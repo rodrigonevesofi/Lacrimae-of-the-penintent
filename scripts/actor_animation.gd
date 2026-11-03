@@ -1,0 +1,67 @@
+extends AnimatedSprite2D
+## Animation frames are distinct drawings cut from a regular source grid.
+## Gameplay and visual contact use the same normalized six-frame timeline.
+static var manifest_cache: Dictionary = {}
+static var frames_cache: Dictionary = {}
+var definitions: Dictionary = {}
+var actor := ""
+var unit_scale := 0.44
+var manual := false
+
+func configure(actor_name: String, scale_factor: float) -> void:
+	var surface := CanvasItemMaterial.new()
+	surface.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	material = surface
+	actor = actor_name
+	unit_scale = scale_factor
+	scale = Vector2.ONE * unit_scale
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	if manifest_cache.is_empty():
+		manifest_cache = JSON.parse_string(FileAccess.get_file_as_string("res://assets/animation/clips.json"))
+	definitions = manifest_cache[actor]
+	if frames_cache.has(actor):
+		sprite_frames = frames_cache[actor]
+		play("idle")
+		return
+	sprite_frames = SpriteFrames.new()
+	sprite_frames.remove_animation("default")
+	for clip in definitions:
+		var data: Dictionary = definitions[clip]
+		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
+		var cell := sheet.get_size() / Vector2(6, 4)
+		sprite_frames.add_animation(clip)
+		sprite_frames.set_animation_loop(clip, data.get("loop", true))
+		sprite_frames.set_animation_speed(clip, float(data.get("fps", 12)))
+		for i in range(int(data["count"])):
+			var index := int(data["start"]) + i
+			var start := Vector2(roundf((index % 6) * cell.x), roundf((index / 6) * cell.y))
+			var end := Vector2(roundf((index % 6 + 1) * cell.x), roundf((index / 6 + 1) * cell.y))
+			var region := AtlasTexture.new()
+			region.atlas = sheet
+			region.region = Rect2(start, end - start)
+			region.filter_clip = true
+			sprite_frames.add_frame(clip, region)
+	frames_cache[actor] = sprite_frames
+	play("idle")
+
+func select(clip: String, direction: int, progress: float = -1.0) -> void:
+	if not definitions.has(clip):
+		clip = "idle"
+	var data: Dictionary = definitions[clip]
+	if animation != clip:
+		play(clip)
+	elif progress < 0 and not is_playing():
+		play()
+	manual = progress >= 0
+	if manual:
+		pause()
+		frame = clampi(int(progress * sprite_frames.get_frame_count(clip)), 0, sprite_frames.get_frame_count(clip) - 1)
+	flip_h = direction < 0
+	# All art uses a common foot anchor. Grid cells remain untrimmed.
+	var cell := sprite_frames.get_frame_texture(clip, frame).get_size()
+	var anchor: Array = data.get("anchor", [128, 250])
+	position = Vector2((cell.x / 2 - float(anchor[0])) * direction, cell.y / 2 - float(anchor[1])) * unit_scale
+
+func pose(clip: String, direction: int, index: int) -> void:
+	var count := sprite_frames.get_frame_count(clip)
+	select(clip, direction, float(index) / count + 0.001)

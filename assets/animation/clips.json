@@ -1,0 +1,322 @@
+{
+  "hero": {
+    "idle": {
+      "sheet": "hero_motion",
+      "start": 0,
+      "count": 6,
+      "fps": 7,
+      "loop": true
+    },
+    "run": {
+      "sheet": "hero_motion",
+      "start": 6,
+      "count": 6,
+      "fps": 16,
+      "loop": true
+    },
+    "roll": {
+      "sheet": "hero_motion",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "jump": {
+      "sheet": "hero_reactions",
+      "start": 0,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "hero_reactions",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "hero_reactions",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "cry": {
+      "sheet": "hero_reactions",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "attack_a": {
+      "sheet": "hero_combat",
+      "start": 0,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_b": {
+      "sheet": "hero_combat",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "heal": {
+      "sheet": "hero_combat",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "pray": {
+      "sheet": "hero_combat",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "cry_start": {
+      "sheet": "hero_grief",
+      "start": 0,
+      "count": 6,
+      "fps": 8,
+      "loop": false
+    },
+    "cry_hold": {
+      "sheet": "hero_grief",
+      "start": 6,
+      "count": 6,
+      "fps": 8,
+      "loop": true
+    },
+    "cry_wipe": {
+      "sheet": "hero_grief",
+      "start": 12,
+      "count": 6,
+      "fps": 8,
+      "loop": false
+    },
+    "cry_end": {
+      "sheet": "hero_grief",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false
+    }
+  },
+  "devotee": {
+    "idle": {
+      "sheet": "devotee",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "devotee",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "devotee",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "devotee",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "devotee",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    }
+  },
+  "mourner": {
+    "idle": {
+      "sheet": "mourner",
+      "start": 0,
+      "count": 6,
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "mourner",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "mourner",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "mourner",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "mourner",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    }
+  },
+  "guardian": {
+    "idle": {
+      "sheet": "guardian",
+      "start": 18,
+      "count": 2,
+      "fps": 4,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "guardian",
+      "start": 0,
+      "count": 6,
+      "fps": 9,
+      "loop": true
+    },
+    "slam": {
+      "sheet": "guardian",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "cast": {
+      "sheet": "guardian",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "guardian",
+      "start": 20,
+      "count": 2,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "guardian",
+      "start": 20,
+      "count": 4,
+      "fps": 12,
+      "loop": false
+    }
+  },
+  "iria": {
+    "idle": {
+      "sheet": "iria",
+      "start": 0,
+      "count": 6,
+      "fps": 7,
+      "loop": true
+    },
+    "talk": {
+      "sheet": "iria",
+      "start": 6,
+      "count": 6,
+      "fps": 9,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "iria",
+      "start": 12,
+      "count": 6,
+      "fps": 9,
+      "loop": true
+    },
+    "pray": {
+      "sheet": "iria",
+      "start": 18,
+      "count": 6,
+      "fps": 7,
+      "loop": true
+    }
+  },
+  "fx": {
+    "idle": {
+      "sheet": "effects",
+      "start": 12,
+      "count": 6,
+      "fps": 18,
+      "loop": true,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "slash_a": {
+      "sheet": "effects",
+      "start": 0,
+      "count": 6,
+      "fps": 24,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "slash_b": {
+      "sheet": "effects",
+      "start": 6,
+      "count": 6,
+      "fps": 24,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "projectile": {
+      "sheet": "effects",
+      "start": 12,
+      "count": 6,
+      "fps": 18,
+      "loop": true,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "impact": {
+      "sheet": "effects",
+      "start": 18,
+      "count": 6,
+      "fps": 24,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    }
+  }
+}
