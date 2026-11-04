@@ -14,13 +14,14 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **Espaço:** pular
 - **J / X:** atacar
 - **K / Shift:** esquivar
-- **E:** interagir
+- **E:** interagir ou executar inimigo atordoado
 - **F:** curar
 - **Q:** penitência
 - **R:** oferecer lágrimas no altar
+- **V:** trocar penitências no altar; **1 / 2 / 3:** escolher
 - **Esc:** pausar
 - **M:** ativar ou silenciar o som
 
-O primeiro ato inclui três ambientes novos, trilhas por situação e uma homenagem opcional no memorial dos portões.
+O primeiro ato tem um cenário contínuo, trilhas por situação, penitências equipáveis, fragmentos de culpa e uma homenagem opcional no memorial dos portões.
 
 O projeto está em desenvolvimento. A versão atual contém o trecho inicial do primeiro ato.

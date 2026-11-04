@@ -7,6 +7,10 @@ const Spike = preload("res://scripts/spike.gd")
 
 signal killed(enemy)
 
+var executing := false
+var execution_progress := 0.0
+var stagger_used := false
+var fed_by_guilt := false
 var kind := 0
 var home := Vector2.ZERO
 var patrol_range := 140.0
@@ -117,8 +121,9 @@ func awaken() -> void:
 
 
 func take_hit(dmg: float, from_x: float) -> void:
-	if dead:
+	if dead or executing:
 		return
+	var was_open := state in ["recover", "cast"]
 	hp -= dmg
 	flash = 0.12
 	get_tree().call_group("game", "spawn_fx", global_position + Vector2(0, -body_size.y * 0.55), Color(1.0, 0.4, 0.3))
@@ -137,21 +142,36 @@ func take_hit(dmg: float, from_x: float) -> void:
 		awaken()
 	if hp <= 0.0:
 		_die()
+	elif kind != 2 and not stagger_used and (was_open or hp <= max_hp * 0.35):
+		stagger_used = true
+		state = "stagger"
+		state_t = 2.0
+		velocity = Vector2.ZERO
 
 
 func _die() -> void:
+	if dead: return
 	dead = true
 	collision_layer = 0
 	if player != null and is_instance_valid(player):
 		player.lagrimas += reward
-		player.culpa = minf(player.culpa + 8.0, 100.0)
+		player.add_culpa(8)
 	get_tree().call_group("game", "shake_cam", 8.0 if kind == 2 else 3.0)
 	killed.emit(self)
 
 
 func _physics_process(delta: float) -> void:
 	var game = get_tree().get_first_node_in_group("game")
-	if game != null and (game.state != "play" or game.message_text != "" or game.narrative.mode != ""):
+	if game != null and (game.state != "play" or game.message_text != "" or game.narrative.mode != "" or game.penitence_menu):
+		return
+	fed_by_guilt = kind != 2 and game != null and game.stain_active and global_position.distance_to(game.stain_pos) < 330
+	if executing: return
+	if state == "stagger" and not dead:
+		state_t -= delta
+		velocity = Vector2.ZERO
+		if state_t <= 0:
+			state = "chase" if kind == 0 else "patrol"
+			cd = 0.8
 		return
 	if hit_pause > 0:
 		hit_pause -= delta
@@ -161,7 +181,7 @@ func _physics_process(delta: float) -> void:
 	anim_t += delta
 	flash = maxf(flash - delta, 0.0)
 	state_t -= delta
-	cd -= delta
+	cd -= delta * (1.35 if fed_by_guilt else 1.0)
 	if dead:
 		fade -= delta * (0.5 if kind == 2 else 1.4)
 		velocity.x = move_toward(velocity.x, 0.0, 800.0 * delta)
@@ -198,7 +218,7 @@ func _walker(delta: float) -> void:
 	var dist: float = absf(to_p)
 	var dy: float = absf(player.global_position.y - global_position.y)
 	var alive: bool = player.state != "dead"
-	var seen: bool = alive and dist < 360.0 and dy < 140.0
+	var seen: bool = alive and dist < (460.0 if fed_by_guilt else 360.0) and dy < 140.0
 	match state:
 		"patrol":
 			velocity.x = facing * 55.0
@@ -213,7 +233,7 @@ func _walker(delta: float) -> void:
 		"chase":
 			facing = 1 if to_p > 0.0 else -1
 			if dist > 54.0 and _ledge_ok():
-				velocity.x = facing * 115.0
+				velocity.x = facing * (150.0 if fed_by_guilt else 115.0)
 			else:
 				velocity.x = 0.0
 			if dist < 72.0 and dy < 90.0 and cd <= 0.0 and alive:
@@ -262,7 +282,7 @@ func _flyer(delta: float) -> void:
 		"patrol":
 			velocity = velocity.lerp((target - global_position) * 1.4, 4.0 * delta)
 			velocity = velocity.limit_length(180.0)
-			if alive and dist < 520.0:
+			if alive and dist < (630.0 if fed_by_guilt else 520.0):
 				facing = 1 if to_p.x > 0.0 else -1
 				if cd <= 0.0:
 					cast_emitted = false
@@ -432,7 +452,7 @@ func _process(delta: float) -> void:
 	if animator == null:
 		return
 	var game = get_tree().get_first_node_in_group("game")
-	if dead and game != null and game.narrative.mode != "":
+	if dead and not executing and game != null and game.narrative.mode != "":
 		fade = maxf(fade - delta * (1.25 if kind == 2 else 1.4), 0)
 		if light:
 			light.energy = fade * 0.5
@@ -441,7 +461,11 @@ func _process(delta: float) -> void:
 	spawn_opacity = minf(spawn_opacity + delta / 0.45, 1.0)
 	animator.modulate = _col(Color(1, 0.87, 0.80) if kind == 2 and phase == 2 else Color.WHITE)
 	animator.modulate.a *= spawn_opacity
-	if dead:
+	if executing:
+		animator.select("executed", facing, execution_progress)
+	elif state == "stagger" and not dead:
+		animator.pose("hurt", facing, 2)
+	elif dead:
 		animator.select("death", facing, 1 - fade)
 	elif state == "hurt":
 		animator.select("hurt", facing, 1 - state_t / 0.3)
@@ -468,6 +492,10 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	if fed_by_guilt and not dead:
+		draw_arc(Vector2(0, -body_size.y * 0.5), body_size.y * 0.6, 0, TAU, 32, Color(0.65, 0.08, 0.1, 0.45), 2)
+	if state == "stagger" and not dead and not executing:
+		draw_arc(Vector2(0, -body_size.y - 22), 8, -PI/2, -PI/2 + TAU * clampf(state_t/2.0, 0, 1), 24, Color("e7c17b"), 2)
 	if kind != 2 and hp < max_hp and not dead:
 		draw_rect(Rect2(-18, -body_size.y - 14, 36, 4), Color(0, 0, 0, 0.6))
 		draw_rect(Rect2(-18, -body_size.y - 14, 36 * hp / max_hp, 4), Color(0.8, 0.15, 0.15))

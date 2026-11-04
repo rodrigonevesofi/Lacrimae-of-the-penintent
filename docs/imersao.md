@@ -8,7 +8,7 @@ O vídeo enviado tem 120 segundos e foi examinado em amostras visuais ao longo d
 - Galeria das Confissões: corredores frios, confessionários vazios, tecidos rasgados e janelas altas.
 - Portões do Silêncio: portas seladas, mãos esculpidas, embrulhos abandonados e a arena do Guardião.
 
-Os fundos mudam gradualmente durante o percurso. A colisão e os caminhos do Ato I foram preservados. São novos ambientes visuais dentro da fase existente, não três mapas ou atos adicionais.
+A fase agora usa um único panorama original de 2172 × 724 pixels, desenhado em um retângulo de 4800 × 1600 unidades do mundo. Cripta, pátio, ponte, galeria e portões pertencem à mesma composição. A câmera percorre esse espaço; não há troca de fundo, repetição horizontal ou dissolução entre salas. Plataformas, suportes e o vão da ponte ficam no plano da jogabilidade e seguem as colisões. A mudança amplia a continuidade visual da fase existente; não adiciona novos atos.
 
 ## Homenagem
 
@@ -34,6 +34,6 @@ São instrumentos e texturas sintetizados: não há cantores gravados nem canto 
 
 ## Intenção e limites
 
-A proposta é aproximar o jogador das consequências por objetos, lugares reconhecíveis, ausência e pequenas ações, em vez de explicar toda a história ou apenas aumentar violência. A memória reutiliza a imagem dos portões visitados durante a exploração. O impacto emocional precisa ser avaliado com jogadores; testes técnicos não demonstram que alguém sentiu culpa.
+A proposta é aproximar o jogador das consequências por objetos, lugares reconhecíveis, ausência e pequenas ações, em vez de explicar toda a história ou apenas aumentar violência. A memória enquadra a região dos portões do próprio panorama visitado durante a exploração. O impacto emocional precisa ser avaliado com jogadores; testes técnicos não demonstram que alguém sentiu culpa.
 
 Os outros atos, dublagem, finais completos e instrumentos acústicos gravados continuam fora desta entrega.

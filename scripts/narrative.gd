@@ -165,7 +165,7 @@ func paint() -> void:
 			text_at(Vector2(0, vs.y - 45), "O peso de cada lágrima.", 21, Color("c4a99d"), vs.x)
 		return
 	panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.01, 0.015, 0.02, 0.87))
-	panel.draw_texture_rect(load("res://assets/basilica.png" if mode == "opening" else "res://assets/gates.png"), Rect2(-elapsed * 2, -50, vs.x + 70, vs.y + 60), false, Color(0.35, 0.34, 0.35))
+	panel.draw_texture_rect((load("res://assets/basilica.png") if mode == "opening" else game.art.gate_memory), Rect2(-elapsed * 2, -50, vs.x + 70, vs.y + 60), false, Color(0.35, 0.34, 0.35))
 	if mode == "opening":
 		# Silhouettes of the kneeling dead; the altar towers above them.
 		for i in range(11):

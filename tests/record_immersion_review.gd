@@ -35,6 +35,7 @@ func run() -> void:
 	await frames(100)
 	game.boss.take_hit(10000,game.player.position.x)
 	await frames(820)
+	game.soundscape.set_process(false)
 	game.soundscape.ambience.stop()
 	game.soundscape.incoming.stop()
 	game.soundscape.guilt_layer.stop()

@@ -48,6 +48,9 @@ var respawn_index := 0
 var relic_taken := false
 var relic_light: PointLight2D
 var stain_light: PointLight2D
+var stain_active := false
+var death_pos := Vector2.ZERO
+var penitence_menu := false
 var stain_amount := 0
 var stain_pos := Vector2.ZERO
 var has_save := false
@@ -95,10 +98,10 @@ var candle_xs: Array[float] = [
 var lore: Array = [
 	{"x": 650.0, "title": "A Primeira Mártir",
 	"text": "Diante de um antigo altar, ela chorou sangue.\nOs registros dizem que centenas receberam absolvição.\n\nDesde então, Vespera passou a medir a culpa em lágrimas."},
-	{"x": 1100.0, "title": "Ordem da Sagrada Absolvição",
-	"text": "Lacrimae Sacramentum. Confessar. Chorar. Oferecer.\nAssim a Ordem prometia libertar os fiéis da culpa.\n\nÀ margem, outra mão escreveu: o Espinho da Contrição\nrepousa nas plataformas altas. Erga-se duas vezes."},
-	{"x": 2420.0, "title": "O Grande Pranto",
-	"text": "As lágrimas levaram o remorso. Os atos permaneceram.\nSob a Grande Basílica, alguém ouvia o sofrimento extraído.\n\nDepois, os mortos deixaram de descansar."},
+	{"x": 1100.0, "title": "A Regra do Confessor",
+	"text": "Bem-aventurados os que choram. — Mateus 5:4\n\nDecreto de Edran: quem não chora deverá aprender a dor.\nUma segunda mão riscou: consolo não é coerção.\n\nÀ margem: o Espinho repousa no alto. Erga-se duas vezes."},
+	{"x": 2420.0, "title": "A Pedra e a Sentença",
+	"text": "Quem está sem pecado, atire a primeira pedra.\n— João 8:7, trecho\n\nA Ordem raspou a primeira linha. Conservou as pedras.\nAs lágrimas levaram o remorso. Os atos permaneceram."},
 	{"x": 3470.0, "title": "Os Portões Fechados",
 	"text": "Uma ordem selada. Os portões deveriam permanecer fechados.\nDo lado de fora, milhares chamavam por proteção.\n\nA assinatura foi raspada. Sua mão treme ao tocar a pedra."},
 ]
@@ -152,6 +155,13 @@ func advance_message() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("penitence_menu") and state == "play" and narrative.mode == "" and message_text == "":
+		if penitence_menu:
+			penitence_menu = false
+		elif player.state == "idle" and player.is_on_floor() and at_altar():
+			penitence_menu = true
+		else:
+			toast("As penitências só podem ser trocadas em um altar.")
 	if event.is_action_pressed("mute"):
 		soundscape.toggle_mute()
 	if event.is_action_pressed("pause"):
@@ -170,6 +180,10 @@ func _add_action(action: String, keys: Array) -> void:
 
 
 func _setup_input() -> void:
+	_add_action("penitence_menu", [KEY_V])
+	_add_action("penitence_none", [KEY_1])
+	_add_action("penitence_nails", [KEY_2])
+	_add_action("penitence_chains", [KEY_3])
 	_add_action("pause", [KEY_ESCAPE])
 	_add_action("mute", [KEY_M])
 	_add_action("left", [KEY_A, KEY_LEFT])
@@ -267,6 +281,8 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	doll_found = false
 	memorial_honored = false
 	player.has_weapon = false
+	penitence_menu = false
+	player.penitence = "none"
 	player.max_hp = 100.0
 	player.upgrades = 0
 	player.culpa = 0.0
@@ -276,6 +292,7 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	boss_defeated = false
 	respawn_index = 0
 	stain_amount = 0
+	stain_active = false
 	ending_countdown = -1.0
 	play_time = 0.0
 	if load_save:
@@ -340,22 +357,23 @@ func _on_enemy_killed(e) -> void:
 
 
 func _on_player_died() -> void:
+	death_pos = player.global_position if player.global_position.y <= GROUND_Y + 20 else player.safe_pos
+	penitence_menu = false
 	state = "dead"
 	death_t = 3.0
 
 
 func _respawn() -> void:
-	var pos: Vector2 = player.global_position
-	if pos.y > GROUND_Y + 20.0:
-		pos = player.safe_pos
-	if player.lagrimas > 0:
-		stain_amount = player.lagrimas
-		stain_pos = pos
+	stain_active = true
+	stain_amount = player.lagrimas
+	stain_pos = death_pos
 	player.lagrimas = 0
-	player.culpa = minf(player.culpa + 25.0, 100.0)
+	player.add_culpa(25)
 	player.revive(altars[respawn_index])
 	_spawn_enemies()
 	state = "play"
+	toast("Recupere o fragmento: capacidade limitada e inimigos próximos fortalecidos.")
+	_save()
 
 
 func show_message(title: String, text: String) -> void:
@@ -392,6 +410,10 @@ func shake_cam(amount: float) -> void:
 func _save() -> void:
 	var data := {
 		"altar": respawn_index,
+		"penitence": player.penitence,
+		"stain_active": stain_active,
+		"stain_amount": stain_amount,
+		"stain_pos": [stain_pos.x, stain_pos.y],
 		"memory_seen": memory_seen,
 		"iria_met": iria_met,
 		"doll_found": doll_found,
@@ -432,7 +454,13 @@ func _load() -> void:
 	relic_taken = bool(parsed.get("relic", false))
 	boss_defeated = bool(parsed.get("boss", false))
 	player.upgrades = int(parsed.get("upgrades", 0))
-	player.max_hp = 100.0 + 15.0 * float(player.upgrades)
+	player.apply_penitence(str(parsed.get("penitence", "none")))
+	stain_active = bool(parsed.get("stain_active", false))
+	stain_amount = maxi(int(parsed.get("stain_amount", 0)), 0)
+	var saved_stain: Array = parsed.get("stain_pos", [0, 600])
+	if saved_stain.size() == 2:
+		stain_pos = Vector2(clampf(float(saved_stain[0]), 20, WORLD_W - 20), clampf(float(saved_stain[1]), -200, 600))
+	player.add_culpa(0)
 
 
 func _delete_save() -> void:
@@ -474,7 +502,7 @@ func _update_lights() -> void:
 		var l: PointLight2D = f[0]
 		l.energy = f[1] * (0.92 + 0.08 * sin(t * f[2] + f[3]) + randf() * 0.04)
 	if stain_light:
-		stain_light.visible = stain_amount > 0
+		stain_light.visible = stain_active
 		stain_light.position = stain_pos + Vector2(0, -24)
 
 
@@ -489,6 +517,14 @@ func _play_update(delta: float) -> void:
 	prompt = ""
 	if narrative.mode != "":
 		return
+	if penitence_menu:
+		for choice in ["none", "nails", "chains"]:
+			if Input.is_action_just_pressed("penitence_" + choice):
+				player.apply_penitence(choice)
+				penitence_menu = false
+				_save()
+		return
+	if player.state == "execution": return
 	if message_text != "":
 		player.controllable = false
 		if message_t <= 0.0 and (Input.is_action_just_pressed("interact") or Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("confirm") or Input.is_action_just_pressed("attack")):
@@ -504,6 +540,18 @@ func _play_update(delta: float) -> void:
 		return
 
 	var pp: Vector2 = player.global_position
+	# Recovery precedes optional interactions, including NPCs and altars.
+	if stain_active and pp.distance_to(stain_pos) < 50:
+		player.lagrimas += stain_amount
+		stain_active = false
+		stain_amount = 0
+		toast("Fragmento recuperado. A capacidade da penitência foi restaurada.")
+		_save()
+	for target in get_tree().get_nodes_in_group("enemies"):
+		if not target.dead and target.state == "stagger" and not target.executing and absf(target.position.x - pp.x) < 72 and absf(target.position.y - pp.y) < 80 and player.state == "idle" and player.is_on_floor():
+			prompt = "[E] Executar — recupera 8 de vida e 12 de culpa"
+			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
+			return
 	var new_area := "CRIPTA DO DESPERTAR" if pp.x < 1250.0 else (("PÁTIO DOS NOMES RISCADOS" if pp.x < 2270 else "GALERIA DAS CONFISSÕES") if pp.x < 3300.0 else "PORTÕES DO SILÊNCIO")
 	if area_name != new_area:
 		area_name = new_area
@@ -523,7 +571,7 @@ func _play_update(delta: float) -> void:
 		prompt = "[E] Falar com Iria" if not iria_met else "[E] Ouvir Iria"
 		if Input.is_action_just_pressed("interact"):
 			iria_met = true
-			show_message("IRIA — A TESTEMUNHA", "Condenado... eu reconheceria sua voz.\n\nNão procure aquele que possa perdoá-lo.\nProcure primeiro aqueles que você condenou.")
+			show_message("IRIA — A TESTEMUNHA", "Condenado... eu reconheceria sua voz.\n\nNão procure aquele que possa perdoá-lo.\nProcure primeiro aqueles que você condenou.\n\nChorai com os que choram. — Romanos 12:15, trecho")
 			if memorial_honored:
 				show_message("IRIA — A TESTEMUNHA", "Você deixou algo junto aos nomes.\n\nAinda há quem precise ser lembrado.\nMas não confunda esse gesto com perdão.")
 			_save()
@@ -545,12 +593,6 @@ func _play_update(delta: float) -> void:
 			_save()
 		return
 
-	# mancha de culpa
-	if stain_amount > 0 and pp.distance_to(stain_pos) < 50.0:
-		player.lagrimas += stain_amount
-		toast("Você recuperou %d lágrimas." % stain_amount)
-		stain_amount = 0
-
 	# relíquia
 	if not relic_taken and pp.distance_to(relic_pos) < 50.0:
 		_take_relic()
@@ -569,7 +611,7 @@ func _play_update(delta: float) -> void:
 
 	if near_altar >= 0:
 		var cost: int = 100 * (player.upgrades + 1)
-		prompt = "[E] Orar  ·  [R] Oferecer %d lágrimas (+15 de vida máxima)" % cost
+		prompt = "[E] Orar  ·  [R] Oferecer %d lágrimas (+15 de vida base)  ·  [V] Penitências" % cost
 		if player.state == "idle":
 			if Input.is_action_just_pressed("interact"):
 				_pray(near_altar)
@@ -579,9 +621,9 @@ func _play_update(delta: float) -> void:
 				elif player.lagrimas >= cost:
 					player.lagrimas -= cost
 					player.upgrades += 1
-					player.max_hp += 15.0
+					player.apply_penitence(player.penitence)
 					player.hp = player.max_hp
-					toast("Sua carne suporta mais dor. (+15 de vida máxima)")
+					toast("Sua carne suporta mais dor. (+15 de vida base)")
 					_save()
 				else:
 					toast("Lágrimas insuficientes.")
@@ -643,7 +685,7 @@ func _draw_dynamic() -> void:
 			var ang := t * 0.8 + float(i) * TAU / 8.0
 			var dv := Vector2(cos(ang), sin(ang))
 			dyn.draw_line(c + dv * 9.0, c + dv * 17.0, Color(0.9, 0.7, 0.3), 2.0)
-	if stain_amount > 0:
+	if stain_active:
 		var pulse := 0.6 + 0.4 * sin(t * 3.0)
 		var s := stain_pos
 		dyn.draw_circle(s + Vector2(0, -24), 20.0, Color(0.6, 0.8, 1.0, 0.18 * pulse))
@@ -678,3 +720,9 @@ func _exit_tree() -> void:
 	preload("res://scripts/actor_animation.gd").frames_cache.clear()
 	preload("res://scripts/actor_animation.gd").manifest_cache.clear()
 	Util.shared_light_texture = null
+
+
+func at_altar() -> bool:
+	for altar in altars:
+		if player.position.distance_to(altar) < 70: return true
+	return false

@@ -40,6 +40,7 @@ func _draw() -> void:
 	if game.narrative != null and game.narrative.has_focus():
 		return
 	_draw_play(vs)
+	if game.penitence_menu: _draw_penitences(vs)
 	if game.paused:
 		_draw_pause(vs)
 
@@ -101,6 +102,9 @@ func _draw_play(vs: Vector2) -> void:
 	var pen_ready: bool = p.culpa >= 50.0
 	var cc := Color(0.85, 0.65, 0.2) if pen_ready else Color(0.45, 0.25, 0.6)
 	_bar(Vector2(28, 56), 220.0, 10.0, p.culpa / 100.0, cc)
+	if game.stain_active:
+		draw_rect(Rect2(193, 56, 55, 10), Color("29252b"))
+		for i in range(5): draw_line(Vector2(195 + i*11, 56), Vector2(201 + i*11, 66), Color("a96863"), 1)
 	_text(Vector2(262, 66), "CULPA", 14, Color(0.8, 0.75, 0.85))
 	if pen_ready:
 		var pa := 0.6 + 0.4 * sin(Time.get_ticks_msec() / 150.0)
@@ -113,9 +117,11 @@ func _draw_play(vs: Vector2) -> void:
 		draw_colored_polygon(PackedVector2Array([Vector2(cx - 5, 90), Vector2(cx, 76), Vector2(cx + 5, 90)]), col)
 	# lágrimas (moeda)
 	_text(Vector2(0, 40), "Lágrimas  %d" % p.lagrimas, 24, Color(0.75, 0.88, 1.0), HORIZONTAL_ALIGNMENT_RIGHT, vs.x - 28.0)
-	if game.stain_amount > 0:
-		_text(Vector2(0, 66), "Mancha de culpa: %d" % game.stain_amount, 16, Color(0.7, 0.8, 1.0, 0.8), HORIZONTAL_ALIGNMENT_RIGHT, vs.x - 28.0)
+	if game.stain_active:
+		_text(Vector2(0, 66), "Fragmento: %d lágrimas · capacidade 75%%" % game.stain_amount, 16, Color(0.7, 0.8, 1.0, 0.8), HORIZONTAL_ALIGNMENT_RIGHT, vs.x - 28.0)
 
+	if p.penitence != "none":
+		_text(Vector2(28, 124), "Pregos da Contrição · espada +40% / vida −30%" if p.penitence == "nails" else "Correntes do Voto · penitência +55% / esquiva +0,65s", 14, Color("c3ad87"))
 	# dica de controles inicial
 	if game.play_time < 18.0 and game.message_text == "" and game.prompt == "":
 		_text(Vector2(28, vs.y - 26), "A/D mover · ESPAÇO pular · J atacar · K rolar · F curar · Q penitência · E interagir", 15, Color(0.8, 0.78, 0.74, 0.8))
@@ -189,8 +195,26 @@ func _draw_pause(vs: Vector2) -> void:
 	draw_rect(Rect2(Vector2.ZERO, vs), Color(0.015, 0.018, 0.024, 0.95))
 	_heading(Vector2(0, 182), "A PEREGRINAÇÃO AGUARDA", 30, GOLD, vs.x)
 	_text(Vector2(0, 228), "PAUSA", 14, Color("a6a49e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "M    Ativar / silenciar som"]
+	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som"]
 	for i in range(controls.size()):
 		_text(Vector2(430, 284 + i * 31), controls[i], 18, Color("c5c0b3"))
 	_text(Vector2(0, 605), "O progresso é salvo ao orar e ao obter a espada ou a relíquia.", 15, Color("8f918e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_heading(Vector2(0, 650), "ESC  ·  Retomar", 22, GOLD, vs.x)
+
+
+func _draw_penitences(vs: Vector2) -> void:
+	draw_rect(Rect2(Vector2.ZERO, vs), Color(0.02, 0.016, 0.022, 0.96))
+	_heading(Vector2(0, 154), "RELÍQUIAS DE PENITÊNCIA", 30, GOLD, vs.x)
+	_text(Vector2(0, 196), "Uma penitência por vez. A troca não restaura a vida.", 18, Color("b9afa1"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	var rows := [
+		["1  ·  Abandonar o fardo", "Vida e ataques sem modificadores."],
+		["2  ·  Pregos da Contrição", "Espada +40% de dano. Vida máxima −30%."],
+		["3  ·  Correntes do Voto", "Penitência +55% de dano. Recuperação da esquiva +0,65s."],
+	]
+	for i in range(3):
+		var y := 246 + i * 115
+		draw_rect(Rect2(220, y, 840, 93), Color("272129"))
+		if game.player.penitence == ["none", "nails", "chains"][i]: draw_rect(Rect2(220, y, 840, 93), GOLD, false, 2)
+		_text(Vector2(250, y + 34), rows[i][0], 23, GOLD)
+		_text(Vector2(250, y + 68), rows[i][1], 18, Color("d7cbbd"))
+	_text(Vector2(0, 650), "V  ·  Fechar     ESC  ·  Pausar", 18, Color("aea493"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)

@@ -3,17 +3,10 @@ extends Node2D
 
 var game
 var redraw_clock := 0.0
-var sky: Sprite2D
-var sky_next: Sprite2D
-var zone_textures: Array[Texture2D] = []
-var zone := 0
-var zone_pending := 0
-var sky_mix := 0.0
-var sky_changing := false
+var panorama: Texture2D
+var gate_memory: AtlasTexture
+const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
 var iria_animation
-var npc_art: AtlasTexture
-var interior: Texture2D
-var background_layer: CanvasLayer
 const GROUND_Y := 600.0
 const INK := Color("17191e")
 const STONE := Color("34383d")
@@ -24,57 +17,21 @@ func _ready() -> void:
 	var surface := CanvasItemMaterial.new()
 	surface.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	material = surface
-	npc_art = AtlasTexture.new()
-	npc_art.atlas = load("res://assets/characters.png")
-	npc_art.region = Rect2(768, 0, 384, 1000)
-	interior = load("res://assets/basilica.png")
 	iria_animation = preload("res://scripts/actor_animation.gd").new()
 	iria_animation.configure("iria", 0.38)
 	var iria_anchor := Node2D.new()
 	iria_anchor.position = Vector2(990, 600)
 	add_child(iria_anchor)
 	iria_anchor.add_child(iria_animation)
-	background_layer = CanvasLayer.new()
-	background_layer.layer = -10
-	add_child(background_layer)
-	var fill := ColorRect.new()
-	fill.color = Color("303e49")
-	fill.size = Vector2(1280, 720)
-	background_layer.add_child(fill)
-	for name in ["court", "gallery", "gates"]:
-		zone_textures.append(load("res://assets/" + name + ".png"))
-	if ResourceLoader.exists("res://assets/city.png"):
-		sky = Sprite2D.new()
-		sky.texture = zone_textures[0]
-		sky.centered = false
-		sky.scale = Vector2(1920, 1080) / sky.texture.get_size()
-		background_layer.add_child(sky)
-		sky_next = Sprite2D.new()
-		sky_next.centered = false
-		sky_next.modulate.a = 0
-		background_layer.add_child(sky_next)
+	panorama = load("res://assets/vespera_panorama.png")
+	gate_memory = AtlasTexture.new()
+	gate_memory.atlas = panorama
+	var size := panorama.get_size()
+	gate_memory.region = Rect2(size.x * 0.57, size.y * 0.15, size.x * 0.43, size.x * 0.43 * 9.0 / 16.0)
 
 func _process(delta: float) -> void:
 	if iria_animation:
 		iria_animation.select("talk" if game.message_title == "IRIA — A TESTEMUNHA" and game.message_text != "" else "idle", -1)
-	if sky and game.player:
-		var desired := 0 if game.player.position.x < 2270 else (1 if game.player.position.x < 3300 else 2)
-		if desired != zone and not sky_changing:
-			zone_pending = desired
-			sky_next.texture = zone_textures[desired]
-			sky_next.scale = Vector2(1920, 1080) / sky_next.texture.get_size()
-			sky_mix = 0
-			sky_changing = true
-		sky.position = Vector2(-fmod(game.player.position.x * 0.06, 350), -170)
-		sky_next.position = sky.position
-		if sky_changing:
-			sky_mix = minf(sky_mix + delta, 1)
-			sky_next.modulate.a = sky_mix
-			if sky_mix >= 1:
-				zone = zone_pending
-				sky.texture = zone_textures[zone]
-				sky_next.modulate.a = 0
-				sky_changing = false
 	redraw_clock += delta
 	if redraw_clock >= 1.0 / 24.0:
 		redraw_clock = 0.0
@@ -105,20 +62,23 @@ func candle(pos: Vector2, height: float, phase: float) -> void:
 func _draw() -> void:
 	if game == null:
 		return
-	# Interior backdrops line up with the actual ground (y=600).
-	# The statues are environmental art; their identity remains undisclosed.
-	for bounds in [Vector2(0, 1240)]:
-		draw_rect(Rect2(bounds.x, -600, bounds.y - bounds.x, 1250), Color("171b22"))
-		draw_texture_rect(interior, Rect2(bounds.x, -210, bounds.y - bounds.x, 930), false)
-		draw_rect(Rect2(bounds.x, -210, bounds.y - bounds.x, 930), Color(0.01, 0.02, 0.03, 0.18))
+	# The entire 4800-unit level shares one fixed panorama in world space.
+	# No camera-following image, texture wrap, room swap or time-based dissolve.
+	draw_texture_rect(panorama, PANORAMA_RECT, false)
+	# The broken bridge is a real hole in the foreground walking plane.
+	draw_rect(Rect2(2000, 600, 270, 310), Color("12171d"))
+	for edge in [2000, 2270]:
+		var side := -1 if edge == 2000 else 1
+		polygon([Vector2(edge, 600), Vector2(edge + side * 35, 600), Vector2(edge + side * 22, 666), Vector2(edge + side * 12, 631)], Color("595149"))
 	# Foreground must match collision platforms exactly.
 	_draw_ground(0, 2000)
 	_draw_ground(2270, 4800)
 	for p in game.platforms:
-		draw_rect(p, Color("303137"))
-		draw_rect(Rect2(p.position, Vector2(p.size.x, 4)), EDGE)
-		for x in range(int(p.position.x) + 6, int(p.end.x) - 4, 22):
-			draw_line(Vector2(x, p.position.y + 5), Vector2(x, p.end.y), INK, 2)
+		# Carved supports physically connect the ledges to the building behind.
+		for end_x in [p.position.x + 12, p.end.x - 12]:
+			draw_texture_rect_region(Rect2(end_x - 10, p.end.y, 20, 600 - p.end.y), panorama, Rect2(550, 250, 26, 365))
+		draw_texture_rect_region(p, panorama, Rect2(1120, 615, 140, 22))
+		draw_line(p.position, Vector2(p.end.x, p.position.y), Color("b5a084"), 2)
 	# Iria remains separate from combatants; the cane identifies her silhouette.
 	if not game.doll_found:
 		draw_circle(Vector2(2760, 499), 5, Color("a18b78"))
@@ -190,6 +150,11 @@ func _draw() -> void:
 		if x > 2000 and x < 2270:
 			continue
 		polygon([Vector2(x - 4, 600), Vector2(x - 2, 594), Vector2(x + 5, 596), Vector2(x + 7, 600)], Color("4b4945"))
+	for anchor in [Vector2(1160, 170), Vector2(2550, 110), Vector2(3380, 180)]:
+		for i in range(8):
+			var yy: float = anchor.y + i * 17
+			var sway := sin(game.t * 1.2 + i * 0.4) * i * 0.75
+			draw_line(Vector2(anchor.x + sway, yy), Vector2(anchor.x + sway + 13 - i, yy + 18), Color("542d32"), 7)
 	# Slow dust and mist give motion without obscuring the collision plane.
 	for i in range(50):
 		var x := fmod(i * 107.5 + game.t * (2 + i % 3), 4800)
@@ -198,15 +163,6 @@ func _draw() -> void:
 
 
 func _draw_ground(x0: float, x1: float) -> void:
-	draw_rect(Rect2(x0, GROUND_Y, x1 - x0, 200), Color("29282a"))
-	draw_rect(Rect2(x0, GROUND_Y, x1 - x0, 5), Color("716351"))
-	var row := 0
-	while row < 6:
-		var y := GROUND_Y + 5.0 + float(row) * 30.0
-		draw_line(Vector2(x0, y), Vector2(x1, y), Color(0.07, 0.06, 0.07), 2.0)
-		var off := 0.0 if row % 2 == 0 else 32.0
-		var bx := x0 + off
-		while bx < x1:
-			draw_line(Vector2(bx, y), Vector2(bx, y + 30.0), Color(0.07, 0.06, 0.07), 2.0)
-			bx += 64.0
-		row += 1
+	# The panorama already contains a continuous carved foundation at y=600.
+	# Keep only the walking edge; flat placeholder bricks no longer cover the art.
+	draw_line(Vector2(x0, GROUND_Y), Vector2(x1, GROUND_Y), Color("8b7d67"), 2)

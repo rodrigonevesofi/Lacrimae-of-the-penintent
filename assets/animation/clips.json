@@ -112,6 +112,28 @@
       "count": 6,
       "fps": 8,
       "loop": false
+    },
+    "execute_devotee": {
+      "sheet": "execute_devotee",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "execute_mourner": {
+      "sheet": "execute_mourner",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
     }
   },
   "devotee": {
@@ -149,6 +171,17 @@
       "count": 3,
       "fps": 12,
       "loop": false
+    },
+    "executed": {
+      "sheet": "execute_devotee",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
     }
   },
   "mourner": {
@@ -186,6 +219,17 @@
       "count": 3,
       "fps": 12,
       "loop": false
+    },
+    "executed": {
+      "sheet": "execute_mourner",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
     }
   },
   "guardian": {

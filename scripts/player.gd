@@ -15,6 +15,11 @@ const ATTACK_TIME := 0.42
 const MAX_FALL := 950.0
 
 var animator
+var penitence := "none"
+var execution_target = null
+var execution_contact := false
+var execution_zoom_start := Vector2.ONE
+const EXECUTION_TIME := 1.15
 var cinematic_focus := false
 var ritual_clip := "pray"
 var ritual_progress := 0.0
@@ -132,10 +137,32 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var game = get_tree().get_first_node_in_group("game")
-	if game != null and (game.message_text != "" or game.narrative.mode != ""):
+	if game != null and (game.message_text != "" or game.narrative.mode != "" or game.penitence_menu):
 		velocity.x = 0.0
 		velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL)
 		move_and_slide()
+		return
+
+	if state == "execution":
+		velocity = Vector2.ZERO
+		var progress := 1.0 - state_t / EXECUTION_TIME
+		camera.zoom = execution_zoom_start.lerp(execution_zoom_start * 1.5, sin(clampf(progress, 0, 1) * PI))
+		if is_instance_valid(execution_target):
+			execution_target.execution_progress = clampf(progress, 0, 1)
+			if progress >= 0.66 and not execution_contact:
+				execution_contact = true
+				execution_target._die()
+				hp = minf(hp + 8, max_hp)
+				add_culpa(12)
+				shake = 5
+				hit_pause = 0.06
+				get_tree().call_group("game", "play_sfx", "hit")
+				get_tree().call_group("game", "spawn_fx", global_position + Vector2(facing * 45, -42), Color("c69c72"))
+		if state_t <= 0:
+			if is_instance_valid(execution_target): execution_target.executing = false
+			execution_target = null
+			camera.zoom = execution_zoom_start
+			state = "idle"
 		return
 
 	var on_floor := is_on_floor()
@@ -245,13 +272,14 @@ func _process(_delta: float) -> void:
 
 func _update_animation() -> void:
 	var tint := Color.WHITE
-	if invuln > 0 and not cinematic_focus and state not in ["roll", "dead"]:
+	if invuln > 0 and not cinematic_focus and state not in ["roll", "dead", "execution"]:
 		tint.a = 0.6 if int(anim_t * 18) % 2 else 1.0
 	animator.modulate = tint
 	if cinematic_focus:
 		animator.select(ritual_clip, facing, ritual_progress)
 		return
 	match state:
+		"execution": animator.select("execute_devotee" if not is_instance_valid(execution_target) or execution_target.kind == 0 else "execute_mourner", facing, 1 - state_t / EXECUTION_TIME)
 		"attack": animator.select("attack_a" if combo == 1 else "attack_b", facing, 1 - state_t / ATTACK_TIME)
 		"roll": animator.select("roll", facing, 1 - state_t / ROLL_TIME)
 		"hurt": animator.select("hurt", facing, 1 - state_t / 0.25)
@@ -291,11 +319,11 @@ func _attack_hits() -> void:
 		if r.intersects(e.hurt_rect()):
 			get_tree().call_group("game", "play_sfx", "hit")
 			hit_list.append(e)
-			var dmg := 20.0 if combo == 1 else 26.0
+			var dmg := (20.0 if combo == 1 else 26.0) * sword_multiplier()
 			e.take_hit(dmg, global_position.x)
 			hit_pause = 0.045
 			e.hit_pause = 0.045
-			culpa = minf(culpa + 3.0, 100.0)
+			add_culpa(3)
 			shake = maxf(shake, 3.0)
 
 
@@ -308,7 +336,7 @@ func _start_roll() -> void:
 	state = "roll"
 	state_t = ROLL_TIME
 	invuln = ROLL_TIME
-	roll_cd = 0.25
+	roll_cd = ROLL_TIME + (0.65 if penitence == "chains" else 0.0)
 
 
 func _start_heal() -> void:
@@ -330,7 +358,7 @@ func _do_penance() -> void:
 	state_t = pray_duration
 	invuln = 0.5
 	shake = 9.0
-	var dmg := 36.0 + used * 0.5
+	var dmg := (36.0 + used * 0.5) * (1.55 if penitence == "chains" else 1.0)
 	for e in get_tree().get_nodes_in_group("enemies"):
 		if e.dead:
 			continue
@@ -350,12 +378,12 @@ func pray(restore: bool = true, duration: float = 1.0) -> void:
 
 
 func take_hit(dmg: float, from_x: float) -> void:
-	if state == "dead" or invuln > 0.0 or cinematic_focus:
+	if state == "dead" or invuln > 0.0 or cinematic_focus or state == "execution":
 		return
 	get_tree().call_group("game", "play_sfx", "hurt")
 	damage_flash = 0.25
 	hp -= dmg
-	culpa = minf(culpa + dmg * 0.6, 100.0)
+	add_culpa(dmg * 0.6)
 	invuln = 0.8
 	var kd := signf(global_position.x - from_x)
 	if kd == 0.0:
@@ -382,7 +410,7 @@ func die() -> void:
 
 func _fell() -> void:
 	hp -= 25.0
-	culpa = minf(culpa + 15.0, 100.0)
+	add_culpa(15)
 	global_position = safe_pos + Vector2(-facing * 50.0, 0.0)
 	velocity = Vector2.ZERO
 	invuln = 1.2
@@ -391,6 +419,9 @@ func _fell() -> void:
 
 
 func revive(pos: Vector2) -> void:
+	if state == "execution" and camera: camera.zoom = execution_zoom_start
+	execution_target = null
+	execution_contact = false
 	hit_pause = 0.0
 	attack_buffer = 0.0
 	roll_buffer = 0.0
@@ -423,6 +454,14 @@ func _draw() -> void:
 		draw_line(hand, tip, Color("727480"), 5)
 		draw_line(hand + Vector2(1, 0), tip, Color("d4cec1"), 1.2)
 		draw_line(hand + Vector2(-5, 5), hand + Vector2(7, -3), Color("9b794a"), 3)
+	if state == "execution" and is_instance_valid(execution_target) and execution_target.kind == 0:
+		var progress := 1 - state_t / EXECUTION_TIME
+		if progress > 0.18 and progress < 0.7:
+			var wrist := Vector2(32, -58 + maxf(progress - 0.35, 0) * 75)
+			var neck: Vector2 = (execution_target.global_position - global_position) * Vector2(facing, 1) + Vector2(0, -execution_target.body_size.y * 0.78)
+			for i in range(8):
+				var knot := wrist.lerp(neck, i / 7.0) + Vector2(0, sin(i / 7.0 * PI) * 5)
+				draw_circle(knot, 1.1, Color("bc9762"))
 	if blood_tears > 0 and not cinematic_focus:
 		for i in range(2):
 			var eye := Vector2(4 + i * 3, -77)
@@ -439,3 +478,39 @@ func draw_ellipse_shadow() -> void:
 		draw_set_transform(Vector2(0, -1), 0, Vector2(1, 0.2))
 		draw_circle(Vector2.ZERO, 18, Color(0, 0, 0, 0.3))
 		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+
+func culpa_capacity() -> float:
+	var game = get_tree().get_first_node_in_group("game")
+	return 75.0 if game != null and game.stain_active else 100.0
+
+func add_culpa(amount: float) -> void:
+	culpa = clampf(culpa + amount, 0, culpa_capacity())
+
+func sword_multiplier() -> float:
+	return 1.4 if penitence == "nails" else 1.0
+
+func apply_penitence(id: String) -> void:
+	penitence = id if id in ["none", "nails", "chains"] else "none"
+	max_hp = (100.0 + upgrades * 15.0) * (0.7 if penitence == "nails" else 1.0)
+	hp = minf(hp, max_hp)
+
+func begin_execution(target) -> bool:
+	if state != "idle" or not has_weapon or not is_on_floor() or not is_instance_valid(target): return false
+	if target.dead or target.kind == 2 or target.state != "stagger" or target.executing: return false
+	if absf(target.position.x - position.x) > 72 or absf(target.position.y - position.y) > 80: return false
+	execution_zoom_start = camera.zoom
+	execution_target = target
+	execution_contact = false
+	state = "execution"
+	state_t = EXECUTION_TIME
+	facing = 1 if target.position.x >= position.x else -1
+	target.executing = true
+	target.execution_progress = 0
+	target.velocity = Vector2.ZERO
+	target.facing = -facing
+	velocity = Vector2.ZERO
+	invuln = EXECUTION_TIME + 0.1
+	attack_buffer = 0
+	roll_buffer = 0
+	return true
