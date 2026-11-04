@@ -16,6 +16,10 @@ func frames(n: int) -> void:
 func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
+	expect(game.art != null, "world art initializes with gameplay scene")
+	if game.art == null:
+		quit(1)
+		return
 	game._start_game(false, false)
 	for i in range(3):
 		game.message_t = 0

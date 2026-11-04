@@ -76,8 +76,8 @@ func _draw() -> void:
 	for p in game.platforms:
 		# Carved supports physically connect the ledges to the building behind.
 		for end_x in [p.position.x + 12, p.end.x - 12]:
-			draw_texture_rect_region(Rect2(end_x - 10, p.end.y, 20, 600 - p.end.y), panorama, Rect2(550, 250, 26, 365))
-		draw_texture_rect_region(p, panorama, Rect2(1120, 615, 140, 22))
+			draw_texture_rect_region(panorama, Rect2(end_x - 10, p.end.y, 20, 600 - p.end.y), Rect2(550, 250, 26, 365))
+		draw_texture_rect_region(panorama, p, Rect2(1120, 615, 140, 22))
 		draw_line(p.position, Vector2(p.end.x, p.position.y), Color("b5a084"), 2)
 	# Iria remains separate from combatants; the cane identifies her silhouette.
 	if not game.doll_found:
