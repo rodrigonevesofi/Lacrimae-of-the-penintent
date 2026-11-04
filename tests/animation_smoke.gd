@@ -68,6 +68,7 @@ func run() -> void:
 	player.hit_pause = 0
 	player._physics_process(0.001)
 	expect(target.hp == hp_after, "a swing cannot hit same enemy twice")
+	game.soundscape.incoming.stop()
 	game.soundscape.ambience.stop()
 	game.soundscape.guilt_layer.stop()
 	for voice in game.soundscape.effects.values():

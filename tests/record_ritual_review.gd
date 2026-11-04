@@ -29,6 +29,7 @@ func run() -> void:
 	game.boss.take_hit(10000, game.player.position.x)
 	print("RITUAL_REVIEW: boss defeated, grief and memory")
 	await frames(820)
+	game.soundscape.incoming.stop()
 	game.soundscape.ambience.stop()
 	game.soundscape.guilt_layer.stop()
 	for voice in game.soundscape.effects.values():

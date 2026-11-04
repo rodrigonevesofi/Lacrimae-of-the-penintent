@@ -21,4 +21,6 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **Esc:** pausar
 - **M:** ativar ou silenciar o som
 
+O primeiro ato inclui três ambientes novos, trilhas por situação e uma homenagem opcional no memorial dos portões.
+
 O projeto está em desenvolvimento. A versão atual contém o trecho inicial do primeiro ato.

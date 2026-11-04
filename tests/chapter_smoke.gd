@@ -202,6 +202,7 @@ func run() -> void:
 	await frames(3)
 	expect(game.state == "ending" and game.boss_defeated, "completed chapter can be resumed from saved progress")
 	game._delete_save()
+	game.soundscape.incoming.stop()
 	game.soundscape.ambience.stop()
 	game.soundscape.guilt_layer.stop()
 	for voice in game.soundscape.effects.values():

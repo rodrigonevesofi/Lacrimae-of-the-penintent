@@ -4,6 +4,12 @@ extends Node2D
 var game
 var redraw_clock := 0.0
 var sky: Sprite2D
+var sky_next: Sprite2D
+var zone_textures: Array[Texture2D] = []
+var zone := 0
+var zone_pending := 0
+var sky_mix := 0.0
+var sky_changing := false
 var iria_animation
 var npc_art: AtlasTexture
 var interior: Texture2D
@@ -35,18 +41,40 @@ func _ready() -> void:
 	fill.color = Color("303e49")
 	fill.size = Vector2(1280, 720)
 	background_layer.add_child(fill)
+	for name in ["court", "gallery", "gates"]:
+		zone_textures.append(load("res://assets/" + name + ".png"))
 	if ResourceLoader.exists("res://assets/city.png"):
 		sky = Sprite2D.new()
-		sky.texture = load("res://assets/city.png")
+		sky.texture = zone_textures[0]
 		sky.centered = false
 		sky.scale = Vector2(1920, 1080) / sky.texture.get_size()
 		background_layer.add_child(sky)
+		sky_next = Sprite2D.new()
+		sky_next.centered = false
+		sky_next.modulate.a = 0
+		background_layer.add_child(sky_next)
 
 func _process(delta: float) -> void:
 	if iria_animation:
 		iria_animation.select("talk" if game.message_title == "IRIA — A TESTEMUNHA" and game.message_text != "" else "idle", -1)
 	if sky and game.player:
-		sky.position = Vector2(-game.player.position.x * 0.10, -170)
+		var desired := 0 if game.player.position.x < 2270 else (1 if game.player.position.x < 3300 else 2)
+		if desired != zone and not sky_changing:
+			zone_pending = desired
+			sky_next.texture = zone_textures[desired]
+			sky_next.scale = Vector2(1920, 1080) / sky_next.texture.get_size()
+			sky_mix = 0
+			sky_changing = true
+		sky.position = Vector2(-fmod(game.player.position.x * 0.06, 350), -170)
+		sky_next.position = sky.position
+		if sky_changing:
+			sky_mix = minf(sky_mix + delta, 1)
+			sky_next.modulate.a = sky_mix
+			if sky_mix >= 1:
+				zone = zone_pending
+				sky.texture = zone_textures[zone]
+				sky_next.modulate.a = 0
+				sky_changing = false
 	redraw_clock += delta
 	if redraw_clock >= 1.0 / 24.0:
 		redraw_clock = 0.0
@@ -83,15 +111,6 @@ func _draw() -> void:
 		draw_rect(Rect2(bounds.x, -600, bounds.y - bounds.x, 1250), Color("171b22"))
 		draw_texture_rect(interior, Rect2(bounds.x, -210, bounds.y - bounds.x, 930), false)
 		draw_rect(Rect2(bounds.x, -210, bounds.y - bounds.x, 930), Color(0.01, 0.02, 0.03, 0.18))
-	# A ruined aqueduct, open arches and buttresses on the exterior walk.
-	for x in range(1280, 3300, 240):
-		arch(x, 610, 200, 370, Color("242c33"), 20)
-		arch(x + 8, 610, 184, 357, Color("55585a"), 2)
-		draw_rect(Rect2(x - 17, 70, 30, 540), Color("252c31"))
-		polygon([Vector2(x - 28, 80), Vector2(x - 2, -12), Vector2(x + 18, 80)], INK)
-		draw_rect(Rect2(x - 28, 110, 53, 10), EDGE)
-		for y in range(180, 600, 56):
-			draw_line(Vector2(x - 17, y), Vector2(x + 13, y), Color("4c5050"), 1)
 	# Foreground must match collision platforms exactly.
 	_draw_ground(0, 2000)
 	_draw_ground(2270, 4800)
@@ -116,6 +135,16 @@ func _draw() -> void:
 		draw_rect(Rect2(pos.x - 22, pos.y + 22, 44, 60), Color("3a3433"), false, 2)
 		for dx in [-14, -5, 5, 14]:
 			draw_line(pos + Vector2(dx, 22), pos + Vector2(dx, 82), Color("6d5a43"), 2)
+	# A memorial is part of the collision-free scenery; its object changes with the story.
+	draw_rect(Rect2(2823, 531, 74, 69), Color("383538"))
+	for row in range(6):
+		draw_line(Vector2(2832, 542 + row * 7), Vector2(2887, 542 + row * 7), Color("72685d"), 1)
+		draw_line(Vector2(2844, 539 + row * 7), Vector2(2870, 548 + row * 7), Color("252428"), 2)
+	if game.memorial_honored:
+		draw_circle(Vector2(2860, 579), 5, Color("a18b78"))
+		draw_line(Vector2(2860, 584), Vector2(2860, 597), Color("624d49"), 6)
+		for i in range(5):
+			candle(Vector2(2830 + i * 15, 600), 12 + i * 2, i)
 	# Tomb, broken lid, burial inscription; purely visual, no hidden collision.
 	draw_rect(Rect2(78, 568, 150, 30), Color("393a3c"))
 	draw_rect(Rect2(82, 563, 142, 7), EDGE)
@@ -169,8 +198,8 @@ func _draw() -> void:
 
 
 func _draw_ground(x0: float, x1: float) -> void:
-	draw_rect(Rect2(x0, GROUND_Y, x1 - x0, 200), Color(0.13, 0.11, 0.12))
-	draw_rect(Rect2(x0, GROUND_Y, x1 - x0, 5), Color(0.34, 0.29, 0.27))
+	draw_rect(Rect2(x0, GROUND_Y, x1 - x0, 200), Color("29282a"))
+	draw_rect(Rect2(x0, GROUND_Y, x1 - x0, 5), Color("716351"))
 	var row := 0
 	while row < 6:
 		var y := GROUND_Y + 5.0 + float(row) * 30.0

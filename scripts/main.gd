@@ -16,6 +16,7 @@ var pending_altar := -1
 var prayer_cooldown := 0.0
 var memory_seen := false
 var iria_met := false
+var memorial_honored := false
 var doll_found := false
 var state := "title"
 var prologue_page := -1
@@ -264,6 +265,7 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	memory_seen = false
 	iria_met = false
 	doll_found = false
+	memorial_honored = false
 	player.has_weapon = false
 	player.max_hp = 100.0
 	player.upgrades = 0
@@ -393,6 +395,7 @@ func _save() -> void:
 		"memory_seen": memory_seen,
 		"iria_met": iria_met,
 		"doll_found": doll_found,
+		"memorial_honored": memorial_honored,
 		"weapon": player.has_weapon,
 		"lagrimas": player.lagrimas,
 		"culpa": player.culpa,
@@ -421,6 +424,7 @@ func _load() -> void:
 	memory_seen = bool(parsed.get("memory_seen", false))
 	iria_met = bool(parsed.get("iria_met", false))
 	doll_found = bool(parsed.get("doll_found", false))
+	memorial_honored = bool(parsed.get("memorial_honored", false))
 	player.has_weapon = bool(parsed.get("weapon", true))
 	player.lagrimas = int(parsed.get("lagrimas", 0))
 	player.culpa = float(parsed.get("culpa", 0.0))
@@ -500,7 +504,7 @@ func _play_update(delta: float) -> void:
 		return
 
 	var pp: Vector2 = player.global_position
-	var new_area := "CRIPTA DO DESPERTAR" if pp.x < 1250.0 else ("CIDADE DA PENITÊNCIA" if pp.x < 3300.0 else "PRAÇA DOS SINOS")
+	var new_area := "CRIPTA DO DESPERTAR" if pp.x < 1250.0 else (("PÁTIO DOS NOMES RISCADOS" if pp.x < 2270 else "GALERIA DAS CONFISSÕES") if pp.x < 3300.0 else "PORTÕES DO SILÊNCIO")
 	if area_name != new_area:
 		area_name = new_area
 		area_t = 4.5
@@ -520,6 +524,16 @@ func _play_update(delta: float) -> void:
 		if Input.is_action_just_pressed("interact"):
 			iria_met = true
 			show_message("IRIA — A TESTEMUNHA", "Condenado... eu reconheceria sua voz.\n\nNão procure aquele que possa perdoá-lo.\nProcure primeiro aqueles que você condenou.")
+			if memorial_honored:
+				show_message("IRIA — A TESTEMUNHA", "Você deixou algo junto aos nomes.\n\nAinda há quem precise ser lembrado.\nMas não confunda esse gesto com perdão.")
+			_save()
+		return
+	if doll_found and not memorial_honored and pp.distance_to(Vector2(2860, 600)) < 60:
+		prompt = "[E] Deixar a boneca no memorial"
+		if Input.is_action_just_pressed("interact"):
+			memorial_honored = true
+			soundscape.play_sfx("bell")
+			show_message("ÀQUELES QUE FICARAM DO OUTRO LADO", "Você deixa a boneca entre as velas.\nO nome de quem a perdeu já não pode ser lido.\n\nPor um instante, a cidade parece escutar.")
 			_save()
 		return
 	if not doll_found and pp.distance_to(Vector2(2760, 520)) < 60:

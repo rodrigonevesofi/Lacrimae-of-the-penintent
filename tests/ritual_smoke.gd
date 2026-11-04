@@ -73,6 +73,7 @@ func run() -> void:
 	expect(game.memory_seen and game.player.controllable and game.player.state == "idle", "memory completes and returns control")
 	expect([game.player.camera.limit_left,game.player.camera.limit_right,game.player.camera.limit_top,game.player.camera.limit_bottom] == limits, "camera boundaries are restored exactly")
 	game._delete_save()
+	game.soundscape.incoming.stop()
 	game.soundscape.ambience.stop()
 	game.soundscape.guilt_layer.stop()
 	for voice in game.soundscape.effects.values():

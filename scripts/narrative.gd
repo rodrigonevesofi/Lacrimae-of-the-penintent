@@ -165,7 +165,7 @@ func paint() -> void:
 			text_at(Vector2(0, vs.y - 45), "O peso de cada lágrima.", 21, Color("c4a99d"), vs.x)
 		return
 	panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.01, 0.015, 0.02, 0.87))
-	panel.draw_texture_rect(load("res://assets/basilica.png"), Rect2(-elapsed * 2, -50, vs.x + 70, vs.y + 60), false, Color(0.35, 0.34, 0.35))
+	panel.draw_texture_rect(load("res://assets/basilica.png" if mode == "opening" else "res://assets/gates.png"), Rect2(-elapsed * 2, -50, vs.x + 70, vs.y + 60), false, Color(0.35, 0.34, 0.35))
 	if mode == "opening":
 		# Silhouettes of the kneeling dead; the altar towers above them.
 		for i in range(11):
@@ -177,19 +177,10 @@ func paint() -> void:
 		text_at(Vector2(100, vs.y - 120), opening[index], 22, Color("e1d7c6"), vs.x - 200)
 		text_at(Vector2(0, 58), "O PESO DE MIL LÁGRIMAS", 18, Color("b59c71"), vs.x)
 	else:
-		# A fragment of the gates: silhouettes remain outside, without naming the protagonist yet.
-		for i in range(17):
-			var x := 280 + i * 45
-			panel.draw_line(Vector2(x, 170), Vector2(x, 470), Color("19191d"), 16)
-		panel.draw_rect(Rect2(270, 215, 750, 15), Color("74604b"))
-		for i in range(10):
-			var x := 330 + i * 63
-			panel.draw_circle(Vector2(x, 430), 9, Color("101014"))
-			panel.draw_line(Vector2(x, 440), Vector2(x + 12, 488), Color("101014"), 18)
 		text_at(Vector2(0, 110), "MEMÓRIAS DA CULPA  ·  I", 25, Color("d3b67f"), vs.x)
 		panel.draw_rect(Rect2(0, 515, vs.x, 145), Color(0, 0, 0, 0.8))
-		text_at(Vector2(100, 555), "Suas mãos empurram os portões.\nDo outro lado, vozes imploram para entrar.", 24, Color("ded4c3"), vs.x - 200)
+		text_at(Vector2(100, 555), "Você lembra o peso do ferro. E as vozes.\nAbra. Ainda estamos aqui." if elapsed < 10 else "Suas mãos fecham os portões.\nO silêncio não devolve quem ficou do outro lado.", 24, Color("ded4c3"), vs.x - 200)
 		if game.doll_found:
-			text_at(Vector2(100, 632), "Entre as mãos pequenas, uma boneca. A mesma que você carrega.", 17, Color("c19481"), vs.x - 200)
+			text_at(Vector2(100, 632), "A boneca entre as mãos pequenas. Você a deixou junto aos nomes." if game.memorial_honored else "Entre as mãos pequenas, uma boneca. A mesma que você carrega.", 17, Color("c19481"), vs.x - 200)
 	panel.draw_rect(Rect2(0, 0, vs.x, 28), Color.BLACK)
 	text_at(Vector2(0, vs.y - 25), "[E] Prosseguir", 14, Color("b6ac9b"), vs.x)
