@@ -5,11 +5,21 @@ var game = null
 var font: Font
 var title_font: Font
 var title_art: Texture2D
+var ui_art: Texture2D
+var ui_regions: Dictionary = {}
 
 const GOLD := Color(0.86, 0.7, 0.38)
 
 
 func _ready() -> void:
+	ui_art = load("res://assets/reliquary_ui.png")
+	var regions := {"bar":Rect2(0,190,512,135),"seal":Rect2(580,0,430,510),"flask":Rect2(1190,0,260,480),"boss":Rect2(0,660,512,240),"panel":Rect2(535,580,540,345),"tear":Rect2(1160,555,300,410)}
+	for key in regions:
+		var atlas := AtlasTexture.new()
+		atlas.atlas = ui_art
+		atlas.region = regions[key]
+		atlas.filter_clip = true
+		ui_regions[key] = atlas
 	font = ThemeDB.fallback_font
 	title_font = load("res://assets/title_font.ttf")
 	title_art = load("res://assets/monastery.png")
@@ -40,6 +50,8 @@ func _draw() -> void:
 	if game.narrative != null and game.narrative.has_focus():
 		return
 	_draw_play(vs)
+	if game.exploration.map_open: _draw_map(vs)
+	if game.exploration.transition > 0: draw_rect(Rect2(Vector2.ZERO,vs),Color(0.02,0.015,0.02,game.exploration.transition/0.4))
 	if game.penitence_menu: _draw_penitences(vs)
 	if game.paused:
 		_draw_pause(vs)
@@ -68,6 +80,7 @@ func _draw_title(vs: Vector2) -> void:
 	for i in range(36):
 		var f := float(i) / 35.0
 		draw_rect(Rect2(0, i * 20, vs.x, 20), Color(0.015, 0.018, 0.022, 0.22 + f * 0.73))
+	draw_texture_rect(ui_regions.seal,Rect2(vs.x/2-36,49,72,85),false)
 	draw_rect(Rect2(28, 28, vs.x - 56, vs.y - 56), Color(GOLD, 0.32), false, 1)
 	_heading(Vector2(0, 174), "L A C R I M A E", 72, Color("d4c3a1"), vs.x)
 	_heading(Vector2(0, 220), "O F   T H E   P E N I T E N T", 23, Color("bca984"), vs.x)
@@ -93,84 +106,118 @@ func _bar(pos: Vector2, w: float, h: float, frac: float, col: Color) -> void:
 
 func _draw_play(vs: Vector2) -> void:
 	var p = game.player
-	if p.damage_flash > 0:
-		draw_rect(Rect2(Vector2.ZERO, vs), Color(0.65, 0.02, 0.03, p.damage_flash * 0.55))
-	# vida
-	var w: float = 120.0 + p.max_hp * 2.0
-	_bar(Vector2(28, 24), w, 18.0, p.hp / p.max_hp, Color(0.7, 0.1, 0.12))
-	# culpa
-	var pen_ready: bool = p.culpa >= 50.0
-	var cc := Color(0.85, 0.65, 0.2) if pen_ready else Color(0.45, 0.25, 0.6)
-	_bar(Vector2(28, 56), 220.0, 10.0, p.culpa / 100.0, cc)
+	if p.damage_flash > 0: draw_rect(Rect2(Vector2.ZERO,vs),Color(0.5,0.015,0.025,p.damage_flash*0.5))
+	# The two vessels share an ornamental frame, but retain clear fill and labels.
+	draw_texture_rect(ui_regions.seal,Rect2(18,20,84,100),false)
+	_ornate_bar(Rect2(80,-4,370,96),p.hp/p.max_hp,Color("8f182b"))
+	_ornate_bar(Rect2(80,29,330,82),p.culpa/100.0,Color("aa874d"))
+	_text(Vector2(126,23),"VIGÍLIA",11,Color("dfc8a0"))
+	_text(Vector2(314,46),"%d / %d" % [ceil(p.hp),p.max_hp],12,Color("f2dfc7"))
+	_text(Vector2(123,98),"CULPA",11,Color("c8ad83"))
 	if game.stain_active:
-		draw_rect(Rect2(193, 56, 55, 10), Color("29252b"))
-		for i in range(5): draw_line(Vector2(195 + i*11, 56), Vector2(201 + i*11, 66), Color("a96863"), 1)
-	_text(Vector2(262, 66), "CULPA", 14, Color(0.8, 0.75, 0.85))
-	if pen_ready:
-		var pa := 0.6 + 0.4 * sin(Time.get_ticks_msec() / 150.0)
-		_text(Vector2(318, 66), "[Q] Penitência pronta", 14, Color(1.0, 0.85, 0.4, pa))
-	# lágrimas curativas
+		draw_rect(Rect2(80+330*0.122+330*0.785*0.75,29+82*0.48,330*0.785*0.25,82*0.17),Color("342f38"))
+		_text(Vector2(259,98),"VÍNCULO ROMPIDO · 75%",11,Color("c79c97"))
+	elif p.culpa >= 50:
+		_text(Vector2(278,98),"Q · PENITÊNCIA",11,Color("e9c991"))
 	for i in range(p.max_flasks):
-		var cx := 36.0 + float(i) * 26.0
-		var col := Color(0.6, 0.85, 1.0) if i < p.flasks else Color(0.2, 0.25, 0.3)
-		draw_circle(Vector2(cx, 92), 7.0, col)
-		draw_colored_polygon(PackedVector2Array([Vector2(cx - 5, 90), Vector2(cx, 76), Vector2(cx + 5, 90)]), col)
-	# lágrimas (moeda)
-	_text(Vector2(0, 40), "Lágrimas  %d" % p.lagrimas, 24, Color(0.75, 0.88, 1.0), HORIZONTAL_ALIGNMENT_RIGHT, vs.x - 28.0)
-	if game.stain_active:
-		_text(Vector2(0, 66), "Fragmento: %d lágrimas · capacidade 75%%" % game.stain_amount, 16, Color(0.7, 0.8, 1.0, 0.8), HORIZONTAL_ALIGNMENT_RIGHT, vs.x - 28.0)
-
+		draw_texture_rect(ui_regions.flask,Rect2(122+i*30,104,20,37),false,Color.WHITE if i<p.flasks else Color(0.35,0.32,0.34,0.75))
 	if p.penitence != "none":
-		_text(Vector2(28, 124), "Pregos da Contrição · espada +40% / vida −30%" if p.penitence == "nails" else "Correntes do Voto · penitência +55% / esquiva +0,65s", 14, Color("c3ad87"))
-	# dica de controles inicial
-	if game.play_time < 18.0 and game.message_text == "" and game.prompt == "":
-		_text(Vector2(28, vs.y - 26), "A/D mover · ESPAÇO pular · J atacar · K rolar · F curar · Q penitência · E interagir", 15, Color(0.8, 0.78, 0.74, 0.8))
-
-	var objective := "Encontre a espada diante do túmulo" if not p.has_weapon else ("Explore a cidade e encontre a relíquia" if not game.relic_taken else "Atravesse o abismo e alcance os sinos")
-	_text(Vector2(0, 91), objective, 13, Color(0.73, 0.69, 0.59, 0.85), HORIZONTAL_ALIGNMENT_RIGHT, vs.x - 28)
-	if game.area_t > 0.0:
-		var aa := minf(game.area_t, 1.0)
-		_heading(Vector2(0, 190), game.area_name, 25, Color(0.86, 0.80, 0.66, aa), vs.x)
-		draw_line(Vector2(vs.x / 2 - 120, 204), Vector2(vs.x / 2 + 120, 204), Color(0.7, 0.57, 0.36, aa * 0.5), 1)
-
-	# chefe
+		_text(Vector2(122,159),"Pregos da Contrição" if p.penitence == "nails" else "Correntes do Voto",13,Color("c6af8b"))
+	# A small relic counter, rather than large detached UI text.
+	_panel(Rect2(vs.x-222,18,198,67))
+	draw_texture_rect(ui_regions.tear,Rect2(vs.x-212,28,30,43),false)
+	_text(Vector2(vs.x-170,61),str(p.lagrimas),28,Color("e8d8bd"))
+	_text(Vector2(vs.x-171,34),"LÁGRIMAS",10,Color("beaa88"))
+	_panel(Rect2(vs.x-370,88,350,78))
+	var objective: String = game.exploration.objective()
+	var objective_x: float = vs.x-350
+	for i in range(_wrap(objective,320,14).size()):
+		_text(Vector2(objective_x,111+i*20),_wrap(objective,320,14)[i],14,Color("ded1b9"))
+	_text(Vector2(vs.x-176,170),"TAB · CARTOGRAFIA",11,Color("c6af8b"))
+	if game.area_t > 0:
+		var opacity := minf(game.area_t,1)
+		_heading(Vector2(200,205),game.area_name,23,Color(0.86,0.8,0.68,opacity),vs.x-400)
+		for sign_value in [-1,1]:
+			var center := Vector2(vs.x/2+sign_value*230,218)
+			draw_line(center,center+Vector2(sign_value*90,0),Color(0.65,0.5,0.3,opacity),1)
+			draw_colored_polygon(PackedVector2Array([center+Vector2(-4,0),center+Vector2(0,-4),center+Vector2(4,0),center+Vector2(0,4)]),Color(0.65,0.5,0.3,opacity))
 	var b = game.boss
-	if b != null and is_instance_valid(b) and b.awake and not b.dead:
-		var bw := 640.0
-		var bx := (vs.x - bw) / 2.0
-		_text(Vector2(0, vs.y - 78), b.display_name, 22, GOLD, HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-		_bar(Vector2(bx, vs.y - 62), bw, 14.0, b.hp / b.max_hp, Color(0.62, 0.55, 0.5))
-
-	# prompt
+	if b != null and is_instance_valid(b) and b.awake and not b.dead and game.exploration.room == "city":
+		_ornate_bar(Rect2(vs.x/2-400,vs.y-148,800,164),b.hp/b.max_hp,Color("872a32"),true)
+		_heading(Vector2(0,vs.y-111),b.display_name,22,Color("d5bd92"),vs.x)
 	if game.prompt != "" and game.message_text == "" and game.state == "play":
-		draw_rect(Rect2(100, vs.y - 65, vs.x - 200, 45), Color(0.02, 0.02, 0.025, 0.85))
-		_text(Vector2(0, vs.y - 36), game.prompt, 18, Color(1.0, 0.9, 0.6), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-
-	# toast
-	if game.toast_t > 0.0:
-		var ta := clampf(game.toast_t, 0.0, 1.0)
-		_text(Vector2(0, 150), game.toast_text, 22, Color(1, 0.92, 0.75, ta), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-
-	# mensagem de lore
-	if game.message_text != "":
-		var pw := 860.0
-		var ph := 340.0
-		var px := (vs.x - pw) / 2.0
-		var py := (vs.y - ph) / 2.0 - 20.0
-		draw_rect(Rect2(px, py, pw, ph), Color(0.04, 0.03, 0.04, 0.92))
-		draw_rect(Rect2(px, py, pw, ph), GOLD, false, 2.0)
-		_heading(Vector2(px, py + 50.0), game.message_title, 24, GOLD, pw)
-		draw_line(Vector2(px + 60, py + 66), Vector2(px + pw - 60, py + 66), Color(GOLD, 0.5), 1.0)
-		draw_multiline_string(font, Vector2(px + 44, py + 106), game.message_text, HORIZONTAL_ALIGNMENT_LEFT, pw - 88.0, 20, -1, Color(0.9, 0.87, 0.82))
-		var next_text := "[E] continuar  ·  %d / 3" % (game.prologue_page + 1) if game.prologue_page >= 0 else "[E] continuar"
-		_text(Vector2(px, py + ph - 20.0), next_text, 16, Color(0.7, 0.68, 0.65), HORIZONTAL_ALIGNMENT_CENTER, pw)
-
-	# morte
+		_panel(Rect2(150,vs.y-51,vs.x-300,41))
+		_text(Vector2(0,vs.y-24),game.prompt,16,Color("eedcc0"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+	elif game.play_time < 18 and game.message_text == "":
+		_text(Vector2(0,vs.y-24),"A/D · mover     ESPAÇO · saltar     J · espada     K · esquiva     E · examinar     TAB · mapa",14,Color("c7baa4"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+	if game.toast_t > 0:
+		var text_lines := _wrap(game.toast_text,800,17)
+		for i in range(text_lines.size()):
+			_text(Vector2(240,259+i*24),text_lines[i],17,Color(0.94,0.84,0.69,minf(game.toast_t,1)),HORIZONTAL_ALIGNMENT_CENTER,800)
+	if game.message_text != "": _draw_message(vs)
 	if game.state == "dead":
-		var da := clampf((3.0 - game.death_t) / 1.2, 0.0, 1.0)
-		draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.55 * da))
-		_text(Vector2(0, vs.y / 2.0 - 10.0), "VOCÊ SUCUMBIU", 54, Color(0.75, 0.12, 0.12, da), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-		_text(Vector2(0, vs.y / 2.0 + 32.0), "A culpa permanece.", 22, Color(0.85, 0.8, 0.8, da), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+		var opacity := clampf((3-game.death_t)/1.2,0,1)
+		draw_rect(Rect2(Vector2.ZERO,vs),Color(0.02,0,0.01,0.65*opacity))
+		_heading(Vector2(0,vs.y/2),"A CARNE CEDE",50,Color(0.67,0.2,0.21,opacity),vs.x)
+		_heading(Vector2(0,vs.y/2+40),"A culpa permanece.",23,Color(0.85,0.77,0.65,opacity),vs.x)
+
+func _ornate_bar(rect: Rect2, amount: float, color: Color, boss: bool = false) -> void:
+	draw_texture_rect(ui_regions.boss if boss else ui_regions.bar,rect,false)
+	var inside := Rect2(rect.position + rect.size*Vector2(0.157 if boss else 0.122,0.42 if boss else 0.48),rect.size*Vector2(0.69 if boss else 0.785,0.10 if boss else 0.17))
+	inside.size.x *= clampf(amount,0,1)
+	if inside.size.x > 0:
+		draw_rect(inside,color)
+		draw_rect(Rect2(inside.position,Vector2(inside.size.x,2)),color.lightened(0.28))
+		draw_rect(Rect2(inside.position+Vector2(0,inside.size.y-2),Vector2(inside.size.x,2)),color.darkened(0.45))
+
+func _panel(rect: Rect2) -> void:
+	draw_texture_rect(ui_regions.panel,rect,false)
+	draw_rect(rect.grow(-8),Color(0.015,0.009,0.015,0.72))
+
+func _wrap(text: String, width: float, size_px: int) -> Array[String]:
+	var lines: Array[String] = []
+	for paragraph in text.split("\n"):
+		var line := ""
+		for word in paragraph.split(" "):
+			var candidate: String = word if line.is_empty() else line+" "+word
+			if font.get_string_size(candidate,HORIZONTAL_ALIGNMENT_LEFT,-1,size_px).x > width and not line.is_empty():
+				lines.append(line)
+				line = word
+			else: line = candidate
+		lines.append(line)
+	return lines
+
+func _draw_message(vs: Vector2) -> void:
+	var rect := Rect2(200,160,vs.x-400,390)
+	_panel(rect)
+	_heading(Vector2(rect.position.x+24,rect.position.y+62),game.message_title,24,Color("d3b58a"),rect.size.x-48)
+	draw_line(rect.position+Vector2(68,79),rect.position+Vector2(rect.size.x-68,79),Color("765b3d"),1)
+	var lines := _wrap(game.message_text,rect.size.x-110,19)
+	for i in range(lines.size()): _text(rect.position+Vector2(55,115+i*25),lines[i],19,Color("e4d6c0"))
+	_text(Vector2(rect.position.x,rect.end.y-25),"E · Continuar",14,Color("bba27c"),HORIZONTAL_ALIGNMENT_CENTER,rect.size.x)
+
+func _draw_map(vs: Vector2) -> void:
+	draw_rect(Rect2(Vector2.ZERO,vs),Color(0.015,0.012,0.018,0.96))
+	_panel(Rect2(50,50,vs.x-100,620))
+	_heading(Vector2(0,102),"CARTOGRAFIA DOS CONDENADOS",28,Color("d2b78d"),vs.x)
+	var ex = game.exploration
+	var positions: Dictionary = {}
+	for id in ex.rooms: positions[id] = ex.rooms[id].map*Vector2(1,0.72)+Vector2(50,70)
+	for link in ex.passages:
+		if not ex.visited.has(link.a) and not ex.visited.has(link.b): continue
+		draw_line(positions[link.a]+Vector2(75,25),positions[link.b]+Vector2(75,25),Color("b99a62") if ex.opened.has(link.id) else Color("554b42"),3)
+	for id in ex.rooms:
+		var pos: Vector2 = positions[id]
+		var known: bool = ex.visited.has(id)
+		var rect := Rect2(pos,Vector2(155,56))
+		draw_rect(rect,Color("3b272c") if id == ex.room else Color("201e24"))
+		draw_rect(rect,Color("d1b185") if known else Color("564b43"),false,2)
+		var label: String = ex.rooms[id].name if known else "NÃO EXPLORADO"
+		var words := _wrap(label,145,12)
+		for i in range(words.size()): _text(pos+Vector2(5,21+i*15),words[i],12,Color("e0cfb3") if known else Color("8d8174"),HORIZONTAL_ALIGNMENT_CENTER,145)
+		if id == ex.room: _text(pos+Vector2(0,-8),"VOCÊ",12,Color("e6b8a0"),HORIZONTAL_ALIGNMENT_CENTER,155)
+	_text(Vector2(0,620),"%d / 7 lugares · %d / 2 correntes · %d / 4 vestígios" % [ex.visited.size(),ex.bells.size(),ex.collected.size()],17,Color("cbb493"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+	_text(Vector2(0,650),"Linhas douradas: atalhos abertos    ·    TAB: retornar",14,Color("aa987b"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 
 
 func _draw_ending(vs: Vector2) -> void:
@@ -193,11 +240,12 @@ func _draw_ending(vs: Vector2) -> void:
 
 func _draw_pause(vs: Vector2) -> void:
 	draw_rect(Rect2(Vector2.ZERO, vs), Color(0.015, 0.018, 0.024, 0.95))
+	_panel(Rect2(220,95,vs.x-440,590))
 	_heading(Vector2(0, 182), "A PEREGRINAÇÃO AGUARDA", 30, GOLD, vs.x)
 	_text(Vector2(0, 228), "PAUSA", 14, Color("a6a49e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som"]
+	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som", "TAB    Cartografia · S+ESPAÇO    Descer"]
 	for i in range(controls.size()):
-		_text(Vector2(430, 284 + i * 31), controls[i], 18, Color("c5c0b3"))
+		_text(Vector2(430, 268 + i * 27), controls[i], 18, Color("c5c0b3"))
 	_text(Vector2(0, 605), "O progresso é salvo ao orar e ao obter a espada ou a relíquia.", 15, Color("8f918e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_heading(Vector2(0, 650), "ESC  ·  Retomar", 22, GOLD, vs.x)
 
@@ -213,7 +261,7 @@ func _draw_penitences(vs: Vector2) -> void:
 	]
 	for i in range(3):
 		var y := 246 + i * 115
-		draw_rect(Rect2(220, y, 840, 93), Color("272129"))
+		_panel(Rect2(220,y,840,93))
 		if game.player.penitence == ["none", "nails", "chains"][i]: draw_rect(Rect2(220, y, 840, 93), GOLD, false, 2)
 		_text(Vector2(250, y + 34), rows[i][0], 23, GOLD)
 		_text(Vector2(250, y + 68), rows[i][1], 18, Color("d7cbbd"))

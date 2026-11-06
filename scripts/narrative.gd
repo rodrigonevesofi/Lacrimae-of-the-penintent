@@ -48,10 +48,10 @@ func begin(sequence: String) -> void:
 		saved_zoom = camera.zoom
 		saved_offset = camera.offset
 		saved_limits = [camera.limit_left, camera.limit_right, camera.limit_top, camera.limit_bottom]
-		camera.limit_left = -10000
-		camera.limit_right = 10000
-		camera.limit_top = -10000
-		camera.limit_bottom = 10000
+		camera.limit_left = -100000
+		camera.limit_right = 100000
+		camera.limit_top = -100000
+		camera.limit_bottom = 100000
 		game.player.cinematic_focus = true
 		saved_music_db = -3.0 if game.soundscape.muted else game.soundscape.ambience.volume_db
 		if not game.soundscape.muted:

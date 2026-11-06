@@ -170,7 +170,7 @@ func run() -> void:
 	victim.state_t = 0.01
 	victim._physics_process(0.02)
 	expect(victim.state == "chase", "stagger expires and enemy resumes combat")
-	expect(game.art.panorama.get_width() > 2000 and game.art.PANORAMA_RECT.size.x == game.WORLD_W, "single detailed panorama spans full level")
+	expect(game.art.panorama.get_width() > 2000 and game.art.PANORAMA_RECT.size.x == game.exploration.rooms.city.bounds.size.x, "single detailed panorama spans full level")
 	expect(not game.art.get("sky_changing"), "walking does not trigger backdrop swaps")
 	var before: Transform2D = game.art.global_transform
 	p.position.x = 3400

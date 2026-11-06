@@ -72,12 +72,12 @@ func desired_context() -> String:
 		return "temple" if game.narrative.mode == "prayer" else "story"
 	if game.state == "ending": return "ending"
 	if game.state == "dead" or game.message_text != "": return "story"
-	if game.boss != null and is_instance_valid(game.boss) and game.boss.awake and not game.boss.dead:
+	if game.boss != null and is_instance_valid(game.boss) and game.boss.awake and not game.boss.dead and (game.exploration == null or game.exploration.room == "city"):
 		return "boss"
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if not enemy.dead and enemy.global_position.distance_to(game.player.global_position) < 230 and enemy.state in ["chase", "windup", "strike", "cast"]:
+		if not enemy.dead and (game.exploration == null or enemy.room_id == game.exploration.room) and enemy.global_position.distance_to(game.player.global_position) < 230 and enemy.state in ["chase", "windup", "strike", "cast"]:
 			return "combat"
-	return "temple" if game.player.position.x < 1250 else "exploration"
+	return "temple" if game.player.position.x < 1250 or game.exploration.room in ["ossuary","refuge"] else "exploration"
 
 func change_context(context: String) -> void:
 	if context == music_context or switching or not music_streams.has(context): return

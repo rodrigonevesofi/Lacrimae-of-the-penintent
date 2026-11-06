@@ -137,7 +137,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var game = get_tree().get_first_node_in_group("game")
-	if game != null and (game.message_text != "" or game.narrative.mode != "" or game.penitence_menu):
+	if game != null and (game.message_text != "" or game.narrative.mode != "" or game.penitence_menu or game.exploration.map_open):
 		velocity.x = 0.0
 		velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL)
 		move_and_slide()
@@ -179,7 +179,11 @@ func _physics_process(delta: float) -> void:
 	else:
 		coyote -= delta
 	jump_buffer -= delta
-	if pressed("jump"):
+	if pressed("jump") and Input.is_action_pressed("down") and is_on_floor() and can_drop():
+		position.y += 28
+		velocity.y = 120
+		jump_buffer = 0
+	elif pressed("jump"):
 		jump_buffer = 0.12
 
 	velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL)
@@ -209,7 +213,7 @@ func _physics_process(delta: float) -> void:
 				velocity.y = DJUMP_V
 				air_jumps += 1
 				get_tree().call_group("game", "spawn_fx", global_position + Vector2(0, -6), Color(1.0, 0.85, 0.5))
-			if released("jump") and velocity.y < -250.0:
+			if released("jump") and not pressed("jump") and velocity.y < -250.0:
 				velocity.y *= 0.55
 			if attack_buffer > 0.0 and has_weapon:
 				_start_attack()
@@ -262,7 +266,8 @@ func _physics_process(delta: float) -> void:
 		get_tree().call_group("game", "play_sfx", "step")
 		footstep_t = 0.28
 
-	if global_position.y > 880.0:
+	var fall_limit: float = game.exploration.rooms[game.exploration.room].bounds.end.y + 50 if game != null else 880.0
+	if global_position.y > fall_limit:
 		_fell()
 
 
@@ -514,3 +519,9 @@ func begin_execution(target) -> bool:
 	attack_buffer = 0
 	roll_buffer = 0
 	return true
+
+func can_drop() -> bool:
+	for i in range(get_slide_collision_count()):
+		var collider = get_slide_collision(i).get_collider()
+		if collider != null and collider.get_meta("one_way",false): return true
+	return false

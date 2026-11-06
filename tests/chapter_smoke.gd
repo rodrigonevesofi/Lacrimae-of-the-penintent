@@ -83,7 +83,7 @@ func run() -> void:
 	await close_dialogue()
 	await close_dialogue()
 	expect(game.message_text == "" and game.player.controllable, "closing prologue enables exploration")
-	expect(get_nodes_in_group("enemies").size() == 8, "seven enemies and boss exist")
+	expect(get_nodes_in_group("enemies").size() == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + 1, "all room encounters and one boss exist")
 	game.player.invuln = 0
 	await screenshot("03-crypt")
 	var initial_x: float = game.player.position.x
@@ -136,7 +136,8 @@ func run() -> void:
 	await interact()
 	expect(game.iria_met and game.message_title == "IRIA — A TESTEMUNHA", "Iria can be encountered")
 	await close_dialogue()
-	game.player.position = Vector2(2760, 520)
+	game.exploration.travel("refuge",Vector2(20030,280))
+	for e in get_nodes_in_group("enemies"): e.set_physics_process(false)
 	await frames(2)
 	await interact()
 	expect(game.doll_found and game.player.blood_tears > 0, "optional doll triggers narrative blood tears")
@@ -184,6 +185,8 @@ func run() -> void:
 	game.player.position = game.stain_pos
 	game._play_update(0.016)
 	expect(game.player.lagrimas == 75 and game.stain_amount == 0, "returning recovers dropped tears")
+	game.exploration.bells = ["water","vigil"]
+	game.exploration.update_gate()
 	game.player.position = Vector2(3950, 600)
 	await frames(4)
 	expect(game.boss.awake and game.boss_wall != null, "entering arena awakens boss and closes gate")
@@ -195,12 +198,15 @@ func run() -> void:
 	game.narrative.finish()
 	game.ending_countdown = 0.01
 	game._play_update(0.02)
-	expect(game.state == "ending", "chapter ends without declaring a final story outcome")
+	expect(game.state == "play", "boss victory leaves side routes available for exploration")
+	game.player.position = Vector2(4700,600)
+	await interact()
+	expect(game.state == "ending", "player explicitly chooses to close chapter at the gates")
 	game.ending_t = 17
 	await screenshot("07-chapter-end")
 	game._start_game(true)
 	await frames(3)
-	expect(game.state == "ending" and game.boss_defeated, "completed chapter can be resumed from saved progress")
+	expect(game.state == "play" and game.boss_defeated, "completed chapter resumes exploration from saved progress")
 	game._delete_save()
 	game.soundscape.set_process(false)
 	game.soundscape.incoming.stop()

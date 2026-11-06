@@ -8,10 +8,11 @@ const HudScript = preload("res://scripts/hud.gd")
 const WorldArt = preload("res://scripts/world_art.gd")
 
 const GROUND_Y := 600.0
-const WORLD_W := 4800.0
+const WORLD_W := 21000.0
 const SAVE_PATH := "user://lacrimae_save.json"
 
 var narrative
+var exploration
 var pending_altar := -1
 var prayer_cooldown := 0.0
 var memory_seen := false
@@ -63,7 +64,7 @@ var toast_t := 0.0
 var fx_list: Array = []
 var flicker: Array = []
 
-var relic_pos := Vector2(1760, 360)
+var relic_pos := Vector2(14580, 1100)
 
 var altars: Array[Vector2] = [Vector2(540, 600), Vector2(1900, 600), Vector2(3620, 600)]
 
@@ -124,8 +125,13 @@ func _ready() -> void:
 	narrative = preload("res://scripts/narrative.gd").new()
 	narrative.game = self
 	add_child(narrative)
+	exploration = preload("res://scripts/exploration.gd").new()
+	exploration.game = self
+	add_child(exploration)
+	exploration.build()
 	state = "title"
 	player.revive(TOMB_POS)
+	exploration.set_camera()
 	player.controllable = false
 
 
@@ -155,6 +161,8 @@ func advance_message() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("map") and state == "play" and narrative.mode == "" and message_text == "" and not penitence_menu and player.state == "idle":
+		exploration.map_open = not exploration.map_open
 	if event.is_action_pressed("penitence_menu") and state == "play" and narrative.mode == "" and message_text == "":
 		if penitence_menu:
 			penitence_menu = false
@@ -180,6 +188,8 @@ func _add_action(action: String, keys: Array) -> void:
 
 
 func _setup_input() -> void:
+	_add_action("map", [KEY_TAB])
+	_add_action("down", [KEY_S, KEY_DOWN])
 	_add_action("penitence_menu", [KEY_V])
 	_add_action("penitence_none", [KEY_1])
 	_add_action("penitence_nails", [KEY_2])
@@ -202,6 +212,7 @@ func _setup_input() -> void:
 # ---------------------------------------------------------------- construção
 func _add_solid(r: Rect2, one_way: bool) -> StaticBody2D:
 	var b := StaticBody2D.new()
+	b.set_meta("one_way",one_way)
 	b.collision_layer = 1
 	b.collision_mask = 0
 	var cs := CollisionShape2D.new()
@@ -222,7 +233,7 @@ func _build_world() -> void:
 	_add_solid(Rect2(0, GROUND_Y, 2000, 400), false)
 	_add_solid(Rect2(2270, GROUND_Y, 2530, 400), false)
 	_add_solid(Rect2(-60, -600, 60, 2000), false)
-	_add_solid(Rect2(WORLD_W, -600, 60, 2000), false)
+	_add_solid(Rect2(4800, -600, 60, 2000), false)
 	for p in platforms:
 		_add_solid(p, true)
 	dyn = Node2D.new()
@@ -276,6 +287,8 @@ func _build_lights() -> void:
 
 # ---------------------------------------------------------------- jogo
 func _start_game(load_save: bool, cinematic: bool = true) -> void:
+	exploration.reset()
+	player.max_flasks = 3
 	memory_seen = false
 	iria_met = false
 	doll_found = false
@@ -300,6 +313,8 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	else:
 		_delete_save()
 	player.revive(altars[respawn_index] if load_save else TOMB_POS)
+	exploration.room = exploration.room_at(player.position)
+	exploration.set_camera()
 	area_name = ""
 	message_text = ""
 	prologue_page = -1
@@ -308,9 +323,7 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	state = "play"
 	if load_save and boss_defeated:
 		if memory_seen:
-			state = "ending"
-			ending_t = 0.0
-			player.controllable = false
+			toast("A primeira Lágrima permanece. Ainda há caminhos por percorrer.")
 		else:
 			ending_countdown = 3.5
 			narrative.begin("memory")
@@ -324,6 +337,7 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 
 
 func _spawn_enemies() -> void:
+	for hazard in get_tree().get_nodes_in_group("hazards"): hazard.queue_free()
 	for e in get_tree().get_nodes_in_group("enemies"):
 		e.queue_free()
 	if boss_wall != null and is_instance_valid(boss_wall):
@@ -335,6 +349,7 @@ func _spawn_enemies() -> void:
 		e.setup(d[0], Vector2(d[1], d[2]), d[3], player)
 		e.killed.connect(_on_enemy_killed)
 		add_child(e)
+	exploration.spawn_enemies()
 	if not boss_defeated:
 		var b = EnemyScript.new()
 		b.setup(2, Vector2(4380.0, GROUND_Y), 0.0, player)
@@ -357,7 +372,7 @@ func _on_enemy_killed(e) -> void:
 
 
 func _on_player_died() -> void:
-	death_pos = player.global_position if player.global_position.y <= GROUND_Y + 20 else player.safe_pos
+	death_pos = player.global_position if player.global_position.y <= exploration.rooms[exploration.room].bounds.end.y else player.safe_pos
 	penitence_menu = false
 	state = "dead"
 	death_t = 3.0
@@ -370,6 +385,8 @@ func _respawn() -> void:
 	player.lagrimas = 0
 	player.add_culpa(25)
 	player.revive(altars[respawn_index])
+	exploration.room = exploration.room_at(player.position)
+	exploration.set_camera()
 	_spawn_enemies()
 	state = "play"
 	toast("Recupere o fragmento: capacidade limitada e inimigos próximos fortalecidos.")
@@ -409,6 +426,8 @@ func shake_cam(amount: float) -> void:
 # ---------------------------------------------------------------- save
 func _save() -> void:
 	var data := {
+		"layout_version": 2,
+		"exploration": exploration.serialize(),
 		"altar": respawn_index,
 		"penitence": player.penitence,
 		"stain_active": stain_active,
@@ -459,8 +478,12 @@ func _load() -> void:
 	stain_amount = maxi(int(parsed.get("stain_amount", 0)), 0)
 	var saved_stain: Array = parsed.get("stain_pos", [0, 600])
 	if saved_stain.size() == 2:
-		stain_pos = Vector2(clampf(float(saved_stain[0]), 20, WORLD_W - 20), clampf(float(saved_stain[1]), -200, 600))
+		stain_pos = Vector2(clampf(float(saved_stain[0]), 20, WORLD_W - 20), clampf(float(saved_stain[1]), -600, 1300))
 	player.add_culpa(0)
+	exploration.restore(parsed.get("exploration",{}))
+	if int(parsed.get("layout_version",1)) < 2 and boss_defeated:
+		exploration.bells = ["water","vigil"]
+		exploration.update_gate()
 
 
 func _delete_save() -> void:
@@ -533,11 +556,7 @@ func _play_update(delta: float) -> void:
 
 	if boss_defeated and ending_countdown > 0.0:
 		ending_countdown -= delta
-		if ending_countdown <= 0.0:
-			state = "ending"
-			ending_t = 0.0
-			player.controllable = false
-		return
+		if ending_countdown <= 0.0: toast("O Guardião caiu. Você pode voltar às passagens ou contemplar a Lágrima junto aos portões.")
 
 	var pp: Vector2 = player.global_position
 	# Recovery precedes optional interactions, including NPCs and altars.
@@ -552,6 +571,14 @@ func _play_update(delta: float) -> void:
 			prompt = "[E] Executar — recupera 8 de vida e 12 de culpa"
 			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
 			return
+	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(Vector2(4700,600)) < 65:
+		prompt = "[E] Contemplar a primeira Lágrima · encerrar a vigília"
+		if Input.is_action_just_pressed("interact"):
+			state = "ending"
+			ending_t = 0
+			player.controllable = false
+		return
+	if exploration.update(delta): return
 	var new_area := "CRIPTA DO DESPERTAR" if pp.x < 1250.0 else (("PÁTIO DOS NOMES RISCADOS" if pp.x < 2270 else "GALERIA DAS CONFISSÕES") if pp.x < 3300.0 else "PORTÕES DO SILÊNCIO")
 	if area_name != new_area:
 		area_name = new_area
@@ -572,6 +599,8 @@ func _play_update(delta: float) -> void:
 		if Input.is_action_just_pressed("interact"):
 			iria_met = true
 			show_message("IRIA — A TESTEMUNHA", "Condenado... eu reconheceria sua voz.\n\nNão procure aquele que possa perdoá-lo.\nProcure primeiro aqueles que você condenou.\n\nChorai com os que choram. — Romanos 12:15, trecho")
+			if exploration.collected.has("register"):
+				show_message("IRIA — OS NOMES", "Você trouxe nomes, não desculpas.\n\nLeia-os. Não depressa. Um de cada vez.\nAlguns ainda têm quem espere ouvi-los.")
 			if memorial_honored:
 				show_message("IRIA — A TESTEMUNHA", "Você deixou algo junto aos nomes.\n\nAinda há quem precise ser lembrado.\nMas não confunda esse gesto com perdão.")
 			_save()
@@ -582,14 +611,6 @@ func _play_update(delta: float) -> void:
 			memorial_honored = true
 			soundscape.play_sfx("bell")
 			show_message("ÀQUELES QUE FICARAM DO OUTRO LADO", "Você deixa a boneca entre as velas.\nO nome de quem a perdeu já não pode ser lido.\n\nPor um instante, a cidade parece escutar.")
-			_save()
-		return
-	if not doll_found and pp.distance_to(Vector2(2760, 520)) < 60:
-		prompt = "[E] Recolher a boneca coberta de cinzas"
-		if Input.is_action_just_pressed("interact"):
-			doll_found = true
-			player.blood_tears = 5
-			show_message("BONECA COBERTA DE CINZAS", "Pequenos dedos costuraram o tecido gasto.\nCinzas preenchem o lugar onde havia um rosto.\n\nAlguém a segurou enquanto esperava que os portões abrissem.")
 			_save()
 		return
 
@@ -616,24 +637,14 @@ func _play_update(delta: float) -> void:
 			if Input.is_action_just_pressed("interact"):
 				_pray(near_altar)
 			elif Input.is_action_just_pressed("offer"):
-				if player.upgrades >= 5:
-					toast("Seu corpo não suporta mais dor.")
-				elif player.lagrimas >= cost:
-					player.lagrimas -= cost
-					player.upgrades += 1
-					player.apply_penitence(player.penitence)
-					player.hp = player.max_hp
-					toast("Sua carne suporta mais dor. (+15 de vida base)")
-					_save()
-				else:
-					toast("Lágrimas insuficientes.")
+				offer_health()
 	elif near_lore >= 0:
 		prompt = "[E] Examinar"
 		if Input.is_action_just_pressed("interact"):
 			show_message(lore[near_lore]["title"], lore[near_lore]["text"])
 
 	# gatilho do chefe
-	if boss != null and is_instance_valid(boss) and not boss.awake and not boss.dead and pp.x > 3900.0:
+	if boss != null and is_instance_valid(boss) and not boss.awake and not boss.dead and pp.x > 3900.0 and exploration.bells.size() == 2:
 		boss.awaken()
 		boss_wall = _add_solid(Rect2(3790, -600, 40, 1200), false)
 		toast("Os sinos tocam. O Guardião reconhece sua presença.")
@@ -652,6 +663,7 @@ func complete_prayer() -> void:
 		return
 	prayer_cooldown = 0.8
 	respawn_index = pending_altar
+	exploration.room = exploration.room_at(altars[respawn_index])
 	pending_altar = -1
 	player.hp = player.max_hp
 	player.flasks = player.max_flasks
@@ -726,3 +738,16 @@ func at_altar() -> bool:
 	for altar in altars:
 		if player.position.distance_to(altar) < 70: return true
 	return false
+
+func offer_health() -> void:
+	if player.state != "idle" or not at_altar(): return
+	var cost: int = 100 * (player.upgrades + 1)
+	if player.upgrades >= 5: toast("Seu corpo não suporta mais dor.")
+	elif player.lagrimas >= cost:
+		player.lagrimas -= cost
+		player.upgrades += 1
+		player.apply_penitence(player.penitence)
+		player.hp = player.max_hp
+		toast("Sua carne suporta mais dor. (+15 de vida base)")
+		_save()
+	else: toast("Lágrimas insuficientes.")

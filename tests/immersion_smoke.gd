@@ -57,7 +57,7 @@ func run() -> void:
 	game._play_update(0.016)
 	Input.action_release("interact")
 	expect(game.message_text.contains("não confunda"),"Iria recognizes gesture without granting forgiveness")
-	expect(game.art.panorama != null and game.art.PANORAMA_RECT.size.x == game.WORLD_W,"continuous panorama spans entire level")
+	expect(game.art.panorama != null and game.art.PANORAMA_RECT.size.x == game.exploration.rooms.city.bounds.size.x,"continuous panorama spans entire level")
 	game.soundscape.toggle_mute()
 	game.soundscape._process(0.1)
 	expect(game.soundscape.ambience.volume_db == -80 and game.soundscape.incoming.volume_db == -80,"mute silences both crossfade voices")

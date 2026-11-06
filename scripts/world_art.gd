@@ -4,6 +4,8 @@ extends Node2D
 var game
 var redraw_clock := 0.0
 var panorama: Texture2D
+var sacred_props: Texture2D
+var room_textures: Dictionary = {}
 var gate_memory: AtlasTexture
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
 var iria_animation
@@ -23,6 +25,8 @@ func _ready() -> void:
 	iria_anchor.position = Vector2(990, 600)
 	add_child(iria_anchor)
 	iria_anchor.add_child(iria_animation)
+	sacred_props = load("res://assets/sacred_props.png")
+	for room in ["ossuary","cistern","cloister","tower"]: room_textures[room] = load("res://assets/"+room+".png")
 	panorama = load("res://assets/vespera_panorama.png")
 	gate_memory = AtlasTexture.new()
 	gate_memory.atlas = panorama
@@ -62,6 +66,9 @@ func candle(pos: Vector2, height: float, phase: float) -> void:
 func _draw() -> void:
 	if game == null:
 		return
+	if game.exploration != null and game.exploration.room != "city":
+		draw_branch()
+		return
 	# The entire 4800-unit level shares one fixed panorama in world space.
 	# No camera-following image, texture wrap, room swap or time-based dissolve.
 	draw_texture_rect(panorama, PANORAMA_RECT, false)
@@ -80,12 +87,6 @@ func _draw() -> void:
 		draw_texture_rect_region(panorama, p, Rect2(1120, 615, 140, 22))
 		draw_line(p.position, Vector2(p.end.x, p.position.y), Color("b5a084"), 2)
 	# Iria remains separate from combatants; the cane identifies her silhouette.
-	if not game.doll_found:
-		draw_circle(Vector2(2760, 499), 5, Color("a18b78"))
-		draw_line(Vector2(2760, 504), Vector2(2760, 516), Color("624d49"), 6)
-		draw_line(Vector2(2751, 507), Vector2(2769, 507), Color("846d58"), 2)
-		for dx in [-3, 3]:
-			draw_line(Vector2(2760 + dx, 514), Vector2(2760 + dx, 520), Color("846d58"), 2)
 	# Suspended empty cages: background silhouettes, never hidden collision.
 	for x in range(1430, 3200, 360):
 		var sway := sin(game.t * 0.65 + x) * 5
@@ -95,23 +96,8 @@ func _draw() -> void:
 		draw_rect(Rect2(pos.x - 22, pos.y + 22, 44, 60), Color("3a3433"), false, 2)
 		for dx in [-14, -5, 5, 14]:
 			draw_line(pos + Vector2(dx, 22), pos + Vector2(dx, 82), Color("6d5a43"), 2)
-	# A memorial is part of the collision-free scenery; its object changes with the story.
-	draw_rect(Rect2(2823, 531, 74, 69), Color("383538"))
-	for row in range(6):
-		draw_line(Vector2(2832, 542 + row * 7), Vector2(2887, 542 + row * 7), Color("72685d"), 1)
-		draw_line(Vector2(2844, 539 + row * 7), Vector2(2870, 548 + row * 7), Color("252428"), 2)
-	if game.memorial_honored:
-		draw_circle(Vector2(2860, 579), 5, Color("a18b78"))
-		draw_line(Vector2(2860, 584), Vector2(2860, 597), Color("624d49"), 6)
-		for i in range(5):
-			candle(Vector2(2830 + i * 15, 600), 12 + i * 2, i)
-	# Tomb, broken lid, burial inscription; purely visual, no hidden collision.
-	draw_rect(Rect2(78, 568, 150, 30), Color("393a3c"))
-	draw_rect(Rect2(82, 563, 142, 7), EDGE)
-	draw_rect(Rect2(91, 573, 124, 18), INK)
-	draw_line(Vector2(148, 575), Vector2(148, 587), GOLD, 1)
-	draw_line(Vector2(141, 579), Vector2(155, 579), GOLD, 1)
-	polygon([Vector2(51, 600), Vector2(66, 511), Vector2(83, 515), Vector2(73, 600)], Color("4a4948"))
+	prop(5,Vector2(2860,600),180,Color.WHITE if game.memorial_honored else Color(0.65,0.62,0.6))
+	prop(1,Vector2(150,600),260)
 	# Crown left beside the tomb.
 	draw_arc(Vector2(245, 593), 12, PI, TAU, 10, GOLD, 2)
 	for i in range(5):
@@ -126,24 +112,16 @@ func _draw() -> void:
 			draw_line(Vector2(x, 553 + i * 7), Vector2(x + 5, 550 + i * 7), GOLD, 1)
 		draw_circle(Vector2(x, 553), 25 + sin(game.t * 2) * 3, Color(0.8, 0.63, 0.3, 0.04))
 	for altar in game.altars:
-		for step in range(3):
-			draw_rect(Rect2(altar.x - 48 + step * 8, 595 - step * 9, 96 - step * 16, 9), Color(0.28 + step * 0.025, 0.27 + step * 0.025, 0.27))
-		draw_rect(Rect2(altar.x - 27, 554, 54, 18), Color("56504a"))
-		draw_line(Vector2(altar.x, 539), Vector2(altar.x, 564), GOLD, 2)
-		draw_line(Vector2(altar.x - 8, 547), Vector2(altar.x + 8, 547), GOLD, 2)
+		if altar.x < 4800: prop(0,altar,185)
+	for entry in game.lore: prop(2,Vector2(entry.x,600),120)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 7413
 	for cx in game.candle_xs:
-		for i in range(7):
-			candle(Vector2(cx + rng.randf_range(-28, 28), 599), rng.randf_range(9, 30), float(i))
-	for altar in game.altars:
-		for i in range(18):
-			candle(Vector2(altar.x - 100 + i * 11, 599), rng.randf_range(12, 42), float(i))
-	for entry in game.lore:
-		var x: float = entry["x"]
-		polygon([Vector2(x - 19, 600), Vector2(x - 19, 553), Vector2(x, 535), Vector2(x + 19, 553), Vector2(x + 19, 600)], Color("49484a"))
-		for i in range(4):
-			draw_line(Vector2(x - 10, 563 + i * 5), Vector2(x + 10, 563 + i * 5), Color("777164"), 1)
+		for i in range(3): candle(Vector2(cx + rng.randf_range(-18,18),599),rng.randf_range(9,22),float(i))
+	if game.exploration != null: draw_passages("city")
+	if game.exploration != null and game.exploration.bells.size() < 2:
+		for x in [3781,3794]:
+			for y in range(-70,600,18): draw_arc(Vector2(x,y),7,0,TAU,12,Color("967853"),3)
 	# Ground rubble, small bones and roots. Deterministic across frames.
 	for i in range(120):
 		var x := rng.randf_range(10, 4790)
@@ -166,3 +144,56 @@ func _draw_ground(x0: float, x1: float) -> void:
 	# The panorama already contains a continuous carved foundation at y=600.
 	# Keep only the walking edge; flat placeholder bricks no longer cover the art.
 	draw_line(Vector2(x0, GROUND_Y), Vector2(x1, GROUND_Y), Color("8b7d67"), 2)
+
+
+func prop(index: int, foot: Vector2, width: float, tint: Color = Color.WHITE) -> void:
+	var cell := sacred_props.get_size() / Vector2(3,2)
+	var source := Rect2(Vector2(index%3,index/3)*cell,cell)
+	draw_set_transform(foot + Vector2(0,-1),0,Vector2(1,0.13))
+	draw_circle(Vector2.ZERO,width*0.4,Color(0,0,0,0.26))
+	draw_set_transform(Vector2.ZERO)
+	draw_texture_rect_region(sacred_props,Rect2(foot.x-width/2,foot.y-width*0.94,width,width),source,tint)
+
+func draw_passages(room: String) -> void:
+	for link in game.exploration.passages:
+		if link.a == room: prop(3,link.pa,155)
+		elif link.b == room: prop(3,link.pb,155)
+
+func draw_branch() -> void:
+	var ex = game.exploration
+	var data: Dictionary = ex.rooms[ex.room]
+	var b: Rect2 = data.bounds
+	var floor_y: float = data.floor
+	var texture: Texture2D = room_textures[data.art]
+	var height := 1900.0 if ex.room == "belfry" else 1100.0
+	# A tall room has a different composition, rather than stretching a landscape wall.
+	var art_rect := Rect2(b.position.x,floor_y-height*0.86,b.size.x,height)
+	draw_rect(b,Color("17181d"))
+	draw_texture_rect(texture,art_rect,false)
+	for ledge in ex.ledges:
+		if ledge.position.x < b.position.x or ledge.end.x > b.end.x: continue
+		draw_texture_rect_region(panorama,ledge,Rect2(1120,615,140,22))
+		draw_line(ledge.position,Vector2(ledge.end.x,ledge.position.y),Color("baa68a"),2)
+		for dx in [12,ledge.size.x-12]:
+			var tip: Vector2 = ledge.position+Vector2(dx,ledge.size.y)
+			polygon([tip+Vector2(-8,0),tip+Vector2(8,0),tip+Vector2(0,28)],Color("797065"))
+	for altar in ex.extra_altars:
+		if altar.x > b.position.x and altar.x < b.end.x: prop(0,altar,185)
+	draw_passages(ex.room)
+	for item in ex.pickups:
+		if item.room != ex.room or ex.collected.has(item.id): continue
+		prop(2,item.pos,100)
+		var glow: Vector2 = item.pos+Vector2(0,-52)
+		draw_circle(glow,7+sin(game.t*3)*2,Color(0.85,0.75,0.5,0.25))
+	for entry in [{"id":"water","room":"cistern","pos":Vector2(9650,40)}, {"id":"vigil","room":"belfry","pos":Vector2(15120,-260)}]:
+		if entry.room == ex.room:
+			prop(4,entry.pos,150,Color(0.65,0.65,0.62) if ex.bells.has(entry.id) else Color.WHITE)
+	if not game.relic_taken and ex.room == "belfry":
+		prop(2,game.relic_pos,110)
+	# Local details stay anchored to the explored room, rather than scrolling with the camera.
+	for i in range(20):
+		var x: float = b.position.x + 70 + i*(b.size.x-140)/20
+		candle(Vector2(x,floor_y),12 + i%4*3,i)
+	for i in range(22):
+		var pos := Vector2(b.position.x+fmod(i*131+game.t*3,b.size.x),floor_y-50-fmod(i*77,700))
+		draw_circle(pos,1,Color(0.8,0.72,0.57,0.16))

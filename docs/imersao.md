@@ -8,7 +8,7 @@ O vídeo enviado tem 120 segundos e foi examinado em amostras visuais ao longo d
 - Galeria das Confissões: corredores frios, confessionários vazios, tecidos rasgados e janelas altas.
 - Portões do Silêncio: portas seladas, mãos esculpidas, embrulhos abandonados e a arena do Guardião.
 
-A fase agora usa um único panorama original de 2172 × 724 pixels, desenhado em um retângulo de 4800 × 1600 unidades do mundo. Cripta, pátio, ponte, galeria e portões pertencem à mesma composição. A câmera percorre esse espaço; não há troca de fundo, repetição horizontal ou dissolução entre salas. Plataformas, suportes e o vão da ponte ficam no plano da jogabilidade e seguem as colisões. A mudança amplia a continuidade visual da fase existente; não adiciona novos atos.
+A cidade usa um único panorama original de 2172 × 724 pixels, desenhado em um retângulo de 4800 × 1600 unidades do mundo. Cripta, pátio, ponte, galeria e portões pertencem à mesma composição. A câmera percorre esse espaço; não há troca de fundo, repetição horizontal ou dissolução entre salas. Plataformas, suportes e o vão da ponte ficam no plano da jogabilidade e seguem as colisões. A mudança amplia a continuidade visual da cidade. A expansão para sete locais e a interface atual estão descritas em `ato-i-exploracao.md`; não adicionam novos atos.
 
 ## Homenagem
 

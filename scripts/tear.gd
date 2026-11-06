@@ -16,6 +16,7 @@ var t := 0.0
 
 
 func _ready() -> void:
+	add_to_group("hazards")
 	animator = preload("res://scripts/actor_animation.gd").new()
 	animator.configure("fx", 0.24 if wave else 0.14)
 	add_child(animator)
@@ -26,7 +27,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	var game = get_tree().get_first_node_in_group("game")
-	if game != null and (game.state != "play" or game.message_text != "" or game.narrative.mode != ""):
+	if game != null and (game.state != "play" or game.message_text != "" or game.narrative.mode != "" or game.penitence_menu or (game.exploration != null and game.exploration.map_open)):
 		return
 	animator.rotation = vel.angle()
 	t += delta
