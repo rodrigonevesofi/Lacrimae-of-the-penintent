@@ -2,10 +2,13 @@
 Checks real nonempty distinct frames after alpha compositing and reports boundaries.
 """
 from pathlib import Path
-import hashlib,json
+import hashlib,json,sys
 from PIL import Image,ImageChops
 root=Path(__file__).resolve().parents[1]
 manifest=json.loads((root/'assets/animation/clips.json').read_text())
+if '--bestiary' in sys.argv:
+ for name in ['devorador','flagelante','bruxa','asmodeia','duelista']:
+  manifest[name]={clip:{'sheet':name+'_executado' if clip=='executed' else name,'start':start,'count':count,'fps':12} for clip,start,count in [('idle',0,6),('walk',6,6),('attack',12,6),('hurt',18,3),('death',21,3),('executed',12,12)]}
 report={};errors=[]
 for actor, clips in manifest.items():
  for clip,d in clips.items():
