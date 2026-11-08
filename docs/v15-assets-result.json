@@ -1,0 +1,57 @@
+{
+  "audio": [
+    {
+      "file": "devorador_rugido.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.68
+    },
+    {
+      "file": "devorador_bote.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.317
+    },
+    {
+      "file": "flagelante_chicote.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.726
+    },
+    {
+      "file": "flagelante_investida.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.363
+    },
+    {
+      "file": "bruxa_sussurro.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.499
+    },
+    {
+      "file": "bruxa_leque.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.635
+    },
+    {
+      "file": "asmodeia_aviso.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.726
+    },
+    {
+      "file": "asmodeia_estilhaco.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.227
+    },
+    {
+      "file": "duelista_cacete.wav",
+      "peak_dbfs": -1.938,
+      "onset_ms": 0.227
+    }
+  ],
+  "ending": {
+    "size": [
+      1920,
+      1080
+    ],
+    "opaque": true,
+    "caption_band_mean_luma_255": 0.57
+  }
+}

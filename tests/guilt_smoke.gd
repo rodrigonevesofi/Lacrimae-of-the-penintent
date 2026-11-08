@@ -156,6 +156,37 @@ func run() -> void:
 		n.finish()
 	expect(true,"all beats of the memory painted without script errors")
 
+
+	# --- The Bell Guardian: the rope that is not there, then silence, then the memory.
+	n.begin("boss_intro")
+	expect(n.mode == "boss_intro" and not p.controllable,"the Guardian's arrival holds control for a short scene")
+	n.elapsed = 1.0
+	Input.action_press("interact")
+	await frames(3)
+	Input.action_release("interact")
+	expect(n.mode == "boss_intro","the arrival cannot be skipped in its first moments")
+	n.elapsed = 2.2
+	Input.action_press("interact")
+	await frames(3)
+	Input.action_release("interact")
+	expect(n.mode == "" and p.controllable,"the arrival can be skipped afterwards")
+	n.begin("boss_end")
+	for t in [0.5,3.0,5.0,7.0,8.6]:
+		n.elapsed = t
+		await frames(2)
+	expect(n.mode == "boss_end" and n.BOSS_END_DURATION >= 6.0,"the Guardian's end paints every beat, with or without the painted stills")
+	n.elapsed = n.BOSS_END_DURATION
+	n._process(0.0)
+	expect(n.mode == "memory","the silence after the bell leads straight into the memory of the gates")
+	n.finish()
+	var knocks_phase: int = sound.knock_count
+	var guardian = game.boss
+	guardian.awaken()
+	guardian.hp = guardian.max_hp * 0.4
+	await frames(6)
+	await create_timer(2.6,true,false,true).timeout
+	expect(sound.knock_count - knocks_phase == 3,"past half its strength the Guardian is answered by three knocks")
+
 	# --- Three knocks when the high chain gives way; the water chain stays quiet.
 	var knocks_chain: int = sound.knock_count
 	game.story_chain_released("water")

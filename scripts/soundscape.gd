@@ -16,7 +16,7 @@ const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "
 
 func _ready() -> void:
 	ambience = AudioStreamPlayer.new()
-	for context in ["menu", "exploration", "temple", "combat", "boss", "story", "ending"]:
+	for context in ["menu", "exploration", "temple", "combat", "boss", "story", "ending", "nave", "terraco", "patio"]:
 		var track: AudioStreamWAV = load("res://assets/audio/ost_%s.wav" % context)
 		track.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		track.loop_end = track.data.size() / 4
@@ -87,7 +87,10 @@ func desired_context() -> String:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if not enemy.dead and (game.exploration == null or enemy.room_id == game.exploration.room) and enemy.global_position.distance_to(game.player.global_position) < 230 and enemy.state in ["chase", "windup", "strike", "cast"]:
 			return "combat"
-	return "temple" if game.player.position.x < 1250 or game.exploration.room in ["ossuary","refuge","nave","court"] else "exploration"
+	if game.exploration != null:
+		var scores := {"nave": "nave", "terrace": "terraco", "court": "patio"}
+		if scores.has(game.exploration.room): return scores[game.exploration.room]
+	return "temple" if game.player.position.x < 1250 or game.exploration.room in ["ossuary","refuge"] else "exploration"
 
 func change_context(context: String) -> void:
 	if context == music_context or switching or not music_streams.has(context): return

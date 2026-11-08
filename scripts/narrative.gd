@@ -10,6 +10,8 @@ const GRIEF_DURATION := 6.6
 const MEMORY_DURATION := 27.0
 const ECHO_DURATION := 7.0
 const MEMORIAL_DURATION := 9.0
+const BOSS_INTRO_DURATION := 6.5
+const BOSS_END_DURATION := 9.0
 ## The memory ends on three knocks, then a cut: no explanation follows them.
 const MEMORY_KNOCKS := [24.6, 25.25, 25.9]
 const ECHO_KNOCKS := [2.2, 2.85, 3.5]
@@ -32,12 +34,21 @@ const MEMORY_ART := {
 	"gate": "res://assets/memory/memoria_04_portao_fechado.png",
 }
 var memory_art: Dictionary = {}
+## Painted stills for the Bell Guardian. Without the files, the scenes use light and text only.
+const BOSS_ART := {
+	"rope": "res://assets/boss/guardiao_01_corda.png",
+	"gesture": "res://assets/boss/guardiao_02_gesto.png",
+	"still": "res://assets/boss/guardiao_03_imovel.png",
+}
+var boss_art: Dictionary = {}
 var echo_index := 0
 var knocks_done := 0
 var flash := 0.0
 var pulse := 0.0
 var memorial_known := false
 var voice_played := false
+var tag := ""
+var tag_t := 0.0
 var opening := [
 	"Dizem que os homens nasceram do pecado\ne que somente através da dor poderiam encontrar a salvação.",
 	"Mas quando as lágrimas deixaram de ser suficientes,\nfizeram do sofrimento uma religião.",
@@ -71,11 +82,18 @@ func _ready() -> void:
 	pool_texture.height = 256
 	for key in MEMORY_ART:
 		if ResourceLoader.exists(MEMORY_ART[key]): memory_art[key] = load(MEMORY_ART[key])
+	for key in BOSS_ART:
+		if ResourceLoader.exists(BOSS_ART[key]): boss_art[key] = load(BOSS_ART[key])
 	title_font = load("res://assets/title_font.ttf")
 	panel = Control.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.draw.connect(paint)
 	add_child(panel)
+
+## Closed captions for sound: every sound that carries information also appears on screen for a moment.
+func caption_sound(text: String, seconds: float = 2.4) -> void:
+	tag = text
+	tag_t = seconds
 
 func duration_of(sequence: String) -> float:
 	match sequence:
@@ -83,6 +101,8 @@ func duration_of(sequence: String) -> float:
 		"prayer": return PRAYER_DURATION
 		"echo": return ECHO_DURATION
 		"memorial": return MEMORIAL_DURATION
+		"boss_intro": return BOSS_INTRO_DURATION
+		"boss_end": return BOSS_END_DURATION
 	return MEMORY_DURATION
 
 func has_focus() -> bool:
@@ -106,8 +126,10 @@ func begin(sequence: String, argument: int = 0) -> void:
 	game.player.shake = 0
 	if sequence == "memorial":
 		game.soundscape.play_sfx("sino_surdo")
+		caption_sound("[Sino grave, abafado]", 3.0)
 	elif sequence != "echo":
 		game.soundscape.play_sfx("bell")
+		caption_sound("[Sino]", 2.2)
 	if sequence in ["prayer", "memory", "echo", "memorial"]:
 		var camera: Camera2D = game.player.camera
 		saved_zoom = camera.zoom
@@ -161,11 +183,32 @@ func finish() -> void:
 	elif previous == "memory":
 		game.memory_seen = true
 		game._save()
+	elif previous == "boss_end":
+		# The silence after the bell leads straight into the memory of the gates.
+		begin("memory")
 	elif previous == "memorial":
 		# The silence comes first; the written record follows, so the text stays available to read again.
 		game.show_message("ÀQUELES QUE FICARAM DO OUTRO LADO", game.Story.memorial_text(memorial_known))
 
+func memorial_timeline(duration: float) -> void:
+	# Kneel with the doll, set it down, stay with it, rise and leave it there.
+	if elapsed < 1.8:
+		game.player.ritual_clip = "memorial_kneel"
+		game.player.ritual_progress = elapsed / 1.8
+	elif elapsed < 4.5:
+		game.player.ritual_clip = "memorial_place"
+		game.player.ritual_progress = (elapsed - 1.8) / 2.7
+	elif elapsed < duration - 2.4:
+		game.player.ritual_clip = "memorial_hold"
+		game.player.ritual_progress = fmod((elapsed - 4.5) * 0.9, 1.0)
+	else:
+		game.player.ritual_clip = "memorial_rise"
+		game.player.ritual_progress = minf((elapsed - (duration - 2.4)) / 2.4, 0.999)
+
 func cry_timeline(duration: float) -> void:
+	if mode == "memorial":
+		memorial_timeline(duration)
+		return
 	# Kneel, hold, wipe the eyes, rise. The tail keeps its length however long the hold lasts.
 	if elapsed < 1.0:
 		game.player.ritual_clip = "cry_start"
@@ -215,15 +258,18 @@ func fire_voices() -> void:
 	if mode == "echo" and echo_index in [1, 2] and elapsed >= 1.2:
 		voice_played = true
 		game.soundscape.play_sfx("murmurio_0%d" % echo_index)
+		caption_sound("[Vozes abafadas]", 3.0)
 	elif mode == "memory" and elapsed >= GRIEF_DURATION + 0.4:
 		voice_played = true
 		game.soundscape.play_sfx("murmurio_03")
+		caption_sound("[Vozes abafadas]", 3.0)
 
 func fire_knocks() -> void:
 	var times := knock_schedule()
 	while knocks_done < times.size() and elapsed >= times[knocks_done]:
 		knocks_done += 1
 		game.soundscape.play_sfx("knock")
+		caption_sound("[Batida]", 1.1)
 		game.shake_cam(3.0)
 		flash = 0.14
 		pulse = 1.0
@@ -240,12 +286,15 @@ func can_skip() -> bool:
 		"memory": return elapsed > GRIEF_DURATION + 0.2
 		"echo": return elapsed > 2.0
 		"memorial": return elapsed > 2.8
+		"boss_intro": return elapsed > 2.0
+		"boss_end": return elapsed > 3.0
 	return false
 
 func _process(delta: float) -> void:
 	if mode != "":
 		elapsed += delta
 		flash = maxf(flash - delta, 0.0)
+		tag_t = maxf(tag_t - delta, 0.0)
 		pulse = maxf(pulse - delta * 1.4, 0.0)
 		update_focus()
 		fire_voices()
@@ -289,9 +338,25 @@ func edge_vignette(vs: Vector2, strength: float, tint: Color) -> void:
 func paint() -> void:
 	if mode == "":
 		return
+	paint_scene()
+	draw_tag()
+
+func draw_tag() -> void:
+	if tag_t <= 0.0 or tag == "":
+		return
+	var vs := panel.get_viewport_rect().size
+	var a := clampf(tag_t / 0.4, 0.0, 1.0)
+	var width := 28.0 + tag.length() * 9.5
+	panel.draw_rect(Rect2(vs.x - width - 26, 64, width, 30), Color(0, 0, 0, 0.62 * a))
+	panel.draw_string(font, Vector2(vs.x - width - 12, 85), tag, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.9, 0.86, 0.78, a))
+
+func paint_scene() -> void:
 	var vs := panel.get_viewport_rect().size
 	if has_focus():
 		paint_focus(vs)
+		return
+	if mode in ["boss_intro", "boss_end"]:
+		paint_boss(vs)
 		return
 	panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.01, 0.015, 0.02, 1.0 if mode == "memory" else 0.87))
 	if mode == "opening":
@@ -400,6 +465,44 @@ func gate_wheel(center: Vector2, angle: float, alpha: float) -> void:
 		var p := center + Vector2(cos(a), sin(a)) * 160
 		panel.draw_circle(p, 26, Color(0.04, 0.03, 0.035, alpha))
 		panel.draw_line(p, p + Vector2(cos(a), sin(a)) * 130, Color(0.04, 0.03, 0.035, alpha), 24)
+
+func boss_still(key: String, alpha: float, vs: Vector2, push: float) -> bool:
+	if alpha <= 0.0 or not boss_art.has(key): return false
+	var size := vs * (1.03 + push)
+	panel.draw_texture_rect(boss_art[key], Rect2(-(size - vs) * 0.5, size), false, Color(1, 1, 1, alpha))
+	return true
+
+## The Bell Guardian: the rope that is not there, the hand that keeps pulling, the bronze that stays still.
+func paint_boss(vs: Vector2) -> void:
+	var span := duration_of(mode)
+	var open := smoothstep(0.0, 0.9, elapsed) * (1.0 - smoothstep(span - 0.9, span, elapsed))
+	panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.005, 0.006, 0.008, 1.0))
+	var lines: Array = GuiltText.BOSS_INTRO if mode == "boss_intro" else GuiltText.BOSS_END
+	var split := span * 0.5
+	var drawn := false
+	if mode == "boss_intro":
+		drawn = boss_still("rope", open, vs, elapsed * 0.004)
+	else:
+		var first := smoothstep(0.0, 0.9, elapsed) * (1.0 - smoothstep(split - 0.7, split, elapsed))
+		var second := smoothstep(split, split + 1.2, elapsed) * (1.0 - smoothstep(span - 0.9, span, elapsed))
+		drawn = boss_still("gesture", first, vs, elapsed * 0.003)
+		drawn = boss_still("still", second, vs, 0.0) or drawn
+	if not drawn:
+		# No painting yet: a slow glow of bronze and the text carry the moment.
+		glow(Vector2(vs.x * 0.5, vs.y * 0.42), 360.0 + 20.0 * sin(elapsed * 1.4), Color(0.85, 0.5, 0.2), 0.32 * open)
+	edge_vignette(vs, 0.6 * open, Color(0, 0, 0))
+	panel.draw_rect(Rect2(0, vs.y - 160, vs.x, 160), Color(0, 0, 0, 0.72 * open))
+	for i in range(lines.size()):
+		var a: float
+		if mode == "boss_intro":
+			a = smoothstep(0.8 + i * 1.8, 1.8 + i * 1.8, elapsed) * (1.0 - smoothstep(span - 0.9, span, elapsed))
+		else:
+			var start := 0.6 if i == 0 else split + 0.6
+			var stop := split - 0.4 if i == 0 else span - 0.5
+			a = smoothstep(start, start + 1.0, elapsed) * (1.0 - smoothstep(stop - 0.6, stop, elapsed))
+		text_at(Vector2(100, vs.y - 112 + i * 34), lines[i], 23, Color(0.9, 0.84, 0.74, a), vs.x - 200)
+	if can_skip():
+		text_at(Vector2(0, vs.y - 18), "[E] Seguir", 13, Color(0.7, 0.66, 0.6, 0.7), vs.x)
 
 func draw_still(key: String, alpha: float, vs: Vector2, push: float, jitter: float = 0.0) -> bool:
 	if alpha <= 0.0 or not memory_art.has(key): return false

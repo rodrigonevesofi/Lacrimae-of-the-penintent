@@ -16,7 +16,7 @@ func frames(count: int) -> void:
 func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
-	expect(game.soundscape.music_streams.size() == 7,"seven contextual scores load")
+	expect(game.soundscape.music_streams.size() == 10,"ten contextual scores load")
 	expect(game.soundscape.desired_context() == "menu","title selects sacred menu score")
 	game._start_game(false,false)
 	for i in range(3):

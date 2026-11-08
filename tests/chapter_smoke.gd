@@ -192,10 +192,15 @@ func run() -> void:
 	game.player.position = Vector2(3950, 600)
 	await frames(4)
 	expect(game.boss.awake and game.boss_wall != null, "entering arena awakens boss and closes gate")
+	expect(game.narrative.mode == "boss_intro", "the Guardian arrives in a short scene, rope first")
+	game.narrative.finish()
 	await screenshot("06-basilica")
 	game.boss.take_hit(10000, game.player.position.x)
 	await frames(4)
 	expect(game.boss_defeated and game.ending_countdown > 0, "boss defeat starts chapter completion")
+	expect(game.narrative.mode == "boss_end", "the Guardian falls in silence first")
+	game.narrative.elapsed = game.narrative.BOSS_END_DURATION
+	game.narrative._process(0.0)
 	expect(not game.memory_seen and game.narrative.mode == "memory", "guardian defeat reveals a memory")
 	game.narrative.finish()
 	game.ending_countdown = 0.01

@@ -1,0 +1,51 @@
+{
+  "source_commit": "5e82da364d7097ff0a915efbe65f558ff4be73ef",
+  "patch_sha256": "73823f222eb019d2a3a62953587fa311e0197d0af7cff43089916b7baf4cce7d",
+  "protected_files": {
+    "scripts/enemy.gd": {
+      "sha256": "c5518caee0a2ed79060387444c39b7c577359227a563e259ef24c70224217619",
+      "matches_received_base": true
+    },
+    "scripts/narrative.gd": {
+      "sha256": "69e7fad90cd9184f2d667df8b27c15794e2d49542669c86daf77b114d768272a",
+      "matches_received_base": true
+    },
+    "scripts/soundscape.gd": {
+      "sha256": "04011dc37a603e64f34875bcd7e9a1d8532d205048be04a0f1254723ef00f49b",
+      "matches_received_base": true
+    },
+    "scripts/world_art.gd": {
+      "sha256": "fda52ba984f80d8dee4c60089a21b283c9ee4b77761a8c5d7f45c7a294c26661",
+      "matches_received_base": true
+    },
+    "scripts/exploration.gd": {
+      "sha256": "ae43660ec5af263e7b3a89ea30c130bd1bb49b49315d3025c0d8c0bb729ed1e0",
+      "matches_received_base": true
+    },
+    "scripts/main.gd": {
+      "sha256": "e13c2d0a40a75e84b615c5d9f5fc45ff48266dda2b248363dddc114c6b51994e",
+      "matches_received_base": true
+    },
+    "scripts/hud.gd": {
+      "sha256": "bd0157ba2652efe0b9499d40e2cfe5366a4d4027e9bf3c3266dc36fd3a587b81",
+      "matches_received_base": true
+    },
+    "scripts/player.gd": {
+      "sha256": "f72f6fec7d29fde9f436864224c3d9ebf125d18d0ee974f117d0c19b8d64f07b",
+      "matches_received_base": true
+    },
+    "scripts/act_one_layout.gd": {
+      "sha256": "43344348e02a1163c4c1d4a6b743a5e5b613d3fb2234c7a546c8c5da83bfa5f0",
+      "matches_received_base": true
+    },
+    "scripts/guilt_text.gd": {
+      "sha256": "ac4eaeb0adc869b635d920c74fcead7ab660f40e7184c58f7e2da40e3c143a0d",
+      "matches_received_base": true
+    },
+    "assets/animation/clips.json": {
+      "sha256": "11ed8c13582691d73148a8386f2328b09f2c47a89ab257f606b5372e86e91223",
+      "matches_received_base": true
+    }
+  },
+  "existing_changes_only_from_received_patch": true
+}

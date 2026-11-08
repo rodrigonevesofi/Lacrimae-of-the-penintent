@@ -1,0 +1,19 @@
+{
+  "checks": 1,
+  "failures": 0,
+  "samples": [
+    {
+      "captions": [
+        "[Batida]"
+      ],
+      "duration": 7.0,
+      "flash": 0.14,
+      "index": 0,
+      "knocks": 3,
+      "mode": "echo",
+      "pulse": 1.0,
+      "shakes": 3
+    }
+  ],
+  "status": "NOT_IMPLEMENTED"
+}

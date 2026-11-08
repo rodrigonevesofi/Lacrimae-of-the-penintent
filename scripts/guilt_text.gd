@@ -27,6 +27,16 @@ const MEMORY_CAPTIONS := [
 	"Atrás de você, alguém aguarda uma ordem.\nVocê não consegue ver o rosto.",
 ]
 
+const BOSS_INTRO := [
+	"O Guardião dos Sinos puxa uma corda que já não existe.",
+	"\"Enquanto tocar, alguém virá abrir.\"",
+]
+
+const BOSS_END := [
+	"A mão continua o gesto da corda por um instante.",
+	"Não veio ninguém.",
+]
+
 static func echo_line(index: int) -> String:
 	return ECHO[clampi(index, 0, ECHO.size() - 1)]
 

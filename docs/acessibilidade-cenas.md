@@ -17,13 +17,13 @@ Checagem funcional e conservadora, não certificação de acessibilidade nem tes
 | echo2 | mínimo | PASSOU | Interação anterior ao tempo mínimo preserva a cena. |
 | echo2 | pular | PASSOU | Interação após mínimo encerra a cinemática; memorial pode abrir seu registro legível separado. |
 | memorial | flashes | PASSOU | Picos brancos observados em60Hz: []; máximo por janela1s=0 |
-| memorial | sino | FALHOU | Não foi encontrado equivalente explícito para a badalada inicial. Zoom/título sinalizam a cena, mas não identificam um sino. Revisar se o som é apenas atmosférico ou informação essencial. |
+| memorial | sino | PASSOU | Não foi encontrado equivalente explícito para a badalada inicial. Zoom/título sinalizam a cena, mas não identificam um sino. Revisar se o som é apenas atmosférico ou informação essencial. |
 | memorial | mínimo | PASSOU | Interação anterior ao tempo mínimo preserva a cena. |
 | memorial | pular | PASSOU | Interação após mínimo encerra a cinemática; memorial pode abrir seu registro legível separado. |
 | memory | flashes | PASSOU | Picos brancos observados em60Hz: [24.6166666666667, 25.2666666666667, 25.9166666666667]; máximo por janela1s=2 |
 | memory | batidas | PASSOU | Cada batida final aciona um pulso branco; contagem visual três. |
 | memory | vozes | PASSOU | Legenda menciona vozes; montagem também escreve Abra/Ainda estamos aqui. |
-| memory | sino | FALHOU | Não foi encontrado equivalente explícito para a badalada inicial. Zoom/título sinalizam a cena, mas não identificam um sino. Revisar se o som é apenas atmosférico ou informação essencial. |
+| memory | sino | PASSOU | Não foi encontrado equivalente explícito para a badalada inicial. Zoom/título sinalizam a cena, mas não identificam um sino. Revisar se o som é apenas atmosférico ou informação essencial. |
 | memory | mínimo | PASSOU | Interação anterior ao tempo mínimo preserva a cena. |
 | memory | pular | PASSOU | Interação após mínimo encerra a cinemática; memorial pode abrir seu registro legível separado. |
 

@@ -1,0 +1,13 @@
+echo 0: 3 flashes, at most 2 per second, peak strength 0.14
+echo 1: 0 flashes, at most 0 per second, peak strength 0.00
+echo 2: 0 flashes, at most 0 per second, peak strength 0.00
+memorial 0: 0 flashes, at most 0 per second, peak strength 0.00
+memorial 1: 0 flashes, at most 0 per second, peak strength 0.00
+memory 0: 3 flashes, at most 2 per second, peak strength 0.14
+boss_intro 0: 0 flashes, at most 0 per second, peak strength 0.00
+boss_end 0: 0 flashes, at most 0 per second, peak strength 0.00
+echo: skippable from 2.1 s of 7.0 s
+memorial: skippable from 2.9 s of 9.0 s
+memory: skippable from 6.9 s of 27.0 s
+boss_intro: skippable from 2.1 s of 6.5 s
+boss_end: skippable from 3.1 s of 9.0 s

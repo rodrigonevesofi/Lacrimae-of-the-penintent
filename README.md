@@ -30,3 +30,5 @@ Detalhes da expansão de salas em [docs/expansao-v09.md](docs/expansao-v09.md). 
 O projeto está em desenvolvimento. A versão atual contém o trecho inicial do primeiro ato.
 
 [Roteiro dos cinco atos](docs/roteiro-cinco-atos.md). Os atos II–V ainda estão no roteiro.
+
+Para jogar o Ato I e relatar o que sentiu, use o [roteiro de playtest](docs/roteiro-de-playtest.md).

@@ -85,6 +85,8 @@ Linha livre (qual ligação você fez?): _____________________________
 
 ## 8. Salas secretas — 6 min (acumulado 30)
 
+> Atualização v15: a Nave, o Terraço e o Pátio têm trilha própria. Ao depositar a boneca no memorial (na Cidade, se você a encontrou), o Penitente a coloca no chão em uma cena curta. Anote se a música diferenciou as salas.
+
 Faça: procure Nave pelo Arquivo, Terraço pela galeria alta do Campanário e Pátio pelo Terraço. Use os atalhos que conseguir abrir. Se não achar alguma sala, registre onde procurou; não consulte código. Caso já tenha reunido boneca/registro, tente voltar a Iria e ao memorial dentro deste bloco de tempo.
 Observe: identidade de cada ambiente, som, recompensa de exploração, voltas úteis e risco de confundir cenário com plataforma. Diferencie a versão instalada das artes ainda não integradas.
 
@@ -95,6 +97,8 @@ Observe: identidade de cada ambiente, som, recompensa de exploração, voltas ú
 Linha livre (salas vistas; o que faltou encontrar?): _______________
 
 ## 9. Guardião dos Sinos — 5 min (acumulado 35)
+
+> Atualização v15: ao cruzar a linha da arena há uma cena de entrada com ilustração (a corda que já não existe); na segunda metade da luta, três batidas respondem; ao cair, uma cena em silêncio termina em "Não veio ninguém." e passa direto para a Memória dos portões. Anote como a entrada e a queda pesaram em você, e se pular a cena de entrada foi tentador.
 
 Faça: retorne aos portões e enfrente o chefe. Se morrer, anote a causa antes de tentar de novo. Não compense uma falha usando ferramenta de teste.
 Observe: antecipação dos golpes, distinção entre acerto e invulnerabilidade, recuperação, câmera, música, duração da luta e encenação da derrota. As novas ilustrações podem ainda não estar integradas: diga o que realmente apareceu.

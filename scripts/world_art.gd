@@ -40,7 +40,7 @@ func _ready() -> void:
 	gate_memory.region = Rect2(size.x * 0.57, size.y * 0.15, size.x * 0.43, size.x * 0.43 * 9.0 / 16.0)
 
 func _process(delta: float) -> void:
-	if memorial_doll: memorial_doll.visible = game.memorial_honored
+	if memorial_doll: memorial_doll.visible = game.memorial_honored and game.narrative.mode != "memorial"
 	if iria_animation:
 		iria_animation.select("talk" if game.message_title == "IRIA — A TESTEMUNHA" and game.message_text != "" else "idle", -1)
 	redraw_clock += delta

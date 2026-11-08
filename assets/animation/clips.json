@@ -167,6 +167,34 @@
         128,
         250
       ]
+    },
+    "memorial_kneel": {
+      "sheet": "hero_memorial",
+      "start": 0,
+      "count": 6,
+      "fps": 8,
+      "loop": false
+    },
+    "memorial_place": {
+      "sheet": "hero_memorial",
+      "start": 6,
+      "count": 6,
+      "fps": 8,
+      "loop": false
+    },
+    "memorial_hold": {
+      "sheet": "hero_memorial",
+      "start": 12,
+      "count": 6,
+      "fps": 6,
+      "loop": true
+    },
+    "memorial_rise": {
+      "sheet": "hero_memorial",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false
     }
   },
   "devotee": {

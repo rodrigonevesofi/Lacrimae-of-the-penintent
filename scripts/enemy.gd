@@ -71,6 +71,7 @@ var charge_hit := false
 var windup_len := 0.55
 var tint := Color.WHITE
 var announced := false
+var phase_two_heard := false
 var family := "walker"
 
 
@@ -656,6 +657,11 @@ func _boss(delta: float) -> void:
 		move_and_slide()
 		return
 	phase = 2 if hp < max_hp * 0.5 else 1
+	if phase == 2 and not phase_two_heard:
+		# Past half its strength the bell is not alone: three knocks answer from beyond the gates.
+		phase_two_heard = true
+		var director = get_tree().get_first_node_in_group("game")
+		if director != null: director.soundscape.play_knocks(0.8)
 	var spd: float = 1.0 if phase == 1 else 1.35
 	var to_p: float = player.global_position.x - global_position.x
 	var dist: float = absf(to_p)

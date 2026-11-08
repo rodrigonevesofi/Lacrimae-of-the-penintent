@@ -1,6 +1,7 @@
 extends SceneTree
 var game
 var checks := 0
+var saw_boss_intro := false
 var failures := 0
 var elapsed_frames := 0
 func _initialize() -> void: call_deferred("run")
@@ -37,6 +38,10 @@ func go(x: float,y: float,limit: int = 260) -> bool:
 	var stuck := 0
 	var last_x: float = p.position.x
 	for i in range(limit):
+		if game.narrative.mode == "boss_intro":
+			# Crossing into the arena starts the Guardian's arrival scene; the walker waits it out like a player would.
+			saw_boss_intro = true
+			game.narrative.finish()
 		var dx: float = x-p.position.x
 		if absf(dx)<12 and absf(p.position.y-y)<8 and p.is_on_floor():
 			Input.action_release("left")
@@ -180,6 +185,7 @@ func run() -> void:
 	expect(game.exploration.room=="city" and game.exploration.opened.has("tower_return"),"tower return forms a second courtyard loop")
 	expect(await go(3960,600),"walk through unlocked boss passage")
 	expect(game.boss.awake and game.boss_wall!=null,"boss arena starts only after exploration requirements")
+	expect(saw_boss_intro,"crossing into the arena plays the Guardian's arrival")
 	expect(game.exploration.visited.size()==7,"the seven main places are reached through the real route")
 	print("PHYSICAL_ROUTE_FRAMES: ",elapsed_frames," SIMULATED_SECONDS: ",elapsed_frames/60.0," PLAY_TIME: ",game.play_time," WALKED_UNITS: ",game.exploration.journey_distance)
 	game._save()

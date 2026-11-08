@@ -1,0 +1,32 @@
+[
+  {
+    "test": "accessibility_pulses_check",
+    "exit": 0,
+    "errors": []
+  },
+  {
+    "test": "accessibility_scenes_check",
+    "exit": 0,
+    "errors": []
+  },
+  {
+    "test": "guilt_smoke",
+    "exit": 0,
+    "errors": []
+  },
+  {
+    "test": "bestiary_smoke",
+    "exit": 0,
+    "errors": []
+  },
+  {
+    "test": "chapter_smoke",
+    "exit": 0,
+    "errors": []
+  },
+  {
+    "test": "expansion_smoke",
+    "exit": 0,
+    "errors": []
+  }
+]

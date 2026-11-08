@@ -394,7 +394,9 @@ func _on_enemy_killed(e) -> void:
 		boss_defeated = true
 		ending_countdown = 3.5
 		toast("O Guardião dos Sinos silencia.")
-		narrative.begin("memory")
+		if narrative.mode != "": narrative.finish()
+		# The bell goes quiet first; the memory of the gates follows on its own.
+		narrative.begin("boss_end")
 		if boss_wall != null and is_instance_valid(boss_wall):
 			boss_wall.queue_free()
 		boss_wall = null
@@ -718,6 +720,7 @@ func _play_update(delta: float) -> void:
 	if boss != null and is_instance_valid(boss) and not boss.awake and not boss.dead and pp.x > 3900.0 and exploration.bells.size() == 2:
 		boss.awaken()
 		boss_wall = _add_solid(Rect2(3790, -600, 40, 1200), false)
+		if narrative.mode == "": narrative.begin("boss_intro")
 		toast("Os sinos tocam. O Guardião reconhece sua presença.")
 
 
