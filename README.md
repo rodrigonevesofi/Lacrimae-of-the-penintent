@@ -23,7 +23,9 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **M:** ativar ou silenciar o som
 - **TAB:** abrir o mapa
 
-O primeiro ato tem sete locais interligados, caminhos elevados, atalhos, descobertas opcionais e um mapa. Inclui penitências equipáveis, fragmentos de culpa e a homenagem no memorial dos portões.
+O primeiro ato tem dez locais interligados: sete no percurso principal e três salas secretas (Nave do Silêncio, Terraço dos Sinos e Pátio dos Portões Selados). Há relevo de alvenaria no chão, galerias elevadas, quinze passagens, quatro atalhos, nove altares, nove descobertas opcionais e um mapa. Inclui penitências equipáveis, fragmentos de culpa e a homenagem no memorial dos portões.
+
+Detalhes da expansão de salas em [docs/expansao-v09.md](docs/expansao-v09.md). O bestiário, com cinco criaturas inspiradas em Goya, está em [docs/bestiario-goya.md](docs/bestiario-goya.md) e as cenas de culpa em [docs/cenas-culpa.md](docs/cenas-culpa.md).
 
 O projeto está em desenvolvimento. A versão atual contém o trecho inicial do primeiro ato.
 

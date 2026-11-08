@@ -2,6 +2,7 @@ extends Node2D
 ## Cena principal: monta a fase, luzes, jogador, HUD, save e narrativa.
 
 const Util = preload("res://scripts/util.gd")
+const GuiltText = preload("res://scripts/guilt_text.gd")
 const PlayerScript = preload("res://scripts/player.gd")
 const EnemyScript = preload("res://scripts/enemy.gd")
 const HudScript = preload("res://scripts/hud.gd")
@@ -9,7 +10,7 @@ const WorldArt = preload("res://scripts/world_art.gd")
 const Story = preload("res://scripts/story_text.gd")
 
 const GROUND_Y := 600.0
-const WORLD_W := 21000.0
+const WORLD_W := 30000.0
 const SAVE_PATH := "user://lacrimae_save.json"
 
 var narrative
@@ -17,6 +18,8 @@ var exploration
 var pending_altar := -1
 var prayer_cooldown := 0.0
 var memory_seen := false
+var echo_count := 0
+var death_count := 0
 var iria_met := false
 var memorial_honored := false
 var doll_found := false
@@ -53,6 +56,9 @@ var respawn_index := 0
 var relic_taken := false
 var relic_light: PointLight2D
 var stain_light: PointLight2D
+var stain_anchor: Node2D
+var stain_animation
+const FRAGMENT_LIFT := Vector2(0, -46)
 var stain_active := false
 var death_pos := Vector2.ZERO
 var penitence_menu := false
@@ -295,6 +301,13 @@ func _build_lights() -> void:
 	stain_light = Util.make_light(Color(0.6, 0.8, 1.0), 0.9, 1.5)
 	stain_light.visible = false
 	add_child(stain_light)
+	stain_anchor = Node2D.new()
+	stain_anchor.visible = false
+	stain_anchor.z_index = 5
+	stain_animation = preload("res://scripts/actor_animation.gd").new()
+	stain_animation.configure("fragmento", 0.72)
+	stain_anchor.add_child(stain_animation)
+	add_child(stain_anchor)
 
 
 # ---------------------------------------------------------------- jogo
@@ -305,6 +318,8 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	dialogue_complete_flag = ""
 	player.max_flasks = 3
 	memory_seen = false
+	echo_count = 0
+	death_count = 0
 	iria_met = false
 	doll_found = false
 	memorial_honored = false
@@ -390,6 +405,7 @@ func _on_player_died() -> void:
 	death_pos = player.global_position if player.global_position.y <= exploration.rooms[exploration.room].bounds.end.y else player.safe_pos
 	penitence_menu = false
 	state = "dead"
+	death_count += 1
 	death_t = 3.0
 
 
@@ -415,10 +431,29 @@ func show_message(title: String, text: String) -> void:
 	player.controllable = false
 
 
+var seen_kinds: Array = []
+
+func announce_enemy(kind: int) -> void:
+	if seen_kinds.has(kind) or not EnemyScript.BESTIARY.has(kind): return
+	seen_kinds.append(kind)
+	toast(EnemyScript.BESTIARY[kind])
+
 func toast(s: String) -> void:
 	toast_text = s
-	toast_t = 3.0
+	toast_t = 5.0 if s.length() > 70 else 3.0
 
+
+## The recovered fragment comes apart into light where it lay.
+func _dissolve_fragment(pos: Vector2) -> void:
+	var anchor := Node2D.new()
+	anchor.position = pos + FRAGMENT_LIFT
+	anchor.z_index = 5
+	var animation = preload("res://scripts/actor_animation.gd").new()
+	animation.configure("fragmento", 0.72)
+	anchor.add_child(animation)
+	add_child(anchor)
+	animation.select("dissolve", 1)
+	animation.animation_finished.connect(anchor.queue_free)
 
 func spawn_fx(pos: Vector2, col: Color) -> void:
 	var effect_anchor := Node2D.new()
@@ -450,6 +485,7 @@ func _save() -> void:
 		"stain_amount": stain_amount,
 		"stain_pos": [stain_pos.x, stain_pos.y],
 		"memory_seen": memory_seen,
+		"echo_count": echo_count,
 		"iria_met": iria_met,
 		"doll_found": doll_found,
 		"memorial_honored": memorial_honored,
@@ -484,6 +520,7 @@ func _load() -> void:
 			if flag in ["names_read", "memorial_named"] and not story_flags.has(str(flag)): story_flags.append(str(flag))
 	respawn_index = clampi(int(parsed.get("altar", 0)), 0, altars.size() - 1)
 	memory_seen = bool(parsed.get("memory_seen", false))
+	echo_count = clampi(int(parsed.get("echo_count", 0)), 0, 99)
 	iria_met = bool(parsed.get("iria_met", false))
 	doll_found = bool(parsed.get("doll_found", false))
 	memorial_honored = bool(parsed.get("memorial_honored", false))
@@ -548,6 +585,9 @@ func _update_lights() -> void:
 	if stain_light:
 		stain_light.visible = stain_active
 		stain_light.position = stain_pos + Vector2(0, -24)
+		stain_anchor.visible = stain_active
+		stain_anchor.position = stain_pos + FRAGMENT_LIFT + Vector2(0, sin(t * 2.0) * 3.0)
+		if stain_active: stain_animation.select("idle", 1)
 
 
 func _update_fx(delta: float) -> void:
@@ -583,10 +623,18 @@ func _play_update(delta: float) -> void:
 	var pp: Vector2 = player.global_position
 	# Recovery precedes optional interactions, including NPCs and altars.
 	if stain_active and pp.distance_to(stain_pos) < 50:
+		_dissolve_fragment(stain_pos)
 		player.lagrimas += stain_amount
 		stain_active = false
 		stain_amount = 0
 		toast("Fragmento recuperado. A capacidade da penitência foi restaurada.")
+		if echo_count < GuiltText.ECHO.size() and player.state == "idle" and narrative.mode == "":
+			# The first recoveries each reveal a little more of what was heard. Nothing changes in the numbers.
+			narrative.begin("echo", echo_count)
+			echo_count += 1
+		else:
+			toast("Fragmento recuperado. A capacidade da penitência foi restaurada.\n" + GuiltText.whisper(echo_count))
+			echo_count += 1
 		_save()
 	for target in get_tree().get_nodes_in_group("enemies"):
 		if not target.dead and target.state == "stagger" and not target.executing and absf(target.position.x - pp.x) < 72 and absf(target.position.y - pp.y) < 80 and player.state == "idle" and player.is_on_floor():
@@ -632,9 +680,9 @@ func _play_update(delta: float) -> void:
 			if Input.is_action_just_pressed("interact"):
 				memorial_honored = true
 				if known_name and not story_flags.has("memorial_named"): story_flags.append("memorial_named")
-				soundscape.play_sfx("bell")
-				show_message("ÀQUELES QUE FICARAM DO OUTRO LADO", Story.memorial_text(known_name))
 				_save()
+				# A scene, not a window: the player kneels, the bell sounds once, and no reward interrupts the silence.
+				narrative.begin("memorial", 1 if known_name else 0)
 			return
 
 	# relíquia
@@ -720,15 +768,6 @@ func _draw_dynamic() -> void:
 			var ang := t * 0.8 + float(i) * TAU / 8.0
 			var dv := Vector2(cos(ang), sin(ang))
 			dyn.draw_line(c + dv * 9.0, c + dv * 17.0, Color(0.9, 0.7, 0.3), 2.0)
-	if stain_active:
-		var pulse := 0.6 + 0.4 * sin(t * 3.0)
-		var s := stain_pos
-		dyn.draw_circle(s + Vector2(0, -24), 20.0, Color(0.6, 0.8, 1.0, 0.18 * pulse))
-		dyn.draw_colored_polygon(PackedVector2Array([
-			Vector2(s.x - 14, s.y), Vector2(s.x - 10, s.y - 22), Vector2(s.x - 2, s.y - 34),
-			Vector2(s.x + 8, s.y - 36), Vector2(s.x + 12, s.y - 22), Vector2(s.x + 16, s.y)]),
-			Color(0.7, 0.85, 1.0, 0.55 * pulse))
-		dyn.draw_circle(Vector2(s.x + 4, s.y - 42), 7.0, Color(0.75, 0.88, 1.0, 0.6 * pulse))
 
 
 func _draw_fx() -> void:
@@ -789,6 +828,7 @@ func story_pickup_text(id: String, fallback: String) -> String:
 func story_chain_released(id: String) -> void:
 	soundscape.play_sfx("breath")
 	toast(Story.chain_line(id))
+	if id == "vigil": soundscape.play_knocks(1.6)
 
 func knows_alba() -> bool:
 	return exploration.collected.has("register") and doll_found

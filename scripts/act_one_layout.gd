@@ -7,8 +7,11 @@ static func rooms() -> Dictionary:
 		"cistern": {"name":"CISTERNA DOS NOMES", "bounds":Rect2(8200,-350,2400,1300), "floor":600.0, "art":"cistern", "map":Vector2(450,540)},
 		"cloister": {"name":"CLAUSTRO DOS VOTOS", "bounds":Rect2(11000,-450,2800,1400), "floor":600.0, "art":"cloister", "map":Vector2(700,330)},
 		"belfry": {"name":"CAMPANÁRIO DA VIGÍLIA", "bounds":Rect2(14200,-650,2000,2050), "floor":1100.0, "art":"tower", "map":Vector2(920,190)},
-		"archive": {"name":"ARQUIVO DAS CONFISSÕES", "bounds":Rect2(16600,-350,2000,1300), "floor":600.0, "art":"cloister", "map":Vector2(700,110)},
-		"refuge": {"name":"ABRIGO DAS CINZAS", "bounds":Rect2(19000,-350,2000,1300), "floor":600.0, "art":"ossuary", "map":Vector2(210,650)},
+		"archive": {"name":"ARQUIVO DAS CONFISSÕES", "bounds":Rect2(16600,-350,2000,1300), "floor":600.0, "art":"gallery", "ground":0.756, "art_h":1250.0, "map":Vector2(700,110)},
+		"refuge": {"name":"ABRIGO DAS CINZAS", "bounds":Rect2(19000,-350,2000,1300), "floor":600.0, "art":"gates", "ground":0.80, "art_h":1250.0, "outdoor":true, "map":Vector2(210,650)},
+		"nave": {"name":"NAVE DO SILÊNCIO", "bounds":Rect2(21400,-450,2600,1400), "floor":600.0, "art":"basilica", "ground":0.80, "art_h":1500.0, "map":Vector2(20,230)},
+		"terrace": {"name":"TERRAÇO DOS SINOS", "bounds":Rect2(24400,-350,2600,1300), "floor":600.0, "art":"city", "ground":0.80, "art_h":1500.0, "outdoor":true, "map":Vector2(1000,380)},
+		"court": {"name":"PÁTIO DOS PORTÕES SELADOS", "bounds":Rect2(27400,-350,2000,1300), "floor":600.0, "art":"court", "ground":0.80, "art_h":1250.0, "outdoor":true, "map":Vector2(1000,560)},
 	}
 
 static func platforms() -> Array[Rect2]:
@@ -35,7 +38,31 @@ static func platforms() -> Array[Rect2]:
 	for base in [16880,19300]:
 		for i in range(4): result.append(Rect2(base+i*140,520-i*80,145,24))
 		result.append(Rect2(base+420,280,600,26))
+	# Nave do Silêncio: coro balcony reached by a short climb, and a long loft over the dais.
+	result.append(Rect2(21950,520,150,24)); result.append(Rect2(22110,440,150,24)); result.append(Rect2(22270,360,420,26))
+	for i in range(4): result.append(Rect2(22800+i*140,520-i*80,145,24))
+	result.append(Rect2(23220,200,680,28))
+	# Terraço dos Sinos: stair to a high walkway above the bell-rope.
+	for i in range(5): result.append(Rect2(25300+i*130,520-i*80,140,24))
+	result.append(Rect2(25820,200,640,28))
+	# Pátio dos Portões Selados: balustrade over the sealed doors.
+	result.append(Rect2(28100,520,200,24)); result.append(Rect2(28300,440,200,24)); result.append(Rect2(28500,360,440,26))
 	return result
+
+# Solid masonry that shapes the ground: low mounds and stepped daises, never taller than one jump.
+static func blocks() -> Array[Rect2]:
+	return [
+		Rect2(6900,550,300,50), Rect2(6960,500,180,100),      # ossuary: burial mound
+		Rect2(9000,550,240,50),                                # cistern: fallen cornice
+		Rect2(12000,550,300,50), Rect2(12060,500,160,100),    # cloister: choir step
+		Rect2(16960,550,200,50),                               # archive: toppled desk
+		Rect2(19900,550,200,50),                               # refuge: collapsed wall
+		Rect2(22000,555,180,45),                               # nave: broken pew base
+		Rect2(23350,550,260,50), Rect2(23410,500,140,100),    # nave: dais under the loft
+		Rect2(24750,550,240,50),                               # terrace: bell frame
+		Rect2(26250,550,220,50), Rect2(26300,500,120,100),    # terrace: parapet
+		Rect2(28200,550,200,50),                               # court: threshold step
+	]
 
 static func passages() -> Array[Dictionary]:
 	return [
@@ -49,15 +76,27 @@ static func passages() -> Array[Dictionary]:
 		{"id":"records", "a":"cloister","pa":Vector2(12800,40),"b":"archive","pb":Vector2(16760,600),"label":"Arquivo das Confissões"},
 		{"id":"archive_return", "a":"archive","pa":Vector2(18430,600),"b":"belfry","pb":Vector2(15720,540),"label":"Passadiço dos copistas","latch":true},
 		{"id":"tower_return", "a":"belfry","pa":Vector2(16040,1100),"b":"city","pb":Vector2(3380,600),"label":"Porta da vigília","latch":true},
+		{"id":"nave_in", "a":"archive","pa":Vector2(17400,280),"b":"nave","pb":Vector2(21560,600),"label":"Nave do Silêncio"},
+		{"id":"nave_out", "a":"nave","pa":Vector2(23850,600),"b":"refuge","pb":Vector2(20260,280),"label":"Passagem do coro"},
+		{"id":"sky", "a":"belfry","pa":Vector2(14420,-100),"b":"terrace","pb":Vector2(24560,600),"label":"Terraço dos Sinos"},
+		{"id":"seal_road", "a":"terrace","pa":Vector2(26900,600),"b":"court","pb":Vector2(27560,600),"label":"Pátio dos Portões Selados"},
+		{"id":"bell_walk", "a":"terrace","pa":Vector2(26600,600),"b":"cloister","pb":Vector2(12950,40),"label":"Passarela dos sinos","latch":true},
 	]
 
+## [room, kind, x, y, patrol range, optional group]. Kinds: 0 devotee, 1 weeper, 3 Devourer, 4 flagellant,
+## 5 coven witch, 6 Asmodea, 7 duelist. Witches and duelists that share a group fight as one encounter.
 static func enemies() -> Array:
 	return [
 		["ossuary",0,5700,600,160],["ossuary",0,6250,200,170],["ossuary",1,6880,340,160],["ossuary",0,7350,600,110],
-		["cistern",0,8680,600,140],["cistern",1,9180,300,130],["cistern",0,9680,40,130],["cistern",0,10100,600,150],
-		["cloister",0,11700,600,170],["cloister",0,12400,40,150],["cloister",1,13000,300,130],["cloister",0,13380,600,100],
-		["belfry",0,14800,1100,160],["belfry",1,15100,760,130],["belfry",0,15550,540,120],["belfry",1,14780,40,100],
-		["archive",0,17380,600,170],["archive",1,17700,360,100],["refuge",0,19600,600,120],
+		["ossuary",7,6120,600,70,1],["ossuary",7,6200,600,70,1],
+		["cistern",0,8680,600,140],["cistern",6,9100,230,130],["cistern",0,9680,40,130],["cistern",0,10100,600,150],
+		["cloister",4,11700,600,170],["cloister",0,12400,40,150],["cloister",1,13000,300,130],["cloister",4,13380,600,100],
+		["belfry",0,14800,1100,160],["belfry",1,15100,760,130],["belfry",3,15550,540,120],["belfry",1,14780,40,100],
+		["archive",0,17380,600,170],["archive",5,17450,410,60,1],["archive",5,17700,390,60,1],["archive",5,17950,410,60,1],
+		["refuge",4,19600,600,120],
+		["nave",0,22450,600,120],["nave",6,22900,260,150],["nave",1,23600,90,100],["nave",3,23200,600,70],
+		["terrace",1,24900,250,160],["terrace",7,25450,600,60,2],["terrace",7,25530,600,60,2],["terrace",6,26100,80,120],
+		["court",3,28650,600,100],["court",1,28300,250,120],
 	]
 
 
@@ -68,7 +107,10 @@ static func passage_face(link: Dictionary, from_a: bool) -> Dictionary:
 	var arrival := -1 if from_a else 1
 	if link.id in ["shelter", "vows", "records"] and from_a: arrival = 1
 	if link.id == "archive_return" and not from_a: arrival = -1
-	var themes := {"city":"stone", "ossuary":"burial", "cistern":"water", "cloister":"stone", "belfry":"bell", "archive":"script", "refuge":"burial"}
+	# Doors on shelves and galleries: arrive walking toward the interior of the platform.
+	if link.id in ["nave_in", "sky"] and from_a: arrival = 1
+	if link.id == "nave_out" and not from_a: arrival = -1
+	var themes := {"city":"stone", "ossuary":"burial", "cistern":"water", "cloister":"stone", "belfry":"bell", "archive":"script", "refuge":"burial", "nave":"stone", "terrace":"bell", "court":"stone"}
 	var width := 300.0
 	if link.id in ["burial", "tower", "vows"]: width = 320.0
 	if link.id in ["shelter", "records", "refuge_return"]: width = 280.0

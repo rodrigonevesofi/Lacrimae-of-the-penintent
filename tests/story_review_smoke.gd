@@ -32,6 +32,9 @@ func interact_at(pos: Vector2) -> void:
 	game._play_update(0.016)
 	Input.action_release("interact")
 	await settle()
+	if game.narrative.mode == "memorial":
+		game.narrative.elapsed = game.narrative.MEMORIAL_DURATION
+		await settle()
 
 func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()

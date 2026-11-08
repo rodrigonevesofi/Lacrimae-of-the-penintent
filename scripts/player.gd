@@ -334,7 +334,7 @@ func _update_animation() -> void:
 		animator.select(ritual_clip, facing, ritual_progress)
 		return
 	match state:
-		"execution": animator.select("execute_devotee" if not is_instance_valid(execution_target) or execution_target.kind == 0 else "execute_mourner", facing, 1 - state_t / EXECUTION_TIME)
+		"execution": animator.select("execute_devotee" if not is_instance_valid(execution_target) or execution_target.humanoid() else "execute_mourner", facing, 1 - state_t / EXECUTION_TIME)
 		"air_attack": animator.select("air_attack",facing,1-state_t/AIR_ATTACK_TIME)
 		"air_recover": animator.select("air_land",facing,1-state_t/AIR_RECOVERY_TIME)
 		"attack": animator.select("attack_a" if combo == 1 else "attack_b", facing, 1 - state_t / ATTACK_TIME)
@@ -508,7 +508,7 @@ func _draw() -> void:
 	if state == "dead":
 		return
 	draw_set_transform(Vector2.ZERO, 0, Vector2(float(facing), 1))
-	if state == "execution" and is_instance_valid(execution_target) and execution_target.kind == 0:
+	if state == "execution" and is_instance_valid(execution_target) and execution_target.humanoid():
 		var progress := 1 - state_t / EXECUTION_TIME
 		if progress > 0.18 and progress < 0.7:
 			var wrist := Vector2(32, -58 + maxf(progress - 0.35, 0) * 75)

@@ -32,6 +32,7 @@ func _ready() -> void:
 	doorway_art = load("res://assets/doorways.png")
 	build_memorial()
 	for room in ["ossuary","cistern","cloister","tower"]: room_textures[room] = load("res://assets/"+room+".png")
+	# Further backdrops (basilica, gallery, gates, city, court) load the first time a room needs them.
 	panorama = load("res://assets/vespera_panorama.png")
 	gate_memory = AtlasTexture.new()
 	gate_memory.atlas = panorama
@@ -208,25 +209,77 @@ func build_memorial() -> void:
 	memorial_doll.visible = false
 	add_child(memorial_doll)
 
+func art_texture(art: String) -> Texture2D:
+	if not room_textures.has(art): room_textures[art] = load("res://assets/"+art+".png")
+	return room_textures[art]
+
+## Stone gallery floor: shadow, corbels under both ends and a worn top edge, replacing the old spiked slabs.
+func draw_ledge(ledge: Rect2) -> void:
+	for i in range(3):
+		draw_rect(Rect2(ledge.position.x+8,ledge.end.y+i*6,ledge.size.x-16,6),Color(0,0,0,0.17-i*0.05))
+	draw_texture_rect_region(panorama,ledge,Rect2(1120,615,140,22))
+	draw_rect(Rect2(ledge.position.x,ledge.end.y-5,ledge.size.x,5),Color(0,0,0,0.38))
+	draw_line(ledge.position,Vector2(ledge.end.x,ledge.position.y),Color("c3ae8e"),2)
+	draw_line(Vector2(ledge.position.x,ledge.position.y+3),Vector2(ledge.end.x,ledge.position.y+3),Color(0,0,0,0.25),1)
+	for side in [-1,1]:
+		var x: float = ledge.position.x+14 if side == -1 else ledge.end.x-14
+		var d: float = -side
+		polygon([Vector2(x,ledge.end.y),Vector2(x+d*34,ledge.end.y),Vector2(x+d*4,ledge.end.y+36)],Color("2a2623"))
+		draw_line(Vector2(x+d*4,ledge.end.y+36),Vector2(x+d*34,ledge.end.y),Color("75695a"),2)
+		draw_line(Vector2(x,ledge.end.y),Vector2(x+d*4,ledge.end.y+36),Color("4d443c"),2)
+
+## Masonry mound or dais that shapes the walking plane; courses are staggered like real stonework.
+func draw_block(r: Rect2) -> void:
+	var row := 0
+	var y := r.position.y
+	while y < r.end.y:
+		var h := minf(22.0,r.end.y-y)
+		var x := r.position.x - (70.0 if row % 2 == 1 else 0.0)
+		while x < r.end.x:
+			var x0 := maxf(x,r.position.x)
+			var x1 := minf(x+140.0,r.end.x)
+			if x1 > x0:
+				var src := Rect2(1120+(x0-x)*140.0/140.0,615,x1-x0,22*h/22.0)
+				draw_texture_rect_region(panorama,Rect2(x0,y,x1-x0,h),src,Color(0.62,0.6,0.6))
+				draw_line(Vector2(x0,y+h),Vector2(x1,y+h),Color(0,0,0,0.42),1)
+				if x > r.position.x - 1.0: draw_line(Vector2(x0,y),Vector2(x0,y+h),Color(0,0,0,0.35),1)
+			x += 140.0
+		y += 22.0
+		row += 1
+	draw_line(r.position+Vector2(-2,0),Vector2(r.end.x+2,r.position.y),Color("c3ae8e"),3)
+	draw_rect(Rect2(r.position.x-2,r.position.y,r.size.x+4,r.size.y),Color(0,0,0,0.5),false,2)
+	draw_rect(Rect2(r.position.x-6,r.position.y-6,r.size.x+12,6),Color(0,0,0,0.12))
+
+func draw_foundation(b: Rect2, floor_y: float) -> void:
+	# Open-air backdrops fade into mist at the bottom; the carved foundation of the city carries the walking plane.
+	var tile := 1768.0
+	var x := b.position.x
+	while x < b.end.x:
+		var w := minf(tile,b.end.x-x)
+		draw_texture_rect_region(panorama,Rect2(x,floor_y-11,w,241),Rect2(900,615,w/tile*800.0,109))
+		x += tile
+	draw_rect(Rect2(b.position.x,floor_y+228,b.size.x,400),Color("17181d"))
+	draw_line(Vector2(b.position.x,floor_y),Vector2(b.end.x,floor_y),Color("8b7d67"),2)
+
 func draw_branch() -> void:
 	var ex = game.exploration
 	var data: Dictionary = ex.rooms[ex.room]
 	var b: Rect2 = data.bounds
 	var floor_y: float = data.floor
-	var texture: Texture2D = room_textures[data.art]
-	var height := 1900.0 if ex.room == "belfry" else 1100.0
+	var texture: Texture2D = art_texture(data.art)
+	var height: float = ex.art_height(ex.room)
 	# A tall room has a different composition, rather than stretching a landscape wall.
-	var art_rect := Rect2(b.position.x,floor_y-height*0.86,b.size.x,height)
+	var art_rect := Rect2(b.position.x,floor_y-height*ex.ground_line(ex.room),b.size.x,height)
 	draw_rect(b,Color("17181d"))
 	draw_texture_rect(texture,art_rect,false)
+	if data.get("outdoor",false): draw_foundation(b,floor_y)
 	draw_passages(ex.room)
+	for block in ex.blocks:
+		if block.position.x < b.position.x or block.end.x > b.end.x: continue
+		draw_block(block)
 	for ledge in ex.ledges:
 		if ledge.position.x < b.position.x or ledge.end.x > b.end.x: continue
-		draw_texture_rect_region(panorama,ledge,Rect2(1120,615,140,22))
-		draw_line(ledge.position,Vector2(ledge.end.x,ledge.position.y),Color("baa68a"),2)
-		for dx in [12,ledge.size.x-12]:
-			var tip: Vector2 = ledge.position+Vector2(dx,ledge.size.y)
-			polygon([tip+Vector2(-8,0),tip+Vector2(8,0),tip+Vector2(0,28)],Color("797065"))
+		draw_ledge(ledge)
 	for altar in ex.extra_altars:
 		if altar.x > b.position.x and altar.x < b.end.x: prop(0,altar,185)
 	for item in ex.pickups:
@@ -239,6 +292,10 @@ func draw_branch() -> void:
 			prop(4,entry.pos,150,Color(0.65,0.65,0.62) if ex.bells.has(entry.id) else Color.WHITE)
 	if not game.relic_taken and ex.room == "belfry":
 		prop(2,game.relic_pos,110)
+	# Low mist keeps the floor line soft and gives every room its own breath of colour.
+	var mist: Color = data.get("mist",Color(0.55,0.5,0.6))
+	var points := PackedVector2Array([Vector2(b.position.x,floor_y-150),Vector2(b.end.x,floor_y-150),Vector2(b.end.x,floor_y),Vector2(b.position.x,floor_y)])
+	draw_polygon(points,PackedColorArray([Color(mist,0),Color(mist,0),Color(mist,0.16),Color(mist,0.16)]))
 	# Local details stay anchored to the explored room, rather than scrolling with the camera.
 	for i in range(20):
 		var x: float = b.position.x + 70 + i*(b.size.x-140)/20

@@ -1,3 +1,5 @@
+> Atualizado na v09: o Ato I agora tem dez locais, quinze passagens e nove altares. Veja [expansao-v09.md](expansao-v09.md). O texto abaixo descreve a base anterior (sete locais).
+
 # Ato I — exploração e interface
 
 A versão anterior era um corredor de 4.800 unidades. Os testes daquela versão verificavam funcionamento; não demonstravam exploração, duração adequada ou acabamento comparável a Blasphemous.

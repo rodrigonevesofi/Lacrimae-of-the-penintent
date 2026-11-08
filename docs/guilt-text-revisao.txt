@@ -1,0 +1,43 @@
+Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org
+
+PHRASE [synthetic forbidden fixture]: Lacrimae Sacramentum
+PHRASE [synthetic forbidden fixture]: Você pediu para esquecer.
+PHRASE [synthetic forbidden fixture]: Meu nome é Fulano.
+PHRASE [synthetic forbidden fixture]: Iria é mãe de Alba.
+PHRASE [synthetic forbidden fixture]: Alba continua viva.
+PHRASE [synthetic forbidden fixture]: Eu lhe concedo perdão.
+PHRASE [synthetic forbidden fixture]: Você receberá uma recompensa.
+PHRASE [guilt_text/ECHO]: Longe, alguém bate. / Três vezes. Depois, nada.
+PHRASE [guilt_text/ECHO]: Uma voz pequena, do outro lado da pedra: / abra.
+PHRASE [guilt_text/ECHO]: Ainda estamos aqui.
+PHRASE [guilt_text/WHISPERS]: O fragmento se desfaz. A batida continua em algum lugar.
+PHRASE [guilt_text/WHISPERS]: Você recolhe a culpa. Ela não pesa menos.
+PHRASE [guilt_text/WHISPERS]: Do outro lado, alguém ainda espera.
+PHRASE [guilt_text/DEATH]: A pedra guarda seu lugar.
+PHRASE [guilt_text/DEATH]: Você volta. Outros não voltaram.
+PHRASE [guilt_text/DEATH]: Mais uma vez, o silêncio responde.
+PHRASE [guilt_text/DEATH]: O fragmento espera onde você caiu.
+PHRASE [guilt_text/MEMORY_CAPTIONS]: Você lembra o peso do ferro. / E as vozes.
+PHRASE [guilt_text/MEMORY_CAPTIONS]: Uma mão pequena segura a grade.
+PHRASE [guilt_text/MEMORY_CAPTIONS]: Atrás de você, alguém aguarda uma ordem. / Você não consegue ver o rosto.
+PHRASE [narrative literal]: Dizem que os homens nasceram do pecado / e que somente através da dor poderiam encontrar a salvação.
+PHRASE [narrative literal]: Mas quando as lágrimas deixaram de ser suficientes, / fizeram do sofrimento uma religião.
+PHRASE [narrative literal]: E quando até os céus permaneceram em silêncio, / condenaram uns aos outros em nome do perdão.
+PHRASE [narrative literal]: Erga-se, Penitente. / Sua morte ainda não foi concedida.
+PHRASE [narrative literal]: ÀQUELES QUE FICARAM DO OUTRO LADO
+PHRASE [narrative literal]: O PESO DE MIL LÁGRIMAS
+PHRASE [narrative literal]: [E] Prosseguir
+PHRASE [narrative literal]: ORAÇÃO DE PENITÊNCIA
+PHRASE [narrative literal]: Ao concluir: vida e curas restauradas; inimigos comuns retornam.
+PHRASE [narrative literal]: O peso de cada lágrima.
+PHRASE [narrative literal]: ÀQUELES QUE FICARAM DO OUTRO LADO
+PHRASE [narrative literal]: [E] Seguir
+PHRASE [narrative literal]: Ainda estamos aqui.
+PHRASE [narrative literal]:  / Abra. Ainda estamos aqui.
+PHRASE [narrative literal]: Você gravou seu nome. A pequena mão continua do outro lado.
+PHRASE [narrative literal]: A boneca entre as mãos pequenas. Você a deixou junto aos nomes.
+PHRASE [narrative literal]: Um sol bordado no pulso. A mesma boneca que você carrega.
+PHRASE [narrative literal]: MEMÓRIAS DA CULPA  ·  I
+PHRASE [narrative literal]: Você apenas assiste. O que foi feito não pode ser desfeito.
+PHRASE [narrative literal]: [E] Prosseguir
+GUILT_TEXT_REVIEW: 40 phrases; 0 failures. Lexical coverage only; unknown proper name and paraphrases require editorial review.

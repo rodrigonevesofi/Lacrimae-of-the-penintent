@@ -1,0 +1,69 @@
+{
+  "protected_files_match_patch": [
+    "enemy",
+    "narrative",
+    "soundscape",
+    "world_art",
+    "exploration",
+    "main",
+    "hud",
+    "act_one_layout",
+    "guilt_text",
+    "player"
+  ],
+  "allowed_changes": [
+    [
+      "devorador",
+      "executed",
+      "anchor",
+      [
+        128,
+        250
+      ],
+      [
+        128,
+        242
+      ]
+    ],
+    [
+      "flagelante",
+      "executed",
+      "anchor",
+      [
+        128,
+        250
+      ],
+      [
+        128,
+        240
+      ]
+    ],
+    [
+      "asmodeia",
+      "executed",
+      "anchor",
+      [
+        128,
+        250
+      ],
+      [
+        128,
+        237
+      ]
+    ]
+  ],
+  "source_commit": "6a170ed",
+  "supplied_patch_sha256": "a503862e9a3cd1bc033794f9abf51feb691b71c82b9fad53301a75c9cee8fbe4",
+  "protected_hashes": {
+    "enemy": "c8f34bd30774e2e1d84f9826232ae8a8c2b9fc83b6e7db939565c80578ee7480",
+    "narrative": "da1af9b294841247cb158e7dd703a66d9238cbc2c4e32f77d51f3141860b2dd9",
+    "soundscape": "697a7bf19a0ebc1543684ec214af44bfd6420b377634fce472decec526384718",
+    "world_art": "75a769a166bb25d7f568b725654505568d6524631af99d6cadbc9ed98a860959",
+    "exploration": "ae43660ec5af263e7b3a89ea30c130bd1bb49b49315d3025c0d8c0bb729ed1e0",
+    "main": "54a668e3e3bec8363e4b2cc44e1c0db0a6b1b0eeba511f47bd2feb1d4cb5a99c",
+    "hud": "bd0157ba2652efe0b9499d40e2cfe5366a4d4027e9bf3c3266dc36fd3a587b81",
+    "act_one_layout": "8f2888cfb8dd1c457249cfd4bf53c0042436eca7999df304e8fd4e4776a871a4",
+    "guilt_text": "be1cb8956786d77e58493e72979a85c5be35a246e368f1a9e8a63488dedea682",
+    "player": "8e89ece5c25fffd3f52a0f516446f60d75f0f7f20d528dec959684e769bd8c8a"
+  }
+}

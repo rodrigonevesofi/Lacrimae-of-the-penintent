@@ -99,6 +99,7 @@ func run() -> void:
 	expect(e.state == "windup" and e.state_t == 0.55, "empowered attack retains readable anticipation")
 	p.position = game.stain_pos
 	game._play_update(0.016)
+	if game.narrative.mode == "echo": game.narrative.finish()
 	expect(not game.stain_active and p.culpa_capacity() == 100, "recovery restores capacity with zero currency")
 	e._physics_process(0.016)
 	expect(not e.fed_by_guilt, "recovery immediately removes empowerment")
@@ -115,6 +116,7 @@ func run() -> void:
 	expect(p.culpa_capacity() == 75, "multiple deaths never stack capacity reductions")
 	p.position = game.stain_pos
 	game._play_update(0.016)
+	if game.narrative.mode == "echo": game.narrative.finish()
 	expect(p.lagrimas == 12 and not game.stain_active, "only latest fragment currency is recovered")
 	for old_enemy in get_nodes_in_group("enemies"):
 		old_enemy.set_physics_process(false)

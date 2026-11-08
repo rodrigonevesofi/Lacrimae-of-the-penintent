@@ -4,6 +4,7 @@ var game
 var rooms := Layout.rooms()
 var passages := Layout.passages()
 var ledges := Layout.platforms()
+var blocks := Layout.blocks()
 var room := "city"
 var visited: Array = ["city"]
 var opened: Array = []
@@ -22,11 +23,17 @@ const FADE_IN_TIME := 0.22
 var gate: StaticBody2D
 var journey_distance := 0.0
 var last_position := Vector2.ZERO
-var extra_altars: Array[Vector2] = [Vector2(5500,600),Vector2(11250,600),Vector2(14420,1100)]
+var extra_altars: Array[Vector2] = [Vector2(5500,600),Vector2(11250,600),Vector2(14420,1100),Vector2(21800,600),Vector2(25100,600),Vector2(27950,600)]
+const ALTAR_NAMES := {5500:"Altar dos Sem Nome",11250:"Altar dos Votos",14420:"Altar da Vigília",21800:"Altar da Santa Calada",25100:"Altar dos Sinos Partidos",27950:"Altar dos Portões Selados"}
 var pickups: Array[Dictionary] = [
 	{"id":"doll","room":"refuge","pos":Vector2(20030,280),"name":"Boneca coberta de cinzas","text":"A boneca estava entre cobertores pequenos.\nAlguém preparou abrigo para quem nunca chegou.\n\nNo pátio, há um memorial sem nomes legíveis."},
 	{"id":"register","room":"archive","pos":Vector2(17800,280),"name":"Registro dos que esperaram","text":"Uma lista de famílias, sem sentença ou confissão.\nAo lado de cada nome, a mesma palavra: aguardando.\n\nA Ordem chamou o silêncio de consentimento.\nVocê pode levar estes nomes até Iria."},
 	{"id":"vessel","room":"refuge","pos":Vector2(20600,600),"name":"Vaso da Última Vigília","text":"Uma curandeira manteve esta chama acesa até o fim.\nSeu pequeno frasco ainda pode carregar uma lágrima.\n\nCapacidade curativa aumentada em um frasco."},
+	{"id":"pews","room":"nave","pos":Vector2(22480,360),"name":"Bancos voltados para a parede","reward":120,"text":"Todos os bancos da nave foram virados para a pedra nua.\nNinguém queria ver o altar. Ninguém queria ser visto.\n\n\"Porque os seus ouvidos se fecharam, e eles não ouviram.\"\n\nSuas lágrimas caíram sobre a madeira. +120 lágrimas."},
+	{"id":"silence","room":"nave","pos":Vector2(23600,200),"name":"Terço de contas apagadas","reward":250,"text":"Cada conta foi lixada até perder o nome que levava.\nRestou o fio, e o fio ainda está quente.\n\nUma mão devota esteve aqui antes de você.\nTalvez a mesma mão que fechou os portões.\n\n+250 lágrimas."},
+	{"id":"rope","room":"terrace","pos":Vector2(26100,200),"name":"Corda do sino sem badalo","reward":150,"text":"O sino foi calado por dentro, antes de tocar a última vez.\nA corda está cortada rente à mão de quem puxava.\n\nNa Ordem, o aviso era um crime.\nPor isso o aviso nunca chegou à cidade.\n\n+150 lágrimas."},
+	{"id":"seal","room":"court","pos":Vector2(28800,600),"name":"Os Portões Selados","reward":0,"text":"Os portões estão fechados por fora, com correntes que ninguém forjou aqui.\nGravado na madeira: \"EDRAN DECRETA: NINGUÉM SAIRÁ, NINGUÉM ENTRARÁ.\"\n\nAbaixo, riscado por unhas: \"Pai, abra. Estamos aqui.\"\n\nEste caminho ainda não se abre.\nAlgo que você carrega ainda é a chave."},
+	{"id":"decree","room":"court","pos":Vector2(28700,360),"name":"Decreto de Edran, selado em cera","reward":200,"text":"\"Quem lamentar será tratado como cúmplice da praga.\nQuem chorar será contado entre os culpados.\"\n\nO selo é o de Edran. O pulso que o assinou tremia.\nPela primeira vez, você duvida de quem ordenou.\n\n+200 lágrimas."},
 	{"id":"witness","room":"ossuary","pos":Vector2(6550,600),"name":"O lugar vazio","text":"Aqui não se enterravam nomes: enterravam-se números.\nUm espaço entre os túmulos continua limpo.\n\nAlguém voltou por uma pessoa que não encontrou."},
 ]
 
@@ -39,9 +46,10 @@ func build() -> void:
 		game._add_solid(Rect2(bounds.position.x-40,bounds.position.y,40,bounds.size.y+300),false)
 		game._add_solid(Rect2(bounds.end.x,bounds.position.y,40,bounds.size.y+300),false)
 	for ledge in ledges: game._add_solid(ledge,true)
+	for block in blocks: game._add_solid(block,false)
 	for pos in extra_altars:
 		game.altars.append(pos)
-		game.altar_names.append({5500:"Altar dos Sem Nome",11250:"Altar dos Votos",14420:"Altar da Vigília"}[int(pos.x)])
+		game.altar_names.append(ALTAR_NAMES[int(pos.x)])
 	update_gate()
 
 func reset() -> void:
@@ -70,11 +78,17 @@ func set_camera() -> void:
 	var c: Camera2D = game.player.camera
 	c.limit_left = int(b.position.x)
 	c.limit_right = int(b.end.x)
-	var graphic_top: float = -770 if room == "city" else rooms[room].floor - (1900 if room == "belfry" else 1100) * 0.86
+	var graphic_top: float = -770 if room == "city" else rooms[room].floor - art_height(room) * ground_line(room)
 	# Camera2D applies its -110 offset after limits; compensate to keep the floor visible.
 	c.limit_top = int(maxf(b.position.y,graphic_top)+110)
 	c.limit_bottom = int(rooms[room].floor + 220)
 	c.reset_smoothing()
+
+func art_height(id: String) -> float:
+	return float(rooms[id].get("art_h",1900.0 if id == "belfry" else 1100.0))
+
+func ground_line(id: String) -> float:
+	return float(rooms[id].get("ground",0.86))
 
 func travel(id: String, pos: Vector2, arrival_facing: int = 0, blocking: bool = false) -> void:
 	for hazard in get_tree().get_nodes_in_group("hazards"): hazard.queue_free()
@@ -111,6 +125,7 @@ func spawn_enemies() -> void:
 		var e = game.EnemyScript.new()
 		e.setup(d[1],Vector2(d[2],d[3]),d[4],game.player)
 		e.room_id = d[0]
+		if d.size() > 5: e.group = int(d[5])
 		e.killed.connect(game._on_enemy_killed)
 		game.add_child(e)
 
@@ -209,6 +224,7 @@ func update(_delta: float) -> bool:
 			if item.id == "doll":
 				game.doll_found = true
 				game.player.blood_tears = 5
+			if item.get("reward",0) > 0: game.player.lagrimas += int(item.reward)
 			if item.id == "vessel":
 				game.player.max_flasks = 4
 				game.player.flasks = mini(game.player.flasks+1,4)

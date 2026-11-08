@@ -11,7 +11,8 @@ var guilt_layer: AudioStreamPlayer
 var ambience: AudioStreamPlayer
 var effects: Dictionary = {}
 var muted := false
-const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath"]
+var knock_count := 0
+const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock"]
 
 func _ready() -> void:
 	ambience = AudioStreamPlayer.new()
@@ -47,11 +48,20 @@ func _ready() -> void:
 		effects[name] = voice
 
 func play_sfx(name: String) -> void:
+	if name == "knock": knock_count += 1
 	if muted or not effects.has(name):
 		return
 	var voice: AudioStreamPlayer = effects[name]
 	voice.pitch_scale = randf_range(0.94, 1.06) if name in ["step", "swing", "hit"] else 1.0
 	voice.play()
+
+## Three knocks from the other side of the stone. They stop before anyone can say where they came from.
+func play_knocks(delay: float = 0.9) -> void:
+	await get_tree().create_timer(delay).timeout
+	for i in range(3):
+		if i > 0: await get_tree().create_timer(0.62).timeout
+		play_sfx("knock")
+		get_tree().call_group("game", "shake_cam", 2.5)
 
 func chime() -> void:
 	play_sfx("altar")
@@ -77,7 +87,7 @@ func desired_context() -> String:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if not enemy.dead and (game.exploration == null or enemy.room_id == game.exploration.room) and enemy.global_position.distance_to(game.player.global_position) < 230 and enemy.state in ["chase", "windup", "strike", "cast"]:
 			return "combat"
-	return "temple" if game.player.position.x < 1250 or game.exploration.room in ["ossuary","refuge"] else "exploration"
+	return "temple" if game.player.position.x < 1250 or game.exploration.room in ["ossuary","refuge","nave","court"] else "exploration"
 
 func change_context(context: String) -> void:
 	if context == music_context or switching or not music_streams.has(context): return
@@ -96,7 +106,10 @@ func _process(delta: float) -> void:
 	if context_timer <= 0 and not switching:
 		context_timer = 0.25
 		change_context(desired_context())
-	var base := -9.0 if game.narrative != null and game.narrative.mode in ["prayer", "memory"] else -3.0
+	var base := -3.0
+	if game.narrative != null:
+		if game.narrative.mode == "prayer": base = -9.0
+		elif game.narrative.mode in ["memory", "echo", "memorial"]: base = game.narrative.music_target()
 	var quiet_memory: bool = game.narrative != null and game.narrative.mode == "memory" and game.narrative.elapsed >= 6.6 and game.narrative.elapsed < 7.1
 	if quiet_memory:
 		base = -38

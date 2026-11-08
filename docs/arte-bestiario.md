@@ -18,3 +18,8 @@ A Asmodeia usa máscara clara e manto amplo com forro vermelho; a Bruxa mantém 
 A consulta ao GitHub encontrou somente `main`, commit `9ff0921`, sem `docs/bestiario-goya.md`, `tests/bestiary_smoke.gd` ou as cinco entradas de criaturas em `clips.json`. Portanto esta entrega acrescenta arte e uma galeria de revisão; os encontros da campanha ainda não usam os novos desenhos. Não substitui a implementação do Claude.
 
 Quando essa base estiver disponível, alterar somente `sheet` nas entradas das cinco criaturas: clipes comuns usam o nome da criatura; `executed` usa `<nome>_executado`. Preservar `start`, `count`, `fps` e demais campos existentes. Executar o teste de bestiário daquela versão e conferir alcance, direção, ancoragem e sincronização das execuções em combate. Esses testes integrados ainda não foram executados.
+
+
+## Integração (v11)
+
+Os dez atlas foram ligados às cinco entradas de `clips.json` (`sheet`; `executed` usa `<nome>_executado`) e o código do bestiário está na mesma base. `tests/bestiary_smoke.gd` passa com a arte nova. As escalas e as caixas de acerto foram ajustadas depois de ver as criaturas ao lado do Penitente: o Devorador ficou com escala 0,62 e caixa de 58 × 112.

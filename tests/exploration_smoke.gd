@@ -34,6 +34,8 @@ func go(x: float,y: float,limit: int = 260) -> bool:
 	var jumping := false
 	var age := 0
 	var start_y: float = p.position.y
+	var stuck := 0
+	var last_x: float = p.position.x
 	for i in range(limit):
 		var dx: float = x-p.position.x
 		if absf(dx)<12 and absf(p.position.y-y)<8 and p.is_on_floor():
@@ -51,6 +53,16 @@ func go(x: float,y: float,limit: int = 260) -> bool:
 		else:
 			Input.action_release("left")
 			Input.action_release("right")
+		if p.is_on_floor() and absf(p.position.x-last_x)<0.5 and absf(dx)>20: stuck += 1
+		else: stuck = 0
+		last_x = p.position.x
+		if stuck > 6 and p.is_on_floor() and not jumping:
+			# Masonry mounds shape the floor: hop over them like a player would.
+			Input.action_press("jump")
+			jumping = true
+			age = 0
+			start_y = p.position.y
+			stuck = 0
 		if p.is_on_floor() and not jumping:
 			if p.position.y > y+20 and absf(dx)<(290 if p.position.y-y>125 and p.has_double_jump else 160):
 				Input.action_press("jump")
@@ -77,6 +89,11 @@ func go(x: float,y: float,limit: int = 260) -> bool:
 	Input.action_release("jump")
 	print("ROUTE_BLOCKED target=",Vector2(x,y)," actual=",p.position)
 	return false
+func ledge_index(x: float,y: float) -> int:
+	for i in range(game.exploration.ledges.size()):
+		var r: Rect2 = game.exploration.ledges[i]
+		if is_equal_approx(r.position.x,x) and is_equal_approx(r.position.y,y): return i
+	return -1
 func climb(indices: Array) -> bool:
 	for index in indices:
 		var rect: Rect2 = game.exploration.ledges[index]
@@ -90,9 +107,9 @@ func run() -> void:
 	for i in range(3): await close_message()
 	quiet_enemies()
 	game.player.has_weapon=true
-	expect(game.exploration.rooms.size()==7,"seven distinct connected places")
-	expect(game.exploration.passages.size()==10,"ten passages include three unlockable shortcuts")
-	expect(game.altars.size()==6,"six themed checkpoints across the act")
+	expect(game.exploration.rooms.size()==10,"ten distinct connected places")
+	expect(game.exploration.passages.size()==15,"fifteen passages include secrets and four unlockable shortcuts")
+	expect(game.altars.size()==9,"nine themed checkpoints across the act")
 	expect(game.exploration.gate!=null,"boss access physically sealed before exploration")
 	# Start at the actual tomb; all following route movement uses controls or doorway interactions.
 	expect(await go(1160,600),"walk from tomb to burial passage")
@@ -103,8 +120,11 @@ func run() -> void:
 	await interact()
 	expect(game.exploration.room=="refuge","upper branch leads to refuge")
 	# Refuge stair indices: final five ledges in the layout.
-	var count: int=game.exploration.ledges.size()
-	expect(await climb([count-5,count-4,count-3,count-2,count-1]),"climb refuge shrine")
+	var refuge_steps: Array = []
+	for i in range(4): refuge_steps.append(ledge_index(19300+i*140,520-i*80))
+	refuge_steps.append(ledge_index(19720,280))
+	expect(not refuge_steps.has(-1),"refuge stair ledges found by position")
+	expect(await climb(refuge_steps),"climb refuge shrine")
 	expect(await go(20030,280),"find doll beyond the refuge branch")
 	await interact()
 	expect(game.doll_found,"optional doll is discovered off the main path")
@@ -132,7 +152,11 @@ func run() -> void:
 	expect(await go(12800,40),"reach hidden archive entrance")
 	await interact()
 	expect(game.exploration.room=="archive","upper cloister branches to archive")
-	expect(await climb([count-10,count-9,count-8,count-7,count-6]),"climb document shelves")
+	var archive_steps: Array = []
+	for i in range(4): archive_steps.append(ledge_index(16880+i*140,520-i*80))
+	archive_steps.append(ledge_index(17300,280))
+	expect(not archive_steps.has(-1),"archive shelf ledges found by position")
+	expect(await climb(archive_steps),"climb document shelves")
 	expect(await go(17800,280),"reach concealed confession register")
 	await interact()
 	expect(game.exploration.collected.has("register"),"archive rewards investigation with narrative record")
@@ -156,7 +180,7 @@ func run() -> void:
 	expect(game.exploration.room=="city" and game.exploration.opened.has("tower_return"),"tower return forms a second courtyard loop")
 	expect(await go(3960,600),"walk through unlocked boss passage")
 	expect(game.boss.awake and game.boss_wall!=null,"boss arena starts only after exploration requirements")
-	expect(game.exploration.visited.size()==7,"all seven places reached through real route")
+	expect(game.exploration.visited.size()==7,"the seven main places are reached through the real route")
 	print("PHYSICAL_ROUTE_FRAMES: ",elapsed_frames," SIMULATED_SECONDS: ",elapsed_frames/60.0," PLAY_TIME: ",game.play_time," WALKED_UNITS: ",game.exploration.journey_distance)
 	game._save()
 	var saved=game.exploration.serialize()

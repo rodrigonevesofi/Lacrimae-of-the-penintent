@@ -160,6 +160,8 @@ func _draw_play(vs: Vector2) -> void:
 		draw_rect(Rect2(Vector2.ZERO,vs),Color(0.02,0,0.01,0.65*opacity))
 		_heading(Vector2(0,vs.y/2),"A CARNE CEDE",50,Color(0.67,0.2,0.21,opacity),vs.x)
 		_heading(Vector2(0,vs.y/2+40),"A culpa permanece.",23,Color(0.85,0.77,0.65,opacity),vs.x)
+		var witness := clampf((1.8-game.death_t)/1.0,0,1)
+		_text(Vector2(0,vs.y/2+88),game.GuiltText.death_line(game.death_count-1),19,Color(0.78,0.66,0.55,witness),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 
 func _ornate_bar(rect: Rect2, amount: float, color: Color, boss: bool = false) -> void:
 	draw_texture_rect(ui_regions.boss if boss else ui_regions.bar,rect,false)
@@ -216,7 +218,7 @@ func _draw_map(vs: Vector2) -> void:
 		var words := _wrap(label,145,12)
 		for i in range(words.size()): _text(pos+Vector2(5,21+i*15),words[i],12,Color("e0cfb3") if known else Color("8d8174"),HORIZONTAL_ALIGNMENT_CENTER,145)
 		if id == ex.room: _text(pos+Vector2(0,-8),"VOCÊ",12,Color("e6b8a0"),HORIZONTAL_ALIGNMENT_CENTER,155)
-	_text(Vector2(0,620),"%d / 7 lugares · %d / 2 correntes · %d / 4 vestígios" % [ex.visited.size(),ex.bells.size(),ex.collected.size()],17,Color("cbb493"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+	_text(Vector2(0,620),"%d / %d lugares · %d / 2 correntes · %d / %d vestígios" % [ex.visited.size(),ex.rooms.size(),ex.bells.size(),ex.collected.size(),ex.pickups.size()],17,Color("cbb493"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	_text(Vector2(0,650),"Linhas douradas: atalhos abertos    ·    TAB: retornar",14,Color("aa987b"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 
 

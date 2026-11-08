@@ -395,5 +395,269 @@
         128
       ]
     }
+  },
+  "devorador": {
+    "idle": {
+      "sheet": "devorador",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "devorador",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "devorador",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "devorador",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "devorador",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "executed": {
+      "sheet": "devorador_executado",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        242
+      ]
+    }
+  },
+  "flagelante": {
+    "idle": {
+      "sheet": "flagelante",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "flagelante",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "flagelante",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "flagelante",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "flagelante",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "executed": {
+      "sheet": "flagelante_executado",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        240
+      ]
+    }
+  },
+  "duelista": {
+    "idle": {
+      "sheet": "duelista",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "duelista",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "duelista",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "duelista",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "duelista",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "executed": {
+      "sheet": "duelista_executado",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "bruxa": {
+    "idle": {
+      "sheet": "bruxa",
+      "start": 0,
+      "count": 6,
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "bruxa",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "bruxa",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "bruxa",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "bruxa",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "executed": {
+      "sheet": "bruxa_executado",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "asmodeia": {
+    "idle": {
+      "sheet": "asmodeia",
+      "start": 0,
+      "count": 6,
+      "fps": 8,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "asmodeia",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "asmodeia",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "asmodeia",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "asmodeia",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "executed": {
+      "sheet": "asmodeia_executado",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        237
+      ]
+    }
+  },
+  "fragmento": {
+    "idle": {
+      "sheet": "fragmento_culpa",
+      "start": 0,
+      "count": 12,
+      "fps": 10,
+      "loop": true,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "dissolve": {
+      "sheet": "fragmento_culpa",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    }
   }
 }
