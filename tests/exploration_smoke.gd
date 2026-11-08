@@ -18,6 +18,9 @@ func interact() -> void:
 	Input.action_press("interact")
 	await frames(3)
 	Input.action_release("interact")
+	for step in range(40):
+		if not game.exploration.is_transitioning(): break
+		await frames(1)
 func close_message() -> void:
 	game.message_t = 0
 	game.advance_message()

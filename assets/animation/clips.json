@@ -134,6 +134,39 @@
         128,
         250
       ]
+    },
+    "air_attack": {
+      "sheet": "hero_aerial",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "air_land": {
+      "sheet": "hero_aerial",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "air_drift": {
+      "sheet": "hero_aerial",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
     }
   },
   "devotee": {

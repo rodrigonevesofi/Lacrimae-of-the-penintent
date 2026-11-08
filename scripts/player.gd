@@ -12,9 +12,14 @@ const DJUMP_V := -560.0
 const ROLL_SPEED := 540.0
 const ROLL_TIME := 0.34
 const ATTACK_TIME := 0.42
+const AIR_ATTACK_TIME := 0.48
+const AIR_RECOVERY_TIME := 0.16
 const MAX_FALL := 950.0
 
 var animator
+var sword: Sprite2D
+const SWORD_GRIP := Vector2(410, 360)
+const SWORD_SCALE := 0.035
 var penitence := "none"
 var execution_target = null
 var execution_contact := false
@@ -50,6 +55,8 @@ var invuln := 0.0
 var coyote := 0.0
 var jump_buffer := 0.0
 var air_jumps := 0
+var air_attack_used := false
+var aerial_after_cut := false
 var combo := 0
 var hit_list: Array = []
 var anim_t := 0.0
@@ -71,6 +78,19 @@ func _ready() -> void:
 	animator = preload("res://scripts/actor_animation.gd").new()
 	animator.configure("hero", 0.44)
 	add_child(animator)
+	sword = Sprite2D.new()
+	sword.texture = load("res://assets/penitent_sword.png")
+	sword.centered = false
+	sword.offset = -SWORD_GRIP
+	sword.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	var sword_surface := ShaderMaterial.new()
+	sword_surface.shader = load("res://shaders/penitent_readability.gdshader")
+	sword_surface.set_shader_parameter("midtone_gain",1.12)
+	sword_surface.set_shader_parameter("edge_strength",0.16)
+	sword.material = sword_surface
+	add_child(sword)
+	# Within the player's canvas order the grip stays behind the gauntlet.
+	move_child(sword,0)
 	add_to_group("player")
 	collision_layer = 2
 	collision_mask = 1
@@ -117,7 +137,10 @@ func body_rect() -> Rect2:
 
 # ---------- física / estados ----------
 func _physics_process(delta: float) -> void:
+	# Read edge-triggered commands before impact pause; the buffer survives its duration.
 	if hit_pause > 0:
+		if pressed("attack") and has_weapon: attack_buffer = 0.20
+		if pressed("roll"): roll_buffer = 0.16
 		hit_pause -= delta
 		return
 	anim_t += delta
@@ -130,13 +153,17 @@ func _physics_process(delta: float) -> void:
 	if camera and not cinematic_focus:
 		camera.offset = Vector2(0, -110) + Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * shake
 
+	var game = get_tree().get_first_node_in_group("game")
+	if game != null and game.exploration != null and game.exploration.is_transitioning():
+		velocity = Vector2.ZERO
+		return
+
 	if state == "dead":
 		velocity.x = move_toward(velocity.x, 0.0, 1500.0 * delta)
 		velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL)
 		move_and_slide()
 		return
 
-	var game = get_tree().get_first_node_in_group("game")
 	if game != null and (game.message_text != "" or game.narrative.mode != "" or game.penitence_menu or game.exploration.map_open):
 		velocity.x = 0.0
 		velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL)
@@ -166,6 +193,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var on_floor := is_on_floor()
+	var just_landed := on_floor and not was_grounded
 	landing_t = maxf(landing_t - delta, 0.0)
 	if not on_floor:
 		jump_elapsed += delta
@@ -173,6 +201,12 @@ func _physics_process(delta: float) -> void:
 		landing_t = 0.10
 	was_grounded = on_floor
 	if on_floor:
+		air_attack_used = false
+		if just_landed and aerial_after_cut and state == "idle":
+			state = "air_recover"
+			state_t = AIR_RECOVERY_TIME
+		elif state not in ["air_attack","air_recover"]:
+			aerial_after_cut = false
 		coyote = 0.1
 		air_jumps = 0
 		safe_pos = global_position
@@ -238,6 +272,21 @@ func _physics_process(delta: float) -> void:
 				_start_attack()
 			elif state_t <= 0.0:
 				state = "idle"
+		"air_attack":
+			velocity.x = move_toward(velocity.x, dir * SPEED * 0.85, 1200.0 * delta)
+			var progress := 1.0 - state_t / AIR_ATTACK_TIME
+			if on_floor:
+				state = "air_recover"
+				state_t = AIR_RECOVERY_TIME
+			elif clampi(int(progress * 12),0,11) in [5,6,7]:
+				_attack_hits(true)
+			if state == "air_attack" and state_t <= 0:
+				state = "idle"
+		"air_recover":
+			velocity.x = move_toward(velocity.x,0,2100.0*delta)
+			if state_t <= 0:
+				state = "idle"
+				aerial_after_cut = false
 		"roll":
 			velocity.x = facing * ROLL_SPEED
 			if state_t <= 0.0:
@@ -273,6 +322,7 @@ func _physics_process(delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	_update_animation()
+	_update_sword()
 	queue_redraw()
 
 func _update_animation() -> void:
@@ -285,6 +335,8 @@ func _update_animation() -> void:
 		return
 	match state:
 		"execution": animator.select("execute_devotee" if not is_instance_valid(execution_target) or execution_target.kind == 0 else "execute_mourner", facing, 1 - state_t / EXECUTION_TIME)
+		"air_attack": animator.select("air_attack",facing,1-state_t/AIR_ATTACK_TIME)
+		"air_recover": animator.select("air_land",facing,1-state_t/AIR_RECOVERY_TIME)
 		"attack": animator.select("attack_a" if combo == 1 else "attack_b", facing, 1 - state_t / ATTACK_TIME)
 		"roll": animator.select("roll", facing, 1 - state_t / ROLL_TIME)
 		"hurt": animator.select("hurt", facing, 1 - state_t / 0.25)
@@ -292,11 +344,13 @@ func _update_animation() -> void:
 		"heal": animator.select("heal", facing, 1 - state_t / 0.55)
 		"pray": animator.select("pray", facing, 1 - state_t / pray_duration)
 		_:
-			if not is_on_floor():
+			if not is_on_floor() and aerial_after_cut:
+				animator.select("air_drift",facing)
+			elif not is_on_floor():
 				var index := (0 if jump_elapsed < 0.06 else 1) if velocity.y < -120 else (2 if velocity.y < 80 else 3)
-				animator.pose("jump", facing, index)
+				animator.pose("air_drift" if has_weapon else "jump", facing, index)
 			elif landing_t > 0:
-				animator.pose("jump", facing, 4 if landing_t > 0.05 else 5)
+				animator.pose("air_land" if has_weapon else "jump", facing, 4 if landing_t > 0.05 else 5)
 			else:
 				animator.select("run" if absf(velocity.x) > 30 else "idle", facing)
 
@@ -304,6 +358,9 @@ func _update_animation() -> void:
 # ---------- ações ----------
 func _start_attack() -> void:
 	if not has_weapon:
+		return
+	if not is_on_floor() or velocity.y < -100.0:
+		_start_air_attack()
 		return
 	var d := axis()
 	if d != 0.0:
@@ -316,15 +373,17 @@ func _start_attack() -> void:
 	hit_list.clear()
 
 
-func _attack_hits() -> void:
+func _attack_hits(aerial: bool = false) -> void:
 	var r := Rect2(global_position + Vector2(6.0 if facing > 0 else -92.0, -66.0), Vector2(86.0, 66.0))
+	if aerial:
+		r = Rect2(global_position + Vector2(8.0 if facing > 0 else -100.0,-108.0),Vector2(92.0,82.0))
 	for e in get_tree().get_nodes_in_group("enemies"):
 		if e.dead or hit_list.has(e):
 			continue
 		if r.intersects(e.hurt_rect()):
 			get_tree().call_group("game", "play_sfx", "hit")
 			hit_list.append(e)
-			var dmg := (20.0 if combo == 1 else 26.0) * sword_multiplier()
+			var dmg := (22.0 if aerial else (20.0 if combo == 1 else 26.0)) * sword_multiplier()
 			e.take_hit(dmg, global_position.x)
 			hit_pause = 0.045
 			e.hit_pause = 0.045
@@ -427,6 +486,8 @@ func revive(pos: Vector2) -> void:
 	if state == "execution" and camera: camera.zoom = execution_zoom_start
 	execution_target = null
 	execution_contact = false
+	air_attack_used = false
+	aerial_after_cut = false
 	hit_pause = 0.0
 	attack_buffer = 0.0
 	roll_buffer = 0.0
@@ -447,18 +508,6 @@ func _draw() -> void:
 	if state == "dead":
 		return
 	draw_set_transform(Vector2.ZERO, 0, Vector2(float(facing), 1))
-	# Body and attacking weapon are in actual six-frame drawings.
-	# Resting blade follows the wrist rather than rotating the entire body.
-	if has_weapon and state == "idle":
-		var bob := sin(anim_t * (16 if absf(velocity.x) > 30 else 3)) * 1.2
-		var wrist := Vector2(174, 135)
-		if animator.animation == "run":
-			wrist = [Vector2(202, 124), Vector2(199, 109), Vector2(156, 134), Vector2(202, 74), Vector2(164, 184), Vector2(160, 156)][animator.frame]
-		var hand := (wrist - Vector2(128, 250)) * 0.44 + Vector2(0, bob)
-		var tip := hand + Vector2(30, 36)
-		draw_line(hand, tip, Color("727480"), 5)
-		draw_line(hand + Vector2(1, 0), tip, Color("d4cec1"), 1.2)
-		draw_line(hand + Vector2(-5, 5), hand + Vector2(7, -3), Color("9b794a"), 3)
 	if state == "execution" and is_instance_valid(execution_target) and execution_target.kind == 0:
 		var progress := 1 - state_t / EXECUTION_TIME
 		if progress > 0.18 and progress < 0.7:
@@ -525,3 +574,36 @@ func can_drop() -> bool:
 		var collider = get_slide_collision(i).get_collider()
 		if collider != null and collider.get_meta("one_way",false): return true
 	return false
+
+
+func _update_sword() -> void:
+	if sword == null: return
+	# Attack/ritual drawings already include their own blade; never add a second one.
+	sword.visible = has_weapon and state == "idle" and not cinematic_focus and animator.animation in ["idle","run"]
+	if not sword.visible: return
+	var wrist := Vector2(174,135)
+	if animator.animation == "run":
+		wrist = [Vector2(202,124),Vector2(199,109),Vector2(156,134),Vector2(202,74),Vector2(164,184),Vector2(160,156)][animator.frame]
+	var bob := sin(anim_t*(16 if animator.animation=="run" else 3))*1.2
+	var hand := (wrist-Vector2(128,250))*0.44+Vector2(0,bob)
+	var angle := 0.75
+	# Keep the point above the collision floor during the low backswing of a run.
+	var blade_length := (2050-SWORD_GRIP.x)*SWORD_SCALE
+	angle = minf(angle,asin(clampf((-3-hand.y)/blade_length,-1,1)))
+	sword.position = Vector2(hand.x*facing,hand.y)
+	sword.scale = Vector2(SWORD_SCALE*facing,SWORD_SCALE)
+	sword.rotation = angle*facing
+	sword.modulate = animator.modulate
+
+
+func _start_air_attack() -> void:
+	if not has_weapon or air_attack_used: return
+	var direction := axis()
+	if direction != 0: facing = 1 if direction > 0 else -1
+	state = "air_attack"
+	state_t = AIR_ATTACK_TIME
+	air_attack_used = true
+	aerial_after_cut = true
+	attack_buffer = 0
+	hit_list.clear()
+	get_tree().call_group("game","play_sfx","swing")

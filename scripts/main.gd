@@ -6,6 +6,7 @@ const PlayerScript = preload("res://scripts/player.gd")
 const EnemyScript = preload("res://scripts/enemy.gd")
 const HudScript = preload("res://scripts/hud.gd")
 const WorldArt = preload("res://scripts/world_art.gd")
+const Story = preload("res://scripts/story_text.gd")
 
 const GROUND_Y := 600.0
 const WORLD_W := 21000.0
@@ -19,6 +20,9 @@ var memory_seen := false
 var iria_met := false
 var memorial_honored := false
 var doll_found := false
+var story_flags: Array[String] = []
+var dialogue_pages: Array[Dictionary] = []
+var dialogue_complete_flag := ""
 var state := "title"
 var prologue_page := -1
 var paused := false
@@ -66,7 +70,7 @@ var flicker: Array = []
 
 var relic_pos := Vector2(14580, 1100)
 
-var altars: Array[Vector2] = [Vector2(540, 600), Vector2(1900, 600), Vector2(3620, 600)]
+var altars: Array[Vector2] = [Vector2(540, 600), Vector2(1810, 600), Vector2(3620, 600)]
 
 var platforms: Array[Rect2] = [
 	Rect2(380, 520, 140, 22),
@@ -97,14 +101,14 @@ var candle_xs: Array[float] = [
 ]
 
 var lore: Array = [
-	{"x": 650.0, "title": "A Primeira Mártir",
+	{"x": 730.0, "title": "A Primeira Mártir",
 	"text": "Diante de um antigo altar, ela chorou sangue.\nOs registros dizem que centenas receberam absolvição.\n\nDesde então, Vespera passou a medir a culpa em lágrimas."},
-	{"x": 1100.0, "title": "A Regra do Confessor",
-	"text": "Bem-aventurados os que choram. — Mateus 5:4\n\nDecreto de Edran: quem não chora deverá aprender a dor.\nUma segunda mão riscou: consolo não é coerção.\n\nÀ margem: o Espinho repousa no alto. Erga-se duas vezes."},
-	{"x": 2420.0, "title": "A Pedra e a Sentença",
-	"text": "Quem está sem pecado, atire a primeira pedra.\n— João 8:7, trecho\n\nA Ordem raspou a primeira linha. Conservou as pedras.\nAs lágrimas levaram o remorso. Os atos permaneceram."},
-	{"x": 3470.0, "title": "Os Portões Fechados",
-	"text": "Uma ordem selada. Os portões deveriam permanecer fechados.\nDo lado de fora, milhares chamavam por proteção.\n\nA assinatura foi raspada. Sua mão treme ao tocar a pedra."},
+	{"x": 1390.0, "title": "A Regra do Confessor",
+	"text": "Bem-aventurados os que choram.\n\nDecreto de Edran: quem não chora deverá aprender a dor.\nUma segunda mão riscou: misericórdia quero, não sacrifício.\n\nÀ margem: procure no campanário aquilo que ainda o ergue."},
+	{"x": 2630.0, "title": "A Pedra e a Sentença",
+	"text": "Quem está sem pecado, atire a primeira pedra.\n\nA Ordem raspou a primeira linha. Conservou as pedras.\nAs lágrimas levaram o remorso. Os atos permaneceram."},
+	{"x": 3860.0, "title": "Os Portões Fechados",
+	"text": "Foi a justiça que ergueu estes portões.\n\nA sentença foi gravada acima da tranca.\nEmbaixo, alguém riscou: aqui também esperavam crianças.\n\nA assinatura foi raspada. Sua mão treme ao tocar a pedra."},
 ]
 
 var altar_names: Array[String] = ["Altar das Primeiras Lágrimas", "Altar do Limiar", "Altar da Última Vela"]
@@ -151,6 +155,14 @@ func toggle_pause() -> void:
 func advance_message() -> void:
 	if message_t > 0.0:
 		return
+	if not dialogue_pages.is_empty():
+		var next_page: Dictionary = dialogue_pages.pop_front()
+		show_message(str(next_page.title), str(next_page.text))
+		return
+	if not dialogue_complete_flag.is_empty():
+		if not story_flags.has(dialogue_complete_flag): story_flags.append(dialogue_complete_flag)
+		dialogue_complete_flag = ""
+		_save()
 	if prologue_page >= 0 and prologue_page < PROLOGUE.size() - 1:
 		prologue_page += 1
 		show_message(PROLOGUE[prologue_page]["title"], PROLOGUE[prologue_page]["text"])
@@ -288,6 +300,9 @@ func _build_lights() -> void:
 # ---------------------------------------------------------------- jogo
 func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	exploration.reset()
+	story_flags.clear()
+	dialogue_pages.clear()
+	dialogue_complete_flag = ""
 	player.max_flasks = 3
 	memory_seen = false
 	iria_met = false
@@ -426,6 +441,7 @@ func shake_cam(amount: float) -> void:
 # ---------------------------------------------------------------- save
 func _save() -> void:
 	var data := {
+		"story_flags": story_flags,
 		"layout_version": 2,
 		"exploration": exploration.serialize(),
 		"altar": respawn_index,
@@ -461,6 +477,11 @@ func _load() -> void:
 	f.close()
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return
+	story_flags.clear()
+	var saved_story = parsed.get("story_flags", [])
+	if saved_story is Array:
+		for flag in saved_story:
+			if flag in ["names_read", "memorial_named"] and not story_flags.has(str(flag)): story_flags.append(str(flag))
 	respawn_index = clampi(int(parsed.get("altar", 0)), 0, altars.size() - 1)
 	memory_seen = bool(parsed.get("memory_seen", false))
 	iria_met = bool(parsed.get("iria_met", false))
@@ -538,6 +559,7 @@ func _update_fx(delta: float) -> void:
 func _play_update(delta: float) -> void:
 	play_time += delta
 	prompt = ""
+	if exploration.has_method("is_transitioning") and exploration.is_transitioning(): return
 	if narrative.mode != "":
 		return
 	if penitence_menu:
@@ -598,21 +620,22 @@ func _play_update(delta: float) -> void:
 		prompt = "[E] Falar com Iria" if not iria_met else "[E] Ouvir Iria"
 		if Input.is_action_just_pressed("interact"):
 			iria_met = true
-			show_message("IRIA — A TESTEMUNHA", "Condenado... eu reconheceria sua voz.\n\nNão procure aquele que possa perdoá-lo.\nProcure primeiro aqueles que você condenou.\n\nChorai com os que choram. — Romanos 12:15, trecho")
-			if exploration.collected.has("register"):
-				show_message("IRIA — OS NOMES", "Você trouxe nomes, não desculpas.\n\nLeia-os. Não depressa. Um de cada vez.\nAlguns ainda têm quem espere ouvi-los.")
-			if memorial_honored:
-				show_message("IRIA — A TESTEMUNHA", "Você deixou algo junto aos nomes.\n\nAinda há quem precise ser lembrado.\nMas não confunda esse gesto com perdão.")
+			var has_register: bool = exploration.collected.has("register")
+			show_dialogue(Story.iria_pages(has_register, story_flags.has("names_read"), memorial_honored, story_flags.has("memorial_named"), memory_seen), "names_read" if has_register and not story_flags.has("names_read") else "")
 			_save()
 		return
-	if doll_found and not memorial_honored and pp.distance_to(Vector2(2860, 600)) < 60:
-		prompt = "[E] Deixar a boneca no memorial"
-		if Input.is_action_just_pressed("interact"):
-			memorial_honored = true
-			soundscape.play_sfx("bell")
-			show_message("ÀQUELES QUE FICARAM DO OUTRO LADO", "Você deixa a boneca entre as velas.\nO nome de quem a perdeu já não pode ser lido.\n\nPor um instante, a cidade parece escutar.")
-			_save()
-		return
+	if doll_found and pp.distance_to(Vector2(2800, 600)) < 60:
+		var known_name: bool = exploration.collected.has("register")
+		var can_name: bool = known_name and not story_flags.has("memorial_named")
+		if not memorial_honored or can_name:
+			prompt = "[E] Gravar o nome de Alba no memorial" if memorial_honored else "[E] Deixar a boneca no memorial"
+			if Input.is_action_just_pressed("interact"):
+				memorial_honored = true
+				if known_name and not story_flags.has("memorial_named"): story_flags.append("memorial_named")
+				soundscape.play_sfx("bell")
+				show_message("ÀQUELES QUE FICARAM DO OUTRO LADO", Story.memorial_text(known_name))
+				_save()
+			return
 
 	# relíquia
 	if not relic_taken and pp.distance_to(relic_pos) < 50.0:
@@ -751,3 +774,21 @@ func offer_health() -> void:
 		toast("Sua carne suporta mais dor. (+15 de vida base)")
 		_save()
 	else: toast("Lágrimas insuficientes.")
+
+
+func show_dialogue(pages: Array[Dictionary], complete_flag: String = "") -> void:
+	dialogue_pages.clear()
+	dialogue_complete_flag = complete_flag
+	if pages.is_empty(): return
+	for i in range(1, pages.size()): dialogue_pages.append(pages[i])
+	show_message(str(pages[0].title), str(pages[0].text))
+
+func story_pickup_text(id: String, fallback: String) -> String:
+	return Story.pickup_text(id, fallback)
+
+func story_chain_released(id: String) -> void:
+	soundscape.play_sfx("breath")
+	toast(Story.chain_line(id))
+
+func knows_alba() -> bool:
+	return exploration.collected.has("register") and doll_found

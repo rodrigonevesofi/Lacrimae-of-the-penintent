@@ -11,6 +11,14 @@ var collected: Array = []
 var bells: Array = []
 var map_open := false
 var transition := 0.0
+var transition_phase := ""
+var transition_elapsed := 0.0
+var transition_blocks := false
+var pending_destination := ""
+var pending_spawn := Vector2.ZERO
+var pending_facing := 0
+const FADE_OUT_TIME := 0.16
+const FADE_IN_TIME := 0.22
 var gate: StaticBody2D
 var journey_distance := 0.0
 var last_position := Vector2.ZERO
@@ -44,6 +52,9 @@ func reset() -> void:
 	bells = []
 	map_open = false
 	transition = 0
+	transition_phase = ""
+	transition_blocks = false
+	pending_destination = ""
 	journey_distance = 0
 	last_position = Vector2.ZERO
 	update_gate()
@@ -65,7 +76,7 @@ func set_camera() -> void:
 	c.limit_bottom = int(rooms[room].floor + 220)
 	c.reset_smoothing()
 
-func travel(id: String, pos: Vector2) -> void:
+func travel(id: String, pos: Vector2, arrival_facing: int = 0, blocking: bool = false) -> void:
 	for hazard in get_tree().get_nodes_in_group("hazards"): hazard.queue_free()
 	room = id
 	if not visited.has(room): visited.append(room)
@@ -76,10 +87,14 @@ func travel(id: String, pos: Vector2) -> void:
 	game.player.attack_buffer = 0
 	game.player.roll_buffer = 0
 	game.player.invuln = 0.65
-	game.player.controllable = true
+	if arrival_facing != 0: game.player.facing = arrival_facing
+	transition_blocks = blocking
+	game.player.controllable = not blocking
 	game.player.camera.zoom = Vector2.ONE
 	set_camera()
 	transition = 0.4
+	transition_phase = "in"
+	transition_elapsed = 0
 	game.area_name = rooms[room].name
 	game.area_t = 4.5
 	last_position = pos
@@ -114,9 +129,40 @@ func restore(data: Dictionary) -> void:
 	game.player.max_flasks = 4 if collected.has("vessel") else 3
 	update_gate()
 
+func is_transitioning() -> bool:
+	return transition_blocks and transition_phase != ""
+
+func request_travel(id: String, pos: Vector2, arrival_facing: int) -> void:
+	if is_transitioning() or not rooms.has(id): return
+	pending_destination = id
+	pending_spawn = pos
+	pending_facing = arrival_facing
+	transition_phase = "out"
+	transition_elapsed = 0
+	transition = 0
+	transition_blocks = true
+	game.player.controllable = false
+	game.player.velocity = Vector2.ZERO
+	game.player.invuln = maxf(game.player.invuln, FADE_OUT_TIME + FADE_IN_TIME + 0.1)
+
 func _process(delta: float) -> void:
-	transition = maxf(transition-delta,0)
-	if game.state != "play" or map_open or game.narrative.mode != "": return
+	if transition_phase != "":
+		transition_elapsed += delta
+		if transition_phase == "out":
+			transition = 0.4 * clampf(transition_elapsed / FADE_OUT_TIME,0,1)
+			if transition_elapsed >= FADE_OUT_TIME:
+				travel(pending_destination,pending_spawn,pending_facing,true)
+				pending_destination = ""
+		else:
+			transition = 0.4 * (1 - clampf(transition_elapsed / FADE_IN_TIME,0,1))
+			if transition_elapsed >= FADE_IN_TIME:
+				transition = 0
+				transition_phase = ""
+				if transition_blocks and game.state == "play" and game.message_text == "" and game.narrative.mode == "":
+					game.player.controllable = true
+				transition_blocks = false
+		if is_transitioning(): game.player.velocity = Vector2.ZERO
+	if game.state != "play" or map_open or is_transitioning() or game.narrative.mode != "": return
 	if room_at(game.player.position) != room:
 		room = room_at(game.player.position)
 		if not visited.has(room): visited.append(room)
@@ -127,7 +173,7 @@ func _process(delta: float) -> void:
 	last_position = game.player.position
 
 func update(_delta: float) -> bool:
-	if map_open: return true
+	if map_open or is_transitioning(): return true
 	var p: Vector2 = game.player.position
 	for link in passages:
 		var forward: bool = room == link.a
@@ -140,7 +186,8 @@ func update(_delta: float) -> bool:
 			if locked: game.toast("A corrente foi presa pelo outro lado. Procure outro caminho.")
 			else:
 				if link.get("latch",false) and not opened.has(link.id): opened.append(link.id)
-				travel(link.b if forward else link.a,(link.pb if forward else link.pa) + Vector2(45 if forward else -45,0))
+				var face := Layout.passage_face(link,not forward)
+				request_travel(str(face.room),face.foot + Vector2(face.arrival_dir * face.spawn_offset,0),int(face.arrival_dir))
 		return true
 	# Both bell mechanisms are in different vertical routes, not on the main corridor.
 	for entry in [{"id":"water","room":"cistern","pos":Vector2(9650,40)}, {"id":"vigil","room":"belfry","pos":Vector2(15120,-260)}]:
@@ -151,7 +198,7 @@ func update(_delta: float) -> bool:
 			update_gate()
 			game.soundscape.play_sfx("bell")
 			game.shake_cam(4)
-			game.toast("Uma corrente cedeu. %d de 2 mecanismos liberados." % bells.size())
+			game.story_chain_released(str(entry.id))
 			game._save()
 		return true
 	for item in pickups:
@@ -165,7 +212,7 @@ func update(_delta: float) -> bool:
 			if item.id == "vessel":
 				game.player.max_flasks = 4
 				game.player.flasks = mini(game.player.flasks+1,4)
-			game.show_message(item.name,item.text)
+			game.show_message(item.name,game.story_pickup_text(str(item.id),str(item.text)))
 			game._save()
 		return true
 	if room == "city" and p.x > 3640 and p.x < 3790 and bells.size() < 2:

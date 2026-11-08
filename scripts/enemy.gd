@@ -163,7 +163,7 @@ func _die() -> void:
 
 func _physics_process(delta: float) -> void:
 	var game = get_tree().get_first_node_in_group("game")
-	if game != null and (game.state != "play" or game.message_text != "" or game.narrative.mode != "" or game.penitence_menu or (game.exploration != null and (game.exploration.map_open or game.exploration.room != room_id))):
+	if game != null and (game.state != "play" or game.message_text != "" or game.narrative.mode != "" or game.penitence_menu or (game.exploration != null and (game.exploration.map_open or game.exploration.is_transitioning() or game.exploration.room != room_id))):
 		return
 	fed_by_guilt = kind != 2 and game != null and game.stain_active and global_position.distance_to(game.stain_pos) < 330
 	if executing: return

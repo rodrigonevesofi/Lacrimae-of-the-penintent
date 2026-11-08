@@ -12,6 +12,10 @@ func configure(actor_name: String, scale_factor: float) -> void:
 	var surface := CanvasItemMaterial.new()
 	surface.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	material = surface
+	if actor_name == "hero":
+		var readable := ShaderMaterial.new()
+		readable.shader = load("res://shaders/penitent_readability.gdshader")
+		material = readable
 	actor = actor_name
 	unit_scale = scale_factor
 	scale = Vector2.ONE * unit_scale
@@ -61,6 +65,11 @@ func select(clip: String, direction: int, progress: float = -1.0) -> void:
 	var cell := sprite_frames.get_frame_texture(clip, frame).get_size()
 	var anchor: Array = data.get("anchor", [128, 250])
 	position = Vector2((cell.x / 2 - float(anchor[0])) * direction, cell.y / 2 - float(anchor[1])) * unit_scale
+	if material is ShaderMaterial:
+		var image: AtlasTexture = sprite_frames.get_frame_texture(clip, frame)
+		var sheet_size := image.atlas.get_size()
+		var bounds := Vector4(image.region.position.x / sheet_size.x, image.region.position.y / sheet_size.y, image.region.end.x / sheet_size.x, image.region.end.y / sheet_size.y)
+		material.set_shader_parameter("frame_bounds", bounds)
 
 func pose(clip: String, direction: int, index: int) -> void:
 	var count := sprite_frames.get_frame_count(clip)

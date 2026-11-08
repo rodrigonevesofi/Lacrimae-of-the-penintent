@@ -176,7 +176,7 @@ func run() -> void:
 	p.position.x = 3400
 	game.art._process(0.016)
 	expect(game.art.global_transform == before, "landmarks remain fixed to world coordinates")
-	expect(game.lore[1].text.contains("Mateus 5:4") and game.lore[2].text.contains("João 8:7"), "biblical fragments have explicit sources")
+	expect(not game.lore[1].text.contains("Mateus 5:4") and not game.lore[2].text.contains("João 8:7"), "inscriptions omit chapter and verse labels")
 	# Exercise modifiers through the actual damage paths, not just their metadata.
 	victim.queue_free()
 	await frames(2)

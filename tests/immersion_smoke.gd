@@ -39,7 +39,7 @@ func run() -> void:
 	game.message_text = "test"
 	expect(game.soundscape.desired_context() == "story","narrative selects story score")
 	game.message_text = ""
-	game.player.position = Vector2(2860,600)
+	game.player.position = Vector2(2800,600)
 	game.doll_found = true
 	Input.action_press("interact")
 	game._play_update(0.016)

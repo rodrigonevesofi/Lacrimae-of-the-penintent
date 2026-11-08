@@ -6,6 +6,9 @@ var redraw_clock := 0.0
 var panorama: Texture2D
 var sacred_props: Texture2D
 var room_textures: Dictionary = {}
+var doorway_art: Texture2D
+var memorial_base: Sprite2D
+var memorial_doll: Sprite2D
 var gate_memory: AtlasTexture
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
 var iria_animation
@@ -26,6 +29,8 @@ func _ready() -> void:
 	add_child(iria_anchor)
 	iria_anchor.add_child(iria_animation)
 	sacred_props = load("res://assets/sacred_props.png")
+	doorway_art = load("res://assets/doorways.png")
+	build_memorial()
 	for room in ["ossuary","cistern","cloister","tower"]: room_textures[room] = load("res://assets/"+room+".png")
 	panorama = load("res://assets/vespera_panorama.png")
 	gate_memory = AtlasTexture.new()
@@ -34,6 +39,7 @@ func _ready() -> void:
 	gate_memory.region = Rect2(size.x * 0.57, size.y * 0.15, size.x * 0.43, size.x * 0.43 * 9.0 / 16.0)
 
 func _process(delta: float) -> void:
+	if memorial_doll: memorial_doll.visible = game.memorial_honored
 	if iria_animation:
 		iria_animation.select("talk" if game.message_title == "IRIA — A TESTEMUNHA" and game.message_text != "" else "idle", -1)
 	redraw_clock += delta
@@ -72,6 +78,7 @@ func _draw() -> void:
 	# The entire 4800-unit level shares one fixed panorama in world space.
 	# No camera-following image, texture wrap, room swap or time-based dissolve.
 	draw_texture_rect(panorama, PANORAMA_RECT, false)
+	if game.exploration != null: draw_passages("city")
 	# The broken bridge is a real hole in the foreground walking plane.
 	draw_rect(Rect2(2000, 600, 270, 310), Color("12171d"))
 	for edge in [2000, 2270]:
@@ -96,7 +103,9 @@ func _draw() -> void:
 		draw_rect(Rect2(pos.x - 22, pos.y + 22, 44, 60), Color("3a3433"), false, 2)
 		for dx in [-14, -5, 5, 14]:
 			draw_line(pos + Vector2(dx, 22), pos + Vector2(dx, 82), Color("6d5a43"), 2)
-	prop(5,Vector2(2860,600),180,Color.WHITE if game.memorial_honored else Color(0.65,0.62,0.6))
+	draw_set_transform(Vector2(2800,599),0,Vector2(1,0.13))
+	draw_circle(Vector2.ZERO,95,Color(0,0,0,0.25))
+	draw_set_transform(Vector2.ZERO)
 	prop(1,Vector2(150,600),260)
 	# Crown left beside the tomb.
 	draw_arc(Vector2(245, 593), 12, PI, TAU, 10, GOLD, 2)
@@ -118,7 +127,6 @@ func _draw() -> void:
 	rng.seed = 7413
 	for cx in game.candle_xs:
 		for i in range(3): candle(Vector2(cx + rng.randf_range(-18,18),599),rng.randf_range(9,22),float(i))
-	if game.exploration != null: draw_passages("city")
 	if game.exploration != null and game.exploration.bells.size() < 2:
 		for x in [3781,3794]:
 			for y in range(-70,600,18): draw_arc(Vector2(x,y),7,0,TAU,12,Color("967853"),3)
@@ -146,18 +154,59 @@ func _draw_ground(x0: float, x1: float) -> void:
 	draw_line(Vector2(x0, GROUND_Y), Vector2(x1, GROUND_Y), Color("8b7d67"), 2)
 
 
-func prop(index: int, foot: Vector2, width: float, tint: Color = Color.WHITE) -> void:
+func prop(index: int, foot: Vector2, width: float, tint: Color = Color.WHITE, facing: int = 1) -> void:
 	var cell := sacred_props.get_size() / Vector2(3,2)
 	var source := Rect2(Vector2(index%3,index/3)*cell,cell)
+	var floor_anchor := 482.0 if index < 3 else 494.0
 	draw_set_transform(foot + Vector2(0,-1),0,Vector2(1,0.13))
 	draw_circle(Vector2.ZERO,width*0.4,Color(0,0,0,0.26))
+	draw_set_transform(foot,0,Vector2(float(facing),1))
+	draw_texture_rect_region(sacred_props,Rect2(-width/2,-width*floor_anchor/cell.y,width,width),source,tint)
 	draw_set_transform(Vector2.ZERO)
-	draw_texture_rect_region(sacred_props,Rect2(foot.x-width/2,foot.y-width*0.94,width,width),source,tint)
 
 func draw_passages(room: String) -> void:
 	for link in game.exploration.passages:
-		if link.a == room: prop(3,link.pa,155)
-		elif link.b == room: prop(3,link.pb,155)
+		if link.a != room and link.b != room: continue
+		var from_a: bool = link.a == room
+		var face: Dictionary = game.exploration.Layout.passage_face(link,from_a)
+		var locked: bool = link.get("latch",false) and not game.exploration.opened.has(link.id)
+		draw_doorway(face,locked)
+
+func draw_doorway(face: Dictionary, locked: bool) -> void:
+	var foot: Vector2 = face.foot
+	var width: float = face.width
+	var variant := 0 if face.theme == "burial" else (1 if face.theme == "water" else 2)
+	var source := Rect2(variant*512,512 if locked else 0,512,512)
+	# The module includes the wall wings, a deep vestibule and the threshold.
+	# Its own source-floor anchor is used instead of scaling a free-standing prop.
+	var floor_anchor := 488.0
+	draw_set_transform(foot+Vector2(0,-1),0,Vector2(1,0.13))
+	draw_circle(Vector2.ZERO,width*0.43,Color(0,0,0,0.28))
+	draw_set_transform(foot,0,Vector2(float(face.facing),1))
+	draw_texture_rect_region(doorway_art,Rect2(-width/2,-width*floor_anchor/512,width,width),source)
+	draw_set_transform(Vector2.ZERO)
+
+func build_memorial() -> void:
+	memorial_base = Sprite2D.new()
+	memorial_base.texture = load("res://assets/memorial_empty.png")
+	var size := memorial_base.texture.get_size()
+	var unit := 220.0/size.x
+	memorial_base.scale = Vector2.ONE*unit
+	memorial_base.position = Vector2(2800,600+(size.y/2-1008)*unit)
+	# The source has a soft translucent glow around its silhouette. This cutout
+	# material rejects the halo at render time while retaining antialiased stone.
+	var shader := Shader.new()
+	shader.code = "shader_type canvas_item; render_mode unshaded; void fragment(){ vec4 sample_color = texture(TEXTURE,UV); sample_color.a *= smoothstep(0.38,0.72,sample_color.a); COLOR = sample_color; }"
+	var cutout := ShaderMaterial.new()
+	cutout.shader = shader
+	memorial_base.material = cutout
+	add_child(memorial_base)
+	memorial_doll = Sprite2D.new()
+	memorial_doll.texture = load("res://assets/cloth_doll.png")
+	memorial_doll.scale = Vector2.ONE*0.037
+	memorial_doll.position = Vector2(2800,543+(627-1136)*0.037)
+	memorial_doll.visible = false
+	add_child(memorial_doll)
 
 func draw_branch() -> void:
 	var ex = game.exploration
@@ -170,6 +219,7 @@ func draw_branch() -> void:
 	var art_rect := Rect2(b.position.x,floor_y-height*0.86,b.size.x,height)
 	draw_rect(b,Color("17181d"))
 	draw_texture_rect(texture,art_rect,false)
+	draw_passages(ex.room)
 	for ledge in ex.ledges:
 		if ledge.position.x < b.position.x or ledge.end.x > b.end.x: continue
 		draw_texture_rect_region(panorama,ledge,Rect2(1120,615,140,22))
@@ -179,7 +229,6 @@ func draw_branch() -> void:
 			polygon([tip+Vector2(-8,0),tip+Vector2(8,0),tip+Vector2(0,28)],Color("797065"))
 	for altar in ex.extra_altars:
 		if altar.x > b.position.x and altar.x < b.end.x: prop(0,altar,185)
-	draw_passages(ex.room)
 	for item in ex.pickups:
 		if item.room != ex.room or ex.collected.has(item.id): continue
 		prop(2,item.pos,100)

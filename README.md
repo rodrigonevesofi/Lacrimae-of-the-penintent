@@ -12,7 +12,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 
 - **A / D ou setas:** mover
 - **Espaço:** pular; **S + Espaço:** descer de uma galeria
-- **J / X:** atacar
+- **J / X:** atacar; no ar, corte aéreo
 - **K / Shift:** esquivar
 - **E:** interagir ou executar inimigo atordoado
 - **F:** curar
@@ -26,3 +26,5 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 O primeiro ato tem sete locais interligados, caminhos elevados, atalhos, descobertas opcionais e um mapa. Inclui penitências equipáveis, fragmentos de culpa e a homenagem no memorial dos portões.
 
 O projeto está em desenvolvimento. A versão atual contém o trecho inicial do primeiro ato.
+
+[Roteiro dos cinco atos](docs/roteiro-cinco-atos.md). Os atos II–V ainda estão no roteiro.

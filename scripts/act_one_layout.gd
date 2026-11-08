@@ -48,7 +48,7 @@ static func passages() -> Array[Dictionary]:
 		{"id":"tower", "a":"cloister","pa":Vector2(13520,600),"b":"belfry","pb":Vector2(14350,1100),"label":"Campanário da Vigília"},
 		{"id":"records", "a":"cloister","pa":Vector2(12800,40),"b":"archive","pb":Vector2(16760,600),"label":"Arquivo das Confissões"},
 		{"id":"archive_return", "a":"archive","pa":Vector2(18430,600),"b":"belfry","pb":Vector2(15720,540),"label":"Passadiço dos copistas","latch":true},
-		{"id":"tower_return", "a":"belfry","pa":Vector2(16040,1100),"b":"city","pb":Vector2(3540,600),"label":"Porta da vigília","latch":true},
+		{"id":"tower_return", "a":"belfry","pa":Vector2(16040,1100),"b":"city","pb":Vector2(3380,600),"label":"Porta da vigília","latch":true},
 	]
 
 static func enemies() -> Array:
@@ -59,3 +59,19 @@ static func enemies() -> Array:
 		["belfry",0,14800,1100,160],["belfry",1,15100,760,130],["belfry",0,15550,540,120],["belfry",1,14780,40,100],
 		["archive",0,17380,600,170],["archive",1,17700,360,100],["refuge",0,19600,600,120],
 	]
+
+
+static func passage_face(link: Dictionary, from_a: bool) -> Dictionary:
+	# A face is a doorway in a wall. Its arrival direction describes the walk into
+	# the destination room, independent of the artificial global room offsets.
+	var room: String = link.a if from_a else link.b
+	var arrival := -1 if from_a else 1
+	if link.id in ["shelter", "vows", "records"] and from_a: arrival = 1
+	if link.id == "archive_return" and not from_a: arrival = -1
+	var themes := {"city":"stone", "ossuary":"burial", "cistern":"water", "cloister":"stone", "belfry":"bell", "archive":"script", "refuge":"burial"}
+	var width := 300.0
+	if link.id in ["burial", "tower", "vows"]: width = 320.0
+	if link.id in ["shelter", "records", "refuge_return"]: width = 280.0
+	return {"room":room, "foot":link.pa if from_a else link.pb,
+		"arrival_dir":arrival, "facing":-arrival, "width":width,
+		"theme":themes[room], "spawn_offset":90.0}

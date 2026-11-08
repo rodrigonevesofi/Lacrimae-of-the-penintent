@@ -23,7 +23,7 @@ func run() -> void:
 	place(Vector2(2600,600))
 	await frames(150)
 	game.doll_found = true
-	place(Vector2(2860,600))
+	place(Vector2(2800,600))
 	await frames(4)
 	Input.action_press("interact")
 	await frames(1)

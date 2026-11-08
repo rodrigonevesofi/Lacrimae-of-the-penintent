@@ -13,6 +13,7 @@ var saved_music_db := -3.0
 var font: Font
 var title_font: Font
 var panel: Control
+var opening_art: Texture2D
 var opening := [
 	"Dizem que os homens nasceram do pecado\ne que somente através da dor poderiam encontrar a salvação.",
 	"Mas quando as lágrimas deixaram de ser suficientes,\nfizeram do sofrimento uma religião.",
@@ -22,6 +23,7 @@ var opening := [
 
 func _ready() -> void:
 	layer = 30
+	opening_art = load("res://assets/opening.png")
 	font = ThemeDB.fallback_font
 	title_font = load("res://assets/title_font.ttf")
 	panel = Control.new()
@@ -165,13 +167,9 @@ func paint() -> void:
 			text_at(Vector2(0, vs.y - 45), "O peso de cada lágrima.", 21, Color("c4a99d"), vs.x)
 		return
 	panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.01, 0.015, 0.02, 0.87))
-	panel.draw_texture_rect((load("res://assets/basilica.png") if mode == "opening" else game.art.gate_memory), Rect2(-elapsed * 2, -50, vs.x + 70, vs.y + 60), false, Color(0.35, 0.34, 0.35))
+	var background: Texture2D = opening_art if mode == "opening" else game.art.gate_memory
+	panel.draw_texture_rect(background, Rect2(-elapsed * 2, -20, vs.x + 70, vs.y + 40), false, Color(0.72, 0.72, 0.76))
 	if mode == "opening":
-		# Silhouettes of the kneeling dead; the altar towers above them.
-		for i in range(11):
-			var x := 150.0 + i * 92
-			panel.draw_circle(Vector2(x, 470), 10, Color("101116"))
-			panel.draw_colored_polygon(PackedVector2Array([Vector2(x - 12, 475), Vector2(x + 9, 477), Vector2(x + 19, 527), Vector2(x - 24, 527)]), Color("101116"))
 		var index := mini(int(elapsed / 5), 3)
 		panel.draw_rect(Rect2(0, vs.y - 175, vs.x, 175), Color(0, 0, 0, 0.85))
 		text_at(Vector2(100, vs.y - 120), opening[index], 22, Color("e1d7c6"), vs.x - 200)
@@ -179,8 +177,8 @@ func paint() -> void:
 	else:
 		text_at(Vector2(0, 110), "MEMÓRIAS DA CULPA  ·  I", 25, Color("d3b67f"), vs.x)
 		panel.draw_rect(Rect2(0, 515, vs.x, 145), Color(0, 0, 0, 0.8))
-		text_at(Vector2(100, 555), "Você lembra o peso do ferro. E as vozes.\nAbra. Ainda estamos aqui." if elapsed < 10 else "Suas mãos fecham os portões.\nO silêncio não devolve quem ficou do outro lado.", 24, Color("ded4c3"), vs.x - 200)
+		text_at(Vector2(100, 555), game.Story.memory_line(elapsed, game.knows_alba()), 24, Color("ded4c3"), vs.x - 200)
 		if game.doll_found:
-			text_at(Vector2(100, 632), "A boneca entre as mãos pequenas. Você a deixou junto aos nomes." if game.memorial_honored else "Entre as mãos pequenas, uma boneca. A mesma que você carrega.", 17, Color("c19481"), vs.x - 200)
+			text_at(Vector2(100, 632), ("Você gravou seu nome. A pequena mão continua do outro lado." if game.story_flags.has("memorial_named") else "A boneca entre as mãos pequenas. Você a deixou junto aos nomes.") if game.memorial_honored else "Um sol bordado no pulso. A mesma boneca que você carrega.", 17, Color("c19481"), vs.x - 200)
 	panel.draw_rect(Rect2(0, 0, vs.x, 28), Color.BLACK)
 	text_at(Vector2(0, vs.y - 25), "[E] Prosseguir", 14, Color("b6ac9b"), vs.x)
