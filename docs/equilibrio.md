@@ -45,6 +45,6 @@ A sonda grava apenas este relatório e o salvamento descartável do ambiente iso
 ## Leitura da rodada com o bestiário completo (v12)
 
 - A espada causa 20 ou 26 por golpe. Quem tem 46 de vida ou menos morre em dois golpes. Isso valia para o Devoto (45) e o Chorão (30) originais, e valia também para as criaturas novas, que morriam em cerca de 1,3 s, antes de preparar qualquer ataque.
-- Por isso a vida das quatro criaturas leves foi aumentada: Flagelante 38 → 70, Duelista 42 → 70, Bruxa 28 → 45 e Asmodeia 34 → 60. O Devorador (130) já exigia seis golpes e foi o único a acertar o Penitente na primeira rodada (30 de dano, uma esquiva sem dano de duas tentativas).
+- Por isso a vida das quatro criaturas leves foi aumentada: Flagelante 38 → 70, Duelista 42 → 70, Bruxa 28 → 45 (depois 40 na v13) e Asmodeia 34 → 60. O Devorador (130) já exigia seis golpes e foi o único a acertar o Penitente na primeira rodada (30 de dano, uma esquiva sem dano de duas tentativas).
 - **Esta sonda não valida os mecanismos novos.** O controlador ataca sem parar e as criaturas só começam a agir depois de cerca de um segundo de espera; mesmo com a vida maior, as quatro morrem em 1,5 a 1,8 s, sem causar dano. Ela mede a tenacidade, não o perigo. Para julgar a investida do Flagelante, o escudo do aquelarre, os estilhaços da Asmodeia e o duelo, é preciso jogar.
 - O aumento de vida é uma decisão de projeto baseada nesta evidência, não um valor calibrado com jogadores. Se as salas ficarem demoradas ou duras, ajuste o campo `hp` de `Enemy.TYPES` em `scripts/enemy.gd`.

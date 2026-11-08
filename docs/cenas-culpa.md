@@ -1,4 +1,4 @@
-# Cenas de culpa (v12)
+# Cenas de culpa (v13)
 
 Seguem as regras do [roteiro dos cinco atos](roteiro-cinco-atos.md): nenhuma cena revela o ritual nem o pedido de esquecimento, nenhuma obriga o jogador a ser autor do fechamento dos portões, memórias duram de 15 a 30 segundos com opção de seguir, e nenhuma dá recompensa nem reduz culpa.
 
@@ -10,7 +10,7 @@ Seguem as regras do [roteiro dos cinco atos](roteiro-cinco-atos.md): nenhuma cen
 | Três batidas | Ao soltar a corrente alta do Campanário | Três batidas do lado interditado, com intervalo de 0,62 s; terminam antes de qualquer pista de onde vêm |
 | Morte | A cada morte | Uma frase de testemunho abaixo de "A culpa permanece" |
 
-Os textos estão em `scripts/guilt_text.gd`. O som das batidas é sintetizado (`assets/audio/knock.wav`).
+Os textos estão em `scripts/guilt_text.gd`. Os sons são sintetizados: as batidas (`knock.wav`), os murmúrios de vozes abafadas, o sino surdo do memorial e a corrente que cede (ver [audio-culpa.md](audio-culpa.md)). O teste lexical `tests/guilt_text_review.gd` confere que nenhum texto antecipa revelações dos atos seguintes.
 
 ## Ilustrações e fragmento
 

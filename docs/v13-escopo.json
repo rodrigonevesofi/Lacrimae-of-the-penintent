@@ -1,0 +1,17 @@
+{
+  "source_commit": "d568e29",
+  "patch_sha256": "3ffc8cf5b0725bf5242b9e83f400e49fa317545c79b017f5b298e80d0f59f65c",
+  "protected_files_unchanged_after_patch": {
+    "scripts/enemy.gd": "87cee0165b4b70feb60a4a1b32b91157fdc5fec42b4ba6b63ae732ea7d2afc5b",
+    "scripts/narrative.gd": "5fc22dafffeb76347e448e9917f770802d6250ffbdce6023ccb926e06de2583f",
+    "scripts/soundscape.gd": "fd8ca32e21ff97f27954efc651d24b86720186f7b6c3594bb6d41c2f3638f92e",
+    "scripts/world_art.gd": "75a769a166bb25d7f568b725654505568d6524631af99d6cadbc9ed98a860959",
+    "scripts/exploration.gd": "ae43660ec5af263e7b3a89ea30c130bd1bb49b49315d3025c0d8c0bb729ed1e0",
+    "scripts/main.gd": "8447bea6565fd8703f63628a29119bc38d238f817991137a69f65df57ed4f28a",
+    "scripts/hud.gd": "bd0157ba2652efe0b9499d40e2cfe5366a4d4027e9bf3c3266dc36fd3a587b81",
+    "scripts/player.gd": "f72f6fec7d29fde9f436864224c3d9ebf125d18d0ee974f117d0c19b8d64f07b",
+    "scripts/act_one_layout.gd": "43344348e02a1163c4c1d4a6b743a5e5b613d3fb2234c7a546c8c5da83bfa5f0",
+    "scripts/guilt_text.gd": "be1cb8956786d77e58493e72979a85c5be35a246e368f1a9e8a63488dedea682",
+    "assets/animation/clips.json": "068f5e8561bc4b711bdb076f60a97202ffebb19b62f921237733ce22626c94a8"
+  }
+}

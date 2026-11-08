@@ -66,6 +66,26 @@ func data_checks() -> void:
 	for k in [3,4,5,6,7]:
 		if not Enemy.BESTIARY.has(k): bestiary_ok = false
 	expect(bestiary_ok,"each new creature has a first-sight note")
+
+	# Reach rule: the sword hits about 66 above the feet standing and about 108 from the feet in the air,
+	# so a new flyer must hover within 170 of something the player can stand on beneath it.
+	var reach_ok := true
+	var reach_report := ""
+	var rooms: Dictionary = Layout.rooms()
+	for d in Layout.enemies():
+		if not [5,6].has(d[1]): continue
+		var supports: Array = [float(rooms[d[0]].floor)]
+		for l in Layout.platforms():
+			if l.end.x >= d[2] - d[4] and l.position.x <= d[2] + d[4]: supports.append(l.position.y)
+		for b in Layout.blocks():
+			if b.end.x >= d[2] - d[4] and b.position.x <= d[2] + d[4]: supports.append(b.position.y)
+		var near := false
+		for y in supports:
+			if y - d[3] >= 0.0 and y - d[3] <= 170.0: near = true
+		if not near:
+			reach_ok = false
+			reach_report += " %s kind %d at (%d,%d)" % [d[0],d[1],d[2],d[3]]
+	expect(reach_ok,"new flyers hover within sword reach of a surface the player can stand on:"+reach_report)
 	var rooms_with_new := {}
 	for d in Layout.enemies():
 		if d[1] >= 3: rooms_with_new[d[0]] = true
@@ -148,12 +168,12 @@ func run() -> void:
 	var c = spawn(5,Vector2(1200,300),0,9)
 	await frames(4)
 	a.take_hit(10.0,p.position.x)
-	expect(absf(a.hp - (a.max_hp - 10.0 * 0.36)) < 0.01,"two sisters absorb most of a blow")
+	expect(absf(a.hp - (a.max_hp - 10.0 * 0.49)) < 0.01,"two sisters absorb most of a blow")
 	b.take_hit(1000.0,p.position.x)
 	expect(b.dead and a.rage_t > 0.0 and c.rage_t > 0.0,"a fallen sister enrages the others")
 	var hp_a: float = a.hp
 	a.take_hit(10.0,p.position.x)
-	expect(absf(a.hp - (hp_a - 6.0)) < 0.01,"one remaining sister still shields part of the blow")
+	expect(absf(a.hp - (hp_a - 7.0)) < 0.01,"one remaining sister still shields part of the blow")
 	c.take_hit(1000.0,p.position.x)
 	var hp_last: float = a.hp
 	a.take_hit(10.0,p.position.x)
@@ -209,7 +229,20 @@ func run() -> void:
 	expect(eb.state == "chase","striking one duelist wakes the other")
 	await clear()
 
-	expect(game.EnemyScript.new().humanoid(),"walkers use the humanoid execution clip")
+	# A stunned flyer comes down to the penitent's level for its execution.
+	p.revive(Vector2(1000,600))
+	var flyer = spawn(6,Vector2(1030,480),0)
+	await frames(30)
+	flyer.state = "stagger"
+	flyer.state_t = 2.0
+	p.position = Vector2(1000,600)
+	await frames(2)
+	expect(p.begin_execution(flyer) and absf(flyer.position.y - 600.0) < 1.0,"a stunned flyer is brought down to ground level for its execution")
+	await frames(90)
+	await clear()
+	var walker = game.EnemyScript.new()
+	expect(walker.humanoid(),"walkers use the humanoid execution clip")
+	walker.free()
 	var weeper = game.EnemyScript.new()
 	weeper.setup(6,Vector2.ZERO,0,p)
 	expect(not weeper.humanoid(),"flyers use the weeper execution clip")

@@ -37,6 +37,7 @@ var knocks_done := 0
 var flash := 0.0
 var pulse := 0.0
 var memorial_known := false
+var voice_played := false
 var opening := [
 	"Dizem que os homens nasceram do pecado\ne que somente através da dor poderiam encontrar a salvação.",
 	"Mas quando as lágrimas deixaram de ser suficientes,\nfizeram do sofrimento uma religião.",
@@ -93,6 +94,7 @@ func begin(sequence: String, argument: int = 0) -> void:
 	mode = sequence
 	elapsed = 0
 	knocks_done = 0
+	voice_played = false
 	flash = 0.0
 	pulse = 0.0
 	echo_index = argument
@@ -102,7 +104,9 @@ func begin(sequence: String, argument: int = 0) -> void:
 	game.player.roll_buffer = 0
 	game.player.hit_pause = 0
 	game.player.shake = 0
-	if sequence != "echo":
+	if sequence == "memorial":
+		game.soundscape.play_sfx("sino_surdo")
+	elif sequence != "echo":
 		game.soundscape.play_sfx("bell")
 	if sequence in ["prayer", "memory", "echo", "memorial"]:
 		var camera: Camera2D = game.player.camera
@@ -205,6 +209,16 @@ func knock_schedule() -> Array:
 	if mode == "echo" and echo_index == 0: return ECHO_KNOCKS
 	return []
 
+## Muffled voices heard through stone: the second and third echoes, and the opening of the memory.
+func fire_voices() -> void:
+	if voice_played: return
+	if mode == "echo" and echo_index in [1, 2] and elapsed >= 1.2:
+		voice_played = true
+		game.soundscape.play_sfx("murmurio_0%d" % echo_index)
+	elif mode == "memory" and elapsed >= GRIEF_DURATION + 0.4:
+		voice_played = true
+		game.soundscape.play_sfx("murmurio_03")
+
 func fire_knocks() -> void:
 	var times := knock_schedule()
 	while knocks_done < times.size() and elapsed >= times[knocks_done]:
@@ -234,6 +248,7 @@ func _process(delta: float) -> void:
 		flash = maxf(flash - delta, 0.0)
 		pulse = maxf(pulse - delta * 1.4, 0.0)
 		update_focus()
+		fire_voices()
 		fire_knocks()
 		if elapsed >= duration_of(mode) or (can_skip() and Input.is_action_just_pressed("interact")):
 			finish()

@@ -79,6 +79,9 @@ func run() -> void:
 	var knocks_second: int = sound.knock_count
 	await die_and_return()
 	expect(n.mode == "echo" and n.echo_index == 1,"the second recovery plays the next echo")
+	n.elapsed = 1.5
+	await frames(3)
+	expect(sound.effects["murmurio_01"].playing,"the second echo plays muffled voices")
 	n.elapsed = n.ECHO_DURATION - 0.01
 	await frames(3)
 	expect(n.mode == "" and sound.knock_count == knocks_second,"the second echo has a voice but no knocks")
@@ -108,6 +111,7 @@ func run() -> void:
 	Input.action_release("interact")
 	await frames(2)
 	expect(game.memorial_honored and n.mode == "memorial" and not p.controllable,"leaving the doll starts a silent scene and is already remembered")
+	expect(sound.effects["sino_surdo"].playing,"a single muffled bell marks the offering")
 	n.elapsed = 1.0
 	Input.action_press("interact")
 	await frames(3)
@@ -158,7 +162,7 @@ func run() -> void:
 	await create_timer(0.3,true,false,true).timeout
 	expect(sound.knock_count == knocks_chain,"the water chain is silent")
 	game.story_chain_released("vigil")
-	await create_timer(3.4,true,false,true).timeout
+	await create_timer(4.4,true,false,true).timeout
 	expect(sound.knock_count - knocks_chain == 3,"the high chain gives three knocks from the other side")
 	sound.set_process(false)
 	sound.ambience.stop()

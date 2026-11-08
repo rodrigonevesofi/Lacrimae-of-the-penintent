@@ -8,16 +8,16 @@ Dano recebido é cumulativo, incluindo o que foi depois curado. Contagens de ace
 
 | Encontro | Semente | Tempo s | Dano | Mortes | Bote | Investida | Estilhaços | Leque | Outros | Curas | Resultado |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| aquelarre | 1000 | 60.00 | 220.0 | 0 | 0 | 0 | 0 | 20 | 0 | 3 | limite |
-| aquelarre | 1001 | 60.00 | 198.0 | 0 | 0 | 0 | 0 | 18 | 0 | 3 | limite |
-| aquelarre | 1002 | 60.00 | 209.0 | 0 | 0 | 0 | 0 | 19 | 0 | 3 | limite |
-| aquelarre | 1003 | 60.00 | 209.0 | 0 | 0 | 0 | 0 | 19 | 0 | 3 | limite |
-| aquelarre | 1004 | 60.00 | 198.0 | 0 | 0 | 0 | 0 | 18 | 0 | 3 | limite |
-| aquelarre | 1005 | 60.00 | 198.0 | 0 | 0 | 0 | 0 | 18 | 0 | 3 | limite |
-| aquelarre | 1006 | 54.68 | 235.0 | 1 | 0 | 0 | 0 | 22 | 0 | 3 | morte |
-| aquelarre | 1007 | 60.00 | 231.0 | 0 | 0 | 0 | 0 | 21 | 0 | 3 | limite |
-| aquelarre | 1008 | 60.00 | 176.0 | 0 | 0 | 0 | 0 | 16 | 0 | 3 | limite |
-| aquelarre | 1009 | 60.00 | 198.0 | 0 | 0 | 0 | 0 | 18 | 0 | 3 | limite |
+| aquelarre | 1000 | 37.60 | 77.0 | 0 | 0 | 0 | 0 | 0 | 11 | 1 | venceu |
+| aquelarre | 1001 | 38.33 | 77.0 | 0 | 0 | 0 | 0 | 0 | 11 | 1 | venceu |
+| aquelarre | 1002 | 53.70 | 112.0 | 0 | 0 | 0 | 0 | 0 | 16 | 2 | venceu |
+| aquelarre | 1003 | 51.95 | 133.0 | 0 | 0 | 0 | 0 | 0 | 19 | 2 | venceu |
+| aquelarre | 1004 | 26.78 | 49.0 | 0 | 0 | 0 | 0 | 0 | 7 | 0 | venceu |
+| aquelarre | 1005 | 41.03 | 84.0 | 0 | 0 | 0 | 0 | 0 | 12 | 1 | venceu |
+| aquelarre | 1006 | 51.18 | 105.0 | 0 | 0 | 0 | 0 | 0 | 15 | 1 | venceu |
+| aquelarre | 1007 | 60.00 | 140.0 | 0 | 0 | 0 | 0 | 0 | 20 | 2 | limite |
+| aquelarre | 1008 | 53.63 | 133.0 | 0 | 0 | 0 | 0 | 0 | 19 | 2 | venceu |
+| aquelarre | 1009 | 60.00 | 105.0 | 0 | 0 | 0 | 0 | 0 | 15 | 1 | limite |
 | duelistas | 1000 | 2.27 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
 | duelistas | 1001 | 3.58 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
 | duelistas | 1002 | 3.52 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
@@ -28,7 +28,17 @@ Dano recebido é cumulativo, incluindo o que foi depois curado. Contagens de ace
 | duelistas | 1007 | 3.47 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
 | duelistas | 1008 | 2.50 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
 | duelistas | 1009 | 3.02 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
-| flagelante_solo | 1000 | 2.57 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1000 | 4.70 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1001 | 5.27 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1002 | 4.60 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1003 | 4.85 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1004 | 4.33 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1005 | 5.20 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1006 | 5.00 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1007 | 4.97 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1008 | 4.60 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
+| devorador | 1009 | 4.73 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| flagelante_solo | 1000 | 1.95 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
 | flagelante_solo | 1001 | 3.35 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
 | flagelante_solo | 1002 | 3.45 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
 | flagelante_solo | 1003 | 3.53 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
@@ -48,36 +58,35 @@ Dano recebido é cumulativo, incluindo o que foi depois curado. Contagens de ace
 | flagelantes_claustro | 1007 | 60.00 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | limite |
 | flagelantes_claustro | 1008 | 60.00 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | limite |
 | flagelantes_claustro | 1009 | 60.00 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | limite |
-| asmodeia_controle | 1000 | 60.00 | 84.0 | 0 | 0 | 0 | 7 | 0 | 0 | 1 | limite |
-| asmodeia_controle | 1001 | 60.00 | 144.0 | 0 | 0 | 0 | 12 | 0 | 0 | 2 | limite |
-| asmodeia_controle | 1002 | 60.00 | 156.0 | 0 | 0 | 0 | 13 | 0 | 0 | 3 | limite |
-| asmodeia_controle | 1003 | 60.00 | 156.0 | 0 | 0 | 0 | 13 | 0 | 0 | 3 | limite |
-| asmodeia_controle | 1004 | 60.00 | 156.0 | 0 | 0 | 0 | 13 | 0 | 0 | 3 | limite |
-| asmodeia_controle | 1005 | 60.00 | 156.0 | 0 | 0 | 0 | 13 | 0 | 0 | 3 | limite |
-| asmodeia_controle | 1006 | 60.00 | 156.0 | 0 | 0 | 0 | 13 | 0 | 0 | 3 | limite |
-| asmodeia_controle | 1007 | 60.00 | 120.0 | 0 | 0 | 0 | 10 | 0 | 0 | 2 | limite |
-| asmodeia_controle | 1008 | 60.00 | 156.0 | 0 | 0 | 0 | 13 | 0 | 0 | 3 | limite |
-| asmodeia_controle | 1009 | 60.00 | 156.0 | 0 | 0 | 0 | 13 | 0 | 0 | 3 | limite |
-| devorador | 1000 | 4.70 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1001 | 5.27 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1002 | 4.60 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1003 | 4.85 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1004 | 4.33 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1005 | 5.20 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1006 | 5.00 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1007 | 4.97 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1008 | 4.60 | 30.0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | venceu |
-| devorador | 1009 | 4.73 | 0.0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1000 | 13.78 | 36.0 | 0 | 0 | 0 | 3 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1001 | 13.80 | 36.0 | 0 | 0 | 0 | 3 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1002 | 23.77 | 60.0 | 0 | 0 | 0 | 5 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1003 | 16.70 | 36.0 | 0 | 0 | 0 | 3 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1004 | 18.00 | 48.0 | 0 | 0 | 0 | 4 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1005 | 13.78 | 24.0 | 0 | 0 | 0 | 2 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1006 | 13.82 | 24.0 | 0 | 0 | 0 | 2 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1007 | 30.97 | 84.0 | 0 | 0 | 0 | 7 | 0 | 0 | 1 | venceu |
+| asmodeia_controle | 1008 | 18.78 | 48.0 | 0 | 0 | 0 | 4 | 0 | 0 | 0 | venceu |
+| asmodeia_controle | 1009 | 10.95 | 24.0 | 0 | 0 | 0 | 2 | 0 | 0 | 0 | venceu |
 
 ## Achados da simulação
 
-- aquelarre: 0vitórias, 1mortes, 9limites; dano médio207.2.
+- aquelarre: 8vitórias, 0mortes, 2limites; dano médio101.5.
 - duelistas: 10vitórias, 0mortes, 0limites; dano médio0.0.
 - devorador: 10vitórias, 0mortes, 0limites; dano médio12.0.
 - flagelante_solo: 10vitórias, 0mortes, 0limites; dano médio0.0.
 - flagelantes_claustro: 0vitórias, 0mortes, 10limites; dano médio0.0.
-- asmodeia_controle: 0vitórias, 0mortes, 10limites; dano médio144.0.
+- asmodeia_controle: 10vitórias, 0mortes, 0limites; dano médio42.0.
 
 Limites: navegação rudimentar pode dominar o resultado; limites de tempo não significam equilíbrio, e zero acertos não prova segurança. Asmodeia/estilhaços foram observados num sexto encontro de controle, isolando a Asmodeia da Nave em sua posição original. Dados e contagens de preparação/erros em equilibrio-humano.json.
 
 Repetir: `XDG_DATA_HOME=/tmp/lacrimae-human-data XDG_CONFIG_HOME=/tmp/lacrimae-human-config XDG_CACHE_HOME=/tmp/lacrimae-human-cache godot --headless --fixed-fps 60 --path . --script res://tests/balance_probe_human.gd`. A sonda exige dados descartáveis e grava o relatório.
+
+## Leitura e ajustes (v13)
+
+- **Aquelarre.** Na primeira rodada, 0 vitórias em 10 e 207 de dano médio. Duas causas: eu havia posto as bruxas a 190 unidades do chão, fora do alcance da espada em pé, e três bruxas atirando um leque de 11 de dano a cada 2,9 s formavam uma verificação de dano contínua. Ajustes: bruxas a 75–90 unidades do chão, leque de 7 de dano a cada 4,2 s, escudo mútuo de 30% por irmã e 40 de vida. Resultado seguinte: 8 vitórias em 10, 0 mortes, 102 de dano médio (com as três curas disponíveis). Um encontro vencível e exigente, para este controlador.
+- **Asmodeia.** Pairava a 340 unidades do chão e nenhuma tentativa a derrotou (151 de dano médio). Ajustada a 120 unidades: 10 vitórias em 10 e 42 de dano médio.
+- **Devorador.** 10 vitórias, 12 de dano médio. O controlador esquiva o bote com facilidade; é provável que um jogador humano sofra mais.
+- **Duelistas e Flagelante solo.** 10 vitórias sem dano. O controlador mata antes de a mecânica acontecer, e a sonda não prova que o Flagelante seja inofensivo.
+- **Flagelantes do Claustro.** Os 10 resultados são limites de tempo com 0 dano: falha de navegação do controlador, já declarada acima. Não são dados de equilíbrio.
+- Os valores acima são ajustes de projeto feitos contra uma simulação. Não substituem a opinião de quem joga.

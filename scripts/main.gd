@@ -637,7 +637,7 @@ func _play_update(delta: float) -> void:
 			echo_count += 1
 		_save()
 	for target in get_tree().get_nodes_in_group("enemies"):
-		if not target.dead and target.state == "stagger" and not target.executing and absf(target.position.x - pp.x) < 72 and absf(target.position.y - pp.y) < 80 and player.state == "idle" and player.is_on_floor():
+		if not target.dead and target.state == "stagger" and not target.executing and absf(target.position.x - pp.x) < 72 and absf(target.position.y - pp.y) < (170 if target.family == "flyer" else 80) and player.state == "idle" and player.is_on_floor():
 			prompt = "[E] Executar — recupera 8 de vida e 12 de culpa"
 			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
 			return
@@ -826,9 +826,9 @@ func story_pickup_text(id: String, fallback: String) -> String:
 	return Story.pickup_text(id, fallback)
 
 func story_chain_released(id: String) -> void:
-	soundscape.play_sfx("breath")
+	soundscape.play_sfx("corrente_cede")
 	toast(Story.chain_line(id))
-	if id == "vigil": soundscape.play_knocks(1.6)
+	if id == "vigil": soundscape.play_knocks(2.4)
 
 func knows_alba() -> bool:
 	return exploration.collected.has("register") and doll_found

@@ -1,4 +1,4 @@
-# Bestiário inspirado em Goya (v12)
+# Bestiário inspirado em Goya (v13)
 
 Cinco criaturas novas, cada uma com uma regra de combate própria, mais um sistema de encontros em grupo. As referências são as Pinturas Negras e as séries gráficas de Francisco de Goya. Nenhuma imagem dele é copiada: o que se aproveita é a ideia de cada obra.
 
@@ -6,7 +6,7 @@ Cinco criaturas novas, cada uma com uma regra de combate própria, mais um siste
 | --- | --- | --- | --- | --- |
 | O Devorador | Saturno devorando um filho | Grande e lento. Fica blindado durante a preparação e o bote. O bote agarra, causa 30 de dano, soma culpa e cura 18 de vida dele | Esquivar do bote e golpear na recuperação longa (1,5 s), que abre a execução | Campanário, Nave, Pátio |
 | Flagelante | Procissão de disciplinantes | Mantém distância, prepara e investe em linha reta. De perto, usa o chicote | Fazê-lo errar: a investida termina contra parede ou borda e o deixa atordoado | Claustro (2), Abrigo |
-| Bruxa do Aquelarre | O Aquelarre | Atira três lágrimas em leque. Três irmãs partilham um voto: cada irmã viva absorve 40% do golpe | Matar uma de cada vez. A morte de uma enfurece as outras por 8 s | Arquivo (3) |
+| Bruxa do Aquelarre | O Aquelarre | Atira três lágrimas em leque (7 de dano cada, a cada 4 s). Três irmãs partilham um voto: cada irmã viva absorve 30% do golpe | Matar uma de cada vez. A morte de uma enfurece as outras por 8 s | Arquivo (3) |
 | Asmodeia | Asmodeia | Paira acima e solta três estilhaços que caem a -120, 0 e +120 do alvo, com linhas de aviso | Sair da vertical e atacar quando ela recolhe | Cisterna, Nave, Terraço |
 | Duelistas | Duelo a cacetadas | Dois homens lutam entre si e ignoram o jogador distante. Os golpes se ferem, mas nunca se matam (piso de 40% de vida). Quem chega a 340 unidades, ou fere um deles, atrai os dois | Atacar de longe, um de cada vez, ou deixá-los se enfraquecer | Ossuário, Terraço |
 
@@ -45,6 +45,10 @@ Os grupos são definidos em `scripts/act_one_layout.gd`, na lista `enemies()`: o
 
 O teste confirma que as regras funcionam, não que o equilíbrio está bom. Dano, vida, velocidade e quantidade de inimigos por sala foram escolhidos com bom senso e ainda não passaram por partidas reais. Ajustes de dificuldade devem vir de quem joga.
 
-## Vida (v12)
+## Vida e ritmo (v13)
 
-Flagelante 70, Duelista 70, Bruxa 45 (ver o escudo do aquelarre), Asmodeia 60 e Devorador 130. Os valores foram aumentados depois que a sonda de equilíbrio mostrou as criaturas leves morrendo em dois golpes, antes de agir; veja [equilibrio.md](equilibrio.md).
+Flagelante 70, Duelista 70, Bruxa 40, Asmodeia 60 e Devorador 130. As bruxas dividem o golpe: cada irmã viva absorve 30% dele. O leque de lágrimas causa 7 de dano por lágrima, a cada 4,2 s (2,2 s se uma irmã caiu).
+
+Regra de alcance: a espada acerta cerca de 66 acima dos pés em pé e cerca de 108 a partir dos pés no ar. Por isso as voadoras novas pairam a, no máximo, 170 unidades de uma superfície onde o jogador possa ficar (teste em `tests/bestiary_smoke.gd`). Uma voadora atordoada pode ser executada a até 170 de altura e desce ao nível do herói durante a execução.
+
+Origem dos números: a primeira sonda mostrou as criaturas leves morrendo em dois golpes, antes de agir ([equilibrio.md](equilibrio.md)); a sonda com atraso de reação mostrou o aquelarre impossível de vencer, com média de 207 de dano em 60 s e as bruxas altas demais para a espada ([equilibrio-humano.md](equilibrio-humano.md)). Os valores atuais foram ajustados contra essas duas medições e ainda não foram calibrados com jogadores.

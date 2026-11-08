@@ -12,7 +12,7 @@ var ambience: AudioStreamPlayer
 var effects: Dictionary = {}
 var muted := false
 var knock_count := 0
-const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock"]
+const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
 
 func _ready() -> void:
 	ambience = AudioStreamPlayer.new()
@@ -43,7 +43,7 @@ func _ready() -> void:
 		var voice := AudioStreamPlayer.new()
 		voice.stream = load("res://assets/audio/%s.wav" % name)
 		voice.max_polyphony = 6
-		voice.volume_db = -7 if name == "step" else -2
+		voice.volume_db = -7 if name == "step" else (-8 if name.begins_with("murmurio") else -2)
 		add_child(voice)
 		effects[name] = voice
 

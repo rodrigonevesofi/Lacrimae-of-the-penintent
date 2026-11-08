@@ -13,3 +13,12 @@ Cinco texturas sintetizadas originais, mono22050Hz, PCM16bits. Sem gravações, 
 Medições no PCM exportado: pico inferior a−1dBFS e entrada acima de−60dB relativo ao pico em até50ms. Espectro conferido por FFT com janela Hann e bandas acima; dados completos em culpa-audio-medidas.json. Esses testes não comprovam realismo vocal nem impacto emocional. Falta audição crítica no contexto das cenas, em fones e caixas, pelo autor e pelo responsável pela mixagem. Os sons não foram ligados ao jogo.
 
 Regerar: `python3 tools/make_culpa_audio.py` (numpy). As sementes fixas produzem os mesmos arquivos.
+
+
+## Integração (v13)
+
+- `murmurio_01` e `murmurio_02` tocam no segundo e no terceiro eco do fragmento, a 1,2 s da cena; `murmurio_03` abre a Memória dos portões, logo depois do choro.
+- `corrente_cede` toca ao soltar qualquer das duas correntes; as três batidas do Campanário começam 2,4 s depois, para o som da corrente terminar antes.
+- `sino_surdo` marca o depósito da boneca no memorial, no lugar do sino comum.
+
+A audição crítica no contexto continua pendente.

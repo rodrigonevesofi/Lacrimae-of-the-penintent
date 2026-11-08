@@ -552,7 +552,7 @@ func apply_penitence(id: String) -> void:
 func begin_execution(target) -> bool:
 	if state != "idle" or not has_weapon or not is_on_floor() or not is_instance_valid(target): return false
 	if target.dead or target.kind == 2 or target.state != "stagger" or target.executing: return false
-	if absf(target.position.x - position.x) > 72 or absf(target.position.y - position.y) > 80: return false
+	if absf(target.position.x - position.x) > 72 or absf(target.position.y - position.y) > (170 if target.family == "flyer" else 80): return false
 	execution_zoom_start = camera.zoom
 	execution_target = target
 	execution_contact = false
@@ -560,6 +560,8 @@ func begin_execution(target) -> bool:
 	state_t = EXECUTION_TIME
 	facing = 1 if target.position.x >= position.x else -1
 	target.executing = true
+	# A stunned flyer is brought down to the penitent's level, so the paired animation lines up with the ground.
+	if target.family == "flyer": target.position.y = position.y
 	target.execution_progress = 0
 	target.velocity = Vector2.ZERO
 	target.facing = -facing

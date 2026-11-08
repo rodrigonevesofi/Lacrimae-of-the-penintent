@@ -9,9 +9,9 @@ static func rooms() -> Dictionary:
 		"belfry": {"name":"CAMPANÁRIO DA VIGÍLIA", "bounds":Rect2(14200,-650,2000,2050), "floor":1100.0, "art":"tower", "map":Vector2(920,190)},
 		"archive": {"name":"ARQUIVO DAS CONFISSÕES", "bounds":Rect2(16600,-350,2000,1300), "floor":600.0, "art":"gallery", "ground":0.756, "art_h":1250.0, "map":Vector2(700,110)},
 		"refuge": {"name":"ABRIGO DAS CINZAS", "bounds":Rect2(19000,-350,2000,1300), "floor":600.0, "art":"gates", "ground":0.80, "art_h":1250.0, "outdoor":true, "map":Vector2(210,650)},
-		"nave": {"name":"NAVE DO SILÊNCIO", "bounds":Rect2(21400,-450,2600,1400), "floor":600.0, "art":"basilica", "ground":0.80, "art_h":1500.0, "map":Vector2(20,230)},
-		"terrace": {"name":"TERRAÇO DOS SINOS", "bounds":Rect2(24400,-350,2600,1300), "floor":600.0, "art":"city", "ground":0.80, "art_h":1500.0, "outdoor":true, "map":Vector2(1000,380)},
-		"court": {"name":"PÁTIO DOS PORTÕES SELADOS", "bounds":Rect2(27400,-350,2000,1300), "floor":600.0, "art":"court", "ground":0.80, "art_h":1250.0, "outdoor":true, "map":Vector2(1000,560)},
+		"nave": {"name":"NAVE DO SILÊNCIO", "bounds":Rect2(21400,-450,2600,1400), "floor":600.0, "art":"nave_silencio", "ground":0.86, "art_h":880.0, "map":Vector2(20,230)},
+		"terrace": {"name":"TERRAÇO DOS SINOS", "bounds":Rect2(24400,-350,2600,1300), "floor":600.0, "art":"terraco_sinos", "ground":0.86, "art_h":880.0, "map":Vector2(1000,380)},
+		"court": {"name":"PÁTIO DOS PORTÕES SELADOS", "bounds":Rect2(27400,-350,2000,1300), "floor":600.0, "art":"patio_portoes", "ground":0.86, "art_h":800.0, "map":Vector2(1000,560)},
 	}
 
 static func platforms() -> Array[Rect2]:
@@ -89,12 +89,12 @@ static func enemies() -> Array:
 	return [
 		["ossuary",0,5700,600,160],["ossuary",0,6250,200,170],["ossuary",1,6880,340,160],["ossuary",0,7350,600,110],
 		["ossuary",7,6120,600,70,1],["ossuary",7,6200,600,70,1],
-		["cistern",0,8680,600,140],["cistern",6,9100,230,130],["cistern",0,9680,40,130],["cistern",0,10100,600,150],
+		["cistern",0,8680,600,140],["cistern",6,9100,480,130],["cistern",0,9680,40,130],["cistern",0,10100,600,150],
 		["cloister",4,11700,600,170],["cloister",0,12400,40,150],["cloister",1,13000,300,130],["cloister",4,13380,600,100],
 		["belfry",0,14800,1100,160],["belfry",1,15100,760,130],["belfry",3,15550,540,120],["belfry",1,14780,40,100],
-		["archive",0,17380,600,170],["archive",5,17450,410,60,1],["archive",5,17700,390,60,1],["archive",5,17950,410,60,1],
+		["archive",0,17380,600,170],["archive",5,17450,525,60,1],["archive",5,17700,510,60,1],["archive",5,17950,525,60,1],
 		["refuge",4,19600,600,120],
-		["nave",0,22450,600,120],["nave",6,22900,260,150],["nave",1,23600,90,100],["nave",3,23200,600,70],
+		["nave",0,22450,600,120],["nave",6,22600,480,150],["nave",1,23600,90,100],["nave",3,23200,600,70],
 		["terrace",1,24900,250,160],["terrace",7,25450,600,60,2],["terrace",7,25530,600,60,2],["terrace",6,26100,80,120],
 		["court",3,28650,600,100],["court",1,28300,250,120],
 	]

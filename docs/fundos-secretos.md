@@ -15,3 +15,8 @@ Três PNGs originais opacos de 2172×724, perspectiva lateral, piso contínuo. A
 - [Pátio](imagens/fundo-patio_portoes.png)
 
 A conferência não valida colisões ou recorte pela câmera da fase. Os arquivos foram entregues separadamente: `act_one_layout.gd` e `world_art.gd` continuam os do patch v12 e ainda usam os fundos anteriores. O Claude precisa ligar os novos nomes e ajustar a referência de piso para 0,86. Não foi medida percepção com jogadores.
+
+
+## Integração (v13)
+
+Os três fundos estão ligados às salas em `act_one_layout.gd` (`nave_silencio`, `terraco_sinos`, `patio_portoes`), com a referência de piso em 0,86 e altura de arte de 880 (Nave e Terraço) e 800 (Pátio). Os pisos foram conferidos em jogo, com o Penitente caminhando sobre a faixa de pedra. A arte antiga (`basilica.png`, `city.png`, `court.png`) permanece nos arquivos, usada pelo prólogo, pela memória e pela cidade.

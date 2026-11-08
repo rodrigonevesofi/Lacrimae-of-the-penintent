@@ -15,7 +15,7 @@ const TYPES := {
 	2: {"name":"A Mãe das Lágrimas","family":"boss","actor":"guardian","scale":0.92,"tint":Color.WHITE,"hp":450.0,"reward":1500,"body":Vector2(110,190),"col":-1},
 	3: {"name":"O Devorador","family":"walker","actor":"devorador","scale":0.62,"tint":Color.WHITE,"hp":130.0,"reward":120,"body":Vector2(58,112),"col":0},
 	4: {"name":"Flagelante","family":"walker","actor":"flagelante","scale":0.35,"tint":Color.WHITE,"hp":70.0,"reward":45,"body":Vector2(34,56),"col":0},
-	5: {"name":"Bruxa do Aquelarre","family":"flyer","actor":"bruxa","scale":0.36,"tint":Color.WHITE,"hp":45.0,"reward":55,"body":Vector2(36,48),"col":1},
+	5: {"name":"Bruxa do Aquelarre","family":"flyer","actor":"bruxa","scale":0.36,"tint":Color.WHITE,"hp":40.0,"reward":55,"body":Vector2(36,48),"col":1},
 	6: {"name":"Asmodeia","family":"flyer","actor":"asmodeia","scale":0.42,"tint":Color.WHITE,"hp":60.0,"reward":60,"body":Vector2(44,56),"col":1},
 	7: {"name":"Duelista","family":"walker","actor":"duelista","scale":0.36,"tint":Color.WHITE,"hp":70.0,"reward":40,"body":Vector2(34,56),"col":0},
 }
@@ -167,7 +167,7 @@ func take_hit(dmg: float, from_x: float) -> void:
 		# The coven's shared vow: every sister still standing absorbs part of the blow.
 		var sisters := coven_others().size()
 		if sisters > 0:
-			dmg *= pow(0.6, sisters)
+			dmg *= pow(0.7, sisters)
 			get_tree().call_group("game", "spawn_fx", global_position + Vector2(0, -body_size.y * 0.8), Color(0.9, 0.8, 0.45))
 	hp -= dmg
 	flash = 0.12
@@ -615,7 +615,7 @@ func _flyer(delta: float) -> void:
 			if state_t <= 0.0:
 				state = "cast"
 				state_t = 0.18
-				cd = 2.3 if kind == 1 else (1.2 if rage_t > 0.0 else 2.9)
+				cd = 2.3 if kind == 1 else (2.2 if rage_t > 0.0 else 4.2)
 		"cast":
 			velocity = Vector2.ZERO
 			if state_t <= 0:
@@ -632,7 +632,7 @@ func _shoot_fan(d: Vector2) -> void:
 		var t = Tear.new()
 		t.player = player
 		t.vel = d.rotated(spread) * 240.0
-		t.dmg = 11.0
+		t.dmg = 7.0
 		t.life = 4.0
 		get_parent().add_child(t)
 		t.global_position = global_position + Vector2(0, -26)

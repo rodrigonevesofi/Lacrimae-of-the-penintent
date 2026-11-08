@@ -110,3 +110,8 @@ Comparação do atlas da vítima com execute_devotee (terrestres) ou execute_mou
 Somente âncoras executed foram corrigidas quando a diferença excedia6px; posições, tempos, dano e outros clipes permanecem os da base. O ajuste constante minimiza o pior desvio entre quadros, sem redesenhar as poses.
 
 Limites: um sprite caído não tem a mesma posição anatômica de um sprite em pé. Correntes/armas podem contaminar a leitura por alfa; as folhas precisam de revisão visual. Além disso, a execução de uma criatura aérea pode começar com sua origem até80unidades acima do herói: essa diferença dinâmica não se corrige com uma âncora única. A correção da posição no início da execução depende do Claude e não foi feita aqui. A revisão não comprova fluidez em todas as alturas/zooms.
+
+
+## Aplicação (v13)
+
+As três âncoras corrigidas ficaram no `clips.json`. A pendência de altura das vítimas aéreas foi tratada em código: uma voadora atordoada pode ser executada a até 170 unidades de altura e é trazida ao nível do herói durante a execução (`player.gd`, `begin_execution`), com teste em `tests/bestiary_smoke.gd`.
