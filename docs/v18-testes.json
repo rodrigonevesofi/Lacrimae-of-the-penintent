@@ -1,0 +1,50 @@
+[
+  {
+    "test": "immersion_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "IMMERSION_SMOKE: 13 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "chapter_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "CHAPTER_SMOKE: 44 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "reduced_pulses_spec",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "REDUCED_PULSES_SPEC: 59 checks, 0 failures; exit=0"
+    ]
+  },
+  {
+    "test": "reduced_pulses_ui_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "REDUCED_PULSES_UI: 8 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "bestiary_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "BESTIARY_SMOKE: 44 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "checkpoints_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "CHECKPOINTS_SMOKE: 21 checks, 0 failures"
+    ]
+  }
+]

@@ -13,7 +13,8 @@ const GOLD := Color(0.86, 0.7, 0.38)
 
 func _ready() -> void:
 	ui_art = load("res://assets/reliquary_ui.png")
-	if ResourceLoader.exists("res://assets/ending/ato1_portoes.png"): ending_art = load("res://assets/ending/ato1_portoes.png")
+	for path in ["res://assets/ending/ato1_portoes_v2.png", "res://assets/ending/ato1_portoes.png"]:
+		if ending_art == null and ResourceLoader.exists(path): ending_art = load(path)
 	var regions := {"bar":Rect2(0,190,512,135),"seal":Rect2(580,0,430,510),"flask":Rect2(1190,0,260,480),"boss":Rect2(0,660,512,240),"panel":Rect2(535,580,540,345),"tear":Rect2(1160,555,300,410)}
 	for key in regions:
 		var atlas := AtlasTexture.new()

@@ -1,0 +1,502 @@
+[
+  {
+    "boss_hp": -4.0,
+    "damage": 92.0,
+    "damage_by_phase": {
+      "1": 26.0,
+      "2": 66.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 7,
+        "slam": 1,
+        "spikes": 0,
+        "wave": 2
+      },
+      "2": {
+        "rain": 10,
+        "slam": 2,
+        "spikes": 5,
+        "wave": 4
+      }
+    },
+    "heals": 1,
+    "hits": {
+      "1": {
+        "rain": 0,
+        "slam": 1,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 2,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 1,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 7.94999999999998,
+      "2": 8.58333333333334
+    },
+    "reaction_opportunities": 6,
+    "roll_commands": 5,
+    "seconds": 16.53,
+    "seed": 1700
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 76.0,
+    "damage_by_phase": {
+      "1": 44.0,
+      "2": 32.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 2,
+        "slam": 1,
+        "spikes": 3,
+        "wave": 2
+      },
+      "2": {
+        "rain": 17,
+        "slam": 0,
+        "spikes": 5,
+        "wave": 0
+      }
+    },
+    "heals": 1,
+    "hits": {
+      "1": {
+        "rain": 0,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 0,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 0,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 8.45,
+      "2": 7.36666666666665
+    },
+    "reaction_opportunities": 5,
+    "roll_commands": 5,
+    "seconds": 15.82,
+    "seed": 1701
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 84.0,
+    "damage_by_phase": {
+      "1": 40.0,
+      "2": 44.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 6,
+        "slam": 1,
+        "spikes": 3,
+        "wave": 2
+      },
+      "2": {
+        "rain": 12,
+        "slam": 1,
+        "spikes": 5,
+        "wave": 2
+      }
+    },
+    "heals": 1,
+    "hits": {
+      "1": {
+        "rain": 1,
+        "slam": 1,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 0,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 1,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 9.31666666666671,
+      "2": 8.26666666666666
+    },
+    "reaction_opportunities": 6,
+    "roll_commands": 5,
+    "seconds": 17.58,
+    "seed": 1702
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 92.0,
+    "damage_by_phase": {
+      "1": 44.0,
+      "2": 48.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 4,
+        "slam": 1,
+        "spikes": 3,
+        "wave": 2
+      },
+      "2": {
+        "rain": 15,
+        "slam": 1,
+        "spikes": 5,
+        "wave": 2
+      }
+    },
+    "heals": 1,
+    "hits": {
+      "1": {
+        "rain": 0,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 0,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 1
+      }
+    },
+    "missed_reactions": 0,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 8.81666666666668,
+      "2": 9.1166666666667
+    },
+    "reaction_opportunities": 6,
+    "roll_commands": 6,
+    "seconds": 17.93,
+    "seed": 1703
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 88.0,
+    "damage_by_phase": {
+      "1": 32.0,
+      "2": 56.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 7,
+        "slam": 0,
+        "spikes": 3,
+        "wave": 0
+      },
+      "2": {
+        "rain": 10,
+        "slam": 2,
+        "spikes": 5,
+        "wave": 4
+      }
+    },
+    "heals": 1,
+    "hits": {
+      "1": {
+        "rain": 1,
+        "slam": 0,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 1,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 1
+      }
+    },
+    "missed_reactions": 0,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 8.68333333333334,
+      "2": 9.85000000000007
+    },
+    "reaction_opportunities": 7,
+    "roll_commands": 6,
+    "seconds": 18.53,
+    "seed": 1704
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 110.0,
+    "damage_by_phase": {
+      "1": 52.0,
+      "2": 58.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 1,
+        "slam": 2,
+        "spikes": 3,
+        "wave": 4
+      },
+      "2": {
+        "rain": 18,
+        "slam": 1,
+        "spikes": 5,
+        "wave": 2
+      }
+    },
+    "heals": 2,
+    "hits": {
+      "1": {
+        "rain": 0,
+        "slam": 2,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 0,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 10.5333333333334,
+      "2": 9.23333333333337
+    },
+    "reaction_opportunities": 7,
+    "roll_commands": 7,
+    "seconds": 19.77,
+    "seed": 1705
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 138.0,
+    "damage_by_phase": {
+      "1": 72.0,
+      "2": 66.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 7,
+        "slam": 1,
+        "spikes": 3,
+        "wave": 2
+      },
+      "2": {
+        "rain": 10,
+        "slam": 2,
+        "spikes": 5,
+        "wave": 4
+      }
+    },
+    "heals": 2,
+    "hits": {
+      "1": {
+        "rain": 2,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 2,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 1,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 9.50000000000005,
+      "2": 9.41666666666671
+    },
+    "reaction_opportunities": 7,
+    "roll_commands": 6,
+    "seconds": 18.92,
+    "seed": 1706
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 102.0,
+    "damage_by_phase": {
+      "1": 44.0,
+      "2": 58.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 0,
+        "slam": 1,
+        "spikes": 3,
+        "wave": 2
+      },
+      "2": {
+        "rain": 10,
+        "slam": 1,
+        "spikes": 5,
+        "wave": 2
+      }
+    },
+    "heals": 1,
+    "hits": {
+      "1": {
+        "rain": 0,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 4,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 7.64999999999998,
+      "2": 7.49999999999998
+    },
+    "reaction_opportunities": 5,
+    "roll_commands": 1,
+    "seconds": 15.15,
+    "seed": 1707
+  },
+  {
+    "boss_hp": -16.0,
+    "damage": 106.0,
+    "damage_by_phase": {
+      "1": 66.0,
+      "2": 40.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 7,
+        "slam": 2,
+        "spikes": 0,
+        "wave": 4
+      },
+      "2": {
+        "rain": 20,
+        "slam": 1,
+        "spikes": 0,
+        "wave": 2
+      }
+    },
+    "heals": 2,
+    "hits": {
+      "1": {
+        "rain": 1,
+        "slam": 2,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 1,
+        "slam": 1,
+        "spikes": 0,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 0,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 10.0833333333334,
+      "2": 8.38333333333333
+    },
+    "reaction_opportunities": 6,
+    "roll_commands": 6,
+    "seconds": 18.47,
+    "seed": 1708
+  },
+  {
+    "boss_hp": -10.0,
+    "damage": 116.0,
+    "damage_by_phase": {
+      "1": 44.0,
+      "2": 72.0
+    },
+    "deaths": 0,
+    "emitted": {
+      "1": {
+        "rain": 7,
+        "slam": 1,
+        "spikes": 3,
+        "wave": 2
+      },
+      "2": {
+        "rain": 14,
+        "slam": 1,
+        "spikes": 5,
+        "wave": 2
+      }
+    },
+    "heals": 2,
+    "hits": {
+      "1": {
+        "rain": 0,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      },
+      "2": {
+        "rain": 2,
+        "slam": 1,
+        "spikes": 1,
+        "unknown": 0,
+        "wave": 0
+      }
+    },
+    "missed_reactions": 0,
+    "outcome": "venceu",
+    "phase_seconds": {
+      "1": 9.43333333333338,
+      "2": 10.5000000000001
+    },
+    "reaction_opportunities": 7,
+    "roll_commands": 7,
+    "seconds": 19.93,
+    "seed": 1709
+  }
+]

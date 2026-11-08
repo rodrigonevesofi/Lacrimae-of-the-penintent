@@ -12,6 +12,17 @@ var ambience: AudioStreamPlayer
 var effects: Dictionary = {}
 var muted := false
 var knock_count := 0
+## Mix trims in dB, added to the base level of each group. They start at zero on purpose: the audit of the
+## volumes (docs/auditoria-volume.md) proposed offsets, but they were measured on files, not heard in play.
+## After listening, retuning the mix is a matter of changing these four numbers.
+const MIX_TRIM_DB := {"tracks": 0.0, "action": 0.0, "scene": 0.0, "creature": 0.0}
+const SCENE_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
+
+func trim_for(name: String) -> float:
+	if CREATURE_SFX.has(name): return MIX_TRIM_DB.creature
+	if SCENE_SFX.has(name): return MIX_TRIM_DB.scene
+	return MIX_TRIM_DB.action
+
 const CREATURE_SFX := ["devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
 const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo", "devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
 
@@ -44,7 +55,7 @@ func _ready() -> void:
 		var voice := AudioStreamPlayer.new()
 		voice.stream = load("res://assets/audio/%s.wav" % name)
 		voice.max_polyphony = 6
-		voice.volume_db = -7 if name == "step" else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))
+		voice.volume_db = (-7 if name == "step" else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))) + trim_for(name)
 		add_child(voice)
 		effects[name] = voice
 
@@ -110,7 +121,7 @@ func _process(delta: float) -> void:
 	if context_timer <= 0 and not switching:
 		context_timer = 0.25
 		change_context(desired_context())
-	var base := -3.0
+	var base := -3.0 + MIX_TRIM_DB.tracks
 	if game.narrative != null:
 		if game.narrative.mode == "prayer": base = -9.0
 		elif game.narrative.mode in ["memory", "echo", "memorial"]: base = game.narrative.music_target()

@@ -1,0 +1,20 @@
+{
+  "base_commit": "bafb1464e785e3ecb30c1dd6488ed2f8ced1d084",
+  "received_patch_sha256": "7e34eec42e97cf5f4719f8a8a341cb6843d4469474ce341e8b512b2cb3e2a0a7",
+  "protected_files": {
+    "scripts/enemy.gd": "691a80e77ee223d02fd97e12944eaf126417258b0c3c6c41fa8febbe57986b15",
+    "scripts/narrative.gd": "38dcc5b1f8c225ab03c96554f81d0ec55eabfe93e2a77c73ba97995710bb4fd6",
+    "scripts/soundscape.gd": "78e60029c47da8c0116b11019dc48d4ad7f1bad5ea346d03fa6686072760ba9c",
+    "scripts/world_art.gd": "fda52ba984f80d8dee4c60089a21b283c9ee4b77761a8c5d7f45c7a294c26661",
+    "scripts/exploration.gd": "88cc335c7dd84197df2aaa7bd5c52353ab85a1b5fcd73717ada7cb5bd58fb9bf",
+    "scripts/main.gd": "290b2489f99f4d7b797f53a15ff8fc24c3422c1f4407b34b739ec36e1bb7e606",
+    "scripts/hud.gd": "75930a51ac3be89488c2073b3f39bb2453cf2fb9b3dfb55e9f9e41a60f963395",
+    "scripts/player.gd": "f72f6fec7d29fde9f436864224c3d9ebf125d18d0ee974f117d0c19b8d64f07b",
+    "scripts/act_one_layout.gd": "43344348e02a1163c4c1d4a6b743a5e5b613d3fb2234c7a546c8c5da83bfa5f0",
+    "scripts/guilt_text.gd": "737f96c053b36c3c9c6a3dfc53b4d4de103d85b756861eba58fa652758446bcb",
+    "scripts/story_text.gd": "7c22895270db6444c7583f14ddb3b78e35a523c16ec98dcfa2eb50006b68cfef",
+    "assets/animation/clips.json": "11ed8c13582691d73148a8386f2328b09f2c47a89ab257f606b5372e86e91223"
+  },
+  "only_received_patch_changes_existing_files": true,
+  "existing_assets_unchanged": 194
+}

@@ -17,6 +17,9 @@ func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	expect(game.soundscape.music_streams.size() == 10,"ten contextual scores load")
+	var trims_zero := true
+	for group in game.soundscape.MIX_TRIM_DB: if game.soundscape.MIX_TRIM_DB[group] != 0.0: trims_zero = false
+	expect(trims_zero and game.soundscape.trim_for("knock") == 0.0 and game.soundscape.trim_for("devorador_rugido") == 0.0,"the mix trims start at zero until the author has listened")
 	expect(game.soundscape.desired_context() == "menu","title selects sacred menu score")
 	game._start_game(false,false)
 	for i in range(3):

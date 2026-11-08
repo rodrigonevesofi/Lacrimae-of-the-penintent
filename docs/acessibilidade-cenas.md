@@ -32,8 +32,3 @@ Pendências: badaladas iniciais de memorial e memória não têm legenda explíc
 Flashes: contador observa elevações da propriedade flash com amostragem60Hz e calcula o máximo em janelas móveis de1s. Não analisa luminância de cada pixel, área luminosa, contraste vermelho, efeitos fora da cena ou queda de quadros. Não comprova conformidade com WCAG nem segurança para todas as pessoas. Legendas foram verificadas por vínculo textual/estado, não por contraste, velocidade de leitura ou tamanho em todos os monitores. A soma de som, luz e legenda deve ser avaliada por pessoas.
 
 Repetir com dados descartáveis: `XDG_DATA_HOME=/tmp/lacrimae-a11y-data XDG_CONFIG_HOME=/tmp/lacrimae-a11y-config XDG_CACHE_HOME=/tmp/lacrimae-a11y-cache godot --headless --path . --script res://tests/accessibility_scenes_check.gd`. O teste termina com código1 quando encontra pendências; isso é esperado nesta base.
-
-
-## Opção de reduzir pulsos e tremores (v16)
-
-Implementada conforme [especificacao-reducao-de-pulsos.md](especificacao-reducao-de-pulsos.md). Ligada, as cenas de culpa e do Guardião não têm clarões, respiração de luz nem tremor de câmera; sons, legendas, durações e tudo o que afeta o jogo continuam. Falta ainda validar a interface com pessoas, em teclado e controle, e conferir visualmente o foco de luz.

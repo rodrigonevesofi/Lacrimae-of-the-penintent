@@ -1,4 +1,4 @@
-# Cenas de culpa (v16)
+# Cenas de culpa (v17)
 
 Seguem as regras do [roteiro dos cinco atos](roteiro-cinco-atos.md): nenhuma cena revela o ritual nem o pedido de esquecimento, nenhuma obriga o jogador a ser autor do fechamento dos portões, memórias duram de 15 a 30 segundos com opção de seguir, e nenhuma dá recompensa nem reduz culpa.
 
@@ -41,4 +41,4 @@ Nenhum teste mede se alguém sente culpa. A leitura visual foi feita por captura
 
 ## Encerramento do Ato I (v16)
 
-A tela de encerramento usa a ilustração `assets/ending/ato1_portoes.png`: o Penitente de costas diante dos Portões Selados, com uma lanterna. As quatro frases aparecem uma de cada vez na faixa escura de baixo, sem cobrir o Penitente, e o cartão final e o ENTER chegam aos 15 s. A ilustração é muito escura (luminância média de cerca de 4 em 255) e pode ficar quase ilegível em alguns monitores; pedido ao Codex um ajuste.
+A tela de encerramento usa a ilustração `assets/ending/ato1_portoes.png`: o Penitente de costas diante dos Portões Selados, com uma lanterna. As quatro frases aparecem uma de cada vez na faixa escura de baixo, sem cobrir o Penitente, e o cartão final e o ENTER chegam aos 15 s. O jogo usa `ato1_portoes_v2.png` (luminância média 17,5 em 255, legível), mantendo a original como reserva; a original era muito escura (média de cerca de 4).
