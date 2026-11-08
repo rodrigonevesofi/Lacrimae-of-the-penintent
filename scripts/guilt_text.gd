@@ -24,7 +24,7 @@ const DEATH := [
 const MEMORY_CAPTIONS := [
 	"Você lembra o peso do ferro.\nE as vozes.",
 	"Uma mão pequena segura a grade.",
-	"Atrás de você, alguém aguarda uma ordem.\nVocê não consegue ver o rosto.",
+	"Atrás de você, uma figura espera.\nVocê não consegue ver o rosto.",
 ]
 
 const BOSS_INTRO := [

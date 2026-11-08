@@ -1,0 +1,300 @@
+{
+  "method": "Yprime=0.2126R+0.7152G+0.0722B on encoded RGB8, no linearisation; alpha over black",
+  "read_only": true,
+  "illustrations": [
+    {
+      "file": "assets/boss/guardiao_01_corda.png",
+      "group": "cena / boss",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "d26de85016a433720739bd715f0beda8633914822fec445746120e800562cf18",
+      "mean": 30.322291538773147,
+      "p95": 100.2106,
+      "below_12_percent": 35.43282214506173,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/boss/guardiao_02_gesto.png",
+      "group": "cena / boss",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "807170838052c1d0bd9865536d47f5507c659f31c60755b083922a0438f0610f",
+      "mean": 22.81096553231096,
+      "p95": 66.37219999999999,
+      "below_12_percent": 37.41386959876543,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/boss/guardiao_03_imovel.png",
+      "group": "cena / boss",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "403f605f4d29b15e1fa570c6693bc553691d2d46af0f93349daeb19020b4c5c8",
+      "mean": 7.111044702642747,
+      "p95": 25.8768,
+      "below_12_percent": 85.80627893518519,
+      "review": "REVER: média <12"
+    },
+    {
+      "file": "assets/cistern.png",
+      "group": "fundo de sala",
+      "size": [
+        2172,
+        724
+      ],
+      "opaque": true,
+      "sha256": "706ad80323d9dab3f5e11c87236d22e2497e92bd3db81851c627134d3a5c7ec8",
+      "mean": 84.81348668411628,
+      "p95": 188.93152999999995,
+      "below_12_percent": 1.1849073593602149,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/cloister.png",
+      "group": "fundo de sala",
+      "size": [
+        2172,
+        724
+      ],
+      "opaque": true,
+      "sha256": "0eb33a91fd68ee3c4c6008d3d88a7633c9cbe8f4fa5ca33cdf36c67112ab33b2",
+      "mean": 81.13572138810883,
+      "p95": 170.595,
+      "below_12_percent": 0.03503912171993122,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/ending/ato1_portoes.png",
+      "group": "cena / ending",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "849549ba16abb691f1f2e567f089bc076d2269b742068e12212d99caec1c5a17",
+      "mean": 3.7550480582561727,
+      "p95": 11.931799999999999,
+      "below_12_percent": 95.08974729938272,
+      "review": "REVER: média <12"
+    },
+    {
+      "file": "assets/ending/ato1_portoes_v2.png",
+      "group": "cena / ending",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "00eb55dafd930965e629e90439136dcc0becf22b4028f6a5d7c3d37036ad5a2a",
+      "mean": 17.529235307195215,
+      "p95": 48.00919999999999,
+      "below_12_percent": 45.79132908950617,
+      "review": "Conferir sombras"
+    },
+    {
+      "file": "assets/gallery.png",
+      "group": "fundo de sala",
+      "size": [
+        1536,
+        1024
+      ],
+      "opaque": true,
+      "sha256": "4f9c11adb9c05a772cd4da52f6f03dc2421b8cbd229d6fca7aceb702315adb42",
+      "mean": 66.34718530667622,
+      "p95": 139.8205099999999,
+      "below_12_percent": 0.12995402018229169,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/gates.png",
+      "group": "fundo de sala",
+      "size": [
+        1536,
+        1024
+      ],
+      "opaque": true,
+      "sha256": "e8f675145bb328b4dc150b24ee355037e63d864b33d8162414b2ffa9a7b9bda4",
+      "mean": 72.69055823809306,
+      "p95": 123.8232,
+      "below_12_percent": 0.03960927327473958,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/memory/memoria_01_maos_na_roda.png",
+      "group": "cena / memory",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "c191508f489111983a41fb1c09d8bf0da6aad25ac24d1d91dea8a008dab38aaa",
+      "mean": 35.15407357561728,
+      "p95": 88.9482,
+      "below_12_percent": 22.437258873456788,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/memory/memoria_02_mao_pequena.png",
+      "group": "cena / memory",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "3b6a9d3b8f650260dae3ea2d862e9ece980530986453d48b61b24836aa836ce7",
+      "mean": 43.02529243258102,
+      "p95": 111.19220999999996,
+      "below_12_percent": 7.197048611111111,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/memory/memoria_02_mao_pequena_sem_sol.png",
+      "group": "cena / memory",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "3df3a4393dd4e57d532ceade18863d436d55b0eedbf9dd6f35071ec3630b6cae",
+      "mean": 44.100991001446765,
+      "p95": 114.14860999999996,
+      "below_12_percent": 4.46021412037037,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/memory/memoria_03_figura_atras.png",
+      "group": "cena / memory",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "aa09615a6c8557728aacb834970cea4782e15a377b29ce39791b0c52413b4370",
+      "mean": 47.9632357336034,
+      "p95": 170.5804,
+      "below_12_percent": 14.306230709876544,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/memory/memoria_04_portao_fechado.png",
+      "group": "cena / memory",
+      "size": [
+        1920,
+        1080
+      ],
+      "opaque": true,
+      "sha256": "e042c0ba4bce5943e34611da69a19cf1ea51deb816ae16aa006aa1fc3ee2d10c",
+      "mean": 18.779736363233024,
+      "p95": 49.6836,
+      "below_12_percent": 44.003954475308646,
+      "review": "Conferir sombras"
+    },
+    {
+      "file": "assets/nave_silencio.png",
+      "group": "fundo de sala",
+      "size": [
+        2172,
+        724
+      ],
+      "opaque": true,
+      "sha256": "e33e153fc676462d13411c9c6aa06d424f504e7c4e5f87d297df762c1bf0817a",
+      "mean": 66.88468311712096,
+      "p95": 153.6806,
+      "below_12_percent": 1.3288157667144878,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/opening.png",
+      "group": "abertura (adicional)",
+      "size": [
+        1672,
+        941
+      ],
+      "opaque": true,
+      "sha256": "51f703fcd13548731ed3c97ae77a3eb09a492fa76635a76be7e2dc5d6e5f8fff",
+      "mean": 44.447898520992126,
+      "p95": 100.7546,
+      "below_12_percent": 7.520821786860156,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/ossuary.png",
+      "group": "fundo de sala",
+      "size": [
+        2172,
+        724
+      ],
+      "opaque": true,
+      "sha256": "6b9d0b3870b9534d838d142f4b1ae154b332041a82b9cc961fc900c01ac3c5b9",
+      "mean": 60.45940137905335,
+      "p95": 127.31524999999989,
+      "below_12_percent": 0.04985602800077328,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/patio_portoes.png",
+      "group": "fundo de sala",
+      "size": [
+        2172,
+        724
+      ],
+      "opaque": true,
+      "sha256": "d1cfb468a5d9d57fbe429cde0890bb4956d6e7488847e45f959fca366900aece",
+      "mean": 77.85126247914185,
+      "p95": 165.72465999999994,
+      "below_12_percent": 0.9929234964337678,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/terraco_sinos.png",
+      "group": "fundo de sala",
+      "size": [
+        2172,
+        724
+      ],
+      "opaque": true,
+      "sha256": "76178697030c77cbcb5fae403a3f1c97d91ca169e5d38d06f03124aaa53799ba",
+      "mean": 81.85648336856323,
+      "p95": 170.56365999999994,
+      "below_12_percent": 0.08018935115940702,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/tower.png",
+      "group": "fundo de sala",
+      "size": [
+        1536,
+        1024
+      ],
+      "opaque": true,
+      "sha256": "bc7129e00eb810dd2da0110f2155be30d56098bfdded96a221020a4ea903a32b",
+      "mean": 59.072879991404214,
+      "p95": 134.434,
+      "below_12_percent": 0.727399190266927,
+      "review": "Sem alerta pelo critério"
+    },
+    {
+      "file": "assets/vespera_panorama.png",
+      "group": "fundo de sala",
+      "size": [
+        2172,
+        724
+      ],
+      "opaque": true,
+      "sha256": "745a467d7bfab2d7172a4f66a9bab68b62428a793cedfaafa240f0ac01ad799c",
+      "mean": 62.990553600699,
+      "p95": 131.88,
+      "below_12_percent": 0.08565825219010409,
+      "review": "Sem alerta pelo critério"
+    }
+  ]
+}

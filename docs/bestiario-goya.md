@@ -1,4 +1,4 @@
-# Bestiário inspirado em Goya (v13)
+# Bestiário inspirado em Goya (v16)
 
 Cinco criaturas novas, cada uma com uma regra de combate própria, mais um sistema de encontros em grupo. As referências são as Pinturas Negras e as séries gráficas de Francisco de Goya. Nenhuma imagem dele é copiada: o que se aproveita é a ideia de cada obra.
 
@@ -52,3 +52,7 @@ Flagelante 70, Duelista 70, Bruxa 40, Asmodeia 60 e Devorador 130. As bruxas div
 Regra de alcance: a espada acerta cerca de 66 acima dos pés em pé e cerca de 108 a partir dos pés no ar. Por isso as voadoras novas pairam a, no máximo, 170 unidades de uma superfície onde o jogador possa ficar (teste em `tests/bestiary_smoke.gd`). Uma voadora atordoada pode ser executada a até 170 de altura e desce ao nível do herói durante a execução.
 
 Origem dos números: a primeira sonda mostrou as criaturas leves morrendo em dois golpes, antes de agir ([equilibrio.md](equilibrio.md)); a sonda com atraso de reação mostrou o aquelarre impossível de vencer, com média de 207 de dano em 60 s e as bruxas altas demais para a espada ([equilibrio-humano.md](equilibrio-humano.md)). Os valores atuais foram ajustados contra essas duas medições e ainda não foram calibrados com jogadores.
+
+## Sons (v16)
+
+Cada criatura tem sons próprios, sintetizados pelo Codex ([sfx-criaturas.md](sfx-criaturas.md)): rugido e bote do Devorador, chicote e investida do Flagelante, sussurro e leque da Bruxa, aviso e estilhaço da Asmodeia, cacete do Duelista. Só tocam quando a criatura está na mesma sala e a menos de 760 unidades do Penitente. Não foram ouvidos em contexto.

@@ -22,7 +22,7 @@ const TYPES := {
 const BESTIARY := {
 	3: "O DEVORADOR — O que ele não consegue perdoar, ele engole. Esquive o bote e golpeie na recuperação.",
 	4: "FLAGELANTE — Pune o corpo para calar o que a alma sabe. Faça-o errar a investida.",
-	5: "AQUELARRE — Três vozes, um voto. Enquanto não estão sós, o voto as protege: elas só caem uma de cada vez.",
+	5: "AQUELARRE — Três vozes, um voto. Enquanto uma irmã vive, ela amortece o golpe que atinge as outras.",
 	6: "ASMODEIA — Paira sobre o povo e deixa cair a sentença. Não fique sob ela.",
 	7: "OS DUELISTAS — Lutam até os joelhos no mesmo chão. Ignoram quem não os atrapalha.",
 }
@@ -72,6 +72,7 @@ var windup_len := 0.55
 var tint := Color.WHITE
 var announced := false
 var phase_two_heard := false
+var prev_state := ""
 var family := "walker"
 
 
@@ -200,6 +201,33 @@ func take_hit(dmg: float, from_x: float) -> void:
 		velocity = Vector2.ZERO
 
 
+## Each creature announces its attacks with a sound of its own, only when it is near the penitent, in the room they share.
+func _state_sounds() -> void:
+	if state == prev_state:
+		return
+	prev_state = state
+	var cues := {}
+	match kind:
+		3: cues = {"windup": "devorador_rugido", "strike": "devorador_bote"}
+		4: cues = {"windup": "flagelante_chicote", "charge": "flagelante_investida", "strike": "flagelante_chicote"}
+		5: cues = {"windup": "bruxa_sussurro", "cast": "bruxa_leque"}
+		6: cues = {"windup": "asmodeia_aviso"}
+		7: cues = {"strike": "duelista_cacete"}
+	if cues.has(state):
+		_sfx(cues[state])
+
+
+func _sfx(cue: String) -> void:
+	var director = get_tree().get_first_node_in_group("game")
+	if director == null or player == null:
+		return
+	if director.exploration != null and director.exploration.room != room_id:
+		return
+	if global_position.distance_to(player.global_position) > 760.0:
+		return
+	director.soundscape.play_sfx(cue)
+
+
 func _aggro_duel() -> void:
 	if state == "duel":
 		state = "chase"
@@ -266,6 +294,7 @@ func _physics_process(delta: float) -> void:
 	if player == null or not is_instance_valid(player):
 		return
 	rage_t = maxf(rage_t - delta, 0.0)
+	_state_sounds()
 	match kind:
 		0, 7:
 			if state == "duel": _duel(delta)
@@ -381,6 +410,7 @@ func _duel(delta: float) -> void:
 		# Blows hurt, but never finish the rival: the player must be the one to end it.
 		partner.hp = maxf(partner.hp - 5.0, partner.max_hp * 0.4)
 		partner.flash = 0.12
+		_sfx("duelista_cacete")
 		get_tree().call_group("game", "spawn_fx", partner.global_position + Vector2(0, -partner.body_size.y * 0.6), Color(0.95, 0.75, 0.4))
 	move_and_slide()
 
@@ -572,6 +602,7 @@ func _bomber(delta: float) -> void:
 
 
 func _drop_line() -> void:
+	_sfx("asmodeia_estilhaco")
 	var game = get_tree().get_first_node_in_group("game")
 	var floor_y := 598.0
 	if game != null and game.exploration != null: floor_y = float(game.exploration.rooms[room_id].floor) + 24.0

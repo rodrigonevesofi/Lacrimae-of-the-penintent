@@ -29,6 +29,8 @@ var dialogue_complete_flag := ""
 var state := "title"
 var prologue_page := -1
 var paused := false
+var reduced_pulses := false
+const SETTINGS_PATH := "user://settings.cfg"
 var area_name := ""
 var area_t := 0.0
 var art: Node2D
@@ -123,6 +125,7 @@ var altar_names: Array[String] = ["Altar das Primeiras Lágrimas", "Altar do Lim
 func _ready() -> void:
 	add_to_group("game")
 	has_save = FileAccess.file_exists(SAVE_PATH)
+	_load_settings()
 	_setup_input()
 	soundscape = preload("res://scripts/soundscape.gd").new()
 	add_child(soundscape)
@@ -150,6 +153,30 @@ func _build_art() -> void:
 	art.game = self
 	add_child(art)
 
+
+## Accessibility: removes flashes, light oscillation and camera shake from the guilt and Guardian scenes.
+## Sounds, captions, durations and everything that affects play stay as they are. The choice is global
+## and survives new games; it lives apart from the save file.
+func _load_settings() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SETTINGS_PATH) == OK:
+		reduced_pulses = bool(cfg.get_value("accessibility", "reduced_pulses", false))
+
+func set_reduced_pulses(enabled: bool) -> void:
+	reduced_pulses = enabled
+	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS_PATH)
+	cfg.set_value("accessibility", "reduced_pulses", enabled)
+	cfg.save(SETTINGS_PATH)
+	# Applies at once: any flash or shake already under way is cleared.
+	if narrative != null:
+		narrative.flash = 0.0
+		narrative.pulse = 0.0
+	if player != null:
+		player.shake = 0.0
+
+func is_reduced_pulses_enabled() -> bool:
+	return reduced_pulses
 
 func toggle_pause() -> void:
 	if state == "title" or state == "ending" or (narrative != null and narrative.mode != ""):
@@ -214,6 +241,7 @@ func _setup_input() -> void:
 	_add_action("penitence_chains", [KEY_3])
 	_add_action("pause", [KEY_ESCAPE])
 	_add_action("mute", [KEY_M])
+	_add_action("reduce_pulses", [KEY_P])
 	_add_action("left", [KEY_A, KEY_LEFT])
 	_add_action("right", [KEY_D, KEY_RIGHT])
 	_add_action("jump", [KEY_SPACE, KEY_W, KEY_UP])
@@ -640,7 +668,7 @@ func _play_update(delta: float) -> void:
 		_save()
 	for target in get_tree().get_nodes_in_group("enemies"):
 		if not target.dead and target.state == "stagger" and not target.executing and absf(target.position.x - pp.x) < 72 and absf(target.position.y - pp.y) < (170 if target.family == "flyer" else 80) and player.state == "idle" and player.is_on_floor():
-			prompt = "[E] Executar — recupera 8 de vida e 12 de culpa"
+			prompt = "[E] Executar — Vida +8 · Culpa +12"
 			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
 			return
 	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(Vector2(4700,600)) < 65:

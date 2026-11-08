@@ -1,6 +1,6 @@
 # Reduzir pulsos e tremores — especificação proposta
 
-**Estado:** opção não implementada. Este documento e o teste descrevem um contrato para o Claude implementar; não acrescentam uma preferência fictícia ao jogo.
+**Estado (v16): implementada.** Tecla **P** no título e no menu de pausa; o estado aparece escrito (LIGADO / DESLIGADO); a preferência fica em `user://settings.cfg`, separada do salvamento, e sobrevive a novos jogos. API: `set_reduced_pulses(enabled)` e `is_reduced_pulses_enabled()` em `main.gd`. O teste de contrato `tests/reduced_pulses_spec.gd` passa (59 verificações, código 0) e `tests/reduced_pulses_ui_smoke.gd` cobre a interface. Escopo, como previsto: cenas de culpa e do Guardião; tremores de combate não mudam.
 
 ## Interface
 

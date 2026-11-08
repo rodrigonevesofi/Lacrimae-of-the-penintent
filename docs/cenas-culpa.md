@@ -1,4 +1,4 @@
-# Cenas de culpa (v15)
+# Cenas de culpa (v16)
 
 Seguem as regras do [roteiro dos cinco atos](roteiro-cinco-atos.md): nenhuma cena revela o ritual nem o pedido de esquecimento, nenhuma obriga o jogador a ser autor do fechamento dos portões, memórias duram de 15 a 30 segundos com opção de seguir, e nenhuma dá recompensa nem reduz culpa.
 
@@ -38,3 +38,7 @@ Nenhum teste mede se alguém sente culpa. A leitura visual foi feita por captura
 - O memorial usa o atlas `hero_memorial` (24 quadros): o Penitente ajoelha com a boneca, a deposita, fica com a mão sobre ela e se levanta. Enquanto a cena dura, a boneca do mundo fica oculta e aparece quando ela termina.
 - A Nave, o Terraço e o Pátio têm trilha própria (`ost_nave`, `ost_terraco`, `ost_patio`), sintetizadas pelo Codex. Não foram ouvidas em contexto por mim.
 - Todo som essencial das cenas tem legenda no canto da tela: `[Sino]`, `[Sino grave, abafado]`, `[Vozes abafadas]` e `[Batida]`.
+
+## Encerramento do Ato I (v16)
+
+A tela de encerramento usa a ilustração `assets/ending/ato1_portoes.png`: o Penitente de costas diante dos Portões Selados, com uma lanterna. As quatro frases aparecem uma de cada vez na faixa escura de baixo, sem cobrir o Penitente, e o cartão final e o ENTER chegam aos 15 s. A ilustração é muito escura (luminância média de cerca de 4 em 255) e pode ficar quase ilegível em alguns monitores; pedido ao Codex um ajuste.

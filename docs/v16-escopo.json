@@ -1,0 +1,56 @@
+{
+  "source_commit": "d5043637b3a984bada9af3413080f294d445665a",
+  "patch_sha256": "5ad19d1838dd1c14056b38cb383a67011b32ad8fa06fc3ff04750310765aaf8c",
+  "protected_files": {
+    "scripts/enemy.gd": {
+      "sha256": "691a80e77ee223d02fd97e12944eaf126417258b0c3c6c41fa8febbe57986b15",
+      "matches_received_base": true
+    },
+    "scripts/narrative.gd": {
+      "sha256": "38dcc5b1f8c225ab03c96554f81d0ec55eabfe93e2a77c73ba97995710bb4fd6",
+      "matches_received_base": true
+    },
+    "scripts/soundscape.gd": {
+      "sha256": "47c9ff1eb98f1dedb18b795d21076dcded2816ad8c533e7b9bedf73ec238b541",
+      "matches_received_base": true
+    },
+    "scripts/world_art.gd": {
+      "sha256": "fda52ba984f80d8dee4c60089a21b283c9ee4b77761a8c5d7f45c7a294c26661",
+      "matches_received_base": true
+    },
+    "scripts/exploration.gd": {
+      "sha256": "88cc335c7dd84197df2aaa7bd5c52353ab85a1b5fcd73717ada7cb5bd58fb9bf",
+      "matches_received_base": true
+    },
+    "scripts/main.gd": {
+      "sha256": "290b2489f99f4d7b797f53a15ff8fc24c3422c1f4407b34b739ec36e1bb7e606",
+      "matches_received_base": true
+    },
+    "scripts/hud.gd": {
+      "sha256": "a71fa662d0facd2139fdf298ce276e092014f4c9700db22bb5f1b9c67277166b",
+      "matches_received_base": true
+    },
+    "scripts/player.gd": {
+      "sha256": "f72f6fec7d29fde9f436864224c3d9ebf125d18d0ee974f117d0c19b8d64f07b",
+      "matches_received_base": true
+    },
+    "scripts/act_one_layout.gd": {
+      "sha256": "43344348e02a1163c4c1d4a6b743a5e5b613d3fb2234c7a546c8c5da83bfa5f0",
+      "matches_received_base": true
+    },
+    "scripts/guilt_text.gd": {
+      "sha256": "737f96c053b36c3c9c6a3dfc53b4d4de103d85b756861eba58fa652758446bcb",
+      "matches_received_base": true
+    },
+    "scripts/story_text.gd": {
+      "sha256": "7c22895270db6444c7583f14ddb3b78e35a523c16ec98dcfa2eb50006b68cfef",
+      "matches_received_base": true
+    },
+    "assets/animation/clips.json": {
+      "sha256": "11ed8c13582691d73148a8386f2328b09f2c47a89ab257f606b5372e86e91223",
+      "matches_received_base": true
+    }
+  },
+  "received_patch_files_identical": true,
+  "preexisting_asset_files_unchanged": 192
+}

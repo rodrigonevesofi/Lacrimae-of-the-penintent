@@ -115,6 +115,8 @@ func begin(sequence: String, argument: int = 0) -> void:
 	elapsed = 0
 	knocks_done = 0
 	voice_played = false
+	tag = ""
+	tag_t = 0.0
 	flash = 0.0
 	pulse = 0.0
 	echo_index = argument
@@ -270,9 +272,10 @@ func fire_knocks() -> void:
 		knocks_done += 1
 		game.soundscape.play_sfx("knock")
 		caption_sound("[Batida]", 1.1)
-		game.shake_cam(3.0)
-		flash = 0.14
-		pulse = 1.0
+		if not game.reduced_pulses:
+			game.shake_cam(3.0)
+			flash = 0.14
+			pulse = 1.0
 
 func music_target() -> float:
 	if mode == "memory" and elapsed > MEMORY_KNOCKS[0] - 1.8: return -34.0
@@ -296,6 +299,9 @@ func _process(delta: float) -> void:
 		flash = maxf(flash - delta, 0.0)
 		tag_t = maxf(tag_t - delta, 0.0)
 		pulse = maxf(pulse - delta * 1.4, 0.0)
+		if game.reduced_pulses:
+			flash = 0.0
+			pulse = 0.0
 		update_focus()
 		fire_voices()
 		fire_knocks()
@@ -391,10 +397,11 @@ func paint_focus(vs: Vector2) -> void:
 	var open := smoothstep(0.0, 1.2, elapsed) * (1.0 - smoothstep(span - 1.0, span, elapsed))
 	var zoom_now: float = game.player.camera.zoom.x
 	var center: Vector2 = game.player.get_global_transform_with_canvas().origin + Vector2(0, -62.0 * zoom_now)
-	var radius := (150.0 + 14.0 * sin(elapsed * 1.3)) * zoom_now / 2.7 * (1.0 - 0.28 * pulse)
+	var breath := 0.0 if game.reduced_pulses else 14.0 * sin(elapsed * 1.3)
+	var radius := (150.0 + breath) * zoom_now / 2.7 * (1.0 - 0.28 * pulse)
 	var tint := Color(0.03, 0.0, 0.04) if mode != "memorial" else Color(0.05, 0.02, 0.0)
 	light_pool(vs, center, radius, 0.92 * open, tint)
-	var ember := 0.14 + 0.06 * sin(elapsed * 2.2)
+	var ember := 0.14 + (0.0 if game.reduced_pulses else 0.06 * sin(elapsed * 2.2))
 	edge_vignette(vs, ember * open, Color(0.28, 0.0, 0.02))
 	panel.draw_rect(Rect2(0, 0, vs.x, 50), Color.BLACK)
 	panel.draw_rect(Rect2(0, vs.y - bottom, vs.x, bottom), Color(0, 0, 0, 0.88))
@@ -489,7 +496,7 @@ func paint_boss(vs: Vector2) -> void:
 		drawn = boss_still("still", second, vs, 0.0) or drawn
 	if not drawn:
 		# No painting yet: a slow glow of bronze and the text carry the moment.
-		glow(Vector2(vs.x * 0.5, vs.y * 0.42), 360.0 + 20.0 * sin(elapsed * 1.4), Color(0.85, 0.5, 0.2), 0.32 * open)
+		glow(Vector2(vs.x * 0.5, vs.y * 0.42), 360.0 + (0.0 if game.reduced_pulses else 20.0 * sin(elapsed * 1.4)), Color(0.85, 0.5, 0.2), 0.32 * open)
 	edge_vignette(vs, 0.6 * open, Color(0, 0, 0))
 	panel.draw_rect(Rect2(0, vs.y - 160, vs.x, 160), Color(0, 0, 0, 0.72 * open))
 	for i in range(lines.size()):
@@ -508,7 +515,7 @@ func draw_still(key: String, alpha: float, vs: Vector2, push: float, jitter: flo
 	if alpha <= 0.0 or not memory_art.has(key): return false
 	var texture: Texture2D = memory_art[key]
 	var size := vs * (1.03 + push)
-	var shake := Vector2(sin(elapsed * 41.0), cos(elapsed * 37.0)) * jitter
+	var shake := Vector2(sin(elapsed * 41.0), cos(elapsed * 37.0)) * (0.0 if game.reduced_pulses else jitter)
 	panel.draw_texture_rect(texture, Rect2(-(size - vs) * 0.5 + shake, size), false, Color(1, 1, 1, alpha))
 	return true
 
@@ -528,7 +535,7 @@ func paint_memory(vs: Vector2) -> void:
 	if voices > 0.0:
 		var spots := [Vector2(0.18, 0.36), Vector2(0.80, 0.48), Vector2(0.46, 0.27)]
 		for i in range(spots.size()):
-			var a := voices * (0.35 + 0.35 * sin(t * 1.7 + i * 2.1))
+			var a := voices * (0.55 if game.reduced_pulses else 0.35 + 0.35 * sin(t * 1.7 + i * 2.1))
 			text_at(Vector2(vs.x * spots[i].x - 150, vs.y * spots[i].y), "Abra." if i != 1 else "Ainda estamos aqui.", 26 + i * 2, Color(0.88, 0.82, 0.72, a), 300)
 	# Iron bars and the small hand.
 	var bars := beat(3.8, 9.8)
@@ -542,7 +549,7 @@ func paint_memory(vs: Vector2) -> void:
 			panel.draw_rect(Rect2(x - 8, -10, 2, vs.y + 20), Color(0.55, 0.4, 0.26, bars * 0.35))
 		panel.draw_rect(Rect2(0, vs.y * 0.14, vs.x, 18), Color(0.03, 0.025, 0.03, bars * 0.92))
 		panel.draw_rect(Rect2(0, vs.y * 0.82, vs.x, 18), Color(0.03, 0.025, 0.03, bars * 0.92))
-		small_hand(Vector2(vs.x * (0.05 + 7 * 0.09) - 2 + sin(t * 9.0) * 0.8, vs.y * 0.5), bars, game.doll_found)
+		small_hand(Vector2(vs.x * (0.05 + 7 * 0.09) - 2 + (0.0 if game.reduced_pulses else sin(t * 9.0) * 0.8), vs.y * 0.5), bars, game.doll_found)
 	# Someone behind, out of focus.
 	var behind := beat(9.4, 13.6)
 	if behind > 0.0 and draw_still("figure", behind, vs, (elapsed - GRIEF_DURATION - 9.4) * 0.003):

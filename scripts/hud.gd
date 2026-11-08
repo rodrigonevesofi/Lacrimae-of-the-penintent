@@ -13,6 +13,7 @@ const GOLD := Color(0.86, 0.7, 0.38)
 
 func _ready() -> void:
 	ui_art = load("res://assets/reliquary_ui.png")
+	if ResourceLoader.exists("res://assets/ending/ato1_portoes.png"): ending_art = load("res://assets/ending/ato1_portoes.png")
 	var regions := {"bar":Rect2(0,190,512,135),"seal":Rect2(580,0,430,510),"flask":Rect2(1190,0,260,480),"boss":Rect2(0,660,512,240),"panel":Rect2(535,580,540,345),"tear":Rect2(1160,555,300,410)}
 	for key in regions:
 		var atlas := AtlasTexture.new()
@@ -36,6 +37,8 @@ func _text(pos: Vector2, s: String, fsize: int, col: Color, align: HorizontalAli
 	draw_string(font, pos + Vector2(2, 2), s, align, w, fsize, Color(0, 0, 0, col.a * 0.8))
 	draw_string(font, pos, s, align, w, fsize, col)
 
+
+var ending_art: Texture2D
 
 func _draw() -> void:
 	if game == null:
@@ -63,6 +66,9 @@ func _heading(pos: Vector2, text: String, font_size: int, color: Color, width: f
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if (game.state == "title" or game.paused) and event.is_action_pressed("reduce_pulses"):
+		game.set_reduced_pulses(not game.reduced_pulses)
+		get_viewport().set_input_as_handled()
 	if game.paused and event.is_action_pressed("mute"):
 		game.soundscape.toggle_mute()
 	if game.paused and event.is_action_pressed("pause"):
@@ -71,6 +77,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if game.state == "title" and event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if Rect2(360, 420, 560, 56).has_point(event.position):
 			game._start_game(false)
+		elif Rect2(320, 654, 640, 28).has_point(event.position):
+			game.set_reduced_pulses(not game.reduced_pulses)
 		elif game.has_save and Rect2(360, 480, 560, 48).has_point(event.position):
 			game._start_game(true)
 
@@ -96,6 +104,7 @@ func _draw_title(vs: Vector2) -> void:
 		_heading(Vector2(360, 513), "C  ·  Continuar jornada", 19, Color("b6b2a8"), 560)
 	_text(Vector2(0, 613), "A / D  mover     ESPAÇO  saltar     J  atacar     K  esquivar     E  interagir", 15, Color("aaa69a"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_text(Vector2(0, 642), "F  curar     Q  penitência     ESC  pausa     M  som", 14, Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 672), "P  ·  Reduzir pulsos e tremores nas cenas: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 14, Color("c2bba8") if game.reduced_pulses else Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 
 
 func _bar(pos: Vector2, w: float, h: float, frac: float, col: Color) -> void:
@@ -116,7 +125,7 @@ func _draw_play(vs: Vector2) -> void:
 	_text(Vector2(123,98),"CULPA",11,Color("c8ad83"))
 	if game.stain_active:
 		draw_rect(Rect2(80+330*0.122+330*0.785*0.75,29+82*0.48,330*0.785*0.25,82*0.17),Color("342f38"))
-		_text(Vector2(259,98),"VÍNCULO ROMPIDO · 75%",11,Color("c79c97"))
+		_text(Vector2(259,98),"Culpa pendente · capacidade 75%",11,Color("c79c97"))
 	elif p.culpa >= 50:
 		_text(Vector2(278,98),"Q · PENITÊNCIA",11,Color("e9c991"))
 	for i in range(p.max_flasks):
@@ -224,14 +233,27 @@ func _draw_map(vs: Vector2) -> void:
 
 func _draw_ending(vs: Vector2) -> void:
 	var fa := clampf(game.ending_t / 1.5, 0.0, 1.0)
-	draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.94 * fa))
 	var lines: Array = [
 		"O Guardião dos Sinos silencia. A cidade ainda não descansa.",
 		"A primeira Lágrima Sagrada desperta uma lembrança dos portões.",
 		"Você viu suas mãos fechando os portões. Ainda não sabe por quê.",
 		"Esta é apenas a primeira etapa da peregrinação.",
 	]
-
+	if ending_art != null:
+		# The closing picture holds the whole screen. The Penitente and the lantern stay clear; the four lines
+		# come one at a time in the dark strip below, and the end card arrives when ENTER becomes available.
+		draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 1.0))
+		draw_texture_rect(ending_art, Rect2(Vector2.ZERO, vs), false, Color(1, 1, 1, fa))
+		draw_rect(Rect2(0, vs.y - 120, vs.x, 120), Color(0, 0, 0, 0.5 * fa))
+		for i in range(lines.size()):
+			var start := 1.2 + float(i) * 3.2
+			var la := smoothstep(start, start + 0.7, game.ending_t) * (1.0 - smoothstep(start + 2.5, start + 3.2, game.ending_t))
+			_text(Vector2(0, vs.y - 62.0), lines[i], 21, Color(0.92, 0.88, 0.8, la), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+		var tb := clampf((game.ending_t - 15.0) / 1.5, 0.0, 1.0)
+		_heading(Vector2(0, 84), "— FIM DO CAPÍTULO JOGÁVEL —", 30, Color(GOLD, tb), vs.x)
+		_text(Vector2(0, vs.y - 60.0), "ENTER  —  voltar ao título", 20, Color(0.88, 0.84, 0.78, tb), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+		return
+	draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.94 * fa))
 	for i in range(lines.size()):
 		var la := clampf((game.ending_t - 1.5 - float(i) * 2.6) / 1.2, 0.0, 1.0)
 		draw_multiline_string(font, Vector2(180, 170.0 + float(i) * 78.0), lines[i], HORIZONTAL_ALIGNMENT_CENTER, vs.x - 360.0, 22, -1, Color(0.9, 0.87, 0.82, la))
@@ -248,6 +270,7 @@ func _draw_pause(vs: Vector2) -> void:
 	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som", "TAB    Cartografia · S+ESPAÇO    Descer"]
 	for i in range(controls.size()):
 		_text(Vector2(430, 268 + i * 27), controls[i], 18, Color("c5c0b3"))
+	_text(Vector2(430, 574), "P    Reduzir pulsos e tremores: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 18, Color("e0d3b0") if game.reduced_pulses else Color("c5c0b3"))
 	_text(Vector2(0, 605), "O progresso é salvo ao orar e ao obter a espada ou a relíquia.", 15, Color("8f918e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_heading(Vector2(0, 650), "ESC  ·  Retomar", 22, GOLD, vs.x)
 

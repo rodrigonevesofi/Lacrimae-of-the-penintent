@@ -32,3 +32,5 @@ O projeto está em desenvolvimento. A versão atual contém o trecho inicial do 
 [Roteiro dos cinco atos](docs/roteiro-cinco-atos.md). Os atos II–V ainda estão no roteiro.
 
 Para jogar o Ato I e relatar o que sentiu, use o [roteiro de playtest](docs/roteiro-de-playtest.md).
+
+Acessibilidade: a tecla **P**, no título e na pausa, reduz pulsos de luz e tremores nas cenas de culpa e do Guardião (veja [docs/acessibilidade-cenas.md](docs/acessibilidade-cenas.md)).

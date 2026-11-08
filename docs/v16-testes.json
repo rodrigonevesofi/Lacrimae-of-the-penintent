@@ -1,0 +1,66 @@
+[
+  {
+    "test": "reduced_pulses_spec",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "REDUCED_PULSES_SPEC: 59 checks, 0 failures; exit=0"
+    ]
+  },
+  {
+    "test": "reduced_pulses_ui_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "REDUCED_PULSES_UI: 8 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "accessibility_pulses_check",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "ACCESSIBILITY_PULSES: 35 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "accessibility_scenes_check",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "ACCESSIBILITY_SCENES: 22 checks, 0 findings"
+    ]
+  },
+  {
+    "test": "bestiary_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "BESTIARY_SMOKE: 44 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "chapter_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "CHAPTER_SMOKE: 44 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "guilt_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "GUILT_SMOKE: 38 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "expansion_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "EXPANSION_SMOKE: 45 checks, 0 failures"
+    ]
+  }
+]

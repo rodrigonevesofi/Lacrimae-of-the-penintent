@@ -12,7 +12,8 @@ var ambience: AudioStreamPlayer
 var effects: Dictionary = {}
 var muted := false
 var knock_count := 0
-const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
+const CREATURE_SFX := ["devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
+const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo", "devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
 
 func _ready() -> void:
 	ambience = AudioStreamPlayer.new()
@@ -43,7 +44,7 @@ func _ready() -> void:
 		var voice := AudioStreamPlayer.new()
 		voice.stream = load("res://assets/audio/%s.wav" % name)
 		voice.max_polyphony = 6
-		voice.volume_db = -7 if name == "step" else (-8 if name.begins_with("murmurio") else -2)
+		voice.volume_db = -7 if name == "step" else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))
 		add_child(voice)
 		effects[name] = voice
 
@@ -61,7 +62,7 @@ func play_knocks(delay: float = 0.9) -> void:
 	for i in range(3):
 		if i > 0: await get_tree().create_timer(0.62).timeout
 		play_sfx("knock")
-		get_tree().call_group("game", "shake_cam", 2.5)
+		if not get_parent().reduced_pulses: get_tree().call_group("game", "shake_cam", 2.5)
 
 func chime() -> void:
 	play_sfx("altar")

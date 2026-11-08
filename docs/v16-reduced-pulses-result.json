@@ -1,0 +1,117 @@
+{
+  "checks": 59,
+  "failures": 0,
+  "samples": [
+    {
+      "captions": [
+        "[Batida]"
+      ],
+      "duration": 7.0,
+      "flash": 0.14,
+      "index": 0,
+      "knocks": 3,
+      "mode": "echo",
+      "pulse": 1.0,
+      "shakes": 3
+    },
+    {
+      "captions": [
+        "[Batida]"
+      ],
+      "duration": 7.0,
+      "flash": 0.0,
+      "index": 0,
+      "knocks": 3,
+      "mode": "echo",
+      "pulse": 0.0,
+      "shakes": 0
+    },
+    {
+      "captions": [
+        "[Vozes abafadas]"
+      ],
+      "duration": 7.0,
+      "flash": 0.0,
+      "index": 1,
+      "knocks": 0,
+      "mode": "echo",
+      "pulse": 0.0,
+      "shakes": 0
+    },
+    {
+      "captions": [
+        "[Vozes abafadas]"
+      ],
+      "duration": 7.0,
+      "flash": 0.0,
+      "index": 2,
+      "knocks": 0,
+      "mode": "echo",
+      "pulse": 0.0,
+      "shakes": 0
+    },
+    {
+      "captions": [
+        "[Sino grave, abafado]"
+      ],
+      "duration": 9.0,
+      "flash": 0.0,
+      "index": 0,
+      "knocks": 0,
+      "mode": "memorial",
+      "pulse": 0.0,
+      "shakes": 0
+    },
+    {
+      "captions": [
+        "[Sino grave, abafado]"
+      ],
+      "duration": 9.0,
+      "flash": 0.0,
+      "index": 1,
+      "knocks": 0,
+      "mode": "memorial",
+      "pulse": 0.0,
+      "shakes": 0
+    },
+    {
+      "captions": [
+        "[Sino]",
+        "[Vozes abafadas]",
+        "[Batida]"
+      ],
+      "duration": 27.0,
+      "flash": 0.0,
+      "index": 0,
+      "knocks": 3,
+      "mode": "memory",
+      "pulse": 0.0,
+      "shakes": 0
+    },
+    {
+      "captions": [
+        "[Sino]"
+      ],
+      "duration": 6.5,
+      "flash": 0.0,
+      "index": 0,
+      "knocks": 0,
+      "mode": "boss_intro",
+      "pulse": 0.0,
+      "shakes": 0
+    },
+    {
+      "captions": [
+        "[Sino]"
+      ],
+      "duration": 9.0,
+      "flash": 0.0,
+      "index": 0,
+      "knocks": 0,
+      "mode": "boss_end",
+      "pulse": 0.0,
+      "shakes": 0
+    }
+  ],
+  "status": "PASS"
+}
