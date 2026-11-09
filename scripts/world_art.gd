@@ -5,6 +5,8 @@ var game
 var redraw_clock := 0.0
 var panorama: Texture2D
 var abyss_art: Texture2D
+var gate_closed: Texture2D
+var gate_open: Texture2D
 var sacred_props: Texture2D
 var room_textures: Dictionary = {}
 var doorway_art: Texture2D
@@ -36,6 +38,8 @@ func _ready() -> void:
 	# Further backdrops (basilica, gallery, gates, city, court) load the first time a room needs them.
 	panorama = load("res://assets/vespera_panorama.png")
 	if ResourceLoader.exists("res://assets/abismo_ponte.png"): abyss_art = load("res://assets/abismo_ponte.png")
+	if ResourceLoader.exists("res://assets/arena_portao.png"): gate_closed = load("res://assets/arena_portao.png")
+	if ResourceLoader.exists("res://assets/arena_portao_aberto.png"): gate_open = load("res://assets/arena_portao_aberto.png")
 	gate_memory = AtlasTexture.new()
 	gate_memory.atlas = panorama
 	var size := panorama.get_size()
@@ -285,8 +289,19 @@ func draw_branch() -> void:
 		if block.position.x < b.position.x or block.end.x > b.end.x: continue
 		draw_block(block)
 	for wall in ex.arena_rects:
-		draw_block(wall)
+		if wall.position.x < b.position.x or wall.end.x > b.end.x: continue
+		if gate_closed != null:
+			# The gate has dropped: iron bars and chains from the vault to the floor.
+			draw_texture_rect(gate_closed, Rect2(wall.position.x - 24.0, wall.position.y - 20.0, wall.size.x + 48.0, wall.size.y + 20.0), false)
+		else:
+			draw_block(wall)
 		draw_rect(Rect2(wall.position.x - 8.0, wall.position.y, wall.size.x + 16.0, wall.size.y), Color(0.55, 0.05, 0.08, 0.10))
+	if gate_open != null:
+		# Before the fight, the raised gates hang under the vault: a sign that this stretch will close.
+		for a in preload("res://scripts/act_one_layout.gd").arenas():
+			if a.x0 < b.position.x or a.x1 > b.end.x or ex.arenas_done.has(a.id) or ex.arena_active == a.id: continue
+			for edge in [a.x0, a.x1]:
+				draw_texture_rect(gate_open, Rect2(edge - 48.0, a.floor - 560.0, 96.0, 540.0), false)
 	for ledge in ex.ledges:
 		if ledge.position.x < b.position.x or ledge.end.x > b.end.x: continue
 		draw_ledge(ledge)

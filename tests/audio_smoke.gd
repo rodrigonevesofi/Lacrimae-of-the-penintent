@@ -82,6 +82,18 @@ func run() -> void:
 	for name in s.HOOK_NAMES:
 		if not ResourceLoader.exists("res://assets/audio/%s.wav" % name): expect(not s.effects.has(name),"hook %s is inert until its file exists" % name)
 		break
+	# Places: each room has its own texture under the music, and its own floor underfoot.
+	game.exploration.room = "cistern"
+	for i in range(30): s._process(0.1)
+	expect(s.beds[0].playing and s.beds[0].stream == s.bed_streams.get("cistern"),"the cistern has its own sound of water under the music")
+	expect(s.bed_streams.size() == 10,"all ten places have a texture of their own")
+	expect(s.resolve("step").begins_with("step_agua"),"steps in the cistern splash")
+	game.exploration.room = "belfry"
+	expect(s.resolve("step").begins_with("step_madeira"),"steps in the belfry are on wood")
+	var picks := {}
+	for i in range(30): picks[s.resolve("hit_carne")] = true
+	expect(picks.size() >= 2,"a blow on flesh picks among several recordings")
+	expect(s.resolve("hit_metal").begins_with("hit_metal"),"a blow on bronze rings as metal")
 	game.soundscape.ambience.stop()
 	game.soundscape.incoming.stop()
 	game.soundscape.guilt_layer.stop()

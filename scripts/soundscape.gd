@@ -15,7 +15,7 @@ var knock_count := 0
 ## Mix trims in dB, added to the base level of each group. They start at zero on purpose: the audit of the
 ## volumes (docs/auditoria-volume.md) proposed offsets, but they were measured on files, not heard in play.
 ## After listening, retuning the mix is a matter of changing these four numbers.
-const MIX_TRIM_DB := {"tracks": 0.0, "action": 0.0, "scene": 0.0, "creature": 0.0}
+const MIX_TRIM_DB := {"tracks": 0.0, "action": 0.0, "scene": 0.0, "creature": 0.0, "ambience": 0.0}
 const SCENE_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
 
 func trim_for(name: String) -> float:
@@ -31,13 +31,31 @@ const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "d
 const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
 ## Reverb of each place (how much of the room's tail the sound effects carry).
 const SPACE := {"city": 0.10, "ossuary": 0.28, "cistern": 0.36, "cloister": 0.30, "belfry": 0.32, "archive": 0.22, "refuge": 0.18, "nave": 0.40, "terrace": 0.16, "court": 0.14}
+## Families of variations: a request for one name picks one of its recordings at random.
+const FAMILIES := {
+	"hit_carne": ["hit_carne_01", "hit_carne_02", "hit_carne_03"],
+	"hit_metal": ["hit_metal_01", "hit_metal_02", "hit_metal_03"],
+	"dor": ["dor", "dor_01", "dor_02", "dor_03"],
+	"morte": ["morte", "morte_01", "morte_02", "morte_03"],
+	"swing": ["swing", "swing_01", "swing_02", "swing_03"],
+	"step_pedra": ["step_pedra_01", "step_pedra_02", "step_pedra_03", "step_pedra_04"],
+	"step_madeira": ["step_madeira_01", "step_madeira_02", "step_madeira_03"],
+	"step_agua": ["step_agua_01", "step_agua_02", "step_agua_03"],
+	"step_osso": ["step_osso_01", "step_osso_02", "step_osso_03"],
+}
+## What the penitent walks on in each place.
+const SURFACE := {"city": "step_pedra", "ossuary": "step_osso", "cistern": "step_agua", "cloister": "step_pedra", "belfry": "step_madeira", "archive": "step_madeira", "refuge": "step_pedra", "nave": "step_pedra", "terrace": "step_pedra", "court": "step_pedra"}
+var beds: Array = []
+var bed_streams := {}
+var bed_room := "-"
+var bed_mix := 1.0
 var played := {}
 var last_time := {}
 var base_db := {}
 var reverb: AudioEffect
 
 func _build_buses() -> void:
-	for bus_name in ["Music", "SFX"]:
+	for bus_name in ["Music", "Ambience", "SFX"]:
 		if AudioServer.get_bus_index(bus_name) == -1:
 			AudioServer.add_bus()
 			var index := AudioServer.bus_count - 1
@@ -93,22 +111,54 @@ func _ready() -> void:
 	guilt_layer.volume_db = -80
 	add_child(guilt_layer)
 	guilt_layer.play()
+	# The texture of each place, a long loop under the music.
+	for room in SURFACE.keys():
+		var path := "res://assets/audio/amb_%s.wav" % room
+		if ResourceLoader.exists(path):
+			var bed: AudioStreamWAV = load(path)
+			bed.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			bed.loop_begin = 0
+			bed.loop_end = bed.data.size() / 4
+			bed_streams[room] = bed
+	for i in range(2):
+		var layer := AudioStreamPlayer.new()
+		layer.bus = "Ambience"
+		layer.volume_db = -80
+		add_child(layer)
+		beds.append(layer)
 	var every_effect: Array = EFFECT_NAMES.duplicate()
 	for hook in HOOK_NAMES:
 		if ResourceLoader.exists("res://assets/audio/%s.wav" % hook): every_effect.append(hook)
+	for family in FAMILIES.values():
+		for variant in family:
+			if not every_effect.has(variant) and ResourceLoader.exists("res://assets/audio/%s.wav" % variant): every_effect.append(variant)
 	for name in every_effect:
 		var voice := AudioStreamPlayer.new()
 		voice.bus = "SFX"
 		voice.stream = load("res://assets/audio/%s.wav" % name)
 		voice.max_polyphony = 6
-		voice.volume_db = (-7 if name == "step" else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))) + trim_for(name)
+		voice.volume_db = (-7 if name.begins_with("step") else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))) + trim_for(name)
 		base_db[name] = voice.volume_db
 		add_child(voice)
 		effects[name] = voice
 
-func play_sfx(name: String) -> void:
-	if name == "knock": knock_count += 1
-	played[name] = int(played.get(name, 0)) + 1
+## The recording that answers a request: a variation of its family, the surface underfoot for steps.
+func resolve(name: String) -> String:
+	var family := name
+	var game = get_parent()
+	if name == "step" and game != null and game.exploration != null: family = SURFACE.get(game.exploration.room, "step")
+	if FAMILIES.has(family):
+		var options: Array = []
+		for variant in FAMILIES[family]:
+			if effects.has(variant): options.append(variant)
+		if not options.is_empty(): return options[randi() % options.size()]
+	if not effects.has(name) and name.begins_with("hit_"): return "hit"
+	return name
+
+func play_sfx(request: String) -> void:
+	if request == "knock": knock_count += 1
+	played[request] = int(played.get(request, 0)) + 1
+	var name := resolve(request)
 	if muted or not effects.has(name):
 		return
 	var voice: AudioStreamPlayer = effects[name]
@@ -118,8 +168,31 @@ func play_sfx(name: String) -> void:
 	voice.play()
 
 ## A sound that belongs to a place in the world: it comes from the left or the right of the penitent and fades with distance.
-func play_sfx_at(name: String, pos: Vector2) -> void:
-	played[name] = int(played.get(name, 0)) + 1
+func _update_beds(game, delta: float) -> void:
+	if beds.size() < 2:
+		return
+	var room: String = game.exploration.room if game.exploration != null and game.state != "title" else ""
+	if room != bed_room:
+		bed_room = room
+		var fresh: AudioStreamPlayer = beds[1]
+		beds[1] = beds[0]
+		beds[0] = fresh
+		if bed_streams.has(room):
+			fresh.stream = bed_streams[room]
+			fresh.play(randf() * 20.0)
+		else:
+			fresh.stop()
+		bed_mix = 0.0
+	bed_mix = minf(bed_mix + delta / 1.6, 1.0)
+	var level: float = -9.0 + float(MIX_TRIM_DB.ambience)
+	if game.narrative != null and game.narrative.mode != "": level -= 14.0
+	beds[0].volume_db = -80.0 if muted or not beds[0].playing else level + linear_to_db(maxf(bed_mix, 0.001))
+	beds[1].volume_db = -80.0 if muted or not beds[1].playing else level + linear_to_db(maxf(1.0 - bed_mix, 0.001))
+	if bed_mix >= 1.0 and beds[1].playing: beds[1].stop()
+
+func play_sfx_at(request: String, pos: Vector2) -> void:
+	played[request] = int(played.get(request, 0)) + 1
+	var name := resolve(request)
 	if muted or not effects.has(name):
 		return
 	var now := Time.get_ticks_msec()
@@ -191,6 +264,7 @@ func _process(delta: float) -> void:
 		return
 	if reverb != null and game.exploration != null:
 		reverb.set("wet", move_toward(float(reverb.get("wet")), float(SPACE.get(game.exploration.room, 0.12)), delta * 0.3))
+	_update_beds(game, delta)
 	context_timer -= delta
 	if context_timer <= 0 and not switching:
 		context_timer = 0.25

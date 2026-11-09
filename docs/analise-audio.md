@@ -36,3 +36,14 @@ O espectrograma ([audio-espectrograma.png](imagens/audio-espectrograma.png)) mos
 - Variações de golpe (carne, metal), de dor e de morte por tipo de criatura.
 - Os 17 sons dos ganchos.
 - Música em camadas (que sobem e descem com o combate).
+
+## Depois da entrega de áudio do Codex (v20)
+Ligados: os 17 sons de eventos, as 10 ambiências de sala (em laço, com transição de 1,6 s entre salas e abaixando 14 dB durante as cenas), passos por superfície (pedra, madeira, água, osso) e variações de golpe em carne e em metal, de dor, de morte e de swing.
+
+| Cena (mistura digital) | Ocupação espectral | LUFS | Pico |
+| --- | ---: | ---: | ---: |
+| Exploração | 40,5% → **91,6%** | −23,3 → −19,5 | −5,5 → −4,0 |
+| Luta | 23,2% → **90,0%** | −17,0 → −17,4 | +1,3 → −0,8 |
+| Cenas do Guardião | 18,9% → 30,9% | −20,7 → −17,6 | −5,9 → −2,8 |
+
+Atenção: a ocupação agora fica **acima** dos clipes de Blasphemous (62% a 88%). Uma ambiência alta demais também enche o espectro e pode encobrir os golpes. O nível das ambiências (−9 dB, ajustável em `MIX_TRIM_DB.ambience`) é um palpite, e só quem ouvir pode confirmar. Nas cenas a ambiência baixa de propósito.

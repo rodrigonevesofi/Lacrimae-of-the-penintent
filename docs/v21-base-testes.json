@@ -1,0 +1,42 @@
+[
+  {
+    "test": "audio_smoke",
+    "exit": 0,
+    "summary": [
+      "AUDIO_SMOKE: 18 checks, 0 failures"
+    ],
+    "errors": []
+  },
+  {
+    "test": "combat_smoke",
+    "exit": 0,
+    "summary": [
+      "COMBAT_SMOKE: 30 checks, 0 failures"
+    ],
+    "errors": []
+  },
+  {
+    "test": "chapter_smoke",
+    "exit": 0,
+    "summary": [
+      "CHAPTER_SMOKE: 44 checks, 0 failures"
+    ],
+    "errors": []
+  },
+  {
+    "test": "animation_smoke",
+    "exit": 0,
+    "summary": [
+      "ANIMATION_SMOKE: 313 checks, 0 failures"
+    ],
+    "errors": []
+  },
+  {
+    "test": "art_v21_resources",
+    "exit": 0,
+    "summary": [
+      "12 resources, 0 failures"
+    ],
+    "errors": []
+  }
+]

@@ -55,7 +55,7 @@ func run() -> void:
 	expect(game.state == "title" and not game.player.controllable, "title locks player input")
 	expect(game.player.appearance != null and game.player.appearance.atlas != null, "player uses illustrated character atlas")
 	expect(game.soundscape.ambience.playing and game.soundscape.ambience.stream.stereo, "stereo score starts automatically")
-	expect(game.soundscape.effects.size() == 26, "twenty-six action, cinematic and creature effects are loaded")
+	expect(game.soundscape.effects.size() >= 26, "the action, cinematic and creature effects are loaded (%d)" % game.soundscape.effects.size())
 	game.player.culpa = 100
 	game.state = "play"
 	game.soundscape._process(4)
@@ -99,7 +99,7 @@ func run() -> void:
 	await close_dialogue()
 	game.player._start_attack()
 	expect(game.player.state == "attack", "sword enables combat")
-	expect(game.soundscape.effects["swing"].playing, "attack triggers sword sound")
+	expect(game.soundscape.played.get("swing", 0) > 0, "attack triggers sword sound")
 	await frames(24)
 	var enemy = get_nodes_in_group("enemies")[0]
 	enemy.position = game.player.position + Vector2(50, 0)

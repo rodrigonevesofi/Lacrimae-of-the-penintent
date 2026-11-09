@@ -62,6 +62,7 @@ func run() -> void:
 	expect(p.hp == hp_before and p.parries == 1,"a blow inside the window is turned aside")
 	expect(devotee.state == "stagger" and devotee.stagger_used,"the attacker is left open")
 	expect(p.invuln > 0.0 and p.hit_pause >= 0.1,"a successful parry has weight: a pause and a moment of safety")
+	expect(p.parry_hit and p.counter_t > 0.0,"after a parry the recoil plays and the next blow is the strong counter")
 	var before_open: float = devotee.hp
 	devotee.take_hit(20.0,p.global_position.x)
 	expect(is_equal_approx(before_open - devotee.hp,32.0),"a staggered creature takes 60 percent more damage")

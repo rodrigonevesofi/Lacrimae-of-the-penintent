@@ -1,0 +1,62 @@
+{
+  "sources": {
+    "giant": "exec-02515c6f-7c95-43db-930b-392b42270232.png",
+    "face": "exec-bdb7ecfd-9da8-4531-991d-87e66f6e0479.png",
+    "fx": "exec-da313e4e-03e1-4d2e-b99b-f321d5460a91.png",
+    "coffin": "exec-a1c3aff9-0c18-446f-8a0a-430aae4ec907.png",
+    "portraits": "exec-82142ba6-84e1-4a7b-b23b-b3571aabdc93.png",
+    "frame": "exec-502897fc-2c1c-486b-ad1c-b647e51b7d21.png"
+  },
+  "source_sizes": {
+    "giant": [
+      1254,
+      1254
+    ],
+    "face": [
+      1717,
+      916
+    ],
+    "fx": [
+      1536,
+      1024
+    ],
+    "coffin": [
+      1536,
+      1024
+    ],
+    "portraits": [
+      1536,
+      1024
+    ],
+    "frame": [
+      2172,
+      724
+    ]
+  },
+  "giant_vertical_packing_offsets": [
+    7,
+    8,
+    7,
+    7,
+    10,
+    12,
+    9,
+    10,
+    10,
+    10,
+    11,
+    10,
+    13,
+    17,
+    19,
+    24
+  ],
+  "giant_alpha40_bottom_pixel": 500,
+  "frame_crop": [
+    0,
+    130,
+    2172,
+    562
+  ],
+  "method": "Technical resizing and cell registration; native images preserved outside repository."
+}

@@ -195,6 +195,50 @@
       "count": 6,
       "fps": 8,
       "loop": false
+    },
+    "parry": {
+      "sheet": "hero_combate",
+      "start": 0,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "parry_recoil": {
+      "sheet": "hero_combate",
+      "start": 6,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "strong_counter": {
+      "sheet": "hero_combate",
+      "start": 12,
+      "count": 6,
+      "fps": 16,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "charged_heavy": {
+      "sheet": "hero_combate",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
     }
   },
   "devotee": {

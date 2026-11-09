@@ -31,6 +31,9 @@ var ritual_progress := 0.0
 var hit_pause := 0.0
 var parry_cd := 0.0
 var prev_vy := 0.0
+var parry_hit := false
+var counter_t := 0.0
+var counter_attack := false
 var parries := 0
 const PARRY_TIME := 0.46
 const PARRY_WINDOW := 0.22
@@ -232,6 +235,7 @@ func _physics_process(delta: float) -> void:
 	attack_buffer = maxf(attack_buffer - delta, 0.0)
 	roll_buffer = maxf(roll_buffer - delta, 0.0)
 	parry_cd = maxf(parry_cd - delta, 0.0)
+	counter_t = maxf(counter_t - delta, 0.0)
 	damage_flash = maxf(damage_flash - delta, 0.0)
 	if pressed("attack") and has_weapon:
 		attack_buffer = 0.20
@@ -354,9 +358,9 @@ func _update_animation() -> void:
 		"execution": animator.select("execute_devotee" if not is_instance_valid(execution_target) or execution_target.humanoid() else "execute_mourner", facing, 1 - state_t / EXECUTION_TIME)
 		"air_attack": animator.select("air_attack",facing,1-state_t/AIR_ATTACK_TIME)
 		"air_recover": animator.select("air_land",facing,1-state_t/AIR_RECOVERY_TIME)
-		"attack": animator.select("attack_a" if combo == 1 else "attack_b", facing, 1 - state_t / ATTACK_TIME)
+		"attack": animator.select("strong_counter" if counter_attack else ("attack_a" if combo == 1 else "attack_b"), facing, 1 - state_t / ATTACK_TIME)
 		"roll": animator.select("roll", facing, 1 - state_t / ROLL_TIME)
-		"parry": animator.pose("attack_a", facing, 2)
+		"parry": animator.select("parry_recoil" if parry_hit else "parry", facing, clampf(1.0 - state_t / (0.3 if parry_hit else PARRY_TIME), 0.0, 0.999))
 		"hurt": animator.select("hurt", facing, 1 - state_t / 0.25)
 		"dead": animator.select("death", facing, 1 - state_t / 0.70)
 		"heal": animator.select("heal", facing, 1 - state_t / 0.55)
@@ -386,6 +390,8 @@ func _start_attack() -> void:
 	get_tree().call_group("game", "play_sfx", "swing")
 	attack_buffer = 0.0
 	state = "attack"
+	counter_attack = counter_t > 0.0
+	counter_t = 0.0
 	state_t = ATTACK_TIME
 	combo = 1 - combo
 	hit_list.clear()
@@ -399,7 +405,8 @@ func _attack_hits(aerial: bool = false) -> void:
 		if e.dead or hit_list.has(e):
 			continue
 		if r.intersects(e.hurt_rect()):
-			get_tree().call_group("game", "play_sfx", "hit")
+			# Bronze and armour ring; flesh gives way.
+			get_tree().call_group("game", "play_sfx", "hit_metal" if e.kind in [2, 3] else "hit_carne")
 			hit_list.append(e)
 			var dmg := (22.0 if aerial else (20.0 if combo == 1 else 26.0)) * sword_multiplier()
 			e.take_hit(dmg, global_position.x)
@@ -468,12 +475,16 @@ func pray(restore: bool = true, duration: float = 1.0) -> void:
 ## Heavy grabs, charges and projectiles cannot be parried; they must be dodged.
 func _start_parry() -> void:
 	state = "parry"
+	parry_hit = false
 	state_t = PARRY_TIME
 	velocity.x = 0.0
 	get_tree().call_group("game", "play_sfx", "swing")
 
 func _parry_success(attacker, from_x: float) -> void:
 	parries += 1
+	parry_hit = true
+	# The next blow within a moment is the strong counter.
+	counter_t = 0.9
 	invuln = 0.5
 	hit_pause = 0.12
 	shake = maxf(shake, 5.0)
