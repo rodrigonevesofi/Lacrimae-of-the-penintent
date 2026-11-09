@@ -4,6 +4,7 @@ extends Node2D
 var game
 var redraw_clock := 0.0
 var panorama: Texture2D
+var abyss_art: Texture2D
 var sacred_props: Texture2D
 var room_textures: Dictionary = {}
 var doorway_art: Texture2D
@@ -34,6 +35,7 @@ func _ready() -> void:
 	for room in ["ossuary","cistern","cloister","tower"]: room_textures[room] = load("res://assets/"+room+".png")
 	# Further backdrops (basilica, gallery, gates, city, court) load the first time a room needs them.
 	panorama = load("res://assets/vespera_panorama.png")
+	if ResourceLoader.exists("res://assets/abismo_ponte.png"): abyss_art = load("res://assets/abismo_ponte.png")
 	gate_memory = AtlasTexture.new()
 	gate_memory.atlas = panorama
 	var size := panorama.get_size()
@@ -81,10 +83,15 @@ func _draw() -> void:
 	draw_texture_rect(panorama, PANORAMA_RECT, false)
 	if game.exploration != null: draw_passages("city")
 	# The broken bridge is a real hole in the foreground walking plane.
-	draw_rect(Rect2(2000, 600, 270, 310), Color("12171d"))
-	for edge in [2000, 2270]:
-		var side := -1 if edge == 2000 else 1
-		polygon([Vector2(edge, 600), Vector2(edge + side * 35, 600), Vector2(edge + side * 22, 666), Vector2(edge + side * 12, 631)], Color("595149"))
+	if abyss_art != null:
+		# A painted chasm: broken stone on both lips, mist rising, a faint light far below.
+		draw_rect(Rect2(2000, 600, 270, 330), Color("0b0e12"))
+		draw_texture_rect(abyss_art, Rect2(2000, 596, 270, 400), false)
+	else:
+		draw_rect(Rect2(2000, 600, 270, 310), Color("12171d"))
+		for edge in [2000, 2270]:
+			var side := -1 if edge == 2000 else 1
+			polygon([Vector2(edge, 600), Vector2(edge + side * 35, 600), Vector2(edge + side * 22, 666), Vector2(edge + side * 12, 631)], Color("595149"))
 	# Foreground must match collision platforms exactly.
 	_draw_ground(0, 2000)
 	_draw_ground(2270, 4800)
@@ -277,6 +284,9 @@ func draw_branch() -> void:
 	for block in ex.blocks:
 		if block.position.x < b.position.x or block.end.x > b.end.x: continue
 		draw_block(block)
+	for wall in ex.arena_rects:
+		draw_block(wall)
+		draw_rect(Rect2(wall.position.x - 8.0, wall.position.y, wall.size.x + 16.0, wall.size.y), Color(0.55, 0.05, 0.08, 0.10))
 	for ledge in ex.ledges:
 		if ledge.position.x < b.position.x or ledge.end.x > b.end.x: continue
 		draw_ledge(ledge)

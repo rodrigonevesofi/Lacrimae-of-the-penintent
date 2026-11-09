@@ -23,6 +23,13 @@ func _ready() -> void:
 	animator.select("projectile", 1)
 	var l := Util.make_light(Color(0.65, 0.82, 1.0), 0.6, 0.8)
 	add_child(l)
+	call_deferred("_announce")
+
+
+func _announce() -> void:
+	var director = get_tree().get_first_node_in_group("game")
+	if director != null and is_inside_tree():
+		director.soundscape.play_sfx_at("projetil", global_position)
 
 
 func _process(delta: float) -> void:
@@ -44,6 +51,7 @@ func _process(delta: float) -> void:
 			clampf(global_position.y, r.position.y, r.end.y))
 		if global_position.distance_to(closest) < radius:
 			player.take_hit(dmg, global_position.x)
+			get_tree().call_group("game", "play_sfx", "projetil_impacto")
 			queue_free()
 			return
 	queue_redraw()

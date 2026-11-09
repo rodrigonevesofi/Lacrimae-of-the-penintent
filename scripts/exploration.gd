@@ -25,6 +25,14 @@ var journey_distance := 0.0
 var last_position := Vector2.ZERO
 var extra_altars: Array[Vector2] = [Vector2(5500,600),Vector2(11250,600),Vector2(14420,1100),Vector2(21800,600),Vector2(25100,600),Vector2(27950,600)]
 const ALTAR_NAMES := {5500:"Altar dos Sem Nome",11250:"Altar dos Votos",14420:"Altar da Vigília",21800:"Altar da Santa Calada",25100:"Altar dos Sinos Partidos",27950:"Altar dos Portões Selados"}
+var arenas_done: Array = []
+var arenas_enabled := true
+var arena_active := ""
+var arena_wave := 0
+var arena_enemies: Array = []
+var arena_bodies: Array = []
+var arena_rects: Array[Rect2] = []
+
 var pickups: Array[Dictionary] = [
 	{"id":"doll","room":"refuge","pos":Vector2(20030,280),"name":"Boneca coberta de cinzas","text":"A boneca estava entre cobertores pequenos.\nAlguém preparou abrigo para quem nunca chegou.\n\nNo pátio, há um memorial sem nomes legíveis."},
 	{"id":"register","room":"archive","pos":Vector2(17800,280),"name":"Registro dos que esperaram","text":"Uma lista de famílias, sem sentença ou confissão.\nAo lado de cada nome, a mesma palavra: aguardando.\n\nA Ordem chamou o silêncio de consentimento.\nVocê pode levar estes nomes até Iria."},
@@ -58,6 +66,8 @@ func reset() -> void:
 	opened = []
 	collected = []
 	bells = []
+	arenas_done = []
+	abort_arena()
 	map_open = false
 	transition = 0
 	transition_phase = ""
@@ -130,16 +140,32 @@ func spawn_enemies() -> void:
 		game.add_child(e)
 
 func serialize() -> Dictionary:
-	return {"room":room,"visited":visited,"opened":opened,"collected":collected,"bells":bells,"distance":journey_distance}
+	return {"room":room,"visited":visited,"opened":opened,"collected":collected,"bells":bells,"arenas_done":arenas_done,"distance":journey_distance}
+
+func _names(value, fallback: Array, allowed: Array = []) -> Array:
+	var clean: Array = []
+	if not value is Array: return fallback.duplicate()
+	for item in value:
+		if item is String and not clean.has(item) and (allowed.is_empty() or allowed.has(item)): clean.append(item)
+	return clean if not clean.is_empty() or fallback.is_empty() else fallback.duplicate()
 
 func restore(data: Dictionary) -> void:
-	room = str(data.get("room","city"))
-	if not rooms.has(room): room = "city"
-	visited = data.get("visited",["city"])
-	opened = data.get("opened",[])
-	collected = data.get("collected",[])
-	bells = data.get("bells",[])
-	journey_distance = float(data.get("distance",0))
+	abort_arena()
+	var saved_room = data.get("room","city")
+	room = saved_room if saved_room is String and rooms.has(saved_room) else "city"
+	visited = _names(data.get("visited"),["city"],rooms.keys())
+	var passage_ids: Array = []
+	for link in passages: passage_ids.append(link.id)
+	opened = _names(data.get("opened"),[],passage_ids)
+	var pickup_ids: Array = []
+	for item in pickups: pickup_ids.append(item.id)
+	collected = _names(data.get("collected"),[],pickup_ids + ["doll","vessel","register","witness"])
+	bells = _names(data.get("bells"),[],["water","vigil"])
+	var arena_ids: Array = []
+	for a in Layout.arenas(): arena_ids.append(a.id)
+	arenas_done = _names(data.get("arenas_done"),[],arena_ids)
+	var distance = data.get("distance",0)
+	journey_distance = clampf(float(distance),0.0,1.0e9) if distance is int or distance is float else 0.0
 	if game.doll_found and not collected.has("doll"): collected.append("doll")
 	game.player.max_flasks = 4 if collected.has("vessel") else 3
 	update_gate()
@@ -149,6 +175,7 @@ func is_transitioning() -> bool:
 
 func request_travel(id: String, pos: Vector2, arrival_facing: int) -> void:
 	if is_transitioning() or not rooms.has(id): return
+	game.soundscape.play_sfx("porta")
 	pending_destination = id
 	pending_spawn = pos
 	pending_facing = arrival_facing
@@ -187,7 +214,85 @@ func _process(delta: float) -> void:
 		if distance < 30: journey_distance += distance
 	last_position = game.player.position
 
+func arena_by_id(id: String) -> Dictionary:
+	for a in Layout.arenas():
+		if a.id == id: return a
+	return {}
+
+func _start_arena(a: Dictionary) -> void:
+	arena_active = a.id
+	arena_wave = 0
+	arena_rects.clear()
+	for edge in [a.x0, a.x1]:
+		var wall := Rect2(edge - 24.0, a.floor - 540.0, 48.0, 600.0)
+		arena_rects.append(wall)
+		arena_bodies.append(game._add_solid(wall, false))
+	game.toast("A saída se fecha. Só se abre quando o último cair.")
+	game.soundscape.play_sfx("bell")
+	game.soundscape.play_sfx("portao_fecha")
+	game.shake_cam(7.0)
+	_spawn_wave(a)
+
+func _spawn_wave(a: Dictionary) -> void:
+	arena_enemies.clear()
+	for d in a.waves[arena_wave]:
+		var e = game.EnemyScript.new()
+		e.setup(d[0],Vector2(d[1],d[2]),d[3],game.player)
+		e.room_id = a.room
+		e.killed.connect(game._on_enemy_killed)
+		game.add_child(e)
+		if e.family == "walker": e.state = "chase"
+		arena_enemies.append(e)
+		game.spawn_effect("dust",Vector2(d[1],d[2]) + Vector2(0,-30),1,0.8)
+
+func _release_arena() -> void:
+	for body in arena_bodies:
+		if is_instance_valid(body): body.queue_free()
+	arena_bodies.clear()
+	arena_rects.clear()
+
+func _finish_arena(a: Dictionary) -> void:
+	arenas_done.append(a.id)
+	arena_active = ""
+	_release_arena()
+	game.player.lagrimas += int(a.reward)
+	game.toast("O caminho se abre. +%d lágrimas" % int(a.reward))
+	game.soundscape.play_sfx("altar")
+	game.soundscape.play_sfx("portao_abre")
+	game._save()
+
+func abort_arena() -> void:
+	## The penitent fell, or left: the fight resets and can be tried again.
+	for e in arena_enemies:
+		if is_instance_valid(e): e.queue_free()
+	arena_enemies.clear()
+	arena_active = ""
+	_release_arena()
+
+func update_arena() -> void:
+	if not arenas_enabled or game.state != "play":
+		return
+	var player = game.player
+	if arena_active == "":
+		for a in Layout.arenas():
+			if a.room == room and not arenas_done.has(a.id):
+				var pos: Vector2 = player.global_position
+				if pos.x > a.x0 + 80.0 and pos.x < a.x1 - 80.0 and absf(pos.y - a.floor) < 90.0 and player.state != "dead":
+					_start_arena(a)
+					return
+		return
+	if player.state == "dead" or room != arena_by_id(arena_active).get("room",""):
+		abort_arena()
+		return
+	for e in arena_enemies:
+		if is_instance_valid(e) and not e.dead: return
+	var a := arena_by_id(arena_active)
+	arena_wave += 1
+	if arena_wave >= a.waves.size(): _finish_arena(a)
+	else: _spawn_wave(a)
+
 func update(_delta: float) -> bool:
+	update_arena()
 	if map_open or is_transitioning(): return true
 	var p: Vector2 = game.player.position
 	for link in passages:
@@ -221,6 +326,7 @@ func update(_delta: float) -> bool:
 		game.prompt = "[E] Examinar · " + item.name
 		if Input.is_action_just_pressed("interact"):
 			collected.append(item.id)
+			game.soundscape.play_sfx("coleta")
 			if item.id == "doll":
 				game.doll_found = true
 				game.player.blood_tears = 5

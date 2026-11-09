@@ -1,80 +1,103 @@
 [
   {
-    "damage": 77.0,
+    "damage": 119.0,
     "deaths": 0,
     "encounter": "aquelarre",
     "end_position": [
-      17920.630859375,
-      596.188659667969
+      17675.78515625,
+      599.986877441406
     ],
-    "errors": 2,
-    "heals": 1,
+    "errors": 4,
+    "heals": 2,
     "hits": {
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 11
+      "leque_lagrimas": 17,
+      "outros": 0
     },
-    "outcome": "venceu",
-    "reactions": 19,
-    "remaining": 0,
-    "seconds": 37.6,
+    "outcome": "limite",
+    "reactions": 29,
+    "remaining": 1,
+    "seconds": 60.0,
     "seed": 1000
   },
   {
-    "damage": 77.0,
+    "damage": 126.0,
     "deaths": 0,
     "encounter": "aquelarre",
     "end_position": [
-      17879.802734375,
-      599.925231933594
+      17331.787109375,
+      565.040649414062
     ],
     "errors": 3,
-    "heals": 1,
+    "heals": 2,
     "hits": {
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 11
+      "leque_lagrimas": 18,
+      "outros": 0
     },
     "outcome": "venceu",
-    "reactions": 21,
+    "reactions": 29,
     "remaining": 0,
-    "seconds": 38.33,
+    "seconds": 53.83,
     "seed": 1001
   },
   {
-    "damage": 112.0,
+    "damage": 189.0,
     "deaths": 0,
     "encounter": "aquelarre",
     "end_position": [
-      17920.095703125,
-      599.925231933594
+      17975.3125,
+      599.98681640625
     ],
     "errors": 3,
-    "heals": 2,
+    "heals": 3,
     "hits": {
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 16
+      "leque_lagrimas": 27,
+      "outros": 0
     },
-    "outcome": "venceu",
-    "reactions": 30,
-    "remaining": 0,
-    "seconds": 53.7,
+    "outcome": "limite",
+    "reactions": 34,
+    "remaining": 2,
+    "seconds": 60.0,
     "seed": 1002
   },
   {
-    "damage": 133.0,
+    "damage": 147.0,
     "deaths": 0,
     "encounter": "aquelarre",
     "end_position": [
-      17746.8984375,
-      504.590881347656
+      17396.751953125,
+      599.925231933594
+    ],
+    "errors": 4,
+    "heals": 2,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 21,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 30,
+    "remaining": 0,
+    "seconds": 56.12,
+    "seed": 1003
+  },
+  {
+    "damage": 147.0,
+    "deaths": 0,
+    "encounter": "aquelarre",
+    "end_position": [
+      17927.072265625,
+      558.282470703125
     ],
     "errors": 2,
     "heals": 2,
@@ -82,90 +105,44 @@
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 19
+      "leque_lagrimas": 21,
+      "outros": 0
     },
     "outcome": "venceu",
-    "reactions": 30,
+    "reactions": 33,
     "remaining": 0,
-    "seconds": 51.95,
-    "seed": 1003
-  },
-  {
-    "damage": 49.0,
-    "deaths": 0,
-    "encounter": "aquelarre",
-    "end_position": [
-      17393.208984375,
-      599.925231933594
-    ],
-    "errors": 1,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 7
-    },
-    "outcome": "venceu",
-    "reactions": 16,
-    "remaining": 0,
-    "seconds": 26.78,
+    "seconds": 58.48,
     "seed": 1004
-  },
-  {
-    "damage": 84.0,
-    "deaths": 0,
-    "encounter": "aquelarre",
-    "end_position": [
-      17764.318359375,
-      504.590881347656
-    ],
-    "errors": 3,
-    "heals": 1,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 12
-    },
-    "outcome": "venceu",
-    "reactions": 25,
-    "remaining": 0,
-    "seconds": 41.03,
-    "seed": 1005
-  },
-  {
-    "damage": 105.0,
-    "deaths": 0,
-    "encounter": "aquelarre",
-    "end_position": [
-      17554.150390625,
-      591.88818359375
-    ],
-    "errors": 2,
-    "heals": 1,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 15
-    },
-    "outcome": "venceu",
-    "reactions": 30,
-    "remaining": 0,
-    "seconds": 51.18,
-    "seed": 1006
   },
   {
     "damage": 140.0,
     "deaths": 0,
     "encounter": "aquelarre",
     "end_position": [
-      17794.919921875,
+      17994.28125,
+      558.282470703125
+    ],
+    "errors": 4,
+    "heals": 2,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 20,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 25,
+    "remaining": 0,
+    "seconds": 49.92,
+    "seed": 1005
+  },
+  {
+    "damage": 147.0,
+    "deaths": 0,
+    "encounter": "aquelarre",
+    "end_position": [
+      17725.98828125,
       599.925231933594
     ],
     "errors": 1,
@@ -174,90 +151,113 @@
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 20
+      "leque_lagrimas": 21,
+      "outros": 0
     },
     "outcome": "limite",
-    "reactions": 31,
-    "remaining": 1,
+    "reactions": 35,
+    "remaining": 3,
     "seconds": 60.0,
-    "seed": 1007
+    "seed": 1006
   },
   {
-    "damage": 133.0,
+    "damage": 147.0,
     "deaths": 0,
     "encounter": "aquelarre",
     "end_position": [
-      17715.21484375,
-      591.88818359375
+      17948.255859375,
+      599.98681640625
     ],
-    "errors": 5,
+    "errors": 0,
     "heals": 2,
     "hits": {
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 19
+      "leque_lagrimas": 21,
+      "outros": 0
     },
     "outcome": "venceu",
-    "reactions": 27,
+    "reactions": 33,
     "remaining": 0,
-    "seconds": 53.63,
-    "seed": 1008
+    "seconds": 59.87,
+    "seed": 1007
   },
   {
-    "damage": 105.0,
+    "damage": 154.0,
     "deaths": 0,
     "encounter": "aquelarre",
     "end_position": [
-      17800.005859375,
-      589.591735839844
+      17659.759765625,
+      599.925231933594
     ],
     "errors": 2,
-    "heals": 1,
+    "heals": 2,
     "hits": {
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 15
+      "leque_lagrimas": 22,
+      "outros": 0
     },
     "outcome": "limite",
-    "reactions": 27,
-    "remaining": 1,
+    "reactions": 35,
+    "remaining": 2,
     "seconds": 60.0,
+    "seed": 1008
+  },
+  {
+    "damage": 140.0,
+    "deaths": 0,
+    "encounter": "aquelarre",
+    "end_position": [
+      17955.724609375,
+      599.925231933594
+    ],
+    "errors": 1,
+    "heals": 2,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 20,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 24,
+    "remaining": 0,
+    "seconds": 52.48,
     "seed": 1009
   },
   {
-    "damage": 0.0,
+    "damage": 16.0,
     "deaths": 0,
     "encounter": "duelistas",
     "end_position": [
-      6089.94921875,
+      6053.83544921875,
       599.925231933594
     ],
-    "errors": 2,
+    "errors": 1,
     "heals": 0,
     "hits": {
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
-    "reactions": 5,
+    "reactions": 3,
     "remaining": 0,
-    "seconds": 2.27,
+    "seconds": 3.25,
     "seed": 1000
   },
   {
-    "damage": 0.0,
+    "damage": 16.0,
     "deaths": 0,
     "encounter": "duelistas",
     "end_position": [
-      6034.896484375,
+      6061.66748046875,
       599.925231933594
     ],
     "errors": 0,
@@ -267,35 +267,35 @@
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
-    "reactions": 5,
+    "reactions": 3,
     "remaining": 0,
-    "seconds": 3.58,
+    "seconds": 3.63,
     "seed": 1001
   },
   {
-    "damage": 0.0,
+    "damage": 16.0,
     "deaths": 0,
     "encounter": "duelistas",
     "end_position": [
-      5992.00927734375,
+      6003.70263671875,
       599.925231933594
     ],
-    "errors": 0,
+    "errors": 1,
     "heals": 0,
     "hits": {
       "bote": 0,
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
     "reactions": 5,
     "remaining": 0,
-    "seconds": 3.52,
+    "seconds": 4.83,
     "seed": 1002
   },
   {
@@ -303,7 +303,7 @@
     "deaths": 0,
     "encounter": "duelistas",
     "end_position": [
-      6063.416015625,
+      6024.28369140625,
       599.925231933594
     ],
     "errors": 0,
@@ -314,34 +314,34 @@
       "investida": 0,
       "leque_lagrimas": 0,
       "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 6,
+    "remaining": 0,
+    "seconds": 5.15,
+    "seed": 1003
+  },
+  {
+    "damage": 16.0,
+    "deaths": 0,
+    "encounter": "duelistas",
+    "end_position": [
+      6105.3037109375,
+      599.925231933594
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
     },
     "outcome": "venceu",
     "reactions": 3,
     "remaining": 0,
-    "seconds": 3.2,
-    "seed": 1003
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "duelistas",
-    "end_position": [
-      5990.341796875,
-      599.925231933594
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 5,
-    "remaining": 0,
-    "seconds": 3.42,
+    "seconds": 3.22,
     "seed": 1004
   },
   {
@@ -349,10 +349,10 @@
     "deaths": 0,
     "encounter": "duelistas",
     "end_position": [
-      6101.9169921875,
+      6042.2412109375,
       599.925231933594
     ],
-    "errors": 0,
+    "errors": 1,
     "heals": 0,
     "hits": {
       "bote": 0,
@@ -364,7 +364,7 @@
     "outcome": "venceu",
     "reactions": 5,
     "remaining": 0,
-    "seconds": 2.82,
+    "seconds": 5.1,
     "seed": 1005
   },
   {
@@ -372,30 +372,7 @@
     "deaths": 0,
     "encounter": "duelistas",
     "end_position": [
-      6063.416015625,
-      599.925231933594
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 3,
-    "remaining": 0,
-    "seconds": 3.38,
-    "seed": 1006
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "duelistas",
-    "end_position": [
-      5992.3427734375,
+      5970.0419921875,
       599.925231933594
     ],
     "errors": 0,
@@ -410,18 +387,64 @@
     "outcome": "venceu",
     "reactions": 5,
     "remaining": 0,
-    "seconds": 3.47,
+    "seconds": 5.52,
+    "seed": 1006
+  },
+  {
+    "damage": 16.0,
+    "deaths": 0,
+    "encounter": "duelistas",
+    "end_position": [
+      5978.5693359375,
+      599.925231933594
+    ],
+    "errors": 1,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "venceu",
+    "reactions": 6,
+    "remaining": 0,
+    "seconds": 6.52,
     "seed": 1007
+  },
+  {
+    "damage": 16.0,
+    "deaths": 0,
+    "encounter": "duelistas",
+    "end_position": [
+      6031.6474609375,
+      599.925231933594
+    ],
+    "errors": 2,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "venceu",
+    "reactions": 5,
+    "remaining": 0,
+    "seconds": 5.38,
+    "seed": 1008
   },
   {
     "damage": 0.0,
     "deaths": 0,
     "encounter": "duelistas",
     "end_position": [
-      6132.6962890625,
+      6082.4169921875,
       599.925231933594
     ],
-    "errors": 0,
+    "errors": 1,
     "heals": 0,
     "hits": {
       "bote": 0,
@@ -433,18 +456,18 @@
     "outcome": "venceu",
     "reactions": 4,
     "remaining": 0,
-    "seconds": 2.5,
-    "seed": 1008
+    "seconds": 3.67,
+    "seed": 1009
   },
   {
     "damage": 0.0,
     "deaths": 0,
-    "encounter": "duelistas",
+    "encounter": "devorador",
     "end_position": [
-      6100.083984375,
-      599.925231933594
+      15399.6025390625,
+      539.924011230469
     ],
-    "errors": 2,
+    "errors": 0,
     "heals": 0,
     "hits": {
       "bote": 0,
@@ -454,225 +477,179 @@
       "outros": 0
     },
     "outcome": "venceu",
+    "reactions": 2,
+    "remaining": 0,
+    "seconds": 6.17,
+    "seed": 1000
+  },
+  {
+    "damage": 60.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15409.6279296875,
+      1077.88708496094
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 2,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 3,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1001
+  },
+  {
+    "damage": 0.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15309.478515625,
+      1099.98681640625
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 2,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1002
+  },
+  {
+    "damage": 60.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15411.34375,
+      1099.98681640625
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 2,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 3,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1003
+  },
+  {
+    "damage": 60.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15363.9365234375,
+      539.924011230469
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 2,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 2,
+    "remaining": 0,
+    "seconds": 8.35,
+    "seed": 1004
+  },
+  {
+    "damage": 30.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15357.689453125,
+      1091.88916015625
+    ],
+    "errors": 1,
+    "heals": 0,
+    "hits": {
+      "bote": 1,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 3,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1005
+  },
+  {
+    "damage": 0.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15447.1669921875,
+      539.924011230469
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 2,
+    "remaining": 0,
+    "seconds": 7.18,
+    "seed": 1006
+  },
+  {
+    "damage": 30.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15358.130859375,
+      1099.98681640625
+    ],
+    "errors": 1,
+    "heals": 0,
+    "hits": {
+      "bote": 1,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
     "reactions": 5,
-    "remaining": 0,
-    "seconds": 3.02,
-    "seed": 1009
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15555.220703125,
-      539.925231933594
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 4.7,
-    "seed": 1000
-  },
-  {
-    "damage": 30.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15424.0478515625,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 1,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 5.27,
-    "seed": 1001
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15430.2158203125,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 4.6,
-    "seed": 1002
-  },
-  {
-    "damage": 30.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15425.0478515625,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 1,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 4.85,
-    "seed": 1003
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15453.5517578125,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 4.33,
-    "seed": 1004
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15417.181640625,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 5.2,
-    "seed": 1005
-  },
-  {
-    "damage": 30.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15423.3779296875,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 1,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 5.0,
-    "seed": 1006
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15425.34765625,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 4.97,
+    "remaining": 1,
+    "seconds": 60.0,
     "seed": 1007
   },
   {
-    "damage": 30.0,
-    "deaths": 0,
-    "encounter": "devorador",
-    "end_position": [
-      15426.3779296875,
-      539.924011230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 1,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 4.6,
-    "seed": 1008
-  },
-  {
     "damage": 0.0,
     "deaths": 0,
     "encounter": "devorador",
     "end_position": [
-      15456.7392578125,
-      539.924011230469
+      15312.4853515625,
+      1099.98681640625
     ],
     "errors": 0,
     "heals": 0,
@@ -683,18 +660,41 @@
       "leque_lagrimas": 0,
       "outros": 0
     },
-    "outcome": "venceu",
-    "reactions": 1,
-    "remaining": 0,
-    "seconds": 4.73,
+    "outcome": "limite",
+    "reactions": 2,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1008
+  },
+  {
+    "damage": 30.0,
+    "deaths": 0,
+    "encounter": "devorador",
+    "end_position": [
+      15407.2021484375,
+      1091.88916015625
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 1,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 3,
+    "remaining": 1,
+    "seconds": 60.0,
     "seed": 1009
   },
   {
-    "damage": 0.0,
+    "damage": 12.0,
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19593.072265625,
+      19560.51171875,
       599.925231933594
     ],
     "errors": 1,
@@ -704,12 +704,12 @@
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
     "reactions": 1,
     "remaining": 0,
-    "seconds": 1.95,
+    "seconds": 2.78,
     "seed": 1000
   },
   {
@@ -717,7 +717,7 @@
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19641.2734375,
+      19617.55078125,
       599.925231933594
     ],
     "errors": 0,
@@ -732,15 +732,15 @@
     "outcome": "venceu",
     "reactions": 1,
     "remaining": 0,
-    "seconds": 3.35,
+    "seconds": 3.28,
     "seed": 1001
   },
   {
-    "damage": 0.0,
+    "damage": 12.0,
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19717.40625,
+      19560.7890625,
       599.925231933594
     ],
     "errors": 0,
@@ -750,12 +750,12 @@
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
-    "reactions": 2,
+    "reactions": 1,
     "remaining": 0,
-    "seconds": 3.45,
+    "seconds": 2.98,
     "seed": 1002
   },
   {
@@ -763,7 +763,7 @@
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19641.2734375,
+      19617.55078125,
       599.925231933594
     ],
     "errors": 0,
@@ -778,7 +778,7 @@
     "outcome": "venceu",
     "reactions": 1,
     "remaining": 0,
-    "seconds": 3.53,
+    "seconds": 3.47,
     "seed": 1003
   },
   {
@@ -786,7 +786,7 @@
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19641.2734375,
+      19617.55078125,
       599.925231933594
     ],
     "errors": 0,
@@ -801,15 +801,15 @@
     "outcome": "venceu",
     "reactions": 1,
     "remaining": 0,
-    "seconds": 3.33,
+    "seconds": 3.27,
     "seed": 1004
   },
   {
-    "damage": 0.0,
+    "damage": 12.0,
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19627.240234375,
+      19556.2265625,
       599.925231933594
     ],
     "errors": 0,
@@ -819,12 +819,12 @@
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
-    "reactions": 2,
+    "reactions": 1,
     "remaining": 0,
-    "seconds": 2.9,
+    "seconds": 2.93,
     "seed": 1005
   },
   {
@@ -832,7 +832,7 @@
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19641.2734375,
+      19617.55078125,
       599.925231933594
     ],
     "errors": 0,
@@ -847,15 +847,15 @@
     "outcome": "venceu",
     "reactions": 1,
     "remaining": 0,
-    "seconds": 3.5,
+    "seconds": 3.43,
     "seed": 1006
   },
   {
-    "damage": 0.0,
+    "damage": 12.0,
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19628.51953125,
+      19554.22265625,
       599.925231933594
     ],
     "errors": 0,
@@ -865,20 +865,20 @@
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
-    "reactions": 2,
+    "reactions": 1,
     "remaining": 0,
-    "seconds": 2.77,
+    "seconds": 2.87,
     "seed": 1007
   },
   {
-    "damage": 0.0,
+    "damage": 12.0,
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19329.966796875,
+      19553.220703125,
       599.925231933594
     ],
     "errors": 0,
@@ -888,20 +888,20 @@
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
-    "reactions": 2,
+    "reactions": 1,
     "remaining": 0,
-    "seconds": 4.9,
+    "seconds": 2.92,
     "seed": 1008
   },
   {
-    "damage": 0.0,
+    "damage": 12.0,
     "deaths": 0,
     "encounter": "flagelante_solo",
     "end_position": [
-      19611.2890625,
+      19562.896484375,
       599.925231933594
     ],
     "errors": 0,
@@ -911,265 +911,265 @@
       "estilhacos": 0,
       "investida": 0,
       "leque_lagrimas": 0,
-      "outros": 0
+      "outros": 1
     },
     "outcome": "venceu",
-    "reactions": 2,
+    "reactions": 1,
     "remaining": 0,
-    "seconds": 2.43,
+    "seconds": 3.1,
     "seed": 1009
+  },
+  {
+    "damage": 12.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.923828125,
+      599.999633789062
+    ],
+    "errors": 1,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1000
   },
   {
     "damage": 0.0,
     "deaths": 0,
     "encounter": "flagelantes_claustro",
     "end_position": [
+      11988.92578125,
+      591.963806152344
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1001
+  },
+  {
+    "damage": 12.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
       11988.923828125,
       599.999633789062
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1002
+  },
+  {
+    "damage": 0.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.92578125,
+      589.666320800781
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1003
+  },
+  {
+    "damage": 0.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.92578125,
+      591.963806152344
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1004
+  },
+  {
+    "damage": 12.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.923828125,
+      599.999633789062
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1005
+  },
+  {
+    "damage": 0.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.92578125,
+      581.558410644531
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1006
+  },
+  {
+    "damage": 12.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.923828125,
+      599.999633789062
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1007
+  },
+  {
+    "damage": 12.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.923828125,
+      599.999633789062
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1008
+  },
+  {
+    "damage": 12.0,
+    "deaths": 0,
+    "encounter": "flagelantes_claustro",
+    "end_position": [
+      11988.923828125,
+      599.999633789062
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 0,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 1
+    },
+    "outcome": "limite",
+    "reactions": 1,
+    "remaining": 1,
+    "seconds": 60.0,
+    "seed": 1009
+  },
+  {
+    "damage": 48.0,
+    "deaths": 0,
+    "encounter": "asmodeia_controle",
+    "end_position": [
+      22704.32421875,
+      558.283569335938
     ],
     "errors": 2,
     "heals": 0,
     "hits": {
       "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 2,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1000
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.923828125,
-      599.999633789062
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 1,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1001
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.923828125,
-      599.999633789062
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 2,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1002
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.92578125,
-      577.961730957031
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 1,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1003
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.923828125,
-      599.999633789062
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 1,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1004
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.92578125,
-      582.062561035156
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 2,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1005
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.92578125,
-      582.062561035156
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 1,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1006
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.923828125,
-      599.999633789062
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 2,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1007
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.923828125,
-      599.999633789062
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 2,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1008
-  },
-  {
-    "damage": 0.0,
-    "deaths": 0,
-    "encounter": "flagelantes_claustro",
-    "end_position": [
-      11988.923828125,
-      599.999633789062
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 0,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "limite",
-    "reactions": 2,
-    "remaining": 1,
-    "seconds": 60.0,
-    "seed": 1009
-  },
-  {
-    "damage": 36.0,
-    "deaths": 0,
-    "encounter": "asmodeia_controle",
-    "end_position": [
-      22426.927734375,
-      591.88818359375
-    ],
-    "errors": 1,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 3,
+      "estilhacos": 4,
       "investida": 0,
       "leque_lagrimas": 0,
       "outros": 0
     },
     "outcome": "venceu",
-    "reactions": 3,
+    "reactions": 4,
     "remaining": 0,
-    "seconds": 13.78,
+    "seconds": 19.65,
     "seed": 1000
   },
   {
@@ -1177,8 +1177,8 @@
     "deaths": 0,
     "encounter": "asmodeia_controle",
     "end_position": [
-      22426.23046875,
-      596.188598632812
+      22417.703125,
+      565.041381835938
     ],
     "errors": 0,
     "heals": 0,
@@ -1192,7 +1192,7 @@
     "outcome": "venceu",
     "reactions": 3,
     "remaining": 0,
-    "seconds": 13.8,
+    "seconds": 12.53,
     "seed": 1001
   },
   {
@@ -1200,10 +1200,10 @@
     "deaths": 0,
     "encounter": "asmodeia_controle",
     "end_position": [
-      22544.767578125,
-      558.282470703125
+      22520.814453125,
+      558.283508300781
     ],
-    "errors": 2,
+    "errors": 0,
     "heals": 0,
     "hits": {
       "bote": 0,
@@ -1215,30 +1215,30 @@
     "outcome": "venceu",
     "reactions": 5,
     "remaining": 0,
-    "seconds": 23.77,
+    "seconds": 23.3,
     "seed": 1002
   },
   {
-    "damage": 36.0,
+    "damage": 72.0,
     "deaths": 0,
     "encounter": "asmodeia_controle",
     "end_position": [
-      22706.60546875,
-      588.088806152344
+      22677.462890625,
+      558.282470703125
     ],
     "errors": 0,
-    "heals": 0,
+    "heals": 1,
     "hits": {
       "bote": 0,
-      "estilhacos": 3,
+      "estilhacos": 6,
       "investida": 0,
       "leque_lagrimas": 0,
       "outros": 0
     },
     "outcome": "venceu",
-    "reactions": 4,
+    "reactions": 7,
     "remaining": 0,
-    "seconds": 16.7,
+    "seconds": 31.77,
     "seed": 1003
   },
   {
@@ -1246,7 +1246,7 @@
     "deaths": 0,
     "encounter": "asmodeia_controle",
     "end_position": [
-      22702.306640625,
+      22582.51171875,
       558.283508300781
     ],
     "errors": 0,
@@ -1261,91 +1261,22 @@
     "outcome": "venceu",
     "reactions": 4,
     "remaining": 0,
-    "seconds": 18.0,
+    "seconds": 17.0,
     "seed": 1004
   },
   {
-    "damage": 24.0,
+    "damage": 36.0,
     "deaths": 0,
     "encounter": "asmodeia_controle",
     "end_position": [
-      22424.990234375,
-      588.087768554688
+      22706.9765625,
+      558.283508300781
     ],
     "errors": 0,
     "heals": 0,
     "hits": {
       "bote": 0,
-      "estilhacos": 2,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 3,
-    "remaining": 0,
-    "seconds": 13.78,
-    "seed": 1005
-  },
-  {
-    "damage": 24.0,
-    "deaths": 0,
-    "encounter": "asmodeia_controle",
-    "end_position": [
-      22516.208984375,
-      558.283386230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 2,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 3,
-    "remaining": 0,
-    "seconds": 13.82,
-    "seed": 1006
-  },
-  {
-    "damage": 84.0,
-    "deaths": 0,
-    "encounter": "asmodeia_controle",
-    "end_position": [
-      22711.388671875,
-      558.283386230469
-    ],
-    "errors": 2,
-    "heals": 1,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 7,
-      "investida": 0,
-      "leque_lagrimas": 0,
-      "outros": 0
-    },
-    "outcome": "venceu",
-    "reactions": 7,
-    "remaining": 0,
-    "seconds": 30.97,
-    "seed": 1007
-  },
-  {
-    "damage": 48.0,
-    "deaths": 0,
-    "encounter": "asmodeia_controle",
-    "end_position": [
-      22707.265625,
-      558.283386230469
-    ],
-    "errors": 0,
-    "heals": 0,
-    "hits": {
-      "bote": 0,
-      "estilhacos": 4,
+      "estilhacos": 3,
       "investida": 0,
       "leque_lagrimas": 0,
       "outros": 0
@@ -1353,22 +1284,22 @@
     "outcome": "venceu",
     "reactions": 4,
     "remaining": 0,
-    "seconds": 18.78,
-    "seed": 1008
+    "seconds": 17.55,
+    "seed": 1005
   },
   {
-    "damage": 24.0,
+    "damage": 36.0,
     "deaths": 0,
     "encounter": "asmodeia_controle",
     "end_position": [
-      22520.533203125,
-      558.283386230469
+      22647.384765625,
+      565.041381835938
     ],
     "errors": 1,
     "heals": 0,
     "hits": {
       "bote": 0,
-      "estilhacos": 2,
+      "estilhacos": 3,
       "investida": 0,
       "leque_lagrimas": 0,
       "outros": 0
@@ -1376,7 +1307,76 @@
     "outcome": "venceu",
     "reactions": 4,
     "remaining": 0,
-    "seconds": 10.95,
+    "seconds": 16.85,
+    "seed": 1006
+  },
+  {
+    "damage": 108.0,
+    "deaths": 0,
+    "encounter": "asmodeia_controle",
+    "end_position": [
+      22427.4921875,
+      558.282653808594
+    ],
+    "errors": 2,
+    "heals": 2,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 9,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 9,
+    "remaining": 0,
+    "seconds": 38.12,
+    "seed": 1007
+  },
+  {
+    "damage": 60.0,
+    "deaths": 0,
+    "encounter": "asmodeia_controle",
+    "end_position": [
+      22520.482421875,
+      558.283508300781
+    ],
+    "errors": 1,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 5,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 6,
+    "remaining": 0,
+    "seconds": 25.13,
+    "seed": 1008
+  },
+  {
+    "damage": 36.0,
+    "deaths": 0,
+    "encounter": "asmodeia_controle",
+    "end_position": [
+      22505.970703125,
+      504.591552734375
+    ],
+    "errors": 0,
+    "heals": 0,
+    "hits": {
+      "bote": 0,
+      "estilhacos": 3,
+      "investida": 0,
+      "leque_lagrimas": 0,
+      "outros": 0
+    },
+    "outcome": "venceu",
+    "reactions": 3,
+    "remaining": 0,
+    "seconds": 13.32,
     "seed": 1009
   }
 ]

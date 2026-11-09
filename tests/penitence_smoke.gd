@@ -192,7 +192,7 @@ func run() -> void:
 	p.combo = 1
 	p.hit_list.clear()
 	p._attack_hits()
-	expect(is_equal_approx(sword_target.hp, 17), "nail bonus applies to actual sword contact")
+	expect(is_equal_approx(sword_target.hp, sword_target.max_hp - 28.0), "nail bonus applies to actual sword contact")
 	sword_target.queue_free()
 	await frames(2)
 	p.apply_penitence("chains")

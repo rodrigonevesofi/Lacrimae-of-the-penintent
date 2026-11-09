@@ -19,15 +19,15 @@ func trial(number: int):
 	game.state="play";game.message_text="";game.prologue_page=-1;game.stain_active=false
 	game.narrative.mode="";game.exploration.room="city";game.exploration.map_open=false
 	p.received=0.0
-	p.hits={"1":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0},"2":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0}}
-	p.damage_by_phase={"1":0.0,"2":0.0}
+	p.hits={"1":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0},"2":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0},"3":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0}}
+	p.damage_by_phase={"1":0.0,"2":0.0,"3":0.0}
 	p.revive(Vector2(4050,600));p.has_weapon=true;p.hp=100;p.max_hp=100;p.flasks=3;p.penitence="none";p.culpa=0
 	boss=Actor.new();boss.setup(2,Vector2(4380,600),0,p);boss.announced=true
 	boss.display_name="Guardião dos Sinos";game.add_child(boss);game.boss=boss;p.boss=boss
 	boss.awaken()
 	var elapsed=0.0;var next_attack=.3;var next_heal=0.0;var pending=-1.0
 	var old_state="";var reactions=0;var errors=0;var roll_commands=0
-	var phase_seconds={"1":0.0,"2":0.0}
+	var phase_seconds={"1":0.0,"2":0.0,"3":0.0}
 	while elapsed<120 and p.hp>0 and p.state!="dead" and not boss.dead:
 		var dx: float=boss.position.x-p.position.x
 		phase_seconds[str(boss.phase)]+=1.0/60
@@ -62,7 +62,7 @@ func report():
 	for r in rows:text+="| %d | %.2f | %.1f | %d | %d | %.1f | %s |\n"%[r.seed,r.seconds,r.damage,r.deaths,r.heals,r.boss_hp,r.outcome]
 	text+="\n## Acertos que retiraram HP, por ataque e fase de emissão\n\n| Semente | Fase | Pancada | Onda | Chuva | Espinhos | Não atribuído | Dano | Tempo na fase s |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n"
 	for r in rows:
-		for phase in ["1","2"]:
+		for phase in ["1","2","3"]:
 			var h=r.hits[phase]
 			text+="| %d | %s | %d | %d | %d | %d | %d | %.1f | %.2f |\n"%[r.seed,phase,h.slam,h.wave,h.rain,h.spikes,h.unknown,r.damage_by_phase[phase],r.phase_seconds[phase]]
 	text+="\nProjéteis e espinhos recebem metadados somente na subclasse observadora, indicando a fase em que foram criados; uma onda antiga não muda de fase só por atingir depois da transição. A pancada direta usa a fase corrente. A contagem registra perda real de HP, incluindo dano depois curado; ataques recusados pela invulnerabilidade não contam. Emissões e oportunidades/erros estão no JSON. Fase não alcançada não significa fase segura.\n\nEsta é simulação de política simples, não um jogador humano. Tempo rápido pode vir de política agressiva; limite pode vir de navegação ruim. Não demonstra diversão, dificuldade ideal, impacto, fluidez nem equivalência a Blasphemous. O Claude deve comparar com a reconstrução futura usando esta mesma base de teste, sem tratar resultados como meta automática de90–120s. É necessário jogar, ouvir e recolher relatos.\n\nRepetir: `XDG_DATA_HOME=/tmp/lacrimae-boss-v17/data XDG_CONFIG_HOME=/tmp/lacrimae-boss-v17/config XDG_CACHE_HOME=/tmp/lacrimae-boss-v17/cache godot --headless --fixed-fps 60 --path . --script res://tests/balance_probe_boss.gd`.\n"

@@ -111,13 +111,13 @@ func run() -> void:
 	await frames(40)
 	expect(await wait_state(d,"windup",240),"the Devourer winds up a slow grab")
 	await frames(2)
-	expect(game.soundscape.effects["devorador_rugido"].playing,"the Devourer growls as he winds up")
+	expect(game.soundscape.played.get("devorador_rugido",0) > 0,"the Devourer growls as he winds up")
 	var before: float = d.hp
 	d.take_hit(5.0,p.position.x)
 	expect(d.state == "windup" and absf(d.hp - (before - 5.0)) < 0.01,"blows during the windup do not interrupt him")
 	expect(await wait_state(d,"strike",120),"the windup becomes a lunge")
 	await frames(2)
-	expect(game.soundscape.effects["devorador_bote"].playing,"the lunge has its own impact sound")
+	expect(game.soundscape.played.get("devorador_bote",0) > 0,"the lunge has its own impact sound")
 	expect(await wait_state(d,"recover",60),"the lunge ends in a long recovery")
 	expect(p.hp < 100.0,"the grab wounds the penitent")
 	expect(absf(d.hp - (before - 5.0 + 18.0)) < 0.01,"he heals by devouring")
@@ -144,7 +144,7 @@ func run() -> void:
 	expect(f.state == "windup","he is armoured while winding up")
 	expect(await wait_state(f,"charge",60),"he charges along the ground")
 	await frames(2)
-	expect(game.soundscape.effects["flagelante_investida"].playing,"the charge is heard as running steps")
+	expect(game.soundscape.played.get("flagelante_investida",0) > 0,"the charge is heard as running steps")
 	p.revive(Vector2(1200,600))
 	expect(await wait_state(f,"stagger",120),"a missed charge ends against the broken edge")
 	expect(f.stagger_used and f.position.x < 2000.0,"he stops at the edge instead of falling, stunned")
@@ -209,12 +209,12 @@ func run() -> void:
 	await clear()
 	# Far away, a creature makes no sound.
 	p.revive(Vector2(200,600))
-	for voice in game.soundscape.effects.values(): voice.stop()
+	game.soundscape.played.clear()
 	var far = spawn(3,Vector2(1500,600),0)
 	far.state = "windup"
 	far.state_t = 1.0
 	await frames(6)
-	expect(not game.soundscape.effects["devorador_rugido"].playing,"a creature far from the penitent makes no sound")
+	expect(game.soundscape.played.get("devorador_rugido",0) == 0,"a creature far from the penitent makes no sound")
 	await clear()
 
 	# Duelistas: they trade blows until the penitent comes close, and cannot finish each other.

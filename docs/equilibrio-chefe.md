@@ -6,48 +6,54 @@ Dez sementes1700–1709;100HP, espada básica, três frascos, sem penitência/sa
 
 | Semente | Tempo s | Dano acumulado | Mortes | Curas | HP chefe final | Resultado |
 |---|---:|---:|---:|---:|---:|---|
-| 1700 | 16.53 | 92.0 | 0 | 1 | -4.0 | venceu |
-| 1701 | 15.82 | 76.0 | 0 | 1 | -10.0 | venceu |
-| 1702 | 17.58 | 84.0 | 0 | 1 | -10.0 | venceu |
-| 1703 | 17.93 | 92.0 | 0 | 1 | -10.0 | venceu |
-| 1704 | 18.53 | 88.0 | 0 | 1 | -10.0 | venceu |
-| 1705 | 19.77 | 110.0 | 0 | 2 | -10.0 | venceu |
-| 1706 | 18.92 | 138.0 | 0 | 2 | -10.0 | venceu |
-| 1707 | 15.15 | 102.0 | 0 | 1 | -10.0 | venceu |
-| 1708 | 18.47 | 106.0 | 0 | 2 | -16.0 | venceu |
-| 1709 | 19.93 | 116.0 | 0 | 2 | -10.0 | venceu |
+| 1700 | 42.07 | 174.0 | 0 | 3 | -24.0 | venceu |
+| 1701 | 41.20 | 206.0 | 0 | 3 | -24.0 | venceu |
+| 1702 | 42.60 | 210.0 | 0 | 3 | -24.0 | venceu |
+| 1703 | 41.15 | 212.0 | 0 | 3 | -24.0 | venceu |
+| 1704 | 44.22 | 218.0 | 0 | 3 | -10.0 | venceu |
+| 1705 | 40.50 | 184.0 | 0 | 3 | -4.0 | venceu |
+| 1706 | 40.03 | 186.0 | 0 | 3 | -10.0 | venceu |
+| 1707 | 40.52 | 226.0 | 0 | 3 | -4.0 | venceu |
+| 1708 | 39.12 | 235.0 | 1 | 3 | 134.0 | morte |
+| 1709 | 43.63 | 220.0 | 0 | 3 | -16.0 | venceu |
 
 ## Acertos que retiraram HP, por ataque e fase de emissão
 
 | Semente | Fase | Pancada | Onda | Chuva | Espinhos | Não atribuído | Dano | Tempo na fase s |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1700 | 1 | 1 | 0 | 0 | 0 | 0 | 26.0 | 7.95 |
-| 1700 | 2 | 2 | 0 | 1 | 0 | 0 | 66.0 | 8.58 |
-| 1701 | 1 | 1 | 0 | 0 | 1 | 0 | 44.0 | 8.45 |
-| 1701 | 2 | 0 | 0 | 1 | 1 | 0 | 32.0 | 7.37 |
-| 1702 | 1 | 1 | 0 | 1 | 0 | 0 | 40.0 | 9.32 |
-| 1702 | 2 | 1 | 0 | 0 | 1 | 0 | 44.0 | 8.27 |
-| 1703 | 1 | 1 | 0 | 0 | 1 | 0 | 44.0 | 8.82 |
-| 1703 | 2 | 0 | 1 | 1 | 1 | 0 | 48.0 | 9.12 |
-| 1704 | 1 | 0 | 0 | 1 | 1 | 0 | 32.0 | 8.68 |
-| 1704 | 2 | 1 | 1 | 1 | 0 | 0 | 56.0 | 9.85 |
-| 1705 | 1 | 2 | 0 | 0 | 0 | 0 | 52.0 | 10.53 |
-| 1705 | 2 | 1 | 0 | 1 | 1 | 0 | 58.0 | 9.23 |
-| 1706 | 1 | 1 | 0 | 2 | 1 | 0 | 72.0 | 9.50 |
-| 1706 | 2 | 2 | 0 | 1 | 0 | 0 | 66.0 | 9.42 |
-| 1707 | 1 | 1 | 0 | 0 | 1 | 0 | 44.0 | 7.65 |
-| 1707 | 2 | 1 | 0 | 1 | 1 | 0 | 58.0 | 7.50 |
-| 1708 | 1 | 2 | 0 | 1 | 0 | 0 | 66.0 | 10.08 |
-| 1708 | 2 | 1 | 0 | 1 | 0 | 0 | 40.0 | 8.38 |
-| 1709 | 1 | 1 | 0 | 0 | 1 | 0 | 44.0 | 9.43 |
-| 1709 | 2 | 1 | 0 | 2 | 1 | 0 | 72.0 | 10.50 |
+| 1700 | 1 | 2 | 1 | 2 | 0 | 0 | 96.0 | 21.92 |
+| 1700 | 2 | 0 | 0 | 0 | 2 | 0 | 36.0 | 9.62 |
+| 1700 | 3 | 1 | 1 | 0 | 0 | 0 | 42.0 | 10.53 |
+| 1701 | 1 | 2 | 1 | 0 | 1 | 0 | 86.0 | 21.05 |
+| 1701 | 2 | 0 | 1 | 1 | 1 | 0 | 48.0 | 10.22 |
+| 1701 | 3 | 1 | 0 | 2 | 1 | 0 | 72.0 | 9.93 |
+| 1702 | 1 | 2 | 0 | 0 | 2 | 0 | 88.0 | 20.78 |
+| 1702 | 2 | 0 | 0 | 3 | 1 | 0 | 60.0 | 10.50 |
+| 1702 | 3 | 1 | 0 | 0 | 2 | 0 | 62.0 | 11.32 |
+| 1703 | 1 | 1 | 1 | 1 | 2 | 0 | 92.0 | 19.92 |
+| 1703 | 2 | 0 | 0 | 0 | 2 | 0 | 36.0 | 10.37 |
+| 1703 | 3 | 2 | 0 | 1 | 1 | 0 | 84.0 | 10.87 |
+| 1704 | 1 | 1 | 0 | 4 | 3 | 0 | 136.0 | 23.88 |
+| 1704 | 2 | 0 | 1 | 0 | 1 | 0 | 34.0 | 10.63 |
+| 1704 | 3 | 0 | 1 | 1 | 1 | 0 | 48.0 | 9.70 |
+| 1705 | 1 | 1 | 1 | 1 | 2 | 0 | 92.0 | 21.03 |
+| 1705 | 2 | 0 | 0 | 0 | 2 | 0 | 36.0 | 9.62 |
+| 1705 | 3 | 1 | 1 | 1 | 0 | 0 | 56.0 | 9.85 |
+| 1706 | 1 | 2 | 0 | 0 | 2 | 0 | 88.0 | 20.70 |
+| 1706 | 2 | 2 | 0 | 2 | 0 | 0 | 80.0 | 11.77 |
+| 1706 | 3 | 0 | 0 | 0 | 1 | 0 | 18.0 | 7.57 |
+| 1707 | 1 | 1 | 1 | 1 | 2 | 0 | 92.0 | 20.87 |
+| 1707 | 2 | 1 | 0 | 0 | 2 | 0 | 62.0 | 10.58 |
+| 1707 | 3 | 1 | 0 | 2 | 1 | 0 | 72.0 | 9.07 |
+| 1708 | 1 | 2 | 1 | 1 | 1 | 0 | 100.0 | 20.95 |
+| 1708 | 2 | 0 | 2 | 4 | 0 | 0 | 88.0 | 13.02 |
+| 1708 | 3 | 0 | 1 | 1 | 1 | 0 | 47.0 | 5.15 |
+| 1709 | 1 | 2 | 0 | 0 | 2 | 0 | 88.0 | 21.60 |
+| 1709 | 2 | 1 | 1 | 1 | 1 | 0 | 74.0 | 11.70 |
+| 1709 | 3 | 1 | 0 | 1 | 1 | 0 | 58.0 | 10.33 |
 
 Projéteis e espinhos recebem metadados somente na subclasse observadora, indicando a fase em que foram criados; uma onda antiga não muda de fase só por atingir depois da transição. A pancada direta usa a fase corrente. A contagem registra perda real de HP, incluindo dano depois curado; ataques recusados pela invulnerabilidade não contam. Emissões e oportunidades/erros estão no JSON. Fase não alcançada não significa fase segura.
 
 Esta é simulação de política simples, não um jogador humano. Tempo rápido pode vir de política agressiva; limite pode vir de navegação ruim. Não demonstra diversão, dificuldade ideal, impacto, fluidez nem equivalência a Blasphemous. O Claude deve comparar com a reconstrução futura usando esta mesma base de teste, sem tratar resultados como meta automática de90–120s. É necessário jogar, ouvir e recolher relatos.
 
 Repetir: `XDG_DATA_HOME=/tmp/lacrimae-boss-v17/data XDG_CONFIG_HOME=/tmp/lacrimae-boss-v17/config XDG_CACHE_HOME=/tmp/lacrimae-boss-v17/cache godot --headless --fixed-fps 60 --path . --script res://tests/balance_probe_boss.gd`.
-
-## Resultado observado nesta base
-
-As dez sementes venceram. Tempo entre15.15 e19.93s, média17.86s; dano recebido médio100.4, contando o que foi curado. Isso sustenta a necessidade de revisar o chefe: o resultado rápido não é aprovação de ritmo ou dificuldade. A próxima integração deve repetir a sonda e comparar as fases e os tipos de acerto, além de playtest humano.

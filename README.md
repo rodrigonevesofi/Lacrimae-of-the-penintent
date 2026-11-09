@@ -34,3 +34,5 @@ O projeto está em desenvolvimento. A versão atual contém o trecho inicial do 
 Para jogar o Ato I e relatar o que sentiu, use o [roteiro de playtest](docs/roteiro-de-playtest.md).
 
 Acessibilidade: a tecla **P**, no título e na pausa, reduz pulsos de luz e tremores nas cenas de culpa e do Guardião (veja [docs/acessibilidade-cenas.md](docs/acessibilidade-cenas.md)).
+
+Combate: **J** golpe, **K** esquiva, **L** aparo (aperte quando o golpe chegar; golpes marcados com anel dourado podem ser aparados, os demais só se esquivam), **F** curar, **E** executar um inimigo aberto.

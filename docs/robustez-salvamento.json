@@ -41,9 +41,7 @@
   },
   {
     "case": "truncated",
-    "errors": [
-      "ERROR: Parse JSON failed. Error at line 0: Expected '}'"
-    ],
+    "errors": [],
     "exit": 0,
     "observed": {
       "altar": 0.0,
@@ -58,14 +56,12 @@
       "safe": true,
       "upgrades": 0.0
     },
-    "passed": false,
+    "passed": true,
     "shutdown_diagnostics": []
   },
   {
     "case": "empty",
-    "errors": [
-      "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token"
-    ],
+    "errors": [],
     "exit": 0,
     "observed": {
       "altar": 0.0,
@@ -80,7 +76,7 @@
       "safe": true,
       "upgrades": 0.0
     },
-    "passed": false,
+    "passed": true,
     "shutdown_diagnostics": []
   },
   {
@@ -125,9 +121,7 @@
   },
   {
     "case": "number_list",
-    "errors": [
-      "SCRIPT ERROR: Invalid call. Nonexistent 'int' constructor."
-    ],
+    "errors": [],
     "exit": 0,
     "observed": {
       "altar": 0.0,
@@ -135,54 +129,54 @@
       "completed": true,
       "culpa": 0.0,
       "currency": 0.0,
-      "echo_count": 0.0,
+      "echo_count": 3.0,
+      "hp": 130.0,
+      "max_hp": 130.0,
+      "room": "city",
+      "safe": true,
+      "upgrades": 2.0
+    },
+    "passed": true,
+    "shutdown_diagnostics": []
+  },
+  {
+    "case": "negative_numbers",
+    "errors": [],
+    "exit": 0,
+    "observed": {
+      "altar": 1.0,
+      "case": "negative_numbers",
+      "completed": true,
+      "culpa": 0.0,
+      "currency": 0.0,
+      "echo_count": 3.0,
       "hp": 100.0,
       "max_hp": 100.0,
       "room": "city",
       "safe": true,
       "upgrades": 0.0
     },
-    "passed": false,
-    "shutdown_diagnostics": []
-  },
-  {
-    "case": "negative_numbers",
-    "errors": [],
-    "exit": 1,
-    "observed": {
-      "altar": 1.0,
-      "case": "negative_numbers",
-      "completed": true,
-      "culpa": 0.0,
-      "currency": -900.0,
-      "echo_count": 3.0,
-      "hp": -14900.0,
-      "max_hp": -14900.0,
-      "room": "city",
-      "safe": false,
-      "upgrades": -1000.0
-    },
-    "passed": false,
+    "passed": true,
     "shutdown_diagnostics": []
   },
   {
     "case": "absurd_numbers",
     "errors": [],
-    "exit": 1,
+    "exit": 0,
     "observed": {
       "altar": 8.0,
       "case": "absurd_numbers",
       "completed": true,
       "culpa": 100.0,
-      "currency": -9223372036854775808.0,
+      "currency": 999999.0,
       "echo_count": 3.0,
-      "hp": 15000000000100.0,
-      "max_hp": 15000000000100.0,
+      "hp": 850.0,
+      "max_hp": 850.0,
       "room": "court",
-      "safe": false,
-      "upgrades": 1000000000000.0
+      "safe": true,
+      "upgrades": 50.0
     },
-    "passed": false,
+    "passed": true,
     "shutdown_diagnostics": []
   },
   {
@@ -207,9 +201,7 @@
   },
   {
     "case": "wrong_exploration",
-    "errors": [
-      "SCRIPT ERROR: Invalid type in function 'restore' in base 'Node (exploration.gd)'. Cannot convert argument 1 from String to Dictionary."
-    ],
+    "errors": [],
     "exit": 0,
     "observed": {
       "altar": 1.0,
@@ -224,14 +216,12 @@
       "safe": true,
       "upgrades": 2.0
     },
-    "passed": false,
+    "passed": true,
     "shutdown_diagnostics": []
   },
   {
     "case": "wrong_stain",
-    "errors": [
-      "SCRIPT ERROR: Trying to assign value of type 'String' to a variable of type 'Array'."
-    ],
+    "errors": [],
     "exit": 0,
     "observed": {
       "altar": 1.0,
@@ -246,7 +236,7 @@
       "safe": true,
       "upgrades": 2.0
     },
-    "passed": false,
+    "passed": true,
     "shutdown_diagnostics": []
   },
   {

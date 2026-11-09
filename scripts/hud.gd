@@ -153,13 +153,13 @@ func _draw_play(vs: Vector2) -> void:
 			draw_colored_polygon(PackedVector2Array([center+Vector2(-4,0),center+Vector2(0,-4),center+Vector2(4,0),center+Vector2(0,4)]),Color(0.65,0.5,0.3,opacity))
 	var b = game.boss
 	if b != null and is_instance_valid(b) and b.awake and not b.dead and game.exploration.room == "city":
-		_ornate_bar(Rect2(vs.x/2-400,vs.y-148,800,164),b.hp/b.max_hp,Color("872a32"),true)
-		_heading(Vector2(0,vs.y-111),b.display_name,22,Color("d5bd92"),vs.x)
+		_ornate_bar(Rect2(vs.x/2-300,10,600,112),b.hp/b.max_hp,Color("872a32"),true)
+		_heading(Vector2(0,132),b.display_name,22,Color("d5bd92"),vs.x)
 	if game.prompt != "" and game.message_text == "" and game.state == "play":
 		_panel(Rect2(150,vs.y-51,vs.x-300,41))
 		_text(Vector2(0,vs.y-24),game.prompt,16,Color("eedcc0"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	elif game.play_time < 18 and game.message_text == "":
-		_text(Vector2(0,vs.y-24),"A/D · mover     ESPAÇO · saltar     J · espada     K · esquiva     E · examinar     TAB · mapa",14,Color("c7baa4"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+		_text(Vector2(0,vs.y-24),"A/D · mover     ESPAÇO · saltar     J · espada     L · aparo     K · esquiva     E · examinar     TAB · mapa",14,Color("c7baa4"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	if game.toast_t > 0:
 		var text_lines := _wrap(game.toast_text,800,17)
 		for i in range(text_lines.size()):
@@ -268,7 +268,7 @@ func _draw_pause(vs: Vector2) -> void:
 	_panel(Rect2(220,95,vs.x-440,590))
 	_heading(Vector2(0, 182), "A PEREGRINAÇÃO AGUARDA", 30, GOLD, vs.x)
 	_text(Vector2(0, 228), "PAUSA", 14, Color("a6a49e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som", "TAB    Cartografia · S+ESPAÇO    Descer"]
+	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "L    Aparo (aperte quando o golpe chegar)", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som", "TAB    Cartografia · S+ESPAÇO    Descer"]
 	for i in range(controls.size()):
 		_text(Vector2(430, 268 + i * 27), controls[i], 18, Color("c5c0b3"))
 	_text(Vector2(430, 574), "P    Reduzir pulsos e tremores: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 18, Color("e0d3b0") if game.reduced_pulses else Color("c5c0b3"))

@@ -109,6 +109,8 @@ func run() -> void:
 	root.add_child(game)
 	expect(game.art!=null and game.exploration!=null,"world and exploration initialize")
 	game._start_game(false,false)
+	# The route tests walk through rooms with quiet enemies; locked arenas have their own tests in combat_smoke.
+	game.exploration.arenas_enabled = false
 	for i in range(3): await close_message()
 	quiet_enemies()
 	game.player.has_weapon=true

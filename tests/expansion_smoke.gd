@@ -93,6 +93,8 @@ func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	game._start_game(false,false)
+	# The route tests walk through rooms with quiet enemies; locked arenas have their own tests in combat_smoke.
+	game.exploration.arenas_enabled = false
 	for i in range(3): await close_message()
 	quiet_enemies()
 	game.player.has_weapon = true

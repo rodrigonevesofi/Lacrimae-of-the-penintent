@@ -24,10 +24,50 @@ func trim_for(name: String) -> float:
 	return MIX_TRIM_DB.action
 
 const CREATURE_SFX := ["devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
+## Sounds for events that used to be silent. Each is loaded only if its file exists, so the hooks in the game are
+## ready before the sounds are: the moment a file with that name lands in assets/audio/, it plays.
+const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "dor", "aterrissagem", "coleta", "porta", "projetil", "projetil_impacto", "espinho", "aparo", "execucao", "portao_fecha", "portao_abre", "ui_mover", "ui_confirmar"]
+## Narrative sounds are always played exactly the same; everything else varies a little in pitch and level.
+const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
+## Reverb of each place (how much of the room's tail the sound effects carry).
+const SPACE := {"city": 0.10, "ossuary": 0.28, "cistern": 0.36, "cloister": 0.30, "belfry": 0.32, "archive": 0.22, "refuge": 0.18, "nave": 0.40, "terrace": 0.16, "court": 0.14}
+var played := {}
+var last_time := {}
+var base_db := {}
+var reverb: AudioEffect
+
+func _build_buses() -> void:
+	for bus_name in ["Music", "SFX"]:
+		if AudioServer.get_bus_index(bus_name) == -1:
+			AudioServer.add_bus()
+			var index := AudioServer.bus_count - 1
+			AudioServer.set_bus_name(index, bus_name)
+			AudioServer.set_bus_send(index, "Master")
+	# A limiter on the master keeps loud moments (a fight can stack many sounds) from going past full scale.
+	var master := AudioServer.get_bus_index("Master")
+	if AudioServer.get_bus_effect_count(master) == 0:
+		var limiter: AudioEffect = ClassDB.instantiate("AudioEffectHardLimiter") if ClassDB.class_exists("AudioEffectHardLimiter") else AudioEffectLimiter.new()
+		limiter.set("ceiling_db", -1.0)
+		limiter.set("pre_gain_db", 3.0)
+		AudioServer.add_bus_effect(master, limiter)
+	var sfx := AudioServer.get_bus_index("SFX")
+	if AudioServer.get_bus_effect_count(sfx) == 0:
+		var room_reverb := AudioEffectReverb.new()
+		room_reverb.room_size = 0.6
+		room_reverb.damping = 0.55
+		room_reverb.dry = 1.0
+		room_reverb.wet = 0.1
+		AudioServer.add_bus_effect(sfx, room_reverb)
+		reverb = room_reverb
+	else:
+		reverb = AudioServer.get_bus_effect(sfx, 0)
+
 const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo", "devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
 
 func _ready() -> void:
+	_build_buses()
 	ambience = AudioStreamPlayer.new()
+	ambience.bus = "Music"
 	for context in ["menu", "exploration", "temple", "combat", "boss", "story", "ending", "nave", "terraco", "patio"]:
 		var track: AudioStreamWAV = load("res://assets/audio/ost_%s.wav" % context)
 		track.loop_mode = AudioStreamWAV.LOOP_FORWARD
@@ -42,8 +82,10 @@ func _ready() -> void:
 	add_child(ambience)
 	ambience.play()
 	incoming = AudioStreamPlayer.new()
+	incoming.bus = "Music"
 	add_child(incoming)
 	guilt_layer = AudioStreamPlayer.new()
+	guilt_layer.bus = "Music"
 	var guilt: AudioStreamWAV = load("res://assets/audio/guilt.wav")
 	guilt.loop_mode = AudioStreamWAV.LOOP_FORWARD
 	guilt.loop_end = guilt.data.size() / 2
@@ -51,20 +93,50 @@ func _ready() -> void:
 	guilt_layer.volume_db = -80
 	add_child(guilt_layer)
 	guilt_layer.play()
-	for name in EFFECT_NAMES:
+	var every_effect: Array = EFFECT_NAMES.duplicate()
+	for hook in HOOK_NAMES:
+		if ResourceLoader.exists("res://assets/audio/%s.wav" % hook): every_effect.append(hook)
+	for name in every_effect:
 		var voice := AudioStreamPlayer.new()
+		voice.bus = "SFX"
 		voice.stream = load("res://assets/audio/%s.wav" % name)
 		voice.max_polyphony = 6
 		voice.volume_db = (-7 if name == "step" else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))) + trim_for(name)
+		base_db[name] = voice.volume_db
 		add_child(voice)
 		effects[name] = voice
 
 func play_sfx(name: String) -> void:
 	if name == "knock": knock_count += 1
+	played[name] = int(played.get(name, 0)) + 1
 	if muted or not effects.has(name):
 		return
 	var voice: AudioStreamPlayer = effects[name]
-	voice.pitch_scale = randf_range(0.94, 1.06) if name in ["step", "swing", "hit"] else 1.0
+	var varied: bool = not FIXED_SFX.has(name)
+	voice.pitch_scale = randf_range(0.94, 1.06) if varied else 1.0
+	voice.volume_db = float(base_db.get(name, -2.0)) + (randf_range(-1.2, 1.2) if varied else 0.0)
+	voice.play()
+
+## A sound that belongs to a place in the world: it comes from the left or the right of the penitent and fades with distance.
+func play_sfx_at(name: String, pos: Vector2) -> void:
+	played[name] = int(played.get(name, 0)) + 1
+	if muted or not effects.has(name):
+		return
+	var now := Time.get_ticks_msec()
+	if now - int(last_time.get(name, 0)) < 70:
+		return
+	last_time[name] = now
+	var base: AudioStreamPlayer = effects[name]
+	var voice := AudioStreamPlayer2D.new()
+	voice.stream = base.stream
+	voice.bus = "SFX"
+	voice.volume_db = float(base_db.get(name, -2.0)) + randf_range(-1.2, 1.2)
+	voice.pitch_scale = randf_range(0.94, 1.06)
+	voice.max_distance = 1100.0
+	voice.attenuation = 1.3
+	get_parent().add_child(voice)
+	voice.global_position = pos
+	voice.finished.connect(voice.queue_free)
 	voice.play()
 
 ## Three knocks from the other side of the stone. They stop before anyone can say where they came from.
@@ -117,6 +189,8 @@ func _process(delta: float) -> void:
 	var game = get_parent()
 	if game.player == null:
 		return
+	if reverb != null and game.exploration != null:
+		reverb.set("wet", move_toward(float(reverb.get("wet")), float(SPACE.get(game.exploration.room, 0.12)), delta * 0.3))
 	context_timer -= delta
 	if context_timer <= 0 and not switching:
 		context_timer = 0.25

@@ -1,0 +1,582 @@
+{
+  "files": 55,
+  "errors": [],
+  "method": "Sample peaks; onset at 1% of file peak; seam first/second differences vs internal 99.9 percentile per channel. Does not certify perceptual seamlessness, true peak, or game mix.",
+  "assets": [
+    {
+      "file": "morte.wav",
+      "seconds": 0.6,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -19.6253,
+      "onset_ms": 0.2268,
+      "sha256": "b07d5af5defb2ed51ecd9b8180f003105306b3cbd11d2c687718e37a3965a4db"
+    },
+    {
+      "file": "morte_grande.wav",
+      "seconds": 1.1,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -19.2321,
+      "onset_ms": 0.3175,
+      "sha256": "87d56e4b4f782d5b08a914a4242634515a9bcaa4fc9fdd60338cf7564e12b379"
+    },
+    {
+      "file": "chefe_morte.wav",
+      "seconds": 3.0,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -20.5473,
+      "onset_ms": 0.1814,
+      "sha256": "ed231dac753abdbb1303b4d24d556cd51e8d96d8dd34923e92984a6421563062"
+    },
+    {
+      "file": "chefe_pancada.wav",
+      "seconds": 0.9,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -19.3074,
+      "onset_ms": 0.2268,
+      "sha256": "f40541a060df2f11f57732eeebbc46715990318ee2f31f9f1cddc97d9228432a"
+    },
+    {
+      "file": "dor.wav",
+      "seconds": 0.3,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -17.1858,
+      "onset_ms": 0.2041,
+      "sha256": "082a2a79984fd0c3a2203fa01cf59bf09aec446b4d46339bc36accad5c70a3b2"
+    },
+    {
+      "file": "aterrissagem.wav",
+      "seconds": 0.25,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -18.3045,
+      "onset_ms": 0.3401,
+      "sha256": "88be8ca2342cb64b52b39d82d82aca1f1361b4b9ef9e7529d3fb950d722eef0d"
+    },
+    {
+      "file": "coleta.wav",
+      "seconds": 0.5,
+      "channels": 1,
+      "peak_dbfs": -8.0001,
+      "rms_dbfs": -21.6954,
+      "onset_ms": 0.3401,
+      "sha256": "750baeeb237630f7d869a09a648803231dd3670fcbb739f0b0b953ff43cf6bad"
+    },
+    {
+      "file": "porta.wav",
+      "seconds": 0.8,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -17.2339,
+      "onset_ms": 0.5442,
+      "sha256": "3f948305c96a919b8ecb13c3c7e33b38f5876067bf594075d4c1a5d2a1611fc3"
+    },
+    {
+      "file": "projetil.wav",
+      "seconds": 0.5,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -15.739,
+      "onset_ms": 0.2948,
+      "sha256": "aca55f8cad2d9fef9b9c1725b99a01a1371811012258f926e72cd86d3749c54b"
+    },
+    {
+      "file": "projetil_impacto.wav",
+      "seconds": 0.3,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -14.2819,
+      "onset_ms": 0.1814,
+      "sha256": "2c50a43bcf4e48a8ca75b10280ac46fdaa648165d80e4fa99dff2f9b32c32d00"
+    },
+    {
+      "file": "espinho.wav",
+      "seconds": 0.35,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -16.0822,
+      "onset_ms": 0.1587,
+      "sha256": "c5842b6fd4ce5f02ba469db85d9464ff70db17718271b884526f2bae66d2e993"
+    },
+    {
+      "file": "aparo.wav",
+      "seconds": 0.45,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -15.8518,
+      "onset_ms": 0.1587,
+      "sha256": "4fab540745b4ad064fcaaa4ced19df30c8282193169b16e7bff4b1e991baf455"
+    },
+    {
+      "file": "execucao.wav",
+      "seconds": 0.7,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -18.1727,
+      "onset_ms": 0.2948,
+      "sha256": "51c5878a03ad9e94d60620abde2012675c4bac8276fb99476804709ae2974da9"
+    },
+    {
+      "file": "portao_fecha.wav",
+      "seconds": 1.2,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -17.2624,
+      "onset_ms": 0.2721,
+      "sha256": "265ab67d22c9c155c469d52723c838af017d93459b16a70f693d584cfd5cba0c"
+    },
+    {
+      "file": "portao_abre.wav",
+      "seconds": 1.4,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -18.1265,
+      "onset_ms": 0.4989,
+      "sha256": "27b9bb178f253217e670a9ee2f34f8d8329650157fb2a8e104ee96eba934da68"
+    },
+    {
+      "file": "ui_mover.wav",
+      "seconds": 0.08,
+      "channels": 1,
+      "peak_dbfs": -14.0001,
+      "rms_dbfs": -27.2302,
+      "onset_ms": 0.1361,
+      "sha256": "7770dcb275756052435b16e7ba9c264d81e83dffc69c0c455e17508f836100c8"
+    },
+    {
+      "file": "ui_confirmar.wav",
+      "seconds": 0.25,
+      "channels": 1,
+      "peak_dbfs": -11.9999,
+      "rms_dbfs": -24.5936,
+      "onset_ms": 0.1587,
+      "sha256": "85c5460cf434436fdd95c022826cb1354e952ae7654db6f291e78dc6001990fb"
+    },
+    {
+      "file": "step_pedra_01.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -19.6445,
+      "onset_ms": 0.3175,
+      "sha256": "55ea8fc69a9bac5772e8ef234385e812d8f245d15a073e29cdf8955d056c5348"
+    },
+    {
+      "file": "step_pedra_02.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -18.8128,
+      "onset_ms": 0.3401,
+      "sha256": "7908729655050d4e9093e323f97f3e3368439351b679e34179aa3ed6108f5fe4"
+    },
+    {
+      "file": "step_pedra_03.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -18.2117,
+      "onset_ms": 0.2948,
+      "sha256": "fc74e65afa00652379d1ad6b3e8d95218b34f9fd90165edab393d71ff2cedee7"
+    },
+    {
+      "file": "step_pedra_04.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -19.6926,
+      "onset_ms": 0.3628,
+      "sha256": "9788fd9c162a8d8d7f74312b835a5a40a776d1720687e28a71cef8f17832882a"
+    },
+    {
+      "file": "step_madeira_01.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -18.2092,
+      "onset_ms": 0.2268,
+      "sha256": "0fc54eeabfcc350f101def33e7663438052c916a69c1f3cfd5cc3172832b4a7f"
+    },
+    {
+      "file": "step_madeira_02.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -18.2081,
+      "onset_ms": 0.1814,
+      "sha256": "4ccbabc16b3a0dca92290e4d7fc20bb0e3290484a43e3576116c39cd783096cd"
+    },
+    {
+      "file": "step_madeira_03.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -18.9229,
+      "onset_ms": 0.1814,
+      "sha256": "63081a0cf8dab52d5988daf070bde2f947c79e7c25185bf2ab192d4ab1830525"
+    },
+    {
+      "file": "step_agua_01.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -21.1756,
+      "onset_ms": 0.2721,
+      "sha256": "84960e36ec961053054cecee7a50e5e46a9d7482f00793cf843d1341da56261d"
+    },
+    {
+      "file": "step_agua_02.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -19.9424,
+      "onset_ms": 0.1814,
+      "sha256": "204f842d2ad9db6c9bc0e6b6fc5dee5ee56e4954b99198cc18546aa33632c61f"
+    },
+    {
+      "file": "step_agua_03.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -20.6768,
+      "onset_ms": 0.2494,
+      "sha256": "48142d9d3cd42368cd990ce9a04806866969bc37adc8b370a567337dcdeebf1e"
+    },
+    {
+      "file": "step_osso_01.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -22.371,
+      "onset_ms": 0.2494,
+      "sha256": "2569c95c40393f497bd4e3a1df4e0bff3126fb69d18ffd17b1c3cf5fca27ceef"
+    },
+    {
+      "file": "step_osso_02.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -20.9007,
+      "onset_ms": 0.1814,
+      "sha256": "9759e6b5df4f11c1492be47169b17cedf77e69111e08538c90e9834927ac3a1d"
+    },
+    {
+      "file": "step_osso_03.wav",
+      "seconds": 0.15,
+      "channels": 1,
+      "peak_dbfs": -4.0001,
+      "rms_dbfs": -20.8428,
+      "onset_ms": 0.2948,
+      "sha256": "188de59e104eb2506c20e50c02ce8fcb5d38559166c1646e07aa744965bcce04"
+    },
+    {
+      "file": "swing_01.wav",
+      "seconds": 0.25,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -17.8683,
+      "onset_ms": 0.5669,
+      "sha256": "9e3376da174c4ed4f0642239dd194139efcbf068b196bf2c8ca9754864848883"
+    },
+    {
+      "file": "swing_02.wav",
+      "seconds": 0.25,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -16.7575,
+      "onset_ms": 0.3401,
+      "sha256": "dba281f121393a0c882051442efc06db01f15d06936cbc6d63e656da04523051"
+    },
+    {
+      "file": "swing_03.wav",
+      "seconds": 0.25,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -16.1672,
+      "onset_ms": 0.4308,
+      "sha256": "33aaa3cd9bb5552c5dd552850b660edbee7ca5f2736454a3bc436be3ce3559ca"
+    },
+    {
+      "file": "hit_carne_01.wav",
+      "seconds": 0.2,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -18.9837,
+      "onset_ms": 0.2948,
+      "sha256": "c7bc575c59eb141c21e479bace55734de1234c4c153100647eea68a168bf92b9"
+    },
+    {
+      "file": "hit_carne_02.wav",
+      "seconds": 0.2,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -18.7321,
+      "onset_ms": 0.2721,
+      "sha256": "f9fbc2e14b93dcaef86dbd061487c271388a95993ce11ecffd8f1a5575e407aa"
+    },
+    {
+      "file": "hit_carne_03.wav",
+      "seconds": 0.2,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -17.6613,
+      "onset_ms": 0.2494,
+      "sha256": "c36517aa904447c456ac6045d44bccdb7fb041a72ddd16149cb9a1368ca7de18"
+    },
+    {
+      "file": "hit_metal_01.wav",
+      "seconds": 0.2,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -14.4594,
+      "onset_ms": 0.1587,
+      "sha256": "880e3b1654515a9df0c7f0e20c52273e4a59ab99b3dfc73353d2cc3ead94ab14"
+    },
+    {
+      "file": "hit_metal_02.wav",
+      "seconds": 0.2,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -13.9484,
+      "onset_ms": 0.2041,
+      "sha256": "319afe454e8b01086486e66514114d66ca201dbbee27f844fbcfa41905bfc3c6"
+    },
+    {
+      "file": "hit_metal_03.wav",
+      "seconds": 0.2,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -13.6964,
+      "onset_ms": 0.1814,
+      "sha256": "a3c6de4016f22d97f990c840f21b10d787e22ac6b0887a0769f995edcd0e86f4"
+    },
+    {
+      "file": "dor_01.wav",
+      "seconds": 0.3,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -16.634,
+      "onset_ms": 0.1814,
+      "sha256": "89a26ce5c8a3e0e9907a69f9772e8d9ecf314f5df10f48cc0fa8ea42ebe50729"
+    },
+    {
+      "file": "dor_02.wav",
+      "seconds": 0.3,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -16.94,
+      "onset_ms": 0.2268,
+      "sha256": "be5906e2a81eadb3a2f646e9c94df895330a984e377d2d6cad2b9608d000953b"
+    },
+    {
+      "file": "dor_03.wav",
+      "seconds": 0.3,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -19.5426,
+      "onset_ms": 0.1814,
+      "sha256": "9ee2084c58789c29f0f1d0a8a6cd72677e0422a4ab5a055cfed4b9ca363a8418"
+    },
+    {
+      "file": "morte_01.wav",
+      "seconds": 0.6,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -19.3137,
+      "onset_ms": 0.3628,
+      "sha256": "f0c4a21cf473f385e54242fc186140df1f192ca546427bc9dc8cb8074852bf41"
+    },
+    {
+      "file": "morte_02.wav",
+      "seconds": 0.6,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -19.1233,
+      "onset_ms": 0.2948,
+      "sha256": "4b256e81bc992b6776c2ef0a3c1305d08240d9b380d9658b60aba227542045b5"
+    },
+    {
+      "file": "morte_03.wav",
+      "seconds": 0.6,
+      "channels": 1,
+      "peak_dbfs": -2.0002,
+      "rms_dbfs": -19.6182,
+      "onset_ms": 0.3401,
+      "sha256": "d5b8bcaf7e10be346ce6e3d148f9e13e37a934c41c145266d1a27f863f2d85e9"
+    },
+    {
+      "file": "amb_city.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -11.1933,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "83b9fb3adff513362e2a5b897896e3e379abc55e0307bdce6751846b1a857678",
+      "seam_max": 0.043792724609375,
+      "seam_limit_min": 0.077850341796875,
+      "bands_fraction": [
+        0.016202932398793966,
+        0.15015062985472571,
+        0.5270536136871515,
+        0.3063165971860194
+      ]
+    },
+    {
+      "file": "amb_ossuary.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -12.1823,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "908ecd69245eb594abe746df91135ecb87cc45e436d49c67af963550deda5097",
+      "seam_max": 0.0159912109375,
+      "seam_limit_min": 0.065887451171875,
+      "bands_fraction": [
+        0.006243840399615575,
+        0.18353841523288092,
+        0.6058570812979044,
+        0.20428194123836244
+      ]
+    },
+    {
+      "file": "amb_cistern.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -12.5826,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "5f5a22945681407d89bdfa55ab1afa3276592d03b3bce51184c84a3a168df115",
+      "seam_max": 0.033233642578125,
+      "seam_limit_min": 0.10406494140625,
+      "bands_fraction": [
+        0.012920295255589706,
+        0.10803439303405366,
+        0.39745775997916216,
+        0.47916901127665484
+      ]
+    },
+    {
+      "file": "amb_cloister.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -11.0597,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "8104405c71b932a5fd17a92395d76728a972ff39a955d947c4f1e43358a959dd",
+      "seam_max": 0.005035400390625,
+      "seam_limit_min": 0.04693603515625,
+      "bands_fraction": [
+        0.034342243289935376,
+        0.2594760453410468,
+        0.6492636288422295,
+        0.056909438523195036
+      ]
+    },
+    {
+      "file": "amb_belfry.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -10.8798,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "2e408cf2b2253fc0984a6d6d8289c12d7aa3c0bc0e9fc86f332da18386f80311",
+      "seam_max": 0.024322509765625,
+      "seam_limit_min": 0.084320068359375,
+      "bands_fraction": [
+        0.006216499074318137,
+        0.14083013481628978,
+        0.5025510216470472,
+        0.3499440010992038
+      ]
+    },
+    {
+      "file": "amb_archive.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -11.8773,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "7307cad5c3caed37feb0a26347092d5f7bee1cc4a365cc259c68ac0bfdbb9ae5",
+      "seam_max": 0.0223388671875,
+      "seam_limit_min": 0.07012945556640915,
+      "bands_fraction": [
+        0.0016790073531185062,
+        0.16720976473198118,
+        0.5933760883585731,
+        0.23761824108280993
+      ]
+    },
+    {
+      "file": "amb_refuge.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -11.7821,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "b1eaf51b81e996bdae199026b608b4bb9ef581cbe53fa09c8adbe8d9c27c9b0e",
+      "seam_max": 0.00714111328125,
+      "seam_limit_min": 0.098907470703125,
+      "bands_fraction": [
+        0.013930608186471122,
+        0.11448662163263972,
+        0.41984784549070475,
+        0.4500693032622817
+      ]
+    },
+    {
+      "file": "amb_nave.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -12.3994,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "a9eb673e5fe131e6e302e3e09644575abbb647bb2ffec2bead7f9f2399192a5b",
+      "seam_max": 0.008880615234375,
+      "seam_limit_min": 0.03430181884765915,
+      "bands_fraction": [
+        0.0667585222605269,
+        0.3476118283090197,
+        0.5743605783353318,
+        0.010788536823361328
+      ]
+    },
+    {
+      "file": "amb_terrace.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -11.9107,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "a4589f8d9db11b689ddad40bf49b1994eefe07849fb499f7fb75d5bc8a1a9898",
+      "seam_max": 0.036865234375,
+      "seam_limit_min": 0.093597412109375,
+      "bands_fraction": [
+        0.00988890519253372,
+        0.12237875088505135,
+        0.4449862678291359,
+        0.4216256092014488
+      ]
+    },
+    {
+      "file": "amb_court.wav",
+      "seconds": 30.0,
+      "channels": 2,
+      "peak_dbfs": -11.9599,
+      "rms_dbfs": -28.0003,
+      "onset_ms": 0.0,
+      "sha256": "92a1b02d4de9948fd975aa0c255de22899ad01322f793729809a9932e710fe3c",
+      "seam_max": 0.018402099609375,
+      "seam_limit_min": 0.07800299072265915,
+      "bands_fraction": [
+        0.010841490994656398,
+        0.15179185103211493,
+        0.530681772577588,
+        0.3064073193728779
+      ]
+    }
+  ]
+}

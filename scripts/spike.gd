@@ -25,6 +25,7 @@ func _process(delta: float) -> void:
 		var r := Rect2(global_position + Vector2(-width / 2.0, -90.0), Vector2(width, 90.0))
 		if r.intersects(player.body_rect()):
 			player.take_hit(dmg, global_position.x)
+			get_tree().call_group("game", "play_sfx", "espinho")
 			hit = true
 	queue_redraw()
 

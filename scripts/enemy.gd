@@ -10,14 +10,14 @@ signal killed(enemy)
 ## Bestiary. Kinds 0-2 are the original devotee, weeper and boss; 3-7 are the Goya-inspired additions.
 ## `family` decides body and movement; `actor` names the animation entry in clips.json (art slot).
 const TYPES := {
-	0: {"name":"Devoto Corrompido","family":"walker","actor":"devotee","scale":0.36,"tint":Color.WHITE,"hp":45.0,"reward":30,"body":Vector2(34,56),"col":0},
-	1: {"name":"Chorão","family":"flyer","actor":"mourner","scale":0.36,"tint":Color.WHITE,"hp":30.0,"reward":40,"body":Vector2(36,48),"col":1},
-	2: {"name":"A Mãe das Lágrimas","family":"boss","actor":"guardian","scale":0.92,"tint":Color.WHITE,"hp":450.0,"reward":1500,"body":Vector2(110,190),"col":-1},
-	3: {"name":"O Devorador","family":"walker","actor":"devorador","scale":0.62,"tint":Color.WHITE,"hp":130.0,"reward":120,"body":Vector2(58,112),"col":0},
-	4: {"name":"Flagelante","family":"walker","actor":"flagelante","scale":0.35,"tint":Color.WHITE,"hp":70.0,"reward":45,"body":Vector2(34,56),"col":0},
-	5: {"name":"Bruxa do Aquelarre","family":"flyer","actor":"bruxa","scale":0.36,"tint":Color.WHITE,"hp":40.0,"reward":55,"body":Vector2(36,48),"col":1},
-	6: {"name":"Asmodeia","family":"flyer","actor":"asmodeia","scale":0.42,"tint":Color.WHITE,"hp":60.0,"reward":60,"body":Vector2(44,56),"col":1},
-	7: {"name":"Duelista","family":"walker","actor":"duelista","scale":0.36,"tint":Color.WHITE,"hp":70.0,"reward":40,"body":Vector2(34,56),"col":0},
+	0: {"name":"Devoto Corrompido","family":"walker","actor":"devotee","scale":0.36,"tint":Color.WHITE,"hp":90.0,"reward":30,"body":Vector2(34,56),"col":0},
+	1: {"name":"Chorão","family":"flyer","actor":"mourner","scale":0.36,"tint":Color.WHITE,"hp":70.0,"reward":40,"body":Vector2(36,48),"col":1},
+	2: {"name":"A Mãe das Lágrimas","family":"boss","actor":"guardiao_grande","scale":0.9,"tint":Color.WHITE,"hp":1700.0,"reward":1500,"body":Vector2(150,215),"col":-1},
+	3: {"name":"O Devorador","family":"walker","actor":"devorador","scale":0.62,"tint":Color.WHITE,"hp":180.0,"reward":120,"body":Vector2(58,112),"col":0},
+	4: {"name":"Flagelante","family":"walker","actor":"flagelante","scale":0.35,"tint":Color.WHITE,"hp":100.0,"reward":45,"body":Vector2(34,56),"col":0},
+	5: {"name":"Bruxa do Aquelarre","family":"flyer","actor":"bruxa","scale":0.36,"tint":Color.WHITE,"hp":60.0,"reward":55,"body":Vector2(36,48),"col":1},
+	6: {"name":"Asmodeia","family":"flyer","actor":"asmodeia","scale":0.42,"tint":Color.WHITE,"hp":80.0,"reward":60,"body":Vector2(44,56),"col":1},
+	7: {"name":"Duelista","family":"walker","actor":"duelista","scale":0.36,"tint":Color.WHITE,"hp":90.0,"reward":40,"body":Vector2(34,56),"col":0},
 }
 const BESTIARY := {
 	3: "O DEVORADOR — O que ele não consegue perdoar, ele engole. Esquive o bote e golpeie na recuperação.",
@@ -73,6 +73,9 @@ var tint := Color.WHITE
 var announced := false
 var phase_two_heard := false
 var prev_state := ""
+## Poise: light blows only make a creature flinch once enough of them have landed; until then it keeps attacking.
+const POISE := {0: 45.0, 1: 35.0, 4: 60.0, 5: 30.0, 6: 40.0, 7: 45.0}
+var poise := 40.0
 var family := "walker"
 
 
@@ -93,6 +96,7 @@ func setup(k: int, pos: Vector2, rng: float, p) -> void:
 		2: state = "idle"
 		7: state = "duel"
 	hp = max_hp
+	poise = POISE.get(kind, 40.0)
 
 
 func humanoid() -> bool:
@@ -161,9 +165,23 @@ func coven_others() -> Array:
 	return others
 
 
+## Left open by a parry: staggered long enough to be struck for more damage or executed.
+func parried() -> void:
+	if dead or kind == 2:
+		return
+	state = "stagger"
+	state_t = 2.2
+	stagger_used = true
+	velocity = Vector2.ZERO
+	flash = 0.15
+
 func take_hit(dmg: float, from_x: float) -> void:
 	if dead or executing:
 		return
+	if state == "stagger":
+		dmg *= 1.6
+	if kind != 2:
+		_sfx("dor")
 	var was_open := state in ["recover", "cast"]
 	if kind == 5:
 		# The coven's shared vow: every sister still standing absorbs part of the blow.
@@ -183,13 +201,23 @@ func take_hit(dmg: float, from_x: float) -> void:
 	var armored: bool = (kind == 3 and state in ["windup", "strike"]) or (kind == 4 and state in ["windup", "charge"])
 	if family == "walker":
 		if not armored:
-			velocity.x = kb * (90.0 if kind == 3 else 220.0)
+			poise -= dmg
+			if poise <= 0.0 or kind == 3:
+				poise = POISE.get(kind, 40.0)
+				velocity.x = kb * (90.0 if kind == 3 else 220.0)
+				state = "hurt"
+				state_t = 0.3
+			else:
+				velocity.x = kb * 70.0
+	elif family == "flyer":
+		poise -= dmg
+		if poise <= 0.0:
+			poise = POISE.get(kind, 35.0)
+			velocity = Vector2(kb * 200.0, -80.0)
 			state = "hurt"
 			state_t = 0.3
-	elif family == "flyer":
-		velocity = Vector2(kb * 200.0, -80.0)
-		state = "hurt"
-		state_t = 0.3
+		else:
+			velocity = Vector2(kb * 90.0, -20.0)
 	elif not awake:
 		awaken()
 	if hp <= 0.0:
@@ -225,7 +253,7 @@ func _sfx(cue: String) -> void:
 		return
 	if global_position.distance_to(player.global_position) > 760.0:
 		return
-	director.soundscape.play_sfx(cue)
+	director.soundscape.play_sfx_at(cue, global_position)
 
 
 func _aggro_duel() -> void:
@@ -241,6 +269,7 @@ func _aggro_duel() -> void:
 func _die() -> void:
 	if dead: return
 	dead = true
+	_sfx("chefe_morte" if kind == 2 else ("morte_grande" if kind == 3 else "morte"))
 	collision_layer = 0
 	if player != null and is_instance_valid(player):
 		player.lagrimas += reward
@@ -361,7 +390,7 @@ func _walker(delta: float) -> void:
 			if not struck:
 				var r := Rect2(global_position + Vector2(0.0 if facing > 0 else -70.0, -64.0), Vector2(70.0, 64.0))
 				if r.intersects(player.body_rect()):
-					player.take_hit(16.0, global_position.x)
+					player.take_hit(16.0, global_position.x, self, true)
 					struck = true
 			if state_t <= 0.0:
 				state = "recover"
@@ -529,7 +558,7 @@ func _charger(delta: float) -> void:
 			if not struck:
 				var lash := Rect2(global_position + Vector2(0.0 if facing > 0 else -84.0, -60.0), Vector2(84.0, 60.0))
 				if lash.intersects(player.body_rect()) and player.invuln <= 0.0:
-					player.take_hit(12.0, global_position.x)
+					player.take_hit(12.0, global_position.x, self, true)
 					struck = true
 			if state_t <= 0.0:
 				state = "recover"
@@ -687,13 +716,13 @@ func _boss(delta: float) -> void:
 		velocity.x = 0.0
 		move_and_slide()
 		return
-	phase = 2 if hp < max_hp * 0.5 else 1
-	if phase == 2 and not phase_two_heard:
+	phase = 3 if hp < max_hp * 0.25 else (2 if hp < max_hp * 0.5 else 1)
+	if phase >= 2 and not phase_two_heard:
 		# Past half its strength the bell is not alone: three knocks answer from beyond the gates.
 		phase_two_heard = true
 		var director = get_tree().get_first_node_in_group("game")
 		if director != null: director.soundscape.play_knocks(0.8)
-	var spd: float = 1.0 if phase == 1 else 1.35
+	var spd: float = 1.0 if phase == 1 else (1.35 if phase == 2 else 1.7)
 	var to_p: float = player.global_position.x - global_position.x
 	var dist: float = absf(to_p)
 	var alive: bool = player.state != "dead"
@@ -762,6 +791,7 @@ func _pick_attack() -> void:
 
 
 func _slam() -> void:
+	_sfx("chefe_pancada")
 	get_tree().call_group("game", "shake_cam", 10.0)
 	if absf(player.global_position.x - global_position.x) < 170.0 and absf(player.global_position.y - global_position.y) < 70.0:
 		player.take_hit(26.0, global_position.x)
@@ -794,7 +824,7 @@ func _rain_drop() -> void:
 
 
 func _spikes() -> void:
-	var n := 3 if phase == 1 else 5
+	var n := 3 if phase == 1 else (5 if phase == 2 else 7)
 	for i in range(n):
 		var x: float = player.global_position.x + (float(i) - float(n - 1) / 2.0) * 110.0
 		x = clampf(x, arena_left + 30.0, arena_right - 30.0)
@@ -830,7 +860,7 @@ func _process(delta: float) -> void:
 		if fade <= 0:
 			queue_free()
 	spawn_opacity = minf(spawn_opacity + delta / 0.45, 1.0)
-	animator.modulate = _col(Color(1, 0.87, 0.80) if kind == 2 and phase == 2 else tint)
+	animator.modulate = _col(Color(1, 0.87, 0.80) if kind == 2 and phase >= 2 else tint)
 	animator.modulate.a *= spawn_opacity
 	animator.speed_scale = 1.0
 	if executing:
@@ -886,6 +916,8 @@ func _draw() -> void:
 	if dead or executing:
 		return
 	# Telegraphs: every new attack announces itself in a colour of its own before it lands.
+	if state == "windup" and kind in [0, 7, 4] and state_t < 0.2 and (kind != 4 or absf(player.global_position.x - global_position.x) < 140.0):
+		draw_arc(Vector2(facing * 34.0, -44.0), 24.0, 0, TAU, 24, Color(1.0, 0.84, 0.32, 0.95), 3.0)
 	match kind:
 		3:
 			if state == "windup":

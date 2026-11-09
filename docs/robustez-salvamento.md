@@ -8,16 +8,16 @@ Critérios de sanidade da sonda: altar existente, sala conhecida, HP finito e po
 |---|---|---:|---|
 | valid | PASSOU | 0 | Estado seguro |
 | legacy | PASSOU | 0 | Estado seguro |
-| truncated | FALHOU | 0 | ERROR: Parse JSON failed. Error at line 0: Expected '}' |
-| empty | FALHOU | 0 | ERROR: Parse JSON failed. Error at line 0: Unknown error getting token |
+| truncated | PASSOU | 0 | Estado seguro |
+| empty | PASSOU | 0 | Estado seguro |
 | extra_fields | PASSOU | 0 | Estado seguro |
 | number_text | PASSOU | 0 | Estado seguro |
-| number_list | FALHOU | 0 | SCRIPT ERROR: Invalid call. Nonexistent 'int' constructor. |
-| negative_numbers | FALHOU | 1 | Estado fora dos limites de sanidade ou carga incompleta |
-| absurd_numbers | FALHOU | 1 | Estado fora dos limites de sanidade ou carga incompleta |
+| number_list | PASSOU | 0 | Estado seguro |
+| negative_numbers | PASSOU | 0 | Estado seguro |
+| absurd_numbers | PASSOU | 0 | Estado seguro |
 | empty_lists | PASSOU | 0 | Estado seguro |
-| wrong_exploration | FALHOU | 0 | SCRIPT ERROR: Invalid type in function 'restore' in base 'Node (exploration.gd)'. Cannot convert argument 1 from String to Dictionary. |
-| wrong_stain | FALHOU | 0 | SCRIPT ERROR: Trying to assign value of type 'String' to a variable of type 'Array'. |
+| wrong_exploration | PASSOU | 0 | Estado seguro |
+| wrong_stain | PASSOU | 0 | Estado seguro |
 | array_root | PASSOU | 0 | Estado seguro |
 
 Resultados completos em robustez-salvamento.json. Avisos de recursos ainda em uso apenas no encerramento não são classificados como falha de migração; erros de script e de parsing continuam sendo falhas.  São falhas observadas, não corrigidas: manter a proteção de scripts pedida. Recomendações ao integrador: validar tipos antes de conversões e chamadas tipadas; tratar JSON vazio/truncado sem erro não controlado; normalizar limites antes de calcular HP; aceitar campos desconhecidos e migrar campos ausentes. Não testar arquivos reais corrompendo o salvamento do autor.

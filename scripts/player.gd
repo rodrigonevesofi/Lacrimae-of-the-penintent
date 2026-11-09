@@ -29,6 +29,11 @@ var cinematic_focus := false
 var ritual_clip := "pray"
 var ritual_progress := 0.0
 var hit_pause := 0.0
+var parry_cd := 0.0
+var prev_vy := 0.0
+var parries := 0
+const PARRY_TIME := 0.46
+const PARRY_WINDOW := 0.22
 var jump_elapsed := 0.0
 var landing_t := 0.0
 var was_grounded := true
@@ -194,6 +199,9 @@ func _physics_process(delta: float) -> void:
 
 	var on_floor := is_on_floor()
 	var just_landed := on_floor and not was_grounded
+	if just_landed and prev_vy > 430.0:
+		get_tree().call_group("game", "play_sfx", "aterrissagem")
+		get_tree().call_group("game", "spawn_effect", "dust", global_position + Vector2(0.0, -4.0), 1, 0.45)
 	landing_t = maxf(landing_t - delta, 0.0)
 	if not on_floor:
 		jump_elapsed += delta
@@ -223,6 +231,7 @@ func _physics_process(delta: float) -> void:
 	velocity.y = minf(velocity.y + GRAVITY * delta, MAX_FALL)
 	attack_buffer = maxf(attack_buffer - delta, 0.0)
 	roll_buffer = maxf(roll_buffer - delta, 0.0)
+	parry_cd = maxf(parry_cd - delta, 0.0)
 	damage_flash = maxf(damage_flash - delta, 0.0)
 	if pressed("attack") and has_weapon:
 		attack_buffer = 0.20
@@ -251,6 +260,8 @@ func _physics_process(delta: float) -> void:
 				velocity.y *= 0.55
 			if attack_buffer > 0.0 and has_weapon:
 				_start_attack()
+			elif pressed("parry") and has_weapon and on_floor and parry_cd <= 0.0:
+				_start_parry()
 			elif roll_buffer > 0.0 and on_floor and roll_cd <= 0.0:
 				_start_roll()
 			elif pressed("heal"):
@@ -287,6 +298,11 @@ func _physics_process(delta: float) -> void:
 			if state_t <= 0:
 				state = "idle"
 				aerial_after_cut = false
+		"parry":
+			velocity.x = move_toward(velocity.x, 0.0, 3200.0 * delta)
+			if state_t <= 0.0:
+				state = "idle"
+				parry_cd = 0.35
 		"roll":
 			velocity.x = facing * ROLL_SPEED
 			if state_t <= 0.0:
@@ -309,6 +325,7 @@ func _physics_process(delta: float) -> void:
 			if state_t <= 0.0:
 				state = "idle"
 
+	prev_vy = velocity.y
 	move_and_slide()
 	footstep_t -= delta
 	if is_on_floor() and absf(velocity.x) > 40 and state == "idle" and footstep_t <= 0:
@@ -339,6 +356,7 @@ func _update_animation() -> void:
 		"air_recover": animator.select("air_land",facing,1-state_t/AIR_RECOVERY_TIME)
 		"attack": animator.select("attack_a" if combo == 1 else "attack_b", facing, 1 - state_t / ATTACK_TIME)
 		"roll": animator.select("roll", facing, 1 - state_t / ROLL_TIME)
+		"parry": animator.pose("attack_a", facing, 2)
 		"hurt": animator.select("hurt", facing, 1 - state_t / 0.25)
 		"dead": animator.select("death", facing, 1 - state_t / 0.70)
 		"heal": animator.select("heal", facing, 1 - state_t / 0.55)
@@ -385,10 +403,15 @@ func _attack_hits(aerial: bool = false) -> void:
 			hit_list.append(e)
 			var dmg := (22.0 if aerial else (20.0 if combo == 1 else 26.0)) * sword_multiplier()
 			e.take_hit(dmg, global_position.x)
-			hit_pause = 0.045
-			e.hit_pause = 0.045
+			# Every blow has weight: a longer stop on the hit, a longer one on the kill, sparks and blood.
+			var stop := 0.16 if e.dead else 0.085
+			hit_pause = stop
+			e.hit_pause = stop
 			add_culpa(3)
-			shake = maxf(shake, 3.0)
+			shake = maxf(shake, 6.0 if e.dead else 4.0)
+			var spot: Vector2 = e.global_position + Vector2(-float(facing) * 14.0, -e.body_size.y * 0.55)
+			get_tree().call_group("game", "spawn_effect", "spark", spot, facing, 0.6)
+			get_tree().call_group("game", "spawn_effect", "blood", spot + Vector2(float(facing) * 8.0, 4.0), facing, 0.7 if e.dead else 0.5)
 
 
 func _start_roll() -> void:
@@ -441,7 +464,32 @@ func pray(restore: bool = true, duration: float = 1.0) -> void:
 	velocity = Vector2.ZERO
 
 
-func take_hit(dmg: float, from_x: float) -> void:
+## A timed guard: in the first moments of the parry, a light blow from the front is turned aside and the attacker is left open.
+## Heavy grabs, charges and projectiles cannot be parried; they must be dodged.
+func _start_parry() -> void:
+	state = "parry"
+	state_t = PARRY_TIME
+	velocity.x = 0.0
+	get_tree().call_group("game", "play_sfx", "swing")
+
+func _parry_success(attacker, from_x: float) -> void:
+	parries += 1
+	invuln = 0.5
+	hit_pause = 0.12
+	shake = maxf(shake, 5.0)
+	state_t = 0.3
+	get_tree().call_group("game", "play_sfx", "hit")
+	get_tree().call_group("game", "play_sfx", "aparo")
+	get_tree().call_group("game", "spawn_effect", "parry", global_position + Vector2(facing * 46.0, -54.0), facing, 0.7)
+	if attacker != null and is_instance_valid(attacker) and attacker.has_method("parried"):
+		attacker.parried()
+	if parries == 1:
+		get_tree().call_group("game", "toast", "Aparo! O inimigo está aberto: golpeie (dano maior) ou execute com E.")
+
+func take_hit(dmg: float, from_x: float, attacker = null, parryable: bool = false) -> void:
+	if state == "parry" and parryable and state_t > PARRY_TIME - PARRY_WINDOW and (from_x - global_position.x) * float(facing) >= -10.0:
+		_parry_success(attacker, from_x)
+		return
 	if state == "dead" or invuln > 0.0 or cinematic_focus or state == "execution":
 		return
 	get_tree().call_group("game", "play_sfx", "hurt")
@@ -557,6 +605,7 @@ func begin_execution(target) -> bool:
 	execution_target = target
 	execution_contact = false
 	state = "execution"
+	get_tree().call_group("game", "play_sfx", "execucao")
 	state_t = EXECUTION_TIME
 	facing = 1 if target.position.x >= position.x else -1
 	target.executing = true

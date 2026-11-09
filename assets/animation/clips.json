@@ -687,5 +687,106 @@
         128
       ]
     }
+  },
+  "efeitos": {
+    "spark": {
+      "sheet": "efeitos_combate",
+      "start": 0,
+      "count": 6,
+      "fps": 16,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "blood": {
+      "sheet": "efeitos_combate",
+      "start": 6,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "parry": {
+      "sheet": "efeitos_combate",
+      "start": 12,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "dust": {
+      "sheet": "efeitos_combate",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "idle": {
+      "sheet": "efeitos_combate",
+      "start": 0,
+      "count": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": [
+        128,
+        128
+      ]
+    }
+  },
+  "guardiao_grande": {
+    "idle": {
+      "sheet": "guardiao_grande",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "guardiao_grande",
+      "start": 6,
+      "count": 6,
+      "fps": 8,
+      "loop": true
+    },
+    "slam": {
+      "sheet": "guardiao_grande",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "cast": {
+      "sheet": "guardiao_grande",
+      "start": 12,
+      "count": 6,
+      "fps": 10,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "guardiao_grande",
+      "start": 18,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "guardiao_grande",
+      "start": 21,
+      "count": 3,
+      "fps": 8,
+      "loop": false
+    }
   }
 }

@@ -242,6 +242,7 @@ func _setup_input() -> void:
 	_add_action("pause", [KEY_ESCAPE])
 	_add_action("mute", [KEY_M])
 	_add_action("reduce_pulses", [KEY_P])
+	_add_action("parry", [KEY_L])
 	_add_action("left", [KEY_A, KEY_LEFT])
 	_add_action("right", [KEY_D, KEY_RIGHT])
 	_add_action("jump", [KEY_SPACE, KEY_W, KEY_UP])
@@ -485,6 +486,18 @@ func _dissolve_fragment(pos: Vector2) -> void:
 	animation.select("dissolve", 1)
 	animation.animation_finished.connect(anchor.queue_free)
 
+## One-shot combat effect from the painted atlas: sword sparks, blood, parry flash, landing dust.
+func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55) -> void:
+	var anchor := Node2D.new()
+	anchor.position = pos
+	anchor.z_index = 6
+	var animation = preload("res://scripts/actor_animation.gd").new()
+	animation.configure("efeitos", size)
+	anchor.add_child(animation)
+	add_child(anchor)
+	animation.select(kind, flip)
+	animation.animation_finished.connect(anchor.queue_free)
+
 func spawn_fx(pos: Vector2, col: Color) -> void:
 	var effect_anchor := Node2D.new()
 	effect_anchor.position = pos
@@ -533,44 +546,70 @@ func _save() -> void:
 		f.close()
 
 
+## Loading never trusts the file: damaged, old or edited saves fall back to safe values instead of failing.
+func _clean_int(value, fallback: int, lo: int, hi: int) -> int:
+	if value is int or value is float:
+		if is_nan(float(value)) or is_inf(float(value)): return fallback
+		return clampi(int(clampf(float(value), float(lo), float(hi))), lo, hi)
+	if value is String and value.is_valid_float():
+		return clampi(int(clampf(value.to_float(), float(lo), float(hi))), lo, hi)
+	return fallback
+
+func _clean_float(value, fallback: float, lo: float, hi: float) -> float:
+	if value is int or value is float:
+		if is_nan(float(value)) or is_inf(float(value)): return fallback
+		return clampf(float(value), lo, hi)
+	if value is String and value.is_valid_float():
+		return clampf(value.to_float(), lo, hi)
+	return fallback
+
+func _clean_bool(value, fallback: bool) -> bool:
+	if value is bool: return value
+	if value is int or value is float: return value != 0
+	return fallback
+
 func _load() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
 	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
 	if f == null:
 		return
-	var parsed = JSON.parse_string(f.get_as_text())
+	var text := f.get_as_text()
 	f.close()
-	if typeof(parsed) != TYPE_DICTIONARY:
+	var reader := JSON.new()
+	if reader.parse(text) != OK or typeof(reader.data) != TYPE_DICTIONARY:
 		return
+	var parsed: Dictionary = reader.data
 	story_flags.clear()
 	var saved_story = parsed.get("story_flags", [])
 	if saved_story is Array:
 		for flag in saved_story:
-			if flag in ["names_read", "memorial_named"] and not story_flags.has(str(flag)): story_flags.append(str(flag))
-	respawn_index = clampi(int(parsed.get("altar", 0)), 0, altars.size() - 1)
-	memory_seen = bool(parsed.get("memory_seen", false))
-	echo_count = clampi(int(parsed.get("echo_count", 0)), 0, 99)
-	iria_met = bool(parsed.get("iria_met", false))
-	doll_found = bool(parsed.get("doll_found", false))
-	memorial_honored = bool(parsed.get("memorial_honored", false))
-	player.has_weapon = bool(parsed.get("weapon", true))
-	player.lagrimas = int(parsed.get("lagrimas", 0))
-	player.culpa = float(parsed.get("culpa", 0.0))
-	player.has_double_jump = bool(parsed.get("double_jump", false))
-	relic_taken = bool(parsed.get("relic", false))
-	boss_defeated = bool(parsed.get("boss", false))
-	player.upgrades = int(parsed.get("upgrades", 0))
-	player.apply_penitence(str(parsed.get("penitence", "none")))
-	stain_active = bool(parsed.get("stain_active", false))
-	stain_amount = maxi(int(parsed.get("stain_amount", 0)), 0)
-	var saved_stain: Array = parsed.get("stain_pos", [0, 600])
-	if saved_stain.size() == 2:
-		stain_pos = Vector2(clampf(float(saved_stain[0]), 20, WORLD_W - 20), clampf(float(saved_stain[1]), -600, 1300))
+			if flag is String and flag in ["names_read", "memorial_named"] and not story_flags.has(flag): story_flags.append(flag)
+	respawn_index = _clean_int(parsed.get("altar", 0), 0, 0, altars.size() - 1)
+	memory_seen = _clean_bool(parsed.get("memory_seen", false), false)
+	echo_count = _clean_int(parsed.get("echo_count", 0), 0, 0, 99)
+	iria_met = _clean_bool(parsed.get("iria_met", false), false)
+	doll_found = _clean_bool(parsed.get("doll_found", false), false)
+	memorial_honored = _clean_bool(parsed.get("memorial_honored", false), false)
+	player.has_weapon = _clean_bool(parsed.get("weapon", true), true)
+	player.lagrimas = _clean_int(parsed.get("lagrimas", 0), 0, 0, 999999)
+	player.culpa = _clean_float(parsed.get("culpa", 0.0), 0.0, 0.0, 100.0)
+	player.has_double_jump = _clean_bool(parsed.get("double_jump", false), false)
+	relic_taken = _clean_bool(parsed.get("relic", false), false)
+	boss_defeated = _clean_bool(parsed.get("boss", false), false)
+	player.upgrades = _clean_int(parsed.get("upgrades", 0), 0, 0, 50)
+	var saved_penitence = parsed.get("penitence", "none")
+	player.apply_penitence(saved_penitence if saved_penitence is String and saved_penitence in ["none", "nails", "chains"] else "none")
+	stain_active = _clean_bool(parsed.get("stain_active", false), false)
+	stain_amount = _clean_int(parsed.get("stain_amount", 0), 0, 0, 999999)
+	var saved_stain = parsed.get("stain_pos", [0, 600])
+	if saved_stain is Array and saved_stain.size() == 2:
+		stain_pos = Vector2(_clean_float(saved_stain[0], 0.0, 20.0, WORLD_W - 20.0), _clean_float(saved_stain[1], 600.0, -600.0, 1300.0))
 	player.add_culpa(0)
-	exploration.restore(parsed.get("exploration",{}))
-	if int(parsed.get("layout_version",1)) < 2 and boss_defeated:
-		exploration.bells = ["water","vigil"]
+	var saved_exploration = parsed.get("exploration", {})
+	exploration.restore(saved_exploration if typeof(saved_exploration) == TYPE_DICTIONARY else {})
+	if _clean_int(parsed.get("layout_version", 1), 1, 1, 99) < 2 and boss_defeated:
+		exploration.bells = ["water", "vigil"]
 		exploration.update_gate()
 
 

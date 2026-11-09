@@ -64,6 +64,16 @@ static func blocks() -> Array[Rect2]:
 		Rect2(28200,550,200,50),                               # court: threshold step
 	]
 
+## Locked fights: the exits close at both ends of a stretch of floor and open when the last wave falls.
+## Waves are [kind, x, y, patrol range]. Spans were chosen away from doors, altars, pickups and masonry.
+static func arenas() -> Array:
+	return [
+		{"id":"cistern","room":"cistern","x0":9320.0,"x1":10190.0,"floor":600.0,"reward":200,"waves":[[[0,9480,600,60],[4,10060,600,60]],[[6,9800,480,100],[0,9420,600,60]]]},
+		{"id":"cloister","room":"cloister","x0":12380.0,"x1":13310.0,"floor":600.0,"reward":250,"waves":[[[4,12560,600,60],[4,13180,600,60]],[[3,12850,600,50]]]},
+		{"id":"belfry","room":"belfry","x0":14630.0,"x1":15830.0,"floor":1100.0,"reward":250,"waves":[[[0,14780,1100,60],[0,15650,1100,60]],[[4,15200,1100,60],[7,15450,1100,60],[7,15520,1100,60]]]},
+		{"id":"archive","room":"archive","x0":17240.0,"x1":18220.0,"floor":600.0,"reward":200,"waves":[[[0,17900,600,60],[0,18150,600,60]]]},
+	]
+
 static func passages() -> Array[Dictionary]:
 	return [
 		{"id":"burial", "a":"city","pa":Vector2(1160,600),"b":"ossuary","pb":Vector2(5360,600),"label":"Ossuário dos Sem Nome"},
@@ -93,10 +103,10 @@ static func enemies() -> Array:
 		["cloister",4,11700,600,170],["cloister",0,12400,40,150],["cloister",1,13000,300,130],["cloister",4,13380,600,100],
 		["belfry",0,14800,1100,160],["belfry",1,15100,760,130],["belfry",3,15550,540,120],["belfry",1,14780,40,100],
 		["archive",0,17380,600,170],["archive",5,17450,525,60,1],["archive",5,17700,510,60,1],["archive",5,17950,525,60,1],
-		["refuge",4,19600,600,120],
+		["refuge",4,19600,600,120],["refuge",0,20480,600,80],["refuge",1,19750,500,110],
 		["nave",0,22450,600,120],["nave",6,22600,480,150],["nave",1,23600,90,100],["nave",3,23200,600,70],
 		["terrace",1,24900,250,160],["terrace",7,25450,600,60,2],["terrace",7,25530,600,60,2],["terrace",6,26100,80,120],
-		["court",3,28650,600,100],["court",1,28300,250,120],
+		["court",3,28650,600,100],["court",1,28300,250,120],["court",0,29050,600,80],
 	]
 
 

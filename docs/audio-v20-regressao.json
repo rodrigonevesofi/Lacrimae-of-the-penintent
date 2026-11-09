@@ -1,0 +1,89 @@
+[
+  {
+    "test": "audio_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "AUDIO_SMOKE: 12 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "combat_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "COMBAT_SMOKE: 29 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "animation_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "ANIMATION_SMOKE: 309 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "bestiary_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "BESTIARY_SMOKE: 44 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "chapter_smoke",
+    "exit": 1,
+    "errors": [
+      "ERROR: FAIL: twenty-six action, cinematic and creature effects are loaded"
+    ],
+    "summary": [
+      "CHAPTER_SMOKE: 44 checks, 1 failures"
+    ]
+  },
+  {
+    "test": "exploration_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "EXPLORATION_SMOKE: 52 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "expansion_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "EXPANSION_SMOKE: 45 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "penitence_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "PENITENCE_SMOKE: 56 checks, 0 failures"
+    ]
+  },
+  {
+    "test": "save_robustness_smoke",
+    "exit": 0,
+    "errors": [],
+    "summary": [
+      "SAVE_CASE valid PASS",
+      "SAVE_CASE legacy PASS",
+      "SAVE_CASE truncated PASS",
+      "SAVE_CASE empty PASS",
+      "SAVE_CASE extra_fields PASS",
+      "SAVE_CASE number_text PASS",
+      "SAVE_CASE number_list PASS",
+      "SAVE_CASE negative_numbers PASS",
+      "SAVE_CASE absurd_numbers PASS",
+      "SAVE_CASE empty_lists PASS",
+      "SAVE_CASE wrong_exploration PASS",
+      "SAVE_CASE wrong_stain PASS",
+      "SAVE_CASE array_root PASS",
+      "SAVE_ROBUSTNESS: 13 cases, 0 failures"
+    ]
+  }
+]

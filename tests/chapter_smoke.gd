@@ -108,6 +108,8 @@ func run() -> void:
 	game.player.hit_list.clear()
 	game.player._attack_hits()
 	expect(enemy.hp < enemy_hp, "sword hit damages an enemy")
+	# Enemies are tougher now: leave this one at the edge of death so the penance is what finishes it.
+	enemy.hp = minf(enemy.hp, 30.0)
 	game.player.culpa = 60
 	game.player._do_penance()
 	expect(game.player.culpa == 8 and game.player.penance_fx > 0 and enemy.dead, "penance spends guilt; defeating enemy adds 8 new guilt")
