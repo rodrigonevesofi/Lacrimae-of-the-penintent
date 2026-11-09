@@ -1,0 +1,17 @@
+[
+  {
+    "mode": "assets",
+    "errors": [],
+    "warnings": [
+      "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver."
+    ]
+  },
+  {
+    "mode": "baseline",
+    "errors": [],
+    "warnings": [
+      "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+      "WARNING: ObjectDB instances leaked at exit (run with --verbose for details)."
+    ]
+  }
+]

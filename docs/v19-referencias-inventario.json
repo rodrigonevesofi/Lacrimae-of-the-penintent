@@ -1,0 +1,171 @@
+{
+  "comparison_base": "a21c9c2",
+  "videos_received": 10,
+  "missing_number": 10,
+  "audio_auditioned": false,
+  "overview_frames": 254,
+  "bursts": [
+    {
+      "video": 3,
+      "start": 2.6,
+      "duration": 1.4,
+      "sampling_fps": 15,
+      "frames": 21
+    },
+    {
+      "video": 6,
+      "start": 0.8,
+      "duration": 1.8,
+      "sampling_fps": 15,
+      "frames": 27
+    },
+    {
+      "video": 7,
+      "start": 2.8,
+      "duration": 2.8,
+      "sampling_fps": 15,
+      "frames": 42
+    },
+    {
+      "video": 11,
+      "start": 12.6,
+      "duration": 3.6,
+      "sampling_fps": 15,
+      "frames": 54
+    }
+  ],
+  "videos": [
+    {
+      "n": 1,
+      "seconds": 21.056,
+      "width": 360,
+      "height": 640,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 1.1697777777777778,
+      "source_name": "videoplayback (1).mp4",
+      "sha256": "5b4a3f6bf4d56f7f427ad58e8d17b5a0d3a1d0164ee9d940bab97583df668dc4",
+      "sampled_overview_frames": 18
+    },
+    {
+      "n": 2,
+      "seconds": 21.176599,
+      "width": 360,
+      "height": 360,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 1.1764777222222222,
+      "source_name": "videoplayback (2).mp4",
+      "sha256": "7888a8c1ee1d0e1436d3037c5067d16f1b6d9fa286aca95780c199f5ab0200fd",
+      "sampled_overview_frames": 18
+    },
+    {
+      "n": 3,
+      "seconds": 25.728,
+      "width": 360,
+      "height": 640,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 1.4293333333333333,
+      "source_name": "videoplayback (3).mp4",
+      "sha256": "a2afb2d4c05ccce29b920ceb9ab7c8b1920febd6af60a6c8c83dc1de1522bbc3",
+      "sampled_overview_frames": 18
+    },
+    {
+      "n": 4,
+      "seconds": 120.576,
+      "width": 360,
+      "height": 640,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 2,
+      "source_name": "videoplayback (4).mp4",
+      "sha256": "48762cfbfe41fe7a8e64604052248cbeadd7043638e4381f74223da226aa8dc8",
+      "sampled_overview_frames": 60
+    },
+    {
+      "n": 5,
+      "seconds": 29.907302,
+      "width": 360,
+      "height": 640,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 1.661516777777778,
+      "source_name": "videoplayback (5).mp4",
+      "sha256": "e2419703358565c708002ff04c19cca09956e96bb225fb36d1aca58e983804f3",
+      "sampled_overview_frames": 18
+    },
+    {
+      "n": 6,
+      "seconds": 9.682721,
+      "width": 360,
+      "height": 640,
+      "fps": "25/1",
+      "audio": true,
+      "sampling_step_s": 0.8,
+      "source_name": "videoplayback (6).mp4",
+      "sha256": "1c34d19289c40f67b88892b304f7d62c61ca0e7f19b219c573887c80924af537",
+      "sampled_overview_frames": 12
+    },
+    {
+      "n": 7,
+      "seconds": 11.609977,
+      "width": 360,
+      "height": 640,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 0.8,
+      "source_name": "videoplayback (7).mp4",
+      "sha256": "c7d01cf4542cfd3fc7f33ad9664d71a1dedfa8852cd3677335910243f3d48116",
+      "sampled_overview_frames": 14
+    },
+    {
+      "n": 8,
+      "seconds": 120.116825,
+      "width": 640,
+      "height": 360,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 2,
+      "source_name": "videoplayback (8).mp4",
+      "sha256": "5a9febf01948cc3230892bd83197ee0c8d11eaae0c661394cd3d2b4ba34058c9",
+      "sampled_overview_frames": 60
+    },
+    {
+      "n": 9,
+      "seconds": 15.023311,
+      "width": 360,
+      "height": 640,
+      "fps": "30000/1001",
+      "audio": true,
+      "sampling_step_s": 0.8346283888888889,
+      "source_name": "videoplayback (9).mp4",
+      "sha256": "bc9a3fd0190e473a45df7a86e075d8fe02b7d951c4a2195511513fba0e80e913",
+      "sampled_overview_frames": 18
+    },
+    {
+      "n": 11,
+      "seconds": 30.698667,
+      "width": 360,
+      "height": 640,
+      "fps": "30/1",
+      "audio": true,
+      "sampling_step_s": 1.7054815,
+      "source_name": "videoplayback (11).mp4",
+      "sha256": "b2f2a679cf063000e27658c525c5945d7ac2bc36ef5e91591cd62c06d16c3c42",
+      "sampled_overview_frames": 18
+    }
+  ],
+  "current_idle_sprite_measurements": {
+    "method": "alpha>40 visible bbox, native scale, 1280x720 viewport, camera zoom1",
+    "hero": {
+      "height_px": 109.12,
+      "screen_height_percent": 15.16
+    },
+    "guardian": {
+      "height_px": 222.64,
+      "screen_height_percent": 30.92
+    },
+    "guardian_to_hero": 2.04
+  }
+}
