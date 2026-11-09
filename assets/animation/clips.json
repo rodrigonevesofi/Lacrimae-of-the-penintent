@@ -899,6 +899,50 @@
         256,
         500
       ]
+    },
+    "sweep": {
+      "sheet": "guardiao_colosso_ataques",
+      "start": 0,
+      "count": 4,
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "leap": {
+      "sheet": "guardiao_colosso_ataques",
+      "start": 4,
+      "count": 4,
+      "fps": 6,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "scream": {
+      "sheet": "guardiao_colosso_ataques",
+      "start": 8,
+      "count": 4,
+      "fps": 6,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "exhausted": {
+      "sheet": "guardiao_colosso_ataques",
+      "start": 12,
+      "count": 4,
+      "fps": 3,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
     }
   },
   "golpe": {
@@ -1009,11 +1053,36 @@
       "loop": true
     },
     "death": {
-      "sheet": "carregador",
-      "start": 12,
-      "count": 3,
-      "fps": 8,
+      "sheet": "carregador_exposto",
+      "start": 16,
+      "count": 8,
+      "fps": 10,
       "loop": false
+    },
+    "strike": {
+      "sheet": "carregador_exposto",
+      "start": 0,
+      "count": 6,
+      "fps": 9,
+      "loop": false
+    },
+    "recoil": {
+      "sheet": "carregador_exposto",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": false
+    },
+    "executed": {
+      "sheet": "carregador_exposto",
+      "start": 12,
+      "count": 12,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
     }
   }
 }

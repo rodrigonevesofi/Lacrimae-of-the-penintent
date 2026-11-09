@@ -50,7 +50,7 @@ func run() -> void:
 		if hits < 2.5 or hits > 6.0: commons_ok = false
 	expect(commons_ok,"every common creature takes between three and six sword blows")
 	expect(Enemy.TYPES[3].hp / average >= 6.0,"the Devourer is an elite: at least six blows")
-	expect(Enemy.TYPES[2].hp >= 1500.0,"the Guardian has the health of a long fight")
+	expect(Enemy.TYPES[2].hp >= 1300.0,"the Guardian has the health of a long fight (1400 after the boss probe: 6 wins in 10, 48 s)")
 
 	# --- Parry: timed, frontal, only for light blows.
 	await reset_player()
@@ -118,9 +118,37 @@ func run() -> void:
 	carrier.state = "patrol"
 	for i in range(2): carrier.take_hit(20.0,p.global_position.x)
 	expect(carrier.exposed and carrier.state == "break","enough blows on the stone break it, and the break plays")
-	expect(not p.begin_execution(carrier),"the carrier has no execution of his own")
+	expect(not p.begin_execution(carrier),"he cannot be executed while the stone is breaking")
+	carrier.state = "chase"
+	carrier.cd = 0.0
+	carrier.player = p
+	carrier.spawn_opacity = 1.0
+	carrier.set_physics_process(true)
+	await frames(3)
+	expect(carrier.state in ["strike_wind","strike","recoil"],"exposed, he strikes with his bound fists")
+	carrier.set_physics_process(false)
+	carrier.state = "stagger"
+	carrier.state_t = 2.0
+	p.state = "idle"
+	expect(p.begin_execution(carrier),"once the stone is broken and he is open, he can be executed")
+	await frames(2)
 	expect(Enemy.BESTIARY.has(8) and Enemy.TYPES[8].actor == "carregador","the carrier has a name, a note and his own art")
 	# --- The Guardian is colossal.
+	var boss_moves := {}
+	var probe_boss = spawn(2,Vector2(4300,600))
+	probe_boss.awake = true
+	for i in range(80):
+		probe_boss.phase = 1
+		probe_boss.attacks_done = 1
+		probe_boss.player.global_position.x = 4300.0 + (150.0 if i % 2 == 0 else 500.0)
+		probe_boss._pick_attack()
+		boss_moves[probe_boss.state] = true
+	p.global_position = Vector2(900,600)
+	expect(boss_moves.has("sweep_wind") and boss_moves.has("leap_crouch") and boss_moves.has("scream_wind"),"the Guardian sweeps, leaps and screams as well (%s)" % ", ".join(boss_moves.keys()))
+	probe_boss.state = "sweep_wind"
+	probe_boss.parried()
+	expect(probe_boss.state == "exhausted","a parried sweep leaves the Guardian on its knees")
+	probe_boss.queue_free()
 	expect(Enemy.TYPES[2].actor == "guardiao_colosso" and Enemy.TYPES[2].body.y / p.body_rect().size.y >= 3.0,"the Guardian stands at least three times the penitent (%.1f)" % (Enemy.TYPES[2].body.y / p.body_rect().size.y))
 
 	# --- The weight of a blow: stop on the hit, longer on the kill, sparks and blood.

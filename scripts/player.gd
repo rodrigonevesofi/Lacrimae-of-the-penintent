@@ -613,8 +613,8 @@ func apply_penitence(id: String) -> void:
 	hp = minf(hp, max_hp)
 
 func begin_execution(target) -> bool:
-	# The coffin carrier has no execution of his own.
-	if target != null and is_instance_valid(target) and target.kind == 8:
+	# The coffin carrier can only be executed once the stone has broken.
+	if target != null and is_instance_valid(target) and target.kind == 8 and not target.exposed:
 		return false
 	if state != "idle" or not has_weapon or not is_on_floor() or not is_instance_valid(target): return false
 	if target.dead or target.kind == 2 or target.state != "stagger" or target.executing: return false

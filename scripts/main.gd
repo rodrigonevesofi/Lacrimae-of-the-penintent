@@ -112,7 +112,7 @@ var lore: Array = [
 	{"x": 730.0, "title": "A Primeira Mártir",
 	"text": "Diante de um antigo altar, ela chorou sangue.\nOs registros dizem que centenas receberam absolvição.\n\nDesde então, Vespera passou a medir a culpa em lágrimas."},
 	{"x": 1390.0, "title": "A Regra do Confessor",
-	"text": "Bem-aventurados os que choram.\n\nDecreto de Edran: quem não chora deverá aprender a dor.\nUma segunda mão riscou: misericórdia quero, não sacrifício.\n\nÀ margem: procure no campanário aquilo que ainda o ergue."},
+	"text": "Bem-aventurados os que choram.\n\nUm decreto sem nome: quem não chora deverá aprender a dor.\nUma segunda mão riscou: misericórdia quero, não sacrifício.\n\nÀ margem: procure no campanário aquilo que ainda o ergue."},
 	{"x": 2630.0, "title": "A Pedra e a Sentença",
 	"text": "Quem está sem pecado, atire a primeira pedra.\n\nA Ordem raspou a primeira linha. Conservou as pedras.\nAs lágrimas levaram o remorso. Os atos permaneceram."},
 	{"x": 3860.0, "title": "Os Portões Fechados",

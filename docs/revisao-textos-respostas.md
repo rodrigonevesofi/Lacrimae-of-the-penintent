@@ -4,7 +4,7 @@ Resposta a cada uma das 17 propostas de [revisao-textos-ato1.md](revisao-textos-
 
 | # | Tema | Situação | Observação |
 | --- | --- | --- | --- |
-| 1 | Quem ordenou o fechamento (Edran) | **Decisão do autor** | O registro dos Portões Selados já nomeia Edran. Ou se adia a identificação para o Ato II, ou se muda o objetivo do Ato I para "entender por que a ordem foi dada e por que o Penitente obedeceu". Não alterei nada |
+| 1 | Quem ordenou o fechamento (Edran) | **Resolvido (v23)**: revelação só no Ato II; o nome saiu dos três textos do Ato I e o selo aparece raspado | O registro dos Portões Selados já nomeia Edran. Ou se adia a identificação para o Ato II, ou se muda o objetivo do Ato I para "entender por que a ordem foi dada e por que o Penitente obedeceu". Não alterei nada |
 | 2 | Aquelarre "só cai uma de cada vez" | **Aplicado** | A nota prometia uma regra que o jogo não impõe. Agora: "Enquanto uma irmã vive, ela amortece o golpe que atinge as outras." |
 | 3 | "alguém aguarda uma ordem" | **Aplicado** | Agora: "Atrás de você, uma figura espera." A hierarquia fica em aberto |
 | 4 | Portões "fechados por fora" | **Decisão do autor** | Concordo que falta orientação espacial; depende de qual lado a memória mostra |

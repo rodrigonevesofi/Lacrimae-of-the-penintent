@@ -12,7 +12,7 @@ signal killed(enemy)
 const TYPES := {
 	0: {"name":"Devoto Corrompido","family":"walker","actor":"devotee","scale":0.36,"tint":Color.WHITE,"hp":90.0,"reward":30,"body":Vector2(34,56),"col":0},
 	1: {"name":"Chorão","family":"flyer","actor":"mourner","scale":0.36,"tint":Color.WHITE,"hp":70.0,"reward":40,"body":Vector2(36,48),"col":1},
-	2: {"name":"A Mãe das Lágrimas","family":"boss","actor":"guardiao_colosso","scale":0.78,"tint":Color.WHITE,"hp":1700.0,"reward":1500,"body":Vector2(230,330),"col":-1},
+	2: {"name":"A Mãe das Lágrimas","family":"boss","actor":"guardiao_colosso","scale":0.78,"tint":Color.WHITE,"hp":1400.0,"reward":1500,"body":Vector2(230,330),"col":-1},
 	3: {"name":"O Devorador","family":"walker","actor":"devorador","scale":0.62,"tint":Color.WHITE,"hp":180.0,"reward":120,"body":Vector2(58,112),"col":0},
 	4: {"name":"Flagelante","family":"walker","actor":"flagelante","scale":0.35,"tint":Color.WHITE,"hp":100.0,"reward":45,"body":Vector2(34,56),"col":0},
 	8: {"name":"Carregador de Caixão","family":"walker","actor":"carregador","scale":0.42,"tint":Color.WHITE,"hp":90.0,"reward":70,"body":Vector2(42,66),"col":0},
@@ -74,6 +74,7 @@ var windup_len := 0.55
 var tint := Color.WHITE
 var announced := false
 var phase_two_heard := false
+var attacks_done := 0
 var prev_state := ""
 ## Poise: light blows only make a creature flinch once enough of them have landed; until then it keeps attacking.
 const POISE := {0: 45.0, 1: 35.0, 4: 60.0, 5: 30.0, 6: 40.0, 7: 45.0, 8: 9999.0}
@@ -173,7 +174,14 @@ func coven_others() -> Array:
 
 ## Left open by a parry: staggered long enough to be struck for more damage or executed.
 func parried() -> void:
-	if dead or kind == 2:
+	if dead:
+		return
+	if kind == 2:
+		# Only the low sweep can be turned aside; it leaves the Guardian on its knees.
+		if state in ["sweep_wind", "sweep"]:
+			state = "exhausted"
+			state_t = 1.8
+			flash = 0.15
 		return
 	state = "stagger"
 	state_t = 2.2
@@ -538,13 +546,14 @@ func _break_coffin() -> void:
 		director.spawn_effect("dust", global_position + Vector2(0.0, -20.0), facing, 0.9)
 		director.shake_cam(5.0)
 		# The broken stone stays where it fell.
-		for k in range(3):
-			var shard := Polygon2D.new()
-			var w := 10.0 + randf() * 10.0
-			shard.polygon = PackedVector2Array([Vector2(-w, 0), Vector2(-w * 0.6, -w * 0.8), Vector2(w * 0.5, -w), Vector2(w, 0)])
-			shard.color = Color(0.42, 0.40, 0.37)
-			shard.position = global_position + Vector2(float(facing) * (14.0 + k * 22.0) - 10.0, 0.0)
-			director.add_child(shard)
+		if ResourceLoader.exists("res://assets/detritos_caixao.png"):
+			var rubble := Sprite2D.new()
+			rubble.texture = load("res://assets/detritos_caixao.png")
+			rubble.scale = Vector2(0.5, 0.5)
+			rubble.flip_h = facing < 0
+			rubble.z_index = 4
+			rubble.position = global_position + Vector2(float(facing) * 34.0, -30.0)
+			director.add_child(rubble)
 
 func _carrier(delta: float) -> void:
 	velocity.y = minf(velocity.y + 1800.0 * delta, 900.0)
@@ -564,11 +573,12 @@ func _carrier(delta: float) -> void:
 		"chase":
 			facing = 1 if to_p > 0.0 else -1
 			if exposed:
-				# Without the stone he is quick and has no attack of his own: he only harms by reaching you.
-				velocity.x = facing * 170.0 if _ledge_ok() else 0.0
-				if dist < 46.0 and dy < 70.0 and contact_cd <= 0.0 and alive and player.invuln <= 0.0:
-					player.take_hit(8.0, global_position.x, self, false)
-					contact_cd = 0.9
+				# Without the stone he is quick, and strikes with his bound fists (that blow can be parried).
+				velocity.x = facing * 170.0 if dist > 70.0 and _ledge_ok() else 0.0
+				if dist < 80.0 and dy < 70.0 and cd <= 0.0 and alive:
+					state = "strike_wind"
+					state_t = 0.45
+					velocity.x = 0.0
 			else:
 				velocity.x = facing * 45.0 if dist > 200.0 and _ledge_ok() else 0.0
 				if dist < 340.0 and dy < 90.0 and cd <= 0.0 and alive:
@@ -607,6 +617,26 @@ func _carrier(delta: float) -> void:
 			velocity.x = 0.0
 			if state_t <= 0.0: state = "chase"
 		"break":
+			velocity.x = 0.0
+			if state_t <= 0.0: state = "chase"
+		"strike_wind":
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				state = "strike"
+				state_t = 0.16
+				struck = false
+		"strike":
+			velocity.x = 0.0
+			if not struck:
+				struck = true
+				var fists := Rect2(global_position + Vector2(0.0 if facing > 0 else -78.0, -62.0), Vector2(78.0, 62.0))
+				if fists.intersects(player.body_rect()):
+					player.take_hit(12.0, global_position.x, self, true)
+			if state_t <= 0.0:
+				state = "recoil"
+				state_t = 0.6
+				cd = 1.1
+		"recoil":
 			velocity.x = 0.0
 			if state_t <= 0.0: state = "chase"
 		"hurt":
@@ -873,14 +903,74 @@ func _boss(delta: float) -> void:
 			if state_t <= 0.0:
 				state = "idle"
 				state_t = 1.0 / spd
+		"sweep_wind":
+			velocity.x = 0.0
+			facing = 1 if to_p > 0.0 else -1
+			if state_t <= 0.0:
+				_sweep()
+				if state == "sweep_wind":
+					state = "sweep"
+					state_t = 0.35
+		"sweep":
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				state = "idle"
+				state_t = 1.0 / spd
+		"leap_crouch":
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				var target_x: float = clampf(player.global_position.x, arena_left + 80.0, arena_right - 80.0)
+				velocity = Vector2((target_x - global_position.x) / 0.75, -720.0)
+				state = "leap_air"
+				state_t = 0.75
+				move_and_slide()
+				return
+		"leap_air":
+			if state_t < 0.45 and is_on_floor():
+				velocity.x = 0.0
+				_slam()
+				state = "leap_land"
+				state_t = 0.4
+		"leap_land":
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				state = "exhausted" if phase == 3 else "idle"
+				state_t = 1.4 if phase == 3 else 1.1 / spd
+		"scream_wind":
+			velocity.x = 0.0
+			facing = 1 if to_p > 0.0 else -1
+			if state_t <= 0.0:
+				_scream()
+				state = "scream"
+				state_t = 0.6
+		"scream":
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				state = "idle"
+				state_t = 1.0 / spd
+		"exhausted":
+			# On its knees: no attack, a moment to strike.
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				state = "idle"
+				state_t = 0.6
 	global_position.x = clampf(global_position.x, arena_left + 60.0, arena_right - 60.0)
 	move_and_slide()
 
 
 func _pick_attack() -> void:
-	var r := randi() % 3
+	# Six moves: the old slam, rain and spikes, and three read from afar: a low sweep (parry it), a leap onto you, a scream.
+	attacks_done += 1
+	if phase >= 2 and attacks_done % 4 == 0:
+		state = "exhausted"
+		state_t = 1.6
+		return
+	var dist: float = absf(player.global_position.x - global_position.x)
+	var options: Array = [0, 1, 2, 5]
+	options.append(3 if dist < 330.0 else 4)
+	var r: int = options[randi() % options.size()]
 	if r == last_attack:
-		r = (r + 1) % 3
+		r = options[(options.find(r) + 1) % options.size()]
 	last_attack = r
 	match r:
 		0:
@@ -894,6 +984,37 @@ func _pick_attack() -> void:
 			state = "spike_cast"
 			state_t = 1.6
 			cast_emitted = false
+		3:
+			state = "sweep_wind"
+			state_t = 0.5
+		4:
+			state = "leap_crouch"
+			state_t = 0.35
+		5:
+			state = "scream_wind"
+			state_t = 0.6
+			cast_emitted = false
+
+
+func _sweep() -> void:
+	_sfx("chefe_pancada")
+	var reach := Rect2(global_position + Vector2(0.0 if facing > 0 else -300.0, -110.0), Vector2(300.0, 110.0))
+	if reach.intersects(player.body_rect()):
+		player.take_hit(18.0, global_position.x, self, true)
+
+
+func _scream() -> void:
+	_sfx("chefe_morte")
+	get_tree().call_group("game", "shake_cam", 5.0)
+	var aim: Vector2 = (player.global_position + Vector2(0.0, -40.0) - (global_position + Vector2(0.0, -260.0))).normalized()
+	for k in range(5):
+		var t = Tear.new()
+		t.player = player
+		t.vel = aim.rotated(deg_to_rad(-24.0 + k * 12.0)) * 270.0
+		t.dmg = 9.0
+		t.life = 3.0
+		get_parent().add_child(t)
+		t.global_position = global_position + Vector2(float(facing) * 30.0, -260.0)
 
 
 func _slam() -> void:
@@ -983,6 +1104,9 @@ func _process(delta: float) -> void:
 			"charge": animator.select("attack", facing, (2 + clampf(1 - state_t / 0.75, 0, 1) * 4) / 6)
 			"recover": animator.pose("hurt", facing, 1)
 			"break": animator.select("break", facing, clampf(1 - state_t / 0.5, 0, 0.999))
+			"strike_wind": animator.select("strike", facing, clampf(1 - state_t / 0.45, 0, 1) * 3.0 / 6)
+			"strike": animator.select("strike", facing, (3 + clampf(1 - state_t / 0.16, 0, 1) * 2.99) / 6)
+			"recoil": animator.select("recoil", facing, clampf(1 - state_t / 0.6, 0, 0.999))
 			_:
 				if absf(velocity.x) > 10: animator.select("walk_exposed" if exposed else "walk", facing)
 				else: animator.select("idle_exposed" if exposed else "idle", facing)
@@ -1014,6 +1138,14 @@ func _process(delta: float) -> void:
 			"slam": animator.select("slam", facing, (4 + clampf(1 - state_t / 0.35, 0, 1) * 2) / 6)
 			"rain": animator.select("cast", facing, 1 - state_t / 2.4)
 			"spike_cast": animator.select("cast", facing, 1 - state_t / 1.6)
+			"sweep_wind": animator.select("sweep", facing, clampf(1 - state_t / 0.5, 0, 1) * 2.0 / 4)
+			"sweep": animator.select("sweep", facing, (2 + clampf(1 - state_t / 0.35, 0, 1) * 1.99) / 4)
+			"leap_crouch": animator.pose("leap", facing, 0)
+			"leap_air": animator.select("leap", facing, (1 + clampf(1 - state_t / 0.75, 0, 1) * 1.99) / 4)
+			"leap_land": animator.pose("leap", facing, 3)
+			"scream_wind": animator.select("scream", facing, clampf(1 - state_t / 0.6, 0, 1) * 2.0 / 4)
+			"scream": animator.select("scream", facing, (2 + clampf(1 - state_t / 0.6, 0, 1) * 1.99) / 4)
+			"exhausted": animator.select("exhausted", facing, clampf(1 - state_t / 1.6, 0, 0.999))
 			_: animator.select("walk" if state == "walk" else "idle", facing)
 	queue_redraw()
 
@@ -1031,7 +1163,9 @@ func _draw() -> void:
 	if dead or executing:
 		return
 	# Telegraphs: every new attack announces itself in a colour of its own before it lands.
-	if state == "windup" and kind in [0, 7, 4] and state_t < 0.2 and (kind != 4 or absf(player.global_position.x - global_position.x) < 140.0):
+	if kind == 2 and state == "sweep_wind" and state_t < 0.22:
+		draw_arc(Vector2(facing * 150.0, -60.0), 46.0, 0, TAU, 32, Color(1.0, 0.84, 0.32, 0.95), 4.0)
+	if state == "windup" and kind in [0, 7, 4, 8] and state_t < 0.2 and (kind != 4 or absf(player.global_position.x - global_position.x) < 140.0):
 		draw_arc(Vector2(facing * 34.0, -44.0), 24.0, 0, TAU, 24, Color(1.0, 0.84, 0.32, 0.95), 3.0)
 	match kind:
 		3:

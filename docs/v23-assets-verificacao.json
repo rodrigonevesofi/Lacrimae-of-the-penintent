@@ -1,0 +1,152 @@
+[
+  {
+    "file": "assets/close/close_01_mascarado.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGB",
+    "alpha": [
+      255,
+      255
+    ]
+  },
+  {
+    "file": "assets/animation/onda_grito.png",
+    "size": [
+      1536,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      251
+    ],
+    "frames": [
+      [
+        {
+          "bounds": [
+            113,
+            115,
+            138,
+            141
+          ],
+          "alpha_mass": 28109.0
+        },
+        {
+          "bounds": [
+            100,
+            105,
+            146,
+            151
+          ],
+          "alpha_mass": 90933.0
+        },
+        {
+          "bounds": [
+            87,
+            94,
+            155,
+            162
+          ],
+          "alpha_mass": 189660.0
+        },
+        {
+          "bounds": [
+            75,
+            83,
+            163,
+            173
+          ],
+          "alpha_mass": 324287.0
+        },
+        {
+          "bounds": [
+            61,
+            72,
+            172,
+            184
+          ],
+          "alpha_mass": 494890.0
+        },
+        {
+          "bounds": [
+            48,
+            62,
+            180,
+            195
+          ],
+          "alpha_mass": 701454.0
+        }
+      ],
+      [
+        {
+          "bounds": [
+            113,
+            116,
+            137,
+            140
+          ],
+          "alpha_mass": 12560.0
+        },
+        {
+          "bounds": [
+            101,
+            106,
+            145,
+            150
+          ],
+          "alpha_mass": 40654.0
+        },
+        {
+          "bounds": [
+            88,
+            96,
+            154,
+            160
+          ],
+          "alpha_mass": 84735.0
+        },
+        {
+          "bounds": [
+            76,
+            84,
+            162,
+            171
+          ],
+          "alpha_mass": 144824.0
+        },
+        {
+          "bounds": [
+            63,
+            73,
+            171,
+            181
+          ],
+          "alpha_mass": 220978.0
+        },
+        {
+          "bounds": [
+            51,
+            63,
+            180,
+            192
+          ],
+          "alpha_mass": 313133.0
+        }
+      ]
+    ]
+  },
+  {
+    "file": "assets/rachadura_chao.png",
+    "size": [
+      512,
+      128
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ]
+  }
+]

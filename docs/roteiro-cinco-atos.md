@@ -665,3 +665,8 @@ Todos os diálogos propostos acima são originais. As referências abaixo são a
 - **Dante, Inferno, cantos III e V; Purgatório, cantos I–II:** limiares, insistência de vozes e mudança do movimento do corpo entre condenação e possibilidade de caminho. Referências de construção espacial e contraponto, não um mapa para copiar círculos, guardiões ou punições.
 
 Não copiar diálogos de filmes ou jogos. Não transcrever traduções modernas longas. A força dramática pretendida depende dos atos, dos silêncios e das consequências específicas de Vespera.
+
+## Decisões do autor (v23)
+- **Quem mandou fechar os portões só é revelado no Ato II.** O Ato I não nomeia Edran em nenhum texto: a inscrição dos Portões Selados e o decreto do Pátio mostram um selo com o nome **raspado**, e a Regra do Confessor fala de "um decreto sem nome". O Ato I termina com a pergunta "Descobrir quem ordenou o fechamento", sem resposta.
+- **A Inquisidora serviu a Edran** e aparece no **Ato II**. O close `assets/close/close_06.png` está reservado para ela; o close de Edran (`close_03.png`) também fica para o Ato II.
+- **O rosto do Penitente nunca aparece.** `close_01.png` não será usado.
