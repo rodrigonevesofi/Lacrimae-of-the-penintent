@@ -104,6 +104,25 @@ func run() -> void:
 	brute.take_hit(20.0,p.global_position.x)
 	expect(brute.state in ["hurt","stagger"],"three blows break its poise")
 
+	# --- The coffin carrier: the stone guards his front until it breaks.
+	await reset_player()
+	var carrier = spawn(8,Vector2(960,600))
+	carrier.facing = -1
+	var c_hp: float = carrier.hp
+	carrier.take_hit(20.0,p.global_position.x)
+	expect(c_hp - carrier.hp < 5.0 and carrier.coffin < 60.0,"a blow on his front lands on the stone")
+	carrier.state = "patrol"
+	var before_back: float = carrier.hp
+	carrier.take_hit(20.0,1100.0)
+	expect(before_back - carrier.hp >= 19.0,"a blow from behind reaches him")
+	carrier.state = "patrol"
+	for i in range(2): carrier.take_hit(20.0,p.global_position.x)
+	expect(carrier.exposed and carrier.state == "break","enough blows on the stone break it, and the break plays")
+	expect(not p.begin_execution(carrier),"the carrier has no execution of his own")
+	expect(Enemy.BESTIARY.has(8) and Enemy.TYPES[8].actor == "carregador","the carrier has a name, a note and his own art")
+	# --- The Guardian is colossal.
+	expect(Enemy.TYPES[2].actor == "guardiao_colosso" and Enemy.TYPES[2].body.y / p.body_rect().size.y >= 3.0,"the Guardian stands at least three times the penitent (%.1f)" % (Enemy.TYPES[2].body.y / p.body_rect().size.y))
+
 	# --- The weight of a blow: stop on the hit, longer on the kill, sparks and blood.
 	await reset_player()
 	var weak = spawn(0,Vector2(960,600))
@@ -117,6 +136,10 @@ func run() -> void:
 	p._attack_hits()
 	expect(weak.dead and p.hit_pause >= 0.15,"a killing blow holds the frame longer than a common hit")
 	expect(game.get_child_count() > effects_before,"a blow throws sparks and blood from the painted atlas")
+	var big := 0
+	for child in game.get_children():
+		if child.get_child_count() > 0 and child.get_child(0).get("actor") == "golpe": big += 1
+	expect(big >= 2,"a killing blow shows the crescent, the star and the pool")
 	var strong = spawn(3,Vector2(960,600))
 	p.hit_list.clear()
 	p.hit_pause = 0

@@ -1,0 +1,6 @@
+{
+  "base": "df3dacc",
+  "patch_sha256": "bbedf6ff921eb6d72b92c74d21258ed58665f7c528c007ea11e96db01d802b4c",
+  "production_patch_only": true,
+  "resources_log": "Godot Engine v4.6.3.stable.official.7d41c59c4 - https://godotengine.org\n\nART_V22_RESOURCES: 3 resources, 0 failures\n"
+}

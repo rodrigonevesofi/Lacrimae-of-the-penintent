@@ -39,12 +39,14 @@ func data_checks() -> void:
 		var t: Dictionary = Enemy.TYPES[kind]
 		if not clips.has(t.actor): data_ok = false; continue
 		if t.family != "boss":
-			for clip in ["idle","walk","attack","hurt","death","executed"]:
+			# The coffin carrier has no execution of his own (none was drawn); every other creature does.
+			var needed: Array = ["idle","walk","attack","hurt","death"] if t.actor == "carregador" else ["idle","walk","attack","hurt","death","executed"]
+			for clip in needed:
 				if not clips[t.actor].has(clip): data_ok = false
 		for clip in clips[t.actor]:
 			if not ResourceLoader.exists("res://assets/animation/"+clips[t.actor][clip].sheet+".png"): data_ok = false
 	expect(data_ok,"every creature has a complete animation entry with existing art")
-	expect(Enemy.TYPES.size() == 8,"eight creature types: devotee, weeper, boss and five new ones")
+	expect(Enemy.TYPES.size() == 9,"nine creature types: devotee, weeper, boss, five from Goya and the coffin carrier")
 	var kinds: Dictionary = {}
 	var groups: Dictionary = {}
 	for d in Layout.enemies():

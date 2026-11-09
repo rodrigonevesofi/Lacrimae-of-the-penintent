@@ -832,5 +832,188 @@
       "fps": 8,
       "loop": false
     }
+  },
+  "guardiao_colosso": {
+    "idle": {
+      "sheet": "guardiao_colosso",
+      "start": 0,
+      "count": 4,
+      "fps": 5,
+      "loop": true,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "walk": {
+      "sheet": "guardiao_colosso",
+      "start": 4,
+      "count": 4,
+      "fps": 6,
+      "loop": true,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "slam": {
+      "sheet": "guardiao_colosso",
+      "start": 8,
+      "count": 4,
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "cast": {
+      "sheet": "guardiao_colosso",
+      "start": 8,
+      "count": 4,
+      "fps": 6,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "hurt": {
+      "sheet": "guardiao_colosso",
+      "start": 12,
+      "count": 2,
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
+    },
+    "death": {
+      "sheet": "guardiao_colosso",
+      "start": 14,
+      "count": 2,
+      "fps": 4,
+      "loop": false,
+      "anchor": [
+        256,
+        500
+      ]
+    }
+  },
+  "golpe": {
+    "idle": {
+      "sheet": "efeitos_golpe",
+      "start": 0,
+      "count": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "arc": {
+      "sheet": "efeitos_golpe",
+      "start": 0,
+      "count": 6,
+      "fps": 22,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "star": {
+      "sheet": "efeitos_golpe",
+      "start": 6,
+      "count": 6,
+      "fps": 20,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "silhueta": {
+      "sheet": "efeitos_golpe",
+      "start": 12,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "pool": {
+      "sheet": "efeitos_golpe",
+      "start": 18,
+      "count": 6,
+      "fps": 9,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    }
+  },
+  "carregador": {
+    "idle": {
+      "sheet": "carregador",
+      "start": 0,
+      "count": 3,
+      "fps": 2,
+      "loop": true
+    },
+    "walk": {
+      "sheet": "carregador",
+      "start": 0,
+      "count": 6,
+      "fps": 7,
+      "loop": true
+    },
+    "attack": {
+      "sheet": "carregador",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "carregador",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "break": {
+      "sheet": "carregador",
+      "start": 15,
+      "count": 3,
+      "fps": 6,
+      "loop": false
+    },
+    "walk_exposed": {
+      "sheet": "carregador",
+      "start": 18,
+      "count": 6,
+      "fps": 11,
+      "loop": true
+    },
+    "idle_exposed": {
+      "sheet": "carregador",
+      "start": 18,
+      "count": 3,
+      "fps": 2,
+      "loop": true
+    },
+    "death": {
+      "sheet": "carregador",
+      "start": 12,
+      "count": 3,
+      "fps": 8,
+      "loop": false
+    }
   }
 }

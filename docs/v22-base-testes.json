@@ -1,0 +1,36 @@
+[
+  {
+    "test": "audio_smoke",
+    "exit": 0,
+    "summary": [
+      "AUDIO_SMOKE: 18 checks, 0 failures"
+    ],
+    "errors": [
+      "ERROR: 10 resources still in use at exit (run with --verbose for details)."
+    ]
+  },
+  {
+    "test": "combat_smoke",
+    "exit": 0,
+    "summary": [
+      "COMBAT_SMOKE: 37 checks, 0 failures"
+    ],
+    "errors": []
+  },
+  {
+    "test": "chapter_smoke",
+    "exit": 0,
+    "summary": [
+      "CHAPTER_SMOKE: 44 checks, 0 failures"
+    ],
+    "errors": []
+  },
+  {
+    "test": "animation_smoke",
+    "exit": 0,
+    "summary": [
+      "ANIMATION_SMOKE: 329 checks, 0 failures"
+    ],
+    "errors": []
+  }
+]

@@ -417,8 +417,12 @@ func _attack_hits(aerial: bool = false) -> void:
 			add_culpa(3)
 			shake = maxf(shake, 6.0 if e.dead else 4.0)
 			var spot: Vector2 = e.global_position + Vector2(-float(facing) * 14.0, -e.body_size.y * 0.55)
-			get_tree().call_group("game", "spawn_effect", "spark", spot, facing, 0.6)
+			# The big painted effects: the crescent of the blade, a star where it bites, blood, and a pool on the kill.
+			get_tree().call_group("game", "spawn_effect", "arc", global_position + Vector2(float(facing) * 58.0, -52.0), facing, 0.62, "golpe")
+			get_tree().call_group("game", "spawn_effect", "star", spot, facing, 0.5, "golpe")
 			get_tree().call_group("game", "spawn_effect", "blood", spot + Vector2(float(facing) * 8.0, 4.0), facing, 0.7 if e.dead else 0.5)
+			if e.dead and e.family != "flyer":
+				get_tree().call_group("game", "spawn_effect", "pool", Vector2(e.global_position.x, e.global_position.y - 52.0), facing, 0.6, "golpe")
 
 
 func _start_roll() -> void:
@@ -609,6 +613,9 @@ func apply_penitence(id: String) -> void:
 	hp = minf(hp, max_hp)
 
 func begin_execution(target) -> bool:
+	# The coffin carrier has no execution of his own.
+	if target != null and is_instance_valid(target) and target.kind == 8:
+		return false
 	if state != "idle" or not has_weapon or not is_on_floor() or not is_instance_valid(target): return false
 	if target.dead or target.kind == 2 or target.state != "stagger" or target.executing: return false
 	if absf(target.position.x - position.x) > 72 or absf(target.position.y - position.y) > (170 if target.family == "flyer" else 80): return false

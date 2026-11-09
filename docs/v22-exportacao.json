@@ -1,0 +1,31 @@
+{
+  "guardian_source": "exec-cf8d48cb-a82c-484a-8c8e-e0bd82a6416c.png",
+  "native_size": [
+    1254,
+    1254
+  ],
+  "vertical_registration": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    7,
+    7,
+    8,
+    8
+  ],
+  "airborne_frames_not_registered": [
+    5,
+    6
+  ],
+  "carrier_source": "exec-528347f7-a0bb-443b-8262-449d343caf61.png",
+  "debris_source": "exec-75d951fe-65de-4f8a-b8ab-c5232d6e1250.png"
+}

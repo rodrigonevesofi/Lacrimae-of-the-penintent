@@ -12,14 +12,16 @@ signal killed(enemy)
 const TYPES := {
 	0: {"name":"Devoto Corrompido","family":"walker","actor":"devotee","scale":0.36,"tint":Color.WHITE,"hp":90.0,"reward":30,"body":Vector2(34,56),"col":0},
 	1: {"name":"Chorão","family":"flyer","actor":"mourner","scale":0.36,"tint":Color.WHITE,"hp":70.0,"reward":40,"body":Vector2(36,48),"col":1},
-	2: {"name":"A Mãe das Lágrimas","family":"boss","actor":"guardiao_grande","scale":0.9,"tint":Color.WHITE,"hp":1700.0,"reward":1500,"body":Vector2(150,215),"col":-1},
+	2: {"name":"A Mãe das Lágrimas","family":"boss","actor":"guardiao_colosso","scale":0.78,"tint":Color.WHITE,"hp":1700.0,"reward":1500,"body":Vector2(230,330),"col":-1},
 	3: {"name":"O Devorador","family":"walker","actor":"devorador","scale":0.62,"tint":Color.WHITE,"hp":180.0,"reward":120,"body":Vector2(58,112),"col":0},
 	4: {"name":"Flagelante","family":"walker","actor":"flagelante","scale":0.35,"tint":Color.WHITE,"hp":100.0,"reward":45,"body":Vector2(34,56),"col":0},
+	8: {"name":"Carregador de Caixão","family":"walker","actor":"carregador","scale":0.42,"tint":Color.WHITE,"hp":90.0,"reward":70,"body":Vector2(42,66),"col":0},
 	5: {"name":"Bruxa do Aquelarre","family":"flyer","actor":"bruxa","scale":0.36,"tint":Color.WHITE,"hp":60.0,"reward":55,"body":Vector2(36,48),"col":1},
 	6: {"name":"Asmodeia","family":"flyer","actor":"asmodeia","scale":0.42,"tint":Color.WHITE,"hp":80.0,"reward":60,"body":Vector2(44,56),"col":1},
 	7: {"name":"Duelista","family":"walker","actor":"duelista","scale":0.36,"tint":Color.WHITE,"hp":90.0,"reward":40,"body":Vector2(34,56),"col":0},
 }
 const BESTIARY := {
+	8: "CARREGADOR DE CAIXÃO — Carrega a própria sepultura. A pedra protege a frente: faça-o errar a investida e golpeie pelas costas.",
 	3: "O DEVORADOR — O que ele não consegue perdoar, ele engole. Esquive o bote e golpeie na recuperação.",
 	4: "FLAGELANTE — Pune o corpo para calar o que a alma sabe. Faça-o errar a investida.",
 	5: "AQUELARRE — Três vozes, um voto. Enquanto uma irmã vive, ela amortece o golpe que atinge as outras.",
@@ -74,8 +76,12 @@ var announced := false
 var phase_two_heard := false
 var prev_state := ""
 ## Poise: light blows only make a creature flinch once enough of them have landed; until then it keeps attacking.
-const POISE := {0: 45.0, 1: 35.0, 4: 60.0, 5: 30.0, 6: 40.0, 7: 45.0}
+const POISE := {0: 45.0, 1: 35.0, 4: 60.0, 5: 30.0, 6: 40.0, 7: 45.0, 8: 9999.0}
 var poise := 40.0
+## The coffin carrier: the stone on his back guards his front until it breaks.
+var coffin := 60.0
+var exposed := false
+var contact_cd := 0.0
 var family := "walker"
 
 
@@ -180,6 +186,13 @@ func take_hit(dmg: float, from_x: float) -> void:
 		return
 	if state == "stagger":
 		dmg *= 1.6
+	if kind == 8 and not exposed and state != "recover" and (from_x - global_position.x) * float(facing) > 0.0:
+		# The blow lands on the stone: little reaches him, the coffin takes the rest.
+		coffin -= dmg
+		dmg *= 0.15
+		_sfx("hit_metal")
+		if coffin <= 0.0:
+			_break_coffin()
 	if kind != 2:
 		_sfx("dor")
 	var was_open := state in ["recover", "cast"]
@@ -241,6 +254,7 @@ func _state_sounds() -> void:
 		5: cues = {"windup": "bruxa_sussurro", "cast": "bruxa_leque"}
 		6: cues = {"windup": "asmodeia_aviso"}
 		7: cues = {"strike": "duelista_cacete"}
+		8: cues = {"charge": "flagelante_investida"}
 	if cues.has(state):
 		_sfx(cues[state])
 
@@ -338,6 +352,8 @@ func _physics_process(delta: float) -> void:
 			_charger(delta)
 		6:
 			_bomber(delta)
+		8:
+			_carrier(delta)
 	queue_redraw()
 
 
@@ -509,6 +525,96 @@ func _brute(delta: float) -> void:
 
 
 # ---------- Flagelante ("Procissão de flagelantes"): investida reta; errar a investida o abre ----------
+# ---------- Carregador de Caixão ----------
+func _break_coffin() -> void:
+	exposed = true
+	state = "break"
+	state_t = 0.5
+	velocity.x = 0.0
+	poise = 30.0
+	_sfx("chefe_pancada")
+	var director = get_tree().get_first_node_in_group("game")
+	if director != null:
+		director.spawn_effect("dust", global_position + Vector2(0.0, -20.0), facing, 0.9)
+		director.shake_cam(5.0)
+		# The broken stone stays where it fell.
+		for k in range(3):
+			var shard := Polygon2D.new()
+			var w := 10.0 + randf() * 10.0
+			shard.polygon = PackedVector2Array([Vector2(-w, 0), Vector2(-w * 0.6, -w * 0.8), Vector2(w * 0.5, -w), Vector2(w, 0)])
+			shard.color = Color(0.42, 0.40, 0.37)
+			shard.position = global_position + Vector2(float(facing) * (14.0 + k * 22.0) - 10.0, 0.0)
+			director.add_child(shard)
+
+func _carrier(delta: float) -> void:
+	velocity.y = minf(velocity.y + 1800.0 * delta, 900.0)
+	var to_p: float = player.global_position.x - global_position.x
+	var dist: float = absf(to_p)
+	var dy: float = absf(player.global_position.y - global_position.y)
+	var alive: bool = player.state != "dead"
+	var seen: bool = alive and dist < 440.0 and dy < 140.0
+	contact_cd = maxf(contact_cd - delta, 0.0)
+	match state:
+		"patrol":
+			velocity.x = facing * (90.0 if exposed else 40.0)
+			if global_position.x > home.x + patrol_range: facing = -1
+			elif global_position.x < home.x - patrol_range: facing = 1
+			if is_on_wall() or not _ledge_ok(): facing = -facing
+			if seen: state = "chase"
+		"chase":
+			facing = 1 if to_p > 0.0 else -1
+			if exposed:
+				# Without the stone he is quick and has no attack of his own: he only harms by reaching you.
+				velocity.x = facing * 170.0 if _ledge_ok() else 0.0
+				if dist < 46.0 and dy < 70.0 and contact_cd <= 0.0 and alive and player.invuln <= 0.0:
+					player.take_hit(8.0, global_position.x, self, false)
+					contact_cd = 0.9
+			else:
+				velocity.x = facing * 45.0 if dist > 200.0 and _ledge_ok() else 0.0
+				if dist < 340.0 and dy < 90.0 and cd <= 0.0 and alive:
+					state = "windup"
+					state_t = 0.4
+					velocity.x = 0.0
+			if not seen and dist > 520.0: state = "patrol"
+		"windup":
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				state = "charge"
+				state_t = 0.75
+				charge_hit = false
+		"charge":
+			velocity.x = facing * 300.0
+			var ram := Rect2(global_position + Vector2(0.0 if facing > 0 else -72.0, -66.0), Vector2(72.0, 66.0))
+			if not charge_hit and ram.intersects(player.body_rect()) and player.invuln <= 0.0:
+				player.take_hit(18.0, global_position.x, self, false)
+				charge_hit = true
+			if is_on_wall() or not _ledge_ok():
+				# The stone strikes the wall: it cracks, and he is left reeling.
+				coffin -= 40.0
+				velocity.x = 0.0
+				state = "recover"
+				state_t = 1.3
+				cd = 1.8
+				var director = get_tree().get_first_node_in_group("game")
+				if director != null: director.shake_cam(4.0)
+				_sfx("hit_metal")
+				if coffin <= 0.0: _break_coffin()
+			elif state_t <= 0.0:
+				state = "recover"
+				state_t = 0.9
+				cd = 1.6
+		"recover":
+			velocity.x = 0.0
+			if state_t <= 0.0: state = "chase"
+		"break":
+			velocity.x = 0.0
+			if state_t <= 0.0: state = "chase"
+		"hurt":
+			velocity.x = move_toward(velocity.x, 0.0, 900.0 * delta)
+			if state_t <= 0.0: state = "chase"
+	move_and_slide()
+
+
 func _charger(delta: float) -> void:
 	velocity.y = minf(velocity.y + 1800.0 * delta, 900.0)
 	var to_p: float = player.global_position.x - global_position.x
@@ -844,9 +950,9 @@ func _col(base: Color) -> Color:
 	return c
 
 
-const WINDUPS := {0:0.55,1:0.75,3:1.0,4:0.5,5:0.75,6:0.9,7:0.55}
+const WINDUPS := {0:0.55,1:0.75,3:1.0,4:0.5,5:0.75,6:0.9,7:0.55,8:0.4}
 const STRIKES := {0:0.18,3:0.32,7:0.18}
-const RECOVERS := {0:0.7,3:1.5,4:0.8,7:0.7}
+const RECOVERS := {0:0.7,3:1.5,4:0.8,7:0.7,8:0.9}
 
 
 func _process(delta: float) -> void:
@@ -871,6 +977,15 @@ func _process(delta: float) -> void:
 		animator.select("death", facing, 1 - fade)
 	elif state == "hurt":
 		animator.select("hurt", facing, 1 - state_t / 0.3)
+	elif kind == 8:
+		match state:
+			"windup": animator.select("attack", facing, clampf(1 - state_t / 0.4, 0, 1) * 2.0 / 6)
+			"charge": animator.select("attack", facing, (2 + clampf(1 - state_t / 0.75, 0, 1) * 4) / 6)
+			"recover": animator.pose("hurt", facing, 1)
+			"break": animator.select("break", facing, clampf(1 - state_t / 0.5, 0, 0.999))
+			_:
+				if absf(velocity.x) > 10: animator.select("walk_exposed" if exposed else "walk", facing)
+				else: animator.select("idle_exposed" if exposed else "idle", facing)
 	elif family == "walker":
 		var wind: float = WINDUPS[kind]
 		match state:
