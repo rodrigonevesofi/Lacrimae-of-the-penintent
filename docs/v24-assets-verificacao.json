@@ -1,0 +1,40 @@
+[
+  {
+    "file": "assets/memoria_fogo/guardiao_fogo_01.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "opaque": true,
+    "subtitle_luminance": 11.01,
+    "scene_luminance": 59.07
+  },
+  {
+    "file": "assets/memoria_fogo/guardiao_fogo_02.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "opaque": true,
+    "subtitle_luminance": 7.97,
+    "scene_luminance": 59.69
+  },
+  {
+    "file": "assets/memoria_fogo/guardiao_fogo_03.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "opaque": true,
+    "subtitle_luminance": 8.52,
+    "scene_luminance": 59.71
+  },
+  {
+    "file": "assets/close/close_04b_grito.png",
+    "size": [
+      512,
+      512
+    ],
+    "opaque": true
+  }
+]

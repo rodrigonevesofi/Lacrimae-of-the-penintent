@@ -487,10 +487,11 @@ func _dissolve_fragment(pos: Vector2) -> void:
 	animation.animation_finished.connect(anchor.queue_free)
 
 ## One-shot combat effect from the painted atlas: sword sparks, blood, parry flash, landing dust.
-func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55, actor: String = "efeitos") -> void:
+func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55, actor: String = "efeitos", tint: Color = Color.WHITE) -> void:
 	var anchor := Node2D.new()
 	anchor.position = pos
 	anchor.z_index = 6
+	anchor.modulate = tint
 	var animation = preload("res://scripts/actor_animation.gd").new()
 	animation.configure(actor, size)
 	anchor.add_child(animation)

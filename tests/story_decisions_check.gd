@@ -18,6 +18,7 @@ func _initialize() -> void:
 		if text.contains("close_01.png"): face.append(path.get_file())
 	expect(named.is_empty(),"Act I names neither Edran nor the Inquisitor %s" % str(named))
 	expect(face.is_empty(),"the Penitent's unmasked face is never used %s" % str(face))
+	expect(ResourceLoader.exists("res://assets/close/close_01_mascarado.png"),"the masked close of the Penitent is ready for the story encounters")
 	var gates := FileAccess.get_file_as_string("res://scripts/exploration.gd")
 	expect(gates.contains("selo raspado") and gates.contains("raspado a faca"),"the seals at the gates are scraped: who ordered it stays a question")
 	print("STORY_DECISIONS: %d checks, %d failures" % [checks,failures])

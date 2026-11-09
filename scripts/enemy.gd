@@ -929,6 +929,7 @@ func _boss(delta: float) -> void:
 			if state_t < 0.45 and is_on_floor():
 				velocity.x = 0.0
 				_slam()
+				_crack_floor()
 				state = "leap_land"
 				state_t = 0.4
 		"leap_land":
@@ -1003,9 +1004,33 @@ func _sweep() -> void:
 		player.take_hit(18.0, global_position.x, self, true)
 
 
+## Where the Guardian lands, the stone floor cracks; the crack fades after a while.
+func _crack_floor() -> void:
+	var director = get_tree().get_first_node_in_group("game")
+	if director == null or not ResourceLoader.exists("res://assets/rachadura_chao.png"):
+		return
+	var crack := Sprite2D.new()
+	crack.texture = load("res://assets/rachadura_chao.png")
+	crack.scale = Vector2(0.7, 0.7)
+	crack.z_index = 4
+	crack.position = Vector2(global_position.x, global_position.y - 30.0)
+	crack.add_to_group("boss_cracks")
+	director.add_child(crack)
+	var fade := crack.create_tween()
+	fade.tween_interval(6.0)
+	fade.tween_property(crack, "modulate:a", 0.0, 2.0)
+	fade.tween_callback(crack.queue_free)
+
+
 func _scream() -> void:
 	_sfx("chefe_morte")
 	get_tree().call_group("game", "shake_cam", 5.0)
+	# The sound leaves the mouth of the bell as rings. They are tinted pale red: gold rings mean "parry now", and this cannot be parried.
+	var director = get_tree().get_first_node_in_group("game")
+	if director != null:
+		var mouth: Vector2 = global_position + Vector2(float(facing) * 30.0, -260.0)
+		director.spawn_effect("ring", mouth, facing, 1.6, "onda", Color(1.0, 0.55, 0.5))
+		director.spawn_effect("ring_weak", mouth, facing, 2.4, "onda", Color(1.0, 0.55, 0.5, 0.8))
 	var aim: Vector2 = (player.global_position + Vector2(0.0, -40.0) - (global_position + Vector2(0.0, -260.0))).normalized()
 	for k in range(5):
 		var t = Tear.new()

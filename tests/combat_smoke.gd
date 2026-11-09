@@ -145,6 +145,17 @@ func run() -> void:
 		boss_moves[probe_boss.state] = true
 	p.global_position = Vector2(900,600)
 	expect(boss_moves.has("sweep_wind") and boss_moves.has("leap_crouch") and boss_moves.has("scream_wind"),"the Guardian sweeps, leaps and screams as well (%s)" % ", ".join(boss_moves.keys()))
+	var rings_before: int = game.get_child_count()
+	probe_boss._scream()
+	var rings := 0
+	for child in game.get_children():
+		if child.get_child_count() > 0 and child.get_child(0).get("actor") == "onda":
+			rings += 1
+			expect(child.modulate.g < 0.8,"the scream's rings are not gold, so they are not read as a parry signal")
+			break
+	expect(rings >= 1,"the scream leaves the bell as rings of sound")
+	probe_boss._crack_floor()
+	expect(get_nodes_in_group("boss_cracks").size() >= 1,"the floor cracks where the Guardian lands")
 	probe_boss.state = "sweep_wind"
 	probe_boss.parried()
 	expect(probe_boss.state == "exhausted","a parried sweep leaves the Guardian on its knees")

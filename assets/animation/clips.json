@@ -1084,5 +1084,40 @@
         250
       ]
     }
+  },
+  "onda": {
+    "idle": {
+      "sheet": "onda_grito",
+      "start": 0,
+      "count": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "ring": {
+      "sheet": "onda_grito",
+      "start": 0,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "ring_weak": {
+      "sheet": "onda_grito",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    }
   }
 }
