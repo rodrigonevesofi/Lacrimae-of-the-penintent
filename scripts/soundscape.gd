@@ -1,5 +1,5 @@
 extends Node
-## Original composed stereo score and separate polyphonic action effects.
+## Trilha estéreo original composta e efeitos de ação polifônicos separados.
 var incoming: AudioStreamPlayer
 var music_context := "menu"
 var transition_context := ""
@@ -12,9 +12,9 @@ var ambience: AudioStreamPlayer
 var effects: Dictionary = {}
 var muted := false
 var knock_count := 0
-## Mix trims in dB, added to the base level of each group. They start at zero on purpose: the audit of the
-## volumes (docs/auditoria-volume.md) proposed offsets, but they were measured on files, not heard in play.
-## After listening, retuning the mix is a matter of changing these four numbers.
+## Ajustes de mixagem em dB, somados ao nível base de cada grupo. Começam em zero de propósito: a auditoria dos
+## volumes (docs/auditoria-volume.md) propôs ajustes, mas eles foram medidos nos arquivos, sem ouvir durante o jogo.
+## Após a escuta, reajustar a mixagem exige apenas alterar estes quatro números.
 const MIX_TRIM_DB := {"tracks": 0.0, "action": 0.0, "scene": 0.0, "creature": 0.0, "ambience": 0.0}
 const SCENE_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
 
@@ -24,14 +24,14 @@ func trim_for(name: String) -> float:
 	return MIX_TRIM_DB.action
 
 const CREATURE_SFX := ["devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
-## Sounds for events that used to be silent. Each is loaded only if its file exists, so the hooks in the game are
-## ready before the sounds are: the moment a file with that name lands in assets/audio/, it plays.
+## Sons de eventos antes silenciosos. Cada um só é carregado se o arquivo existir, deixando os pontos de integração
+## prontos antes dos sons: assim que um arquivo com esse nome chega a assets/audio/, ele toca.
 const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "dor", "aterrissagem", "coleta", "porta", "projetil", "projetil_impacto", "espinho", "aparo", "execucao", "portao_fecha", "portao_abre", "ui_mover", "ui_confirmar"]
-## Narrative sounds are always played exactly the same; everything else varies a little in pitch and level.
+## Os sons narrativos são sempre reproduzidos da mesma forma; os demais variam um pouco em altura e volume.
 const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
-## Reverb of each place (how much of the room's tail the sound effects carry).
+## Reverberação de cada lugar (quanto da cauda acústica da sala os efeitos carregam).
 const SPACE := {"city": 0.10, "ossuary": 0.28, "cistern": 0.36, "cloister": 0.30, "belfry": 0.32, "archive": 0.22, "refuge": 0.18, "nave": 0.40, "terrace": 0.16, "court": 0.14}
-## Families of variations: a request for one name picks one of its recordings at random.
+## Famílias de variações: uma solicitação por nome escolhe aleatoriamente uma de suas gravações.
 const FAMILIES := {
 	"hit_carne": ["hit_carne_01", "hit_carne_02", "hit_carne_03"],
 	"hit_metal": ["hit_metal_01", "hit_metal_02", "hit_metal_03"],
@@ -43,7 +43,7 @@ const FAMILIES := {
 	"step_agua": ["step_agua_01", "step_agua_02", "step_agua_03"],
 	"step_osso": ["step_osso_01", "step_osso_02", "step_osso_03"],
 }
-## What the penitent walks on in each place.
+## Superfície em que o penitente caminha em cada lugar.
 const SURFACE := {"city": "step_pedra", "ossuary": "step_osso", "cistern": "step_agua", "cloister": "step_pedra", "belfry": "step_madeira", "archive": "step_madeira", "refuge": "step_pedra", "nave": "step_pedra", "terrace": "step_pedra", "court": "step_pedra"}
 var beds: Array = []
 var bed_streams := {}
@@ -61,7 +61,7 @@ func _build_buses() -> void:
 			var index := AudioServer.bus_count - 1
 			AudioServer.set_bus_name(index, bus_name)
 			AudioServer.set_bus_send(index, "Master")
-	# A limiter on the master keeps loud moments (a fight can stack many sounds) from going past full scale.
+	# Um limitador na saída principal impede que momentos intensos (combates acumulam sons) ultrapassem o nível máximo.
 	var master := AudioServer.get_bus_index("Master")
 	if AudioServer.get_bus_effect_count(master) == 0:
 		var limiter: AudioEffect = ClassDB.instantiate("AudioEffectHardLimiter") if ClassDB.class_exists("AudioEffectHardLimiter") else AudioEffectLimiter.new()
@@ -111,7 +111,7 @@ func _ready() -> void:
 	guilt_layer.volume_db = -80
 	add_child(guilt_layer)
 	guilt_layer.play()
-	# The texture of each place, a long loop under the music.
+	# A textura sonora de cada lugar, um ciclo longo sob a música.
 	for room in SURFACE.keys():
 		var path := "res://assets/audio/amb_%s.wav" % room
 		if ResourceLoader.exists(path):
@@ -142,7 +142,7 @@ func _ready() -> void:
 		add_child(voice)
 		effects[name] = voice
 
-## The recording that answers a request: a variation of its family, the surface underfoot for steps.
+## Gravação que atende à solicitação: uma variação da família ou, para passos, a superfície sob os pés.
 func resolve(name: String) -> String:
 	var family := name
 	var game = get_parent()
@@ -167,7 +167,7 @@ func play_sfx(request: String) -> void:
 	voice.volume_db = float(base_db.get(name, -2.0)) + (randf_range(-1.2, 1.2) if varied else 0.0)
 	voice.play()
 
-## A sound that belongs to a place in the world: it comes from the left or the right of the penitent and fades with distance.
+## Som localizado no mundo: vem da esquerda ou direita do penitente e diminui com a distância.
 func _update_beds(game, delta: float) -> void:
 	if beds.size() < 2:
 		return
@@ -212,7 +212,7 @@ func play_sfx_at(request: String, pos: Vector2) -> void:
 	voice.finished.connect(voice.queue_free)
 	voice.play()
 
-## Three knocks from the other side of the stone. They stop before anyone can say where they came from.
+## Três batidas do outro lado da pedra. Param antes que alguém possa dizer de onde vieram.
 func play_knocks(delay: float = 0.9) -> void:
 	await get_tree().create_timer(delay).timeout
 	for i in range(3):

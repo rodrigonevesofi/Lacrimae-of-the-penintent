@@ -1,5 +1,5 @@
 extends SceneTree
-## Goya-inspired bestiary: data, encounters and the behaviour of each new creature.
+## Bestiário inspirado em Goya: dados, encontros e comportamento de cada nova criatura.
 const Layout = preload("res://scripts/act_one_layout.gd")
 var game
 var p
@@ -39,7 +39,7 @@ func data_checks() -> void:
 		var t: Dictionary = Enemy.TYPES[kind]
 		if not clips.has(t.actor): data_ok = false; continue
 		if t.family != "boss":
-			# The coffin carrier has no execution of his own (none was drawn); every other creature does.
+			# O carregador de caixão não possui execução própria (nenhuma foi desenhada); as demais criaturas possuem.
 			var needed: Array = ["idle","walk","attack","hurt","death"] if t.actor == "carregador" else ["idle","walk","attack","hurt","death","executed"]
 			for clip in needed:
 				if not clips[t.actor].has(clip): data_ok = false
@@ -69,8 +69,8 @@ func data_checks() -> void:
 		if not Enemy.BESTIARY.has(k): bestiary_ok = false
 	expect(bestiary_ok,"each new creature has a first-sight note")
 
-	# Reach rule: the sword hits about 66 above the feet standing and about 108 from the feet in the air,
-	# so a new flyer must hover within 170 of something the player can stand on beneath it.
+	# Regra de alcance: a espada atinge cerca de 66 unidades acima dos pés no chão e 108 no ar,
+	# portanto um novo voador deve pairar a até 170 unidades de uma superfície onde o jogador possa ficar abaixo dele.
 	var reach_ok := true
 	var reach_report := ""
 	var rooms: Dictionary = Layout.rooms()
@@ -106,7 +106,7 @@ func run() -> void:
 	data_checks()
 	await clear()
 
-	# O Devorador: armoured while attacking, heals on the grab, wide open in recovery.
+	# O Devorador: protegido durante o ataque, cura ao agarrar e fica exposto na recuperação.
 	p.revive(Vector2(830,600))
 	var d = spawn(3,Vector2(960,600),60)
 	d.hp = d.max_hp - 40
@@ -137,7 +137,7 @@ func run() -> void:
 	expect(d.dead,"the execution kills him")
 	await clear()
 
-	# Flagelante: a missed charge crashes at the broken bridge and leaves him open.
+	# Flagelante: uma investida errada colide na ponte quebrada e o deixa exposto.
 	p.revive(Vector2(1950,600))
 	var f = spawn(4,Vector2(1750,600),0)
 	await frames(40)
@@ -169,7 +169,7 @@ func run() -> void:
 	expect(await wait_state(f3,"recover",40) and p.hp < 100.0,"the lash wounds a penitent who stays beside him")
 	await clear()
 
-	# Aquelarre: the shared vow protects sisters until they stand alone.
+	# Aquelarre: o voto compartilhado protege as irmãs até ficarem sozinhas.
 	p.revive(Vector2(200,600))
 	var a = spawn(5,Vector2(1000,300),0,9)
 	var b = spawn(5,Vector2(1100,300),0,9)
@@ -196,7 +196,7 @@ func run() -> void:
 	expect(fan,"a witch fires a three-tear fan")
 	await clear()
 
-	# Asmodeia: three shards fall in a line over the penitent's position.
+	# Asmodeia: três estilhaços caem em linha sobre a posição do penitente.
 	p.revive(Vector2(900,600))
 	var s = spawn(6,Vector2(900,240),100)
 	var shards := false
@@ -209,7 +209,7 @@ func run() -> void:
 	xs.sort()
 	expect(xs.size() >= 3 and absf(xs[0] + 120.0) <= 20.0 and absf(xs[xs.size() - 1] - 120.0) <= 20.0,"the shards fall at -120, 0 and +120 from the target")
 	await clear()
-	# Far away, a creature makes no sound.
+	# À distância, a criatura não emite som.
 	p.revive(Vector2(200,600))
 	game.soundscape.played.clear()
 	var far = spawn(3,Vector2(1500,600),0)
@@ -219,7 +219,7 @@ func run() -> void:
 	expect(game.soundscape.played.get("devorador_rugido",0) == 0,"a creature far from the penitent makes no sound")
 	await clear()
 
-	# Duelistas: they trade blows until the penitent comes close, and cannot finish each other.
+	# Duelistas: trocam golpes até o penitente se aproximar e não podem matar um ao outro.
 	p.revive(Vector2(300,600))
 	var da = spawn(7,Vector2(1500,600),70,5)
 	var db = spawn(7,Vector2(1580,600),70,5)
@@ -246,7 +246,7 @@ func run() -> void:
 	expect(eb.state == "chase","striking one duelist wakes the other")
 	await clear()
 
-	# A stunned flyer comes down to the penitent's level for its execution.
+	# Um voador atordoado desce ao nível do penitente para a execução.
 	p.revive(Vector2(1000,600))
 	var flyer = spawn(6,Vector2(1030,480),0)
 	await frames(30)

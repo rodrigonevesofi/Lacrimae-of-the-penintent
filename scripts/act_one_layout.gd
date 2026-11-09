@@ -1,5 +1,5 @@
 extends RefCounted
-## Coordinates describe physical rooms; passages form loops, not a sequence of screens.
+## As coordenadas descrevem salas físicas; as passagens formam circuitos, não uma sequência de telas.
 static func rooms() -> Dictionary:
 	return {
 		"city": {"name":"CIDADE DA PENITÊNCIA", "bounds":Rect2(0,-300,4800,1250), "floor":600.0, "art":"vespera_panorama", "map":Vector2(450,330)},
@@ -16,56 +16,56 @@ static func rooms() -> Dictionary:
 
 static func platforms() -> Array[Rect2]:
 	var result: Array[Rect2] = []
-	# Ossuary upper burial gallery, a traversable alternate route to the refuge.
+	# Galeria funerária superior do ossuário, uma rota alternativa transitável até o refúgio.
 	for i in range(5): result.append(Rect2(5480+i*140,520-i*80,140,24))
 	result.append(Rect2(6100,200,680,28))
 	for i in range(4): result.append(Rect2(6780+i*135,280+i*80,150,24))
-	# Cistern: a staggered ascent to the first bell mechanism; no double jump needed.
+	# Cisterna: subida escalonada até o primeiro mecanismo do sino; dispensa salto duplo.
 	for i in range(7): result.append(Rect2(8560+i*140,520-i*80,145,24))
 	result.append(Rect2(9400,40,500,28))
 	for i in range(5): result.append(Rect2(9840+i*130,120+i*80,150,24))
-	# Cloister two-level loop: the lower passage and upper gallery reconnect.
+	# Circuito do claustro em dois níveis: a passagem inferior e a galeria superior se reconectam.
 	for i in range(7): result.append(Rect2(11320+i*140,520-i*80,145,24))
 	result.append(Rect2(12160,40,1000,28))
 	for i in range(5): result.append(Rect2(13160+i*110,120+i*80,145,24))
-	# Bell tower: switchback stair flights, landings and a last double-jump gap.
+	# Torre do sino: lances de escada em zigue-zague, patamares e um vão final para salto duplo.
 	for i in range(7): result.append(Rect2(14500+i*140,1020-i*80,145,24))
 	result.append(Rect2(15340,540,500,28))
 	for i in range(7): result.append(Rect2(15340-i*140,460-i*80,145,24))
 	result.append(Rect2(14350,-100,400,28))
 	result.append(Rect2(14900,-260,450,28))
-	# Archive high document shelf and refuge shrine.
+	# Prateleira alta de documentos do arquivo e santuário do refúgio.
 	for base in [16880,19300]:
 		for i in range(4): result.append(Rect2(base+i*140,520-i*80,145,24))
 		result.append(Rect2(base+420,280,600,26))
-	# Nave do Silêncio: coro balcony reached by a short climb, and a long loft over the dais.
+	# Nave do Silêncio: sacada do coro acessível por uma subida curta e um mezanino longo sobre o estrado.
 	result.append(Rect2(21950,520,150,24)); result.append(Rect2(22110,440,150,24)); result.append(Rect2(22270,360,420,26))
 	for i in range(4): result.append(Rect2(22800+i*140,520-i*80,145,24))
 	result.append(Rect2(23220,200,680,28))
-	# Terraço dos Sinos: stair to a high walkway above the bell-rope.
+	# Terraço dos Sinos: escada até uma passagem elevada acima da corda do sino.
 	for i in range(5): result.append(Rect2(25300+i*130,520-i*80,140,24))
 	result.append(Rect2(25820,200,640,28))
-	# Pátio dos Portões Selados: balustrade over the sealed doors.
+	# Pátio dos Portões Selados: balaustrada sobre as portas seladas.
 	result.append(Rect2(28100,520,200,24)); result.append(Rect2(28300,440,200,24)); result.append(Rect2(28500,360,440,26))
 	return result
 
-# Solid masonry that shapes the ground: low mounds and stepped daises, never taller than one jump.
+# Alvenaria sólida que molda o chão: montes baixos e estrados escalonados, nunca mais altos que um salto.
 static func blocks() -> Array[Rect2]:
 	return [
-		Rect2(6900,550,300,50), Rect2(6960,500,180,100),      # ossuary: burial mound
-		Rect2(9000,550,240,50),                                # cistern: fallen cornice
-		Rect2(12000,550,300,50), Rect2(12060,500,160,100),    # cloister: choir step
-		Rect2(16960,550,200,50),                               # archive: toppled desk
-		Rect2(19900,550,200,50),                               # refuge: collapsed wall
-		Rect2(22000,555,180,45),                               # nave: broken pew base
-		Rect2(23350,550,260,50), Rect2(23410,500,140,100),    # nave: dais under the loft
-		Rect2(24750,550,240,50),                               # terrace: bell frame
-		Rect2(26250,550,220,50), Rect2(26300,500,120,100),    # terrace: parapet
-		Rect2(28200,550,200,50),                               # court: threshold step
+		Rect2(6900,550,300,50), Rect2(6960,500,180,100),      # ossuário: monte funerário
+		Rect2(9000,550,240,50),                                # cisterna: cornija caída
+		Rect2(12000,550,300,50), Rect2(12060,500,160,100),    # claustro: degrau do coro
+		Rect2(16960,550,200,50),                               # arquivo: escrivaninha tombada
+		Rect2(19900,550,200,50),                               # refúgio: parede desabada
+		Rect2(22000,555,180,45),                               # nave: base de banco quebrado
+		Rect2(23350,550,260,50), Rect2(23410,500,140,100),    # nave: estrado sob o mezanino
+		Rect2(24750,550,240,50),                               # terraço: armação do sino
+		Rect2(26250,550,220,50), Rect2(26300,500,120,100),    # terraço: parapeito
+		Rect2(28200,550,200,50),                               # pátio: degrau da soleira
 	]
 
-## Locked fights: the exits close at both ends of a stretch of floor and open when the last wave falls.
-## Waves are [kind, x, y, patrol range]. Spans were chosen away from doors, altars, pickups and masonry.
+## Combates com saídas bloqueadas: as duas extremidades do trecho se fecham e abrem quando a última leva cai.
+## Levas: [tipo, x, y, alcance da patrulha]. Trechos escolhidos longe de portas, altares, itens e alvenaria.
 static func arenas() -> Array:
 	return [
 		{"id":"cistern","room":"cistern","x0":9320.0,"x1":10190.0,"floor":600.0,"reward":200,"waves":[[[0,9480,600,60],[4,10060,600,60]],[[6,9800,480,100],[0,9420,600,60]]]},
@@ -93,8 +93,8 @@ static func passages() -> Array[Dictionary]:
 		{"id":"bell_walk", "a":"terrace","pa":Vector2(26600,600),"b":"cloister","pb":Vector2(12950,40),"label":"Passarela dos sinos","latch":true},
 	]
 
-## [room, kind, x, y, patrol range, optional group]. Kinds: 0 devotee, 1 weeper, 3 Devourer, 4 flagellant,
-## 5 coven witch, 6 Asmodea, 7 duelist. Witches and duelists that share a group fight as one encounter.
+## [sala, tipo, x, y, alcance da patrulha, grupo opcional]. Tipos: 0 devoto, 1 chorão, 3 Devorador, 4 flagelante,
+## 5 bruxa do aquelarre, 6 Asmodeia, 7 duelista. Bruxas e duelistas do mesmo grupo formam um único encontro.
 static func enemies() -> Array:
 	return [
 		["ossuary",0,5700,600,160],["ossuary",0,6250,200,170],["ossuary",1,6880,340,160],["ossuary",0,7350,600,110],
@@ -111,13 +111,13 @@ static func enemies() -> Array:
 
 
 static func passage_face(link: Dictionary, from_a: bool) -> Dictionary:
-	# A face is a doorway in a wall. Its arrival direction describes the walk into
-	# the destination room, independent of the artificial global room offsets.
+	# Uma face é uma abertura na parede. Sua direção de chegada descreve a entrada
+	# na sala de destino, independentemente dos deslocamentos globais artificiais das salas.
 	var room: String = link.a if from_a else link.b
 	var arrival := -1 if from_a else 1
 	if link.id in ["shelter", "vows", "records"] and from_a: arrival = 1
 	if link.id == "archive_return" and not from_a: arrival = -1
-	# Doors on shelves and galleries: arrive walking toward the interior of the platform.
+	# Portas em prateleiras e galerias: a chegada ocorre caminhando para o interior da plataforma.
 	if link.id in ["nave_in", "sky"] and from_a: arrival = 1
 	if link.id == "nave_out" and not from_a: arrival = -1
 	var themes := {"city":"stone", "ossuary":"burial", "cistern":"water", "cloister":"stone", "belfry":"bell", "archive":"script", "refuge":"burial", "nave":"stone", "terrace":"bell", "court":"stone"}

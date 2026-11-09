@@ -1,4 +1,4 @@
-# Records the game's own mixed audio and video for analysis (no capture gain). Usage: REC_MODE=explore|fight|boss|memory godot --path . --resolution 640x360 --fixed-fps 30 --write-movie out.avi --script res://tests/record_audio_scenes.gd
+# Grava áudio e vídeo mixados pelo próprio jogo para análise (sem ganho de captura). Uso: REC_MODE=explore|fight|boss|memory godot --path . --resolution 640x360 --fixed-fps 30 --write-movie out.avi --script res://tests/record_audio_scenes.gd
 extends "res://tests/exploration_smoke.gd"
 var mode := "explore"
 func run() -> void:
@@ -14,7 +14,7 @@ func run() -> void:
 	await frames(2)
 	p.revive(Vector2(900,600)); p.invuln=0; p.hp=999
 	if mode=="explore":
-		# walk right and left in the city for 20 s of game time
+		# Caminha para a direita e a esquerda na cidade por 20 s de tempo do jogo.
 		for k in range(4):
 			Input.action_press("right"); await frames(150); Input.action_release("right")
 			Input.action_press("left"); await frames(150); Input.action_release("left")

@@ -1,5 +1,5 @@
 extends "res://scripts/player.gd"
-# Test instrumentation only: observe successful damage, never alter its value.
+# Instrumentação de teste: observa o dano aplicado sem alterar seu valor.
 var received:=0.0
 var hits={"bote":0,"investida":0,"estilhacos":0,"leque_lagrimas":0,"outros":0}
 func take_hit(dmg: float,from_x: float,attacker=null,parryable: bool=false) -> void:

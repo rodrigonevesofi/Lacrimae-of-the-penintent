@@ -49,7 +49,7 @@ func run() -> void:
 			for ledge in ex.ledges:
 				if absf(spawn.y-ledge.position.y)<1 and spawn.x>=ledge.position.x and spawn.x<=ledge.end.x: supported=true
 			expect(supported,"arrival has real floor or gallery: %s/%s" % [link.id,face.room])
-	# Check actual timing: destination is not changed on E; movement pauses until arrival.
+	# Verifica o tempo real: E não altera o destino imediatamente; o movimento pausa até a chegada.
 	Input.action_press("interact")
 	game._play_update(0.016)
 	Input.action_release("interact")
@@ -70,11 +70,11 @@ func run() -> void:
 		await frames(1)
 	expect(not ex.is_transitioning() and p.controllable,"entry fade restores player control")
 	expect(p.hp==61 and p.lagrimas==77 and p.culpa==50,"door travel preserves health, currency and guilt")
-	# The reverse side is deliberately placed against the direction of the outgoing route.
+	# O lado inverso é posicionado deliberadamente contra a direção da rota de saída.
 	ex.request_travel("city",Vector2(1070,600),-1)
 	await frames(30)
 	expect(ex.room=="city" and p.facing==-1,"return arrival keeps its authored orientation")
-	# Closed-from-other-side routes must refuse the journey.
+	# Rotas fechadas pelo outro lado devem recusar a travessia.
 	ex.travel("city",Vector2(2400,600))
 	await frames(3)
 	Input.action_press("interact")

@@ -1,6 +1,6 @@
 extends SceneTree
-## Controlled gameplay rehearsal, recorded with Godot Movie Maker at fixed 60 Hz.
-## This demonstrates poses/transitions; it is not an unassisted playthrough or FPS benchmark.
+## Ensaio controlado de jogabilidade, gravado com Godot Movie Maker a 60 Hz fixos.
+## Demonstra poses e transições; não é uma partida sem assistência nem uma medição de quadros por segundo.
 var game
 var frame_number := 0
 var stages: Array = []

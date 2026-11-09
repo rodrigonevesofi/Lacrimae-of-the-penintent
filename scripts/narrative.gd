@@ -1,6 +1,6 @@
 extends CanvasLayer
-## Timed visual sequences; no recorded narration is bundled.
-## Guilt scenes: echo of a recovered fragment, the memorial offering and the memory of the gates.
+## Sequências visuais temporizadas; nenhuma narração gravada está incluída.
+## Cenas de culpa: eco de um fragmento recuperado, oferenda no memorial e memória dos portões.
 const GuiltText = preload("res://scripts/guilt_text.gd")
 var game
 var elapsed := 0.0
@@ -12,7 +12,7 @@ const ECHO_DURATION := 7.0
 const MEMORIAL_DURATION := 9.0
 const BOSS_INTRO_DURATION := 6.5
 const BOSS_END_DURATION := 9.0
-## The memory ends on three knocks, then a cut: no explanation follows them.
+## A memória termina com três batidas e um corte: nenhuma explicação vem depois.
 const MEMORY_KNOCKS := [24.6, 25.25, 25.9]
 const ECHO_KNOCKS := [2.2, 2.85, 3.5]
 var saved_zoom := Vector2.ONE
@@ -25,7 +25,7 @@ var panel: Control
 var opening_art: Texture2D
 var glow_texture: GradientTexture2D
 var pool_texture: GradientTexture2D
-## Painted stills for the memory of the gates. If a file is missing, a drawn silhouette stands in for it.
+## Ilustrações estáticas da memória dos portões. Se faltar um arquivo, uma silhueta desenhada o substitui.
 const MEMORY_ART := {
 	"hands": "res://assets/memory/memoria_01_maos_na_roda.png",
 	"small_hand": "res://assets/memory/memoria_02_mao_pequena.png",
@@ -34,7 +34,7 @@ const MEMORY_ART := {
 	"gate": "res://assets/memory/memoria_04_portao_fechado.png",
 }
 var memory_art: Dictionary = {}
-## Painted stills for the Bell Guardian. Without the files, the scenes use light and text only.
+## Ilustrações estáticas do Guardião do Sino. Sem os arquivos, as cenas usam apenas luz e texto.
 const BOSS_ART := {
 	"rope": "res://assets/boss/guardiao_01_corda.png",
 	"gesture": "res://assets/boss/guardiao_02_gesto.png",
@@ -90,7 +90,7 @@ func _ready() -> void:
 	panel.draw.connect(paint)
 	add_child(panel)
 
-## Closed captions for sound: every sound that carries information also appears on screen for a moment.
+## Legendas de som: todo som que transmite informação também aparece brevemente na tela.
 func caption_sound(text: String, seconds: float = 2.4) -> void:
 	tag = text
 	tag_t = seconds
@@ -186,14 +186,14 @@ func finish() -> void:
 		game.memory_seen = true
 		game._save()
 	elif previous == "boss_end":
-		# The silence after the bell leads straight into the memory of the gates.
+		# O silêncio após o sino conduz diretamente à memória dos portões.
 		begin("memory")
 	elif previous == "memorial":
-		# The silence comes first; the written record follows, so the text stays available to read again.
+		# O silêncio vem primeiro; o registro escrito vem depois, deixando o texto disponível para releitura.
 		game.show_message("ÀQUELES QUE FICARAM DO OUTRO LADO", game.Story.memorial_text(memorial_known))
 
 func memorial_timeline(duration: float) -> void:
-	# Kneel with the doll, set it down, stay with it, rise and leave it there.
+	# Ajoelha com a boneca, coloca-a no chão, permanece ao lado dela, levanta e a deixa ali.
 	if elapsed < 1.8:
 		game.player.ritual_clip = "memorial_kneel"
 		game.player.ritual_progress = elapsed / 1.8
@@ -211,7 +211,7 @@ func cry_timeline(duration: float) -> void:
 	if mode == "memorial":
 		memorial_timeline(duration)
 		return
-	# Kneel, hold, wipe the eyes, rise. The tail keeps its length however long the hold lasts.
+	# Ajoelha, mantém a posição, enxuga os olhos e levanta. O trecho final mantém a duração, independentemente da espera.
 	if elapsed < 1.0:
 		game.player.ritual_clip = "cry_start"
 		game.player.ritual_progress = elapsed
@@ -254,7 +254,7 @@ func knock_schedule() -> Array:
 	if mode == "echo" and echo_index == 0: return ECHO_KNOCKS
 	return []
 
-## Muffled voices heard through stone: the second and third echoes, and the opening of the memory.
+## Vozes abafadas através da pedra: o segundo e o terceiro ecos e a abertura da memória.
 func fire_voices() -> void:
 	if voice_played: return
 	if mode == "echo" and echo_index in [1, 2] and elapsed >= 1.2:
@@ -312,7 +312,7 @@ func _process(delta: float) -> void:
 func text_at(pos: Vector2, text: String, size: int, color: Color, width: float) -> void:
 	panel.draw_multiline_string(font, pos, text, HORIZONTAL_ALIGNMENT_CENTER, width, size, -1, color)
 
-## Smooth 0..1 envelope for something visible between a and b.
+## Envoltória suave de 0 a 1 para algo visível entre a e b.
 func beat(a: float, b: float, fade: float = 0.6) -> float:
 	var t := elapsed - GRIEF_DURATION
 	return smoothstep(a, a + fade, t) * (1.0 - smoothstep(b - fade, b, t))
@@ -320,13 +320,13 @@ func beat(a: float, b: float, fade: float = 0.6) -> float:
 func glow(center: Vector2, radius: float, color: Color, alpha: float) -> void:
 	panel.draw_texture_rect(glow_texture, Rect2(center - Vector2(radius, radius), Vector2(radius, radius) * 2.0), false, Color(color, clampf(alpha, 0.0, 1.0)))
 
-## Everything falls into shadow except a pool of light around the kneeling figure. One smooth gradient, no seams.
+## Tudo fica na sombra, exceto um círculo de luz em torno da figura ajoelhada. Um único gradiente suave, sem emendas.
 func light_pool(vs: Vector2, center: Vector2, radius: float, dark: float, tint: Color) -> void:
 	var half := radius / 0.14
 	var tex_rect := Rect2(center - Vector2(half, half), Vector2(half, half) * 2.0)
 	panel.draw_texture_rect(pool_texture, tex_rect, false, Color(tint, clampf(dark, 0.0, 1.0)))
 	var solid := Color(tint, clampf(dark * 0.9, 0.0, 1.0))
-	# Beyond the gradient's square the shade stays solid.
+	# Além do quadrado do gradiente, a sombra permanece sólida.
 	if tex_rect.position.x > 0: panel.draw_rect(Rect2(0, 0, tex_rect.position.x, vs.y), solid)
 	if tex_rect.end.x < vs.x: panel.draw_rect(Rect2(tex_rect.end.x, 0, vs.x - tex_rect.end.x, vs.y), solid)
 	if tex_rect.position.y > 0: panel.draw_rect(Rect2(0, 0, vs.x, tex_rect.position.y), solid)
@@ -392,7 +392,7 @@ func paint_focus(vs: Vector2) -> void:
 		var progress := clampf(elapsed / PRAYER_DURATION, 0, 1)
 		panel.draw_line(Vector2(vs.x / 2 - 130, vs.y - 77), Vector2(vs.x / 2 - 130 + progress * 260, vs.y - 77), Color("c2a66f"), 2)
 		return
-	# Guilt scenes isolate the figure in a pool of light. Each knock contracts it, then it slowly opens again.
+	# As cenas de culpa isolam a figura em um círculo de luz. Cada batida o contrai e depois ele se abre lentamente.
 	var span := GRIEF_DURATION if mode == "memory" else duration_of(mode)
 	var open := smoothstep(0.0, 1.2, elapsed) * (1.0 - smoothstep(span - 1.0, span, elapsed))
 	var zoom_now: float = game.player.camera.zoom.x
@@ -420,7 +420,7 @@ func paint_focus(vs: Vector2) -> void:
 		panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(1, 1, 1, flash * 0.35))
 
 func small_hand(origin: Vector2, alpha: float, sun: bool) -> void:
-	# A child's hand gripping an iron bar; only silhouette and one stitched sun are drawn.
+	# A mão de uma criança segurando uma barra de ferro; desenha apenas a silhueta e um sol bordado.
 	var s := 2.0
 	glow(origin + Vector2(0, 30) * s, 150.0 * s, Color(0.95, 0.62, 0.28), alpha * 0.9)
 	panel.draw_set_transform(origin, 0, Vector2.ONE * s)
@@ -449,7 +449,7 @@ func small_hand(origin: Vector2, alpha: float, sun: bool) -> void:
 	panel.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
 func blurred_figure(pos: Vector2, alpha: float) -> void:
-	# A robed figure that never comes into focus: the same shape repeated and offset, against a pale light.
+	# Uma figura de manto que nunca entra em foco: a mesma forma repetida e deslocada contra uma luz pálida.
 	glow(pos + Vector2(0, -170), 330.0, Color(0.9, 0.8, 0.62), alpha * 0.8)
 	for i in range(7):
 		var off := Vector2((i - 3) * 7.0, (i % 2) * 5.0)
@@ -479,7 +479,7 @@ func boss_still(key: String, alpha: float, vs: Vector2, push: float) -> bool:
 	panel.draw_texture_rect(boss_art[key], Rect2(-(size - vs) * 0.5, size), false, Color(1, 1, 1, alpha))
 	return true
 
-## The Bell Guardian: the rope that is not there, the hand that keeps pulling, the bronze that stays still.
+## O Guardião do Sino: a corda ausente, a mão que continua puxando, o bronze imóvel.
 func paint_boss(vs: Vector2) -> void:
 	var span := duration_of(mode)
 	var open := smoothstep(0.0, 0.9, elapsed) * (1.0 - smoothstep(span - 0.9, span, elapsed))
@@ -495,7 +495,7 @@ func paint_boss(vs: Vector2) -> void:
 		drawn = boss_still("gesture", first, vs, elapsed * 0.003)
 		drawn = boss_still("still", second, vs, 0.0) or drawn
 	if not drawn:
-		# No painting yet: a slow glow of bronze and the text carry the moment.
+		# Ainda sem pintura: um brilho lento de bronze e o texto sustentam o momento.
 		glow(Vector2(vs.x * 0.5, vs.y * 0.42), 360.0 + (0.0 if game.reduced_pulses else 20.0 * sin(elapsed * 1.4)), Color(0.85, 0.5, 0.2), 0.32 * open)
 	edge_vignette(vs, 0.6 * open, Color(0, 0, 0))
 	panel.draw_rect(Rect2(0, vs.y - 160, vs.x, 160), Color(0, 0, 0, 0.72 * open))
@@ -522,22 +522,22 @@ func draw_still(key: String, alpha: float, vs: Vector2, push: float, jitter: flo
 func paint_memory(vs: Vector2) -> void:
 	var t := elapsed - GRIEF_DURATION
 	var knows: bool = game.knows_alba()
-	# Backdrop: the gates of the visited panorama, pushed in slowly. It darkens as the memory narrows.
+	# Fundo: os portões do panorama visitado, em aproximação lenta. Escurece conforme a memória se estreita.
 	var shade := 0.62
 	if t > 8.6: shade = lerpf(0.62, 0.34, clampf((t - 8.6) / 2.0, 0, 1))
 	if t > 16.4: shade = lerpf(0.34, 0.0, clampf((t - 16.4) / 1.2, 0, 1))
 	var size := vs * (1.0 + t * 0.012)
 	panel.draw_texture_rect(game.art.gate_memory, Rect2(-(size - vs) * Vector2(0.62, 0.45), size), false, Color(shade, shade, shade * 1.04))
-	# Opening shot: the hands on the mechanism, before anything is said.
+	# Plano de abertura: as mãos no mecanismo, antes de qualquer fala.
 	draw_still("hands", beat(0.0, 4.6, 0.9), vs, t * 0.003)
-	# Voices: overheard, never located.
+	# Vozes: ouvidas por acaso, nunca localizadas.
 	var voices := beat(0.0, 4.6)
 	if voices > 0.0:
 		var spots := [Vector2(0.18, 0.36), Vector2(0.80, 0.48), Vector2(0.46, 0.27)]
 		for i in range(spots.size()):
 			var a := voices * (0.55 if game.reduced_pulses else 0.35 + 0.35 * sin(t * 1.7 + i * 2.1))
 			text_at(Vector2(vs.x * spots[i].x - 150, vs.y * spots[i].y), "Abra." if i != 1 else "Ainda estamos aqui.", 26 + i * 2, Color(0.88, 0.82, 0.72, a), 300)
-	# Iron bars and the small hand.
+	# Barras de ferro e a pequena mão.
 	var bars := beat(3.8, 9.8)
 	var hand_key := "small_hand" if game.doll_found and memory_art.has("small_hand") else "small_hand_plain"
 	if bars > 0.0 and draw_still(hand_key, bars, vs, (elapsed - GRIEF_DURATION - 3.8) * 0.004):
@@ -550,13 +550,13 @@ func paint_memory(vs: Vector2) -> void:
 		panel.draw_rect(Rect2(0, vs.y * 0.14, vs.x, 18), Color(0.03, 0.025, 0.03, bars * 0.92))
 		panel.draw_rect(Rect2(0, vs.y * 0.82, vs.x, 18), Color(0.03, 0.025, 0.03, bars * 0.92))
 		small_hand(Vector2(vs.x * (0.05 + 7 * 0.09) - 2 + (0.0 if game.reduced_pulses else sin(t * 9.0) * 0.8), vs.y * 0.5), bars, game.doll_found)
-	# Someone behind, out of focus.
+	# Alguém atrás, fora de foco.
 	var behind := beat(9.4, 13.6)
 	if behind > 0.0 and draw_still("figure", behind, vs, (elapsed - GRIEF_DURATION - 9.4) * 0.003):
 		pass
 	elif behind > 0.0:
 		blurred_figure(Vector2(vs.x * 0.24 + sin(t * 0.6) * 10, vs.y * 0.86), behind)
-	# The wheel turns. Nothing here asks the player to press anything: it only watches.
+	# A roda gira. Nada aqui pede uma ação ao jogador: ele apenas observa.
 	var wheel := beat(12.8, 17.6)
 	if wheel > 0.0 and draw_still("hands", wheel, vs, 0.02 + (elapsed - GRIEF_DURATION - 12.8) * 0.006, 1.6 * wheel):
 		pass
@@ -564,9 +564,9 @@ func paint_memory(vs: Vector2) -> void:
 		var turn := smoothstep(0.0, 1.0, clampf((t - 13.4) / 3.8, 0, 1)) * PI * 0.9
 		glow(Vector2(vs.x * 0.5, vs.y * 0.54), 330.0, Color(0.95, 0.62, 0.28), wheel * 0.7)
 		gate_wheel(Vector2(vs.x * 0.5, vs.y * 0.54), turn, wheel)
-	# The closed gate holds the last seconds; the knocks arrive over it.
+	# O portão fechado permanece nos últimos segundos; as batidas soam sobre essa imagem.
 	draw_still("gate", beat(17.0, 20.6, 0.9), vs, 0.0)
-	# Captions.
+	# Legendas.
 	panel.draw_rect(Rect2(0, 515, vs.x, 145), Color(0, 0, 0, 0.8 * minf(1.0, shade * 4.0 + 0.2)))
 	var cap := 0.0
 	var line := ""

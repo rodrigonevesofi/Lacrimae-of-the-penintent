@@ -1,6 +1,6 @@
 extends SceneTree
-## The reduced-pulses option as a person meets it: the key, the default, persistence across sessions,
-## and the written state. Uses disposable user data, so it never touches a real player's settings.
+## A opção de pulsos reduzidos como aparece para a pessoa: tecla, padrão, persistência entre sessões
+## e estado escrito. Usa dados de usuário descartáveis, sem tocar nas configurações de um jogador real.
 var game
 var checks := 0
 var failures := 0

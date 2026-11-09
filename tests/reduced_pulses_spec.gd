@@ -68,7 +68,7 @@ func run():
 		expect(reduced.knocks==normal.knocks,"%s/%d: sound calls retained"%entry)
 		expect(reduced.captions==normal.captions,"%s/%d: sound captions retained"%entry)
 		expect(reduced.duration==normal.duration,"%s/%d: scene duration retained"%entry)
-	# Applying the setting while a knock's impulse is already active must clear it.
+	# Aplicar a configuração durante o impulso de uma batida deve interrompê-lo.
 	game.call("set_reduced_pulses",false)
 	var n=game.narrative;n.begin("echo",0);n.elapsed=2.21;n._process(0)
 	game.call("set_reduced_pulses",true);n._process(1.0/60)

@@ -1,6 +1,6 @@
 extends AnimatedSprite2D
-## Animation frames are distinct drawings cut from a regular source grid.
-## Gameplay and visual contact use the same normalized six-frame timeline.
+## Os quadros de animação são desenhos distintos recortados de uma grade regular de origem.
+## A jogabilidade e o contato visual usam a mesma linha do tempo normalizada de seis quadros.
 static var manifest_cache: Dictionary = {}
 static var frames_cache: Dictionary = {}
 var definitions: Dictionary = {}
@@ -61,7 +61,7 @@ func select(clip: String, direction: int, progress: float = -1.0) -> void:
 		pause()
 		frame = clampi(int(progress * sprite_frames.get_frame_count(clip)), 0, sprite_frames.get_frame_count(clip) - 1)
 	flip_h = direction < 0
-	# All art uses a common foot anchor. Grid cells remain untrimmed.
+	# Toda a arte usa uma âncora comum nos pés. As células da grade não são aparadas.
 	var cell := sprite_frames.get_frame_texture(clip, frame).get_size()
 	var anchor: Array = data.get("anchor", [128, 250])
 	position = Vector2((cell.x / 2 - float(anchor[0])) * direction, cell.y / 2 - float(anchor[1])) * unit_scale

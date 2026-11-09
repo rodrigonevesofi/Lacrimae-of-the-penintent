@@ -39,7 +39,7 @@ func go(x: float,y: float,limit: int = 260) -> bool:
 	var last_x: float = p.position.x
 	for i in range(limit):
 		if game.narrative.mode == "boss_intro":
-			# Crossing into the arena starts the Guardian's arrival scene; the walker waits it out like a player would.
+			# Entrar na arena inicia a cena de chegada do Guardião; aguarda o fim como um jogador faria.
 			saw_boss_intro = true
 			game.narrative.finish()
 		var dx: float = x-p.position.x
@@ -62,7 +62,7 @@ func go(x: float,y: float,limit: int = 260) -> bool:
 		else: stuck = 0
 		last_x = p.position.x
 		if stuck > 6 and p.is_on_floor() and not jumping:
-			# Masonry mounds shape the floor: hop over them like a player would.
+			# Montes de alvenaria moldam o piso: salta sobre eles como um jogador faria.
 			Input.action_press("jump")
 			jumping = true
 			age = 0
@@ -109,7 +109,7 @@ func run() -> void:
 	root.add_child(game)
 	expect(game.art!=null and game.exploration!=null,"world and exploration initialize")
 	game._start_game(false,false)
-	# The route tests walk through rooms with quiet enemies; locked arenas have their own tests in combat_smoke.
+	# Os testes de rota percorrem salas com inimigos inativos; arenas bloqueadas têm testes próprios em combat_smoke.
 	game.exploration.arenas_enabled = false
 	for i in range(3): await close_message()
 	quiet_enemies()
@@ -118,7 +118,7 @@ func run() -> void:
 	expect(game.exploration.passages.size()==15,"fifteen passages include secrets and four unlockable shortcuts")
 	expect(game.altars.size()==9,"nine themed checkpoints across the act")
 	expect(game.exploration.gate!=null,"boss access physically sealed before exploration")
-	# Start at the actual tomb; all following route movement uses controls or doorway interactions.
+	# Começa no túmulo real; todo movimento seguinte usa controles ou interações com portas.
 	expect(await go(1160,600),"walk from tomb to burial passage")
 	await interact()
 	expect(game.exploration.room=="ossuary","enter ossuary through door")
@@ -126,7 +126,7 @@ func run() -> void:
 	expect(await go(6450,200),"reach optional upper passage")
 	await interact()
 	expect(game.exploration.room=="refuge","upper branch leads to refuge")
-	# Refuge stair indices: final five ledges in the layout.
+	# Índices da escada do refúgio: as cinco últimas saliências do leiaute.
 	var refuge_steps: Array = []
 	for i in range(4): refuge_steps.append(ledge_index(19300+i*140,520-i*80))
 	refuge_steps.append(ledge_index(19720,280))
@@ -143,7 +143,7 @@ func run() -> void:
 	expect(await go(20830,600),"reach refuge exit")
 	await interact()
 	expect(game.exploration.room=="cistern","refuge rejoins cistern through alternate entrance")
-	# Cistern starts after ten ossuary ledges, followed by seven ascending ledges.
+	# A cisterna começa após dez saliências do ossuário, seguidas por sete saliências ascendentes.
 	expect(await climb([12,13,14,15,16,17]),"climb cistern mechanism with normal jumps")
 	expect(await go(9650,40),"reach upper water-chain mechanism")
 	await interact()
@@ -154,7 +154,7 @@ func run() -> void:
 	expect(await go(3080,600),"find cloister entrance in courtyard")
 	await interact()
 	expect(game.exploration.room=="cloister","enter cloister branch")
-	# Ossuary10 + cistern13 =23; cloister ascent23..29 and gallery30.
+	# Ossuário10 + cisterna13 =23; subida do claustro23..29 e galeria30.
 	expect(await climb([23,24,25,26,27,28,29,30]),"climb cloister upper route")
 	expect(await go(12800,40),"reach hidden archive entrance")
 	await interact()
@@ -174,7 +174,7 @@ func run() -> void:
 	expect(await go(14580,1100),"descend tower to the relic alcove")
 	expect(game.player.has_double_jump and game.relic_taken,"relic acquired in tower through exploration")
 	if game.message_text!="": await close_message()
-	# Cloister ends35; tower lower flight36..42, landing43, upper44..50, high51, double-jump52.
+	# Claustro termina35; torre: lance inferior36..42, patamar43, superior44..50, alto51, salto duplo52.
 	expect(await climb([36,37,38,39,40,41,42,43]),"ascend lower tower switchback")
 	expect(await climb([44,45,46,47,48,49,50,51]),"ascend upper tower switchback")
 	expect(await go(14730,-100),"approach final elevated gap")

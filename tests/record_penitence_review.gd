@@ -70,7 +70,7 @@ func run() -> void:
 	game.player.invuln = 0
 	game.player.die()
 	await frames(185)
-	# Keep a single fragment demonstration and show the nearby empowered enemy.
+	# Mantém uma única demonstração de fragmento e mostra o inimigo fortalecido próximo.
 	place(Vector2(2930,600))
 	await frames(80)
 	Input.action_press("right")

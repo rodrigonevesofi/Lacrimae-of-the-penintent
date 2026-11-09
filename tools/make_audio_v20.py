@@ -83,7 +83,7 @@ def ambient(room,seed):
     common=noise(rng,n,lo,hi)
     stereo=np.column_stack([.7*common+.45*noise(rng,n,lo,hi) for _ in range(2)])
     stereo*= (.65+.18*np.sin(2*np.pi*3*t/30)+.12*np.cos(2*np.pi*7*t/30))[:,None]
-    # Filtered noise and modulation are periodic; events and echoes wrap at the loop boundary.
+    # Ruído filtrado e modulação são periódicos; eventos e ecos dão a volta no limite do ciclo.
     kinds={'city':'step_pedra','ossuary':'step_osso','cistern':'step_agua','cloister':'dor',
            'belfry':'aparo','archive':'step_madeira','refuge':'step_osso','nave':'porta',
            'terrace':'coleta','court':'portao_abre'}

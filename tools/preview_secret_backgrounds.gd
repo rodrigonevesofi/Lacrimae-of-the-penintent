@@ -7,13 +7,13 @@ var hero: AtlasTexture
 func _initialize():call_deferred("run")
 func paint():
 	canvas.draw_rect(Rect2(0,0,1280,720),Color("17191e"))
-	# The panorama keeps its native3:1 aspect; the 1280x720 viewport letterboxes it.
+	# O panorama mantém a proporção nativa de 3:1; a área de exibição de 1280x720 acrescenta faixas.
 	var height=1280.0*724/2172
 	var top=(720-height)/2
 	canvas.draw_texture_rect(images[current],Rect2(0,top,1280,height),false)
 	var floor_y=top+height*.86
 	canvas.draw_line(Vector2(0,floor_y),Vector2(1280,floor_y),Color(0,1,.65,.8),1)
-	# Hero silhouette is90px high on screen, soles precisely on the guide.
+	# A silhueta do herói tem 90 px de altura na tela, com as solas exatamente sobre a guia.
 	canvas.draw_texture_rect(hero,Rect2(610,floor_y-90,256.0*90/250,256.0*90/250),false)
 	canvas.draw_string(ThemeDB.fallback_font,Vector2(20,60),ids[current]+" · guia86% · Penitente90px",HORIZONTAL_ALIGNMENT_LEFT,-1,20,Color.WHITE)
 func run():

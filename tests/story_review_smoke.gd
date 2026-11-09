@@ -1,6 +1,6 @@
 extends SceneTree
-## Independent review: reverse discovery order and interrupted conversation saves.
-## Run with a dedicated XDG_DATA_HOME; this test creates/deletes its own save.
+## Revisão independente: ordem de descoberta invertida e salvamentos de conversas interrompidas.
+## Executar com XDG_DATA_HOME dedicado; este teste cria e exclui seu próprio salvamento.
 var game
 var checks := 0
 var failures := 0
