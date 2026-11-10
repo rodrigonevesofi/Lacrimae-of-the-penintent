@@ -7,8 +7,8 @@ const Spike = preload("res://scripts/spike.gd")
 
 signal killed(enemy)
 
-## Bestiary. Kinds 0-2 are the original devotee, weeper and boss; 3-7 are the Goya-inspired additions.
-## `family` decides body and movement; `actor` names the animation entry in clips.json (art slot).
+## Bestiário. Os tipos 0–2 são o devoto, o chorão e o chefe originais; 3–7 são as adições inspiradas em Goya.
+## `family` define corpo e movimento; `actor` identifica a entrada de animação em clips.json (posição da arte).
 const TYPES := {
 	0: {"name":"Devoto Corrompido","family":"walker","actor":"devotee","scale":0.36,"tint":Color.WHITE,"hp":90.0,"reward":30,"body":Vector2(34,56),"col":0},
 	1: {"name":"Chorão","family":"flyer","actor":"mourner","scale":0.36,"tint":Color.WHITE,"hp":70.0,"reward":40,"body":Vector2(36,48),"col":1},
@@ -76,10 +76,10 @@ var announced := false
 var phase_two_heard := false
 var attacks_done := 0
 var prev_state := ""
-## Poise: light blows only make a creature flinch once enough of them have landed; until then it keeps attacking.
+## Equilíbrio: golpes leves só fazem a criatura recuar após acumular acertos suficientes; até lá ela continua atacando.
 const POISE := {0: 45.0, 1: 35.0, 4: 60.0, 5: 30.0, 6: 40.0, 7: 45.0, 8: 9999.0}
 var poise := 40.0
-## The coffin carrier: the stone on his back guards his front until it breaks.
+## Carregador de caixão: a pedra nas costas protege sua frente até quebrar.
 var coffin := 60.0
 var exposed := false
 var contact_cd := 0.0
@@ -172,12 +172,12 @@ func coven_others() -> Array:
 	return others
 
 
-## Left open by a parry: staggered long enough to be struck for more damage or executed.
+## Exposto após um aparo: fica atordoado por tempo suficiente para receber dano adicional ou ser executado.
 func parried() -> void:
 	if dead:
 		return
 	if kind == 2:
-		# Only the low sweep can be turned aside; it leaves the Guardian on its knees.
+		# Só a varredura baixa pode ser aparada; ela deixa o Guardião de joelhos.
 		if state in ["sweep_wind", "sweep"]:
 			state = "exhausted"
 			state_t = 1.8
@@ -195,7 +195,7 @@ func take_hit(dmg: float, from_x: float) -> void:
 	if state == "stagger":
 		dmg *= 1.6
 	if kind == 8 and not exposed and state != "recover" and (from_x - global_position.x) * float(facing) > 0.0:
-		# The blow lands on the stone: little reaches him, the coffin takes the rest.
+		# O golpe atinge a pedra: pouco dano chega a ele; o caixão absorve o restante.
 		coffin -= dmg
 		dmg *= 0.15
 		_sfx("hit_metal")
@@ -205,7 +205,7 @@ func take_hit(dmg: float, from_x: float) -> void:
 		_sfx("dor")
 	var was_open := state in ["recover", "cast"]
 	if kind == 5:
-		# The coven's shared vow: every sister still standing absorbs part of the blow.
+		# Voto compartilhado do aquelarre: cada irmã ainda de pé absorve parte do golpe.
 		var sisters := coven_others().size()
 		if sisters > 0:
 			dmg *= pow(0.7, sisters)
@@ -218,7 +218,7 @@ func take_hit(dmg: float, from_x: float) -> void:
 		kb = 1.0
 	if kind == 7 and state == "duel":
 		_aggro_duel()
-	# The Devourer and a charging flagellant shrug off blows mid-attack; their opening comes from recovery.
+	# O Devorador e o flagelante em investida resistem aos golpes durante o ataque; a abertura ocorre na recuperação.
 	var armored: bool = (kind == 3 and state in ["windup", "strike"]) or (kind == 4 and state in ["windup", "charge"])
 	if family == "walker":
 		if not armored:
@@ -250,7 +250,7 @@ func take_hit(dmg: float, from_x: float) -> void:
 		velocity = Vector2.ZERO
 
 
-## Each creature announces its attacks with a sound of its own, only when it is near the penitent, in the room they share.
+## Cada criatura anuncia os ataques com um som próprio, apenas quando está perto do penitente, na mesma sala.
 func _state_sounds() -> void:
 	if state == prev_state:
 		return
@@ -437,7 +437,7 @@ func _find_partner() -> void:
 		if e != self and is_instance_valid(e) and e.kind == 7 and not e.dead and e.group == group and e.room_id == room_id and e.partner == null:
 			partner = e
 			e.partner = self
-			# Their blows alternate: one strikes while the other recovers.
+			# Os golpes se alternam: um ataca enquanto o outro se recupera.
 			if e.get_instance_id() < get_instance_id(): duel_t = 1.0
 			return
 
@@ -460,7 +460,7 @@ func _duel(delta: float) -> void:
 	duel_t += delta
 	if duel_t >= 2.0:
 		duel_t = 0.0
-		# Blows hurt, but never finish the rival: the player must be the one to end it.
+		# Os golpes ferem, mas nunca matam o rival: cabe ao jogador encerrar o combate.
 		partner.hp = maxf(partner.hp - 5.0, partner.max_hp * 0.4)
 		partner.flash = 0.12
 		_sfx("duelista_cacete")
@@ -545,7 +545,7 @@ func _break_coffin() -> void:
 	if director != null:
 		director.spawn_effect("dust", global_position + Vector2(0.0, -20.0), facing, 0.9)
 		director.shake_cam(5.0)
-		# The broken stone stays where it fell.
+		# A pedra quebrada permanece onde caiu.
 		if ResourceLoader.exists("res://assets/detritos_caixao.png"):
 			var rubble := Sprite2D.new()
 			rubble.texture = load("res://assets/detritos_caixao.png")
@@ -573,7 +573,7 @@ func _carrier(delta: float) -> void:
 		"chase":
 			facing = 1 if to_p > 0.0 else -1
 			if exposed:
-				# Without the stone he is quick, and strikes with his bound fists (that blow can be parried).
+				# Sem a pedra, ele fica rápido e ataca com os punhos amarrados (esse golpe pode ser aparado).
 				velocity.x = facing * 170.0 if dist > 70.0 and _ledge_ok() else 0.0
 				if dist < 80.0 and dy < 70.0 and cd <= 0.0 and alive:
 					state = "strike_wind"
@@ -599,7 +599,7 @@ func _carrier(delta: float) -> void:
 				player.take_hit(18.0, global_position.x, self, false)
 				charge_hit = true
 			if is_on_wall() or not _ledge_ok():
-				# The stone strikes the wall: it cracks, and he is left reeling.
+				# A pedra atinge a parede: ela racha e ele fica atordoado.
 				coffin -= 40.0
 				velocity.x = 0.0
 				state = "recover"
@@ -665,7 +665,7 @@ func _charger(delta: float) -> void:
 				state = "chase"
 		"chase":
 			facing = 1 if to_p > 0.0 else -1
-			# He keeps his distance to gather speed, and charges from there.
+			# Ele mantém distância para ganhar velocidade e iniciar a investida.
 			if dist > 240.0 and _ledge_ok():
 				velocity.x = facing * 100.0
 			else:
@@ -680,7 +680,7 @@ func _charger(delta: float) -> void:
 		"windup":
 			velocity.x = 0.0
 			if state_t <= 0.0:
-				# Up close he lashes out instead; from afar he charges.
+				# De perto ele golpeia; de longe, investe.
 				if dist < 130.0:
 					state = "strike"
 					state_t = 0.18
@@ -708,7 +708,7 @@ func _charger(delta: float) -> void:
 					player.take_hit(18.0, global_position.x)
 					charge_hit = true
 			if is_on_wall() or not _ledge_ok():
-				# A missed charge ends against stone: the penitent drops, and the opening is the player's.
+				# Uma investida errada termina contra a pedra: o penitente cai e o jogador ganha uma abertura.
 				state = "stagger"
 				stagger_used = true
 				state_t = 1.8
@@ -854,7 +854,7 @@ func _boss(delta: float) -> void:
 		return
 	phase = 3 if hp < max_hp * 0.25 else (2 if hp < max_hp * 0.5 else 1)
 	if phase >= 2 and not phase_two_heard:
-		# Past half its strength the bell is not alone: three knocks answer from beyond the gates.
+		# Abaixo da metade da força, o sino já não está sozinho: três batidas respondem além dos portões.
 		phase_two_heard = true
 		var director = get_tree().get_first_node_in_group("game")
 		if director != null: director.soundscape.play_knocks(0.8)
@@ -950,7 +950,7 @@ func _boss(delta: float) -> void:
 				state = "idle"
 				state_t = 1.0 / spd
 		"exhausted":
-			# On its knees: no attack, a moment to strike.
+			# De joelhos: nenhum ataque, um momento para golpear.
 			velocity.x = 0.0
 			if state_t <= 0.0:
 				state = "idle"
@@ -960,7 +960,7 @@ func _boss(delta: float) -> void:
 
 
 func _pick_attack() -> void:
-	# Six moves: the old slam, rain and spikes, and three read from afar: a low sweep (parry it), a leap onto you, a scream.
+	# Seis movimentos: os antigos impacto, chuva e espinhos, mais três anunciados à distância: varredura baixa (aparável), salto sobre o jogador e grito.
 	attacks_done += 1
 	if phase >= 2 and attacks_done % 4 == 0:
 		state = "exhausted"
@@ -1004,7 +1004,7 @@ func _sweep() -> void:
 		player.take_hit(18.0, global_position.x, self, true)
 
 
-## Where the Guardian lands, the stone floor cracks; the crack fades after a while.
+## Onde o Guardião pousa, o piso de pedra racha; a rachadura desaparece após algum tempo.
 func _crack_floor() -> void:
 	var director = get_tree().get_first_node_in_group("game")
 	if director == null or not ResourceLoader.exists("res://assets/rachadura_chao.png"):
@@ -1025,7 +1025,7 @@ func _crack_floor() -> void:
 func _scream() -> void:
 	_sfx("chefe_morte")
 	get_tree().call_group("game", "shake_cam", 5.0)
-	# The sound leaves the mouth of the bell as rings. They are tinted pale red: gold rings mean "parry now", and this cannot be parried.
+	# O som sai da boca do sino em anéis vermelho-claros: anéis dourados significam "apare agora", mas este ataque não pode ser aparado.
 	var director = get_tree().get_first_node_in_group("game")
 	if director != null:
 		var mouth: Vector2 = global_position + Vector2(float(facing) * 30.0, -260.0)
@@ -1087,7 +1087,7 @@ func _spikes() -> void:
 		s.global_position = Vector2(x, 600.0)
 
 
-# ---------- visual (placeholders desenhados por código) ----------
+# ---------- visual (representações provisórias desenhadas por código) ----------
 func _col(base: Color) -> Color:
 	var c := base
 	if flash > 0.0:
@@ -1139,7 +1139,7 @@ func _process(delta: float) -> void:
 		var wind: float = WINDUPS[kind]
 		match state:
 			"duel":
-				# Rivals trade blows to the beat of their cycle: rest, wind up, strike.
+				# Os rivais trocam golpes no ritmo do ciclo: descanso, preparação, ataque.
 				if duel_t < 1.3: animator.select("idle", facing)
 				elif duel_t < 1.85: animator.select("attack", facing, (duel_t - 1.3) / 0.55 * 4.0 / 6)
 				else: animator.select("attack", facing, (4 + clampf((duel_t - 1.85) / 0.15, 0, 1) * 2) / 6)
@@ -1187,7 +1187,7 @@ func _draw() -> void:
 		draw_arc(Vector2(0, -110), 80, 0, TAU, 40, Color(0.8, 0.3, 0.08, 0.35), 2)
 	if dead or executing:
 		return
-	# Telegraphs: every new attack announces itself in a colour of its own before it lands.
+	# Sinais de antecipação: cada novo ataque se anuncia com uma cor própria antes de atingir.
 	if kind == 2 and state == "sweep_wind" and state_t < 0.22:
 		draw_arc(Vector2(facing * 150.0, -60.0), 46.0, 0, TAU, 32, Color(1.0, 0.84, 0.32, 0.95), 4.0)
 	if state == "windup" and kind in [0, 7, 4, 8] and state_t < 0.2 and (kind != 4 or absf(player.global_position.x - global_position.x) < 140.0):

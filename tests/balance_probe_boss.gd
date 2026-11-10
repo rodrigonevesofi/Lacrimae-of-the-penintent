@@ -39,7 +39,7 @@ func trial(number: int):
 		var retreat: bool=p.hp<40 and p.flasks>0
 		var move=0
 		if absf(dx)>75 or retreat:move=(1 if dx>0 else -1)*(-1 if retreat else 1)
-		# Arena walls are real collision limits; turn inward instead of running out of bounds.
+		# As paredes da arena são limites reais de colisão; vira para dentro em vez de sair dos limites.
 		if p.position.x<3835 and move<0:move=1
 		if p.position.x>4745 and move>0:move=-1
 		if move!=0:Input.action_press("right" if move>0 else "left")
@@ -48,7 +48,7 @@ func trial(number: int):
 		elif retreat and elapsed>=next_heal and p.state=="idle":
 			Input.action_press("heal");next_heal=elapsed+1.1
 		elif p.state=="idle" and absf(dx)<110 and elapsed>=next_attack:
-			# Face the boss even if the last movement was a retreat.
+			# Olha para o chefe mesmo que o último movimento tenha sido uma retirada.
 			p.facing=1 if dx>0 else -1
 			Input.action_press("attack");next_attack=elapsed+rng.randf_range(.5,.85)
 		await frames(1);release();elapsed+=1.0/60

@@ -15,8 +15,8 @@ for i in range(24):
     cell=im.crop((i%6*256,i//6*256,i%6*256+256,i//6*256+256));assert cell.getchannel('A').point(lambda x:255 if x>=64 else 0).getbbox()
     hashes.append(hashlib.sha256(cell.tobytes()).hexdigest())
 assert len(set(hashes))==24
-# Reuse the repository checker in an isolated fixture, since the new atlas must not
-# be inserted in the protected production clips.json before Claude integrates it.
+# Reutiliza o verificador do repositório em um cenário de teste isolado, pois o novo atlas não deve
+# ser inserido no clips.json de produção protegido antes da integração por Claude.
 with tempfile.TemporaryDirectory(prefix='memorial-check-',dir='/tmp') as tmp:
     tmp=Path(tmp);(tmp/'tools').mkdir();(tmp/'assets/animation').mkdir(parents=True)
     shutil.copyfile(ROOT/'tools/check_animation_atlases.py',tmp/'tools/check_animation_atlases.py')

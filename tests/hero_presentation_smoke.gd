@@ -87,7 +87,7 @@ func run() -> void:
 	await frames(55)
 	expect(p.state=="idle" and p.is_on_floor() and not p.aerial_after_cut,"landing recovery returns to grounded control")
 	expect(p.sword.visible,"weapon returns to grip after aerial recovery")
-	# Mirror the dedicated aerial hit area against a left-side target.
+	# Espelha a área dedicada de golpe aéreo contra um alvo à esquerda.
 	var left_target=game.EnemyScript.new()
 	left_target.setup(1,p.position+Vector2(-55,-65),0,p)
 	game.add_child(left_target)

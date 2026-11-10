@@ -9,7 +9,7 @@ def frame(name,index,cols,cell,size):
  x=index%cols*cell;y=index//cols*cell
  return im.crop((x,y,x+cell,y+cell)).resize((size,size),Image.Resampling.LANCZOS)
 def paste(canvas,im,xy):canvas.paste(im,xy,im)
-# Contact sheet for six close-ups and lore sample.
+# Folha de contato com seis detalhes ampliados e amostra do contexto narrativo.
 contact=Image.new('RGB',(1536,1104),(20,20,24));d=ImageDraw.Draw(contact)
 for i,name in enumerate(['Penitente','Iria','Edran','Guardião','Sepultador','Inquisidora']):
  im=Image.open(R/f'assets/close/close_{i+1:02}.png');contact.paste(im.convert('RGB'),(i%3*512,i//3*552));d.text((i%3*512+16,i//3*552+518),f'{i+1:02} · {name}',font=font(22),fill='#c5b38d')

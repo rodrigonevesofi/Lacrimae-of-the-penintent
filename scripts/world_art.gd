@@ -1,5 +1,5 @@
 extends Node2D
-## Original procedural scenery; geometry matches main.gd's collision layout.
+## Cenário procedural original; a geometria corresponde ao leiaute de colisão de main.gd.
 
 var game
 var redraw_clock := 0.0
@@ -35,7 +35,7 @@ func _ready() -> void:
 	doorway_art = load("res://assets/doorways.png")
 	build_memorial()
 	for room in ["ossuary","cistern","cloister","tower"]: room_textures[room] = load("res://assets/"+room+".png")
-	# Further backdrops (basilica, gallery, gates, city, court) load the first time a room needs them.
+	# Fundos adicionais (basílica, galeria, portões, cidade, pátio) são carregados quando uma sala precisa deles pela primeira vez.
 	panorama = load("res://assets/vespera_panorama.png")
 	if ResourceLoader.exists("res://assets/abismo_ponte.png"): abyss_art = load("res://assets/abismo_ponte.png")
 	if ResourceLoader.exists("res://assets/arena_portao.png"): gate_closed = load("res://assets/arena_portao.png")
@@ -82,13 +82,13 @@ func _draw() -> void:
 	if game.exploration != null and game.exploration.room != "city":
 		draw_branch()
 		return
-	# The entire 4800-unit level shares one fixed panorama in world space.
-	# No camera-following image, texture wrap, room swap or time-based dissolve.
+	# Toda a fase de 4800 unidades compartilha um panorama fixo no espaço do mundo.
+	# Sem imagem seguindo a câmera, repetição de textura, troca por sala ou dissolução temporal.
 	draw_texture_rect(panorama, PANORAMA_RECT, false)
 	if game.exploration != null: draw_passages("city")
-	# The broken bridge is a real hole in the foreground walking plane.
+	# A ponte quebrada é um buraco real no plano de caminhada em primeiro plano.
 	if abyss_art != null:
-		# A painted chasm: broken stone on both lips, mist rising, a faint light far below.
+		# Abismo pintado: pedra quebrada nas duas bordas, névoa subindo e luz tênue ao fundo.
 		draw_rect(Rect2(2000, 600, 270, 330), Color("0b0e12"))
 		draw_texture_rect(abyss_art, Rect2(2000, 596, 270, 400), false)
 	else:
@@ -96,17 +96,17 @@ func _draw() -> void:
 		for edge in [2000, 2270]:
 			var side := -1 if edge == 2000 else 1
 			polygon([Vector2(edge, 600), Vector2(edge + side * 35, 600), Vector2(edge + side * 22, 666), Vector2(edge + side * 12, 631)], Color("595149"))
-	# Foreground must match collision platforms exactly.
+	# O primeiro plano deve corresponder exatamente às plataformas de colisão.
 	_draw_ground(0, 2000)
 	_draw_ground(2270, 4800)
 	for p in game.platforms:
-		# Carved supports physically connect the ledges to the building behind.
+		# Suportes esculpidos conectam fisicamente as saliências ao edifício atrás.
 		for end_x in [p.position.x + 12, p.end.x - 12]:
 			draw_texture_rect_region(panorama, Rect2(end_x - 10, p.end.y, 20, 600 - p.end.y), Rect2(550, 250, 26, 365))
 		draw_texture_rect_region(panorama, p, Rect2(1120, 615, 140, 22))
 		draw_line(p.position, Vector2(p.end.x, p.position.y), Color("b5a084"), 2)
-	# Iria remains separate from combatants; the cane identifies her silhouette.
-	# Suspended empty cages: background silhouettes, never hidden collision.
+	# Iria permanece separada dos combatentes; a bengala identifica sua silhueta.
+	# Gaiolas vazias suspensas: silhuetas de fundo, nunca colisões ocultas.
 	for x in range(1430, 3200, 360):
 		var sway := sin(game.t * 0.65 + x) * 5
 		var pos := Vector2(x + sway, 190)
@@ -119,7 +119,7 @@ func _draw() -> void:
 	draw_circle(Vector2.ZERO,95,Color(0,0,0,0.25))
 	draw_set_transform(Vector2.ZERO)
 	prop(1,Vector2(150,600),260)
-	# Crown left beside the tomb.
+	# Coroa deixada ao lado do túmulo.
 	draw_arc(Vector2(245, 593), 12, PI, TAU, 10, GOLD, 2)
 	for i in range(5):
 		draw_line(Vector2(234 + i * 5, 590), Vector2(232 + i * 5, 584), GOLD, 1)
@@ -142,7 +142,7 @@ func _draw() -> void:
 	if game.exploration != null and game.exploration.bells.size() < 2:
 		for x in [3781,3794]:
 			for y in range(-70,600,18): draw_arc(Vector2(x,y),7,0,TAU,12,Color("967853"),3)
-	# Ground rubble, small bones and roots. Deterministic across frames.
+	# Entulho, ossos pequenos e raízes no chão. Determinísticos entre quadros.
 	for i in range(120):
 		var x := rng.randf_range(10, 4790)
 		if x > 2000 and x < 2270:
@@ -153,7 +153,7 @@ func _draw() -> void:
 			var yy: float = anchor.y + i * 17
 			var sway := sin(game.t * 1.2 + i * 0.4) * i * 0.75
 			draw_line(Vector2(anchor.x + sway, yy), Vector2(anchor.x + sway + 13 - i, yy + 18), Color("542d32"), 7)
-	# Slow dust and mist give motion without obscuring the collision plane.
+	# Poeira e névoa lentas criam movimento sem ocultar o plano de colisão.
 	for i in range(50):
 		var x := fmod(i * 107.5 + game.t * (2 + i % 3), 4800)
 		var y := 90 + fmod(i * 77.3 + game.t * 4, 480)
@@ -161,8 +161,8 @@ func _draw() -> void:
 
 
 func _draw_ground(x0: float, x1: float) -> void:
-	# The panorama already contains a continuous carved foundation at y=600.
-	# Keep only the walking edge; flat placeholder bricks no longer cover the art.
+	# O panorama já contém uma fundação esculpida contínua em y=600.
+	# Mantém apenas a borda de caminhada; tijolos planos provisórios já não cobrem a arte.
 	draw_line(Vector2(x0, GROUND_Y), Vector2(x1, GROUND_Y), Color("8b7d67"), 2)
 
 
@@ -189,8 +189,8 @@ func draw_doorway(face: Dictionary, locked: bool) -> void:
 	var width: float = face.width
 	var variant := 0 if face.theme == "burial" else (1 if face.theme == "water" else 2)
 	var source := Rect2(variant*512,512 if locked else 0,512,512)
-	# The module includes the wall wings, a deep vestibule and the threshold.
-	# Its own source-floor anchor is used instead of scaling a free-standing prop.
+	# O módulo inclui as laterais da parede, um vestíbulo profundo e a soleira.
+	# Usa a própria âncora do piso de origem em vez de redimensionar um objeto isolado.
 	var floor_anchor := 488.0
 	draw_set_transform(foot+Vector2(0,-1),0,Vector2(1,0.13))
 	draw_circle(Vector2.ZERO,width*0.43,Color(0,0,0,0.28))
@@ -205,8 +205,8 @@ func build_memorial() -> void:
 	var unit := 220.0/size.x
 	memorial_base.scale = Vector2.ONE*unit
 	memorial_base.position = Vector2(2800,600+(size.y/2-1008)*unit)
-	# The source has a soft translucent glow around its silhouette. This cutout
-	# material rejects the halo at render time while retaining antialiased stone.
+	# A imagem de origem tem brilho translúcido suave em torno da silhueta. Este material de recorte
+	# remove o halo durante a renderização e preserva a suavização das bordas da pedra.
 	var shader := Shader.new()
 	shader.code = "shader_type canvas_item; render_mode unshaded; void fragment(){ vec4 sample_color = texture(TEXTURE,UV); sample_color.a *= smoothstep(0.38,0.72,sample_color.a); COLOR = sample_color; }"
 	var cutout := ShaderMaterial.new()
@@ -224,7 +224,7 @@ func art_texture(art: String) -> Texture2D:
 	if not room_textures.has(art): room_textures[art] = load("res://assets/"+art+".png")
 	return room_textures[art]
 
-## Stone gallery floor: shadow, corbels under both ends and a worn top edge, replacing the old spiked slabs.
+## Piso de galeria de pedra: sombra, mísulas nas duas pontas e borda superior desgastada, substituindo as antigas lajes pontiagudas.
 func draw_ledge(ledge: Rect2) -> void:
 	for i in range(3):
 		draw_rect(Rect2(ledge.position.x+8,ledge.end.y+i*6,ledge.size.x-16,6),Color(0,0,0,0.17-i*0.05))
@@ -239,7 +239,7 @@ func draw_ledge(ledge: Rect2) -> void:
 		draw_line(Vector2(x+d*4,ledge.end.y+36),Vector2(x+d*34,ledge.end.y),Color("75695a"),2)
 		draw_line(Vector2(x,ledge.end.y),Vector2(x+d*4,ledge.end.y+36),Color("4d443c"),2)
 
-## Masonry mound or dais that shapes the walking plane; courses are staggered like real stonework.
+## Monte ou estrado de alvenaria que molda o plano de caminhada; fiadas alternadas como em uma construção real.
 func draw_block(r: Rect2) -> void:
 	var row := 0
 	var y := r.position.y
@@ -262,7 +262,7 @@ func draw_block(r: Rect2) -> void:
 	draw_rect(Rect2(r.position.x-6,r.position.y-6,r.size.x+12,6),Color(0,0,0,0.12))
 
 func draw_foundation(b: Rect2, floor_y: float) -> void:
-	# Open-air backdrops fade into mist at the bottom; the carved foundation of the city carries the walking plane.
+	# Fundos ao ar livre se dissolvem em névoa na base; a fundação esculpida da cidade sustenta o plano de caminhada.
 	var tile := 1768.0
 	var x := b.position.x
 	while x < b.end.x:
@@ -279,7 +279,7 @@ func draw_branch() -> void:
 	var floor_y: float = data.floor
 	var texture: Texture2D = art_texture(data.art)
 	var height: float = ex.art_height(ex.room)
-	# A tall room has a different composition, rather than stretching a landscape wall.
+	# Uma sala alta recebe outra composição, em vez de esticar uma parede horizontal.
 	var art_rect := Rect2(b.position.x,floor_y-height*ex.ground_line(ex.room),b.size.x,height)
 	draw_rect(b,Color("17181d"))
 	draw_texture_rect(texture,art_rect,false)
@@ -291,13 +291,13 @@ func draw_branch() -> void:
 	for wall in ex.arena_rects:
 		if wall.position.x < b.position.x or wall.end.x > b.end.x: continue
 		if gate_closed != null:
-			# The gate has dropped: iron bars and chains from the vault to the floor.
+			# O portão desceu: barras de ferro e correntes da abóbada ao chão.
 			draw_texture_rect(gate_closed, Rect2(wall.position.x - 24.0, wall.position.y - 20.0, wall.size.x + 48.0, wall.size.y + 20.0), false)
 		else:
 			draw_block(wall)
 		draw_rect(Rect2(wall.position.x - 8.0, wall.position.y, wall.size.x + 16.0, wall.size.y), Color(0.55, 0.05, 0.08, 0.10))
 	if gate_open != null:
-		# Before the fight, the raised gates hang under the vault: a sign that this stretch will close.
+		# Antes do combate, os portões erguidos ficam sob a abóbada, indicando que o trecho será fechado.
 		for a in preload("res://scripts/act_one_layout.gd").arenas():
 			if a.x0 < b.position.x or a.x1 > b.end.x or ex.arenas_done.has(a.id) or ex.arena_active == a.id: continue
 			for edge in [a.x0, a.x1]:
@@ -317,11 +317,11 @@ func draw_branch() -> void:
 			prop(4,entry.pos,150,Color(0.65,0.65,0.62) if ex.bells.has(entry.id) else Color.WHITE)
 	if not game.relic_taken and ex.room == "belfry":
 		prop(2,game.relic_pos,110)
-	# Low mist keeps the floor line soft and gives every room its own breath of colour.
+	# A névoa baixa suaviza a linha do chão e dá a cada sala sua própria atmosfera de cor.
 	var mist: Color = data.get("mist",Color(0.55,0.5,0.6))
 	var points := PackedVector2Array([Vector2(b.position.x,floor_y-150),Vector2(b.end.x,floor_y-150),Vector2(b.end.x,floor_y),Vector2(b.position.x,floor_y)])
 	draw_polygon(points,PackedColorArray([Color(mist,0),Color(mist,0),Color(mist,0.16),Color(mist,0.16)]))
-	# Local details stay anchored to the explored room, rather than scrolling with the camera.
+	# Os detalhes locais ficam ancorados na sala explorada, em vez de acompanhar a câmera.
 	for i in range(20):
 		var x: float = b.position.x + 70 + i*(b.size.x-140)/20
 		candle(Vector2(x,floor_y),12 + i%4*3,i)

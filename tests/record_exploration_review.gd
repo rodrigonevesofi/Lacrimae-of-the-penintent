@@ -1,5 +1,5 @@
 extends "res://tests/exploration_smoke.gd"
-## Curated visual review. Long room transitions are cut; stair traversal uses the player controls.
+## Revisão visual dirigida. Transições longas são cortadas; a travessia de escadas usa os controles do jogador.
 func shot(label: String) -> void:
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png("/tmp/v8-final-"+label+".png")
@@ -29,7 +29,7 @@ func run() -> void:
 	await interact()
 	await frames(40)
 	await shot("refuge")
-	# Cut to the water stair, then traverse it physically.
+	# Corta para a escada da água e então a percorre fisicamente.
 	game.exploration.travel("cistern",Vector2(8560,600))
 	await frames(30)
 	expect(await climb([10,11,12,13,14,15,16,17]),"climb cistern water gallery")

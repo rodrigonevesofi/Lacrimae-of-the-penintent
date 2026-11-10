@@ -1,5 +1,5 @@
 extends SceneTree
-## Rehearsal of an actual altar interaction and boss-kill sequence.
+## Ensaio de uma interação real com altar e da sequência de morte do chefe.
 var game
 func _initialize() -> void:
 	call_deferred("run")

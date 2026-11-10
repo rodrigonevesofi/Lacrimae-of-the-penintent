@@ -1,5 +1,5 @@
 extends "res://tests/exploration_smoke.gd"
-## Staged review with cuts between situations; not a full playthrough.
+## Revisão encenada com cortes entre situações; não é uma partida completa.
 func shot(label: String) -> void:
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png("/tmp/v09-"+label+".png")

@@ -18,7 +18,7 @@ def murmur(seed,duration):
         f0=base*(1+.014*np.sin(2*np.pi*rng.uniform(.4,1.5)*t+phase))
         ph=np.cumsum(f0)*2*np.pi/SR
         v=np.zeros(len(t))
-        # Adult register with broad vowel resonances, never phoneme sequences.
+        # Registro adulto com ressonâncias amplas de vogais, nunca sequências de fonemas.
         for h in range(1,24):
             freq=base*h
             formant=.35*np.exp(-((freq-450)/180)**2)+.22*np.exp(-((freq-1050)/280)**2)+.09*np.exp(-((freq-1900)/350)**2)

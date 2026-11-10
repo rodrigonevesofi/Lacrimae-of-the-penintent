@@ -1,6 +1,6 @@
 extends SceneTree
-## Story decisions of the author that Act I must respect: who ordered the gates closed is revealed only in Act II,
-## Edran and the Inquisitor belong to Act II, and the Penitent's face is never shown.
+## Decisões narrativas do autor que o Ato I deve respeitar: quem ordenou o fechamento dos portões só é revelado no Ato II,
+## Edran e o Inquisidor pertencem ao Ato II, e o rosto do Penitente nunca é mostrado.
 var checks := 0
 var failures := 0
 func expect(ok: bool,label: String) -> void:

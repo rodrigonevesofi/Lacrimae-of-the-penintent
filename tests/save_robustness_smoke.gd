@@ -1,5 +1,5 @@
 extends SceneTree
-# Read-only production code; every corrupt fixture runs in a separate disposable process.
+# Código de produção somente para leitura; cada caso corrompido executa em um processo descartável separado.
 const CASES=["valid","legacy","truncated","empty","extra_fields","number_text","number_list","negative_numbers","absurd_numbers","empty_lists","wrong_exploration","wrong_stain","array_root"]
 var game
 func _initialize():call_deferred("run")

@@ -1,5 +1,5 @@
 extends SceneTree
-# Standalone art review, never changes or loads the production main scene.
+# Revisão isolada da arte; nunca altera nem carrega a cena principal de produção.
 func _initialize():call_deferred("run")
 func run():
 	root.size=Vector2i(1280,720)

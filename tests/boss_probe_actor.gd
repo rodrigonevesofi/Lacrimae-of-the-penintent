@@ -1,5 +1,5 @@
 extends "res://scripts/enemy.gd"
-# Observation only: all original attack methods execute unchanged.
+# Apenas observação: todos os métodos originais de ataque executam sem alterações.
 var emitted={"1":{"slam":0,"wave":0,"rain":0,"spikes":0},"2":{"slam":0,"wave":0,"rain":0,"spikes":0},"3":{"slam":0,"wave":0,"rain":0,"spikes":0}}
 func hazard_ids() -> Array:
 	return get_tree().get_nodes_in_group("hazards").map(func(h):return h.get_instance_id())

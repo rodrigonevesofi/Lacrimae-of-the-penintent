@@ -1,5 +1,5 @@
 extends SceneTree
-# Visual atlas review, independent from enemy AI and the campaign manifest.
+# Revisão visual do atlas, independente da inteligência dos inimigos e do manifesto da campanha.
 var ids = ["devorador","flagelante","bruxa","asmodeia","duelista"]
 var sheets: Array = []
 var victims: Array = []

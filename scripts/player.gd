@@ -97,7 +97,7 @@ func _ready() -> void:
 	sword_surface.set_shader_parameter("edge_strength",0.16)
 	sword.material = sword_surface
 	add_child(sword)
-	# Within the player's canvas order the grip stays behind the gauntlet.
+	# Na ordem de desenho do jogador, o cabo fica atrás da manopla.
 	move_child(sword,0)
 	add_to_group("player")
 	collision_layer = 2
@@ -145,7 +145,7 @@ func body_rect() -> Rect2:
 
 # ---------- física / estados ----------
 func _physics_process(delta: float) -> void:
-	# Read edge-triggered commands before impact pause; the buffer survives its duration.
+	# Lê os comandos de acionamento antes da pausa de impacto; a entrada armazenada persiste durante a pausa.
 	if hit_pause > 0:
 		if pressed("attack") and has_weapon: attack_buffer = 0.20
 		if pressed("roll"): roll_buffer = 0.16
@@ -405,19 +405,19 @@ func _attack_hits(aerial: bool = false) -> void:
 		if e.dead or hit_list.has(e):
 			continue
 		if r.intersects(e.hurt_rect()):
-			# Bronze and armour ring; flesh gives way.
+			# Bronze e armadura ressoam; a carne cede.
 			get_tree().call_group("game", "play_sfx", "hit_metal" if e.kind in [2, 3] else "hit_carne")
 			hit_list.append(e)
 			var dmg := (22.0 if aerial else (20.0 if combo == 1 else 26.0)) * sword_multiplier()
 			e.take_hit(dmg, global_position.x)
-			# Every blow has weight: a longer stop on the hit, a longer one on the kill, sparks and blood.
+			# Cada golpe tem peso: pausa no impacto, pausa maior ao matar, faíscas e sangue.
 			var stop := 0.16 if e.dead else 0.085
 			hit_pause = stop
 			e.hit_pause = stop
 			add_culpa(3)
 			shake = maxf(shake, 6.0 if e.dead else 4.0)
 			var spot: Vector2 = e.global_position + Vector2(-float(facing) * 14.0, -e.body_size.y * 0.55)
-			# The big painted effects: the crescent of the blade, a star where it bites, blood, and a pool on the kill.
+			# Grandes efeitos pintados: arco da lâmina, estrela no contato, sangue e poça ao matar.
 			get_tree().call_group("game", "spawn_effect", "arc", global_position + Vector2(float(facing) * 58.0, -52.0), facing, 0.62, "golpe")
 			get_tree().call_group("game", "spawn_effect", "star", spot, facing, 0.5, "golpe")
 			get_tree().call_group("game", "spawn_effect", "blood", spot + Vector2(float(facing) * 8.0, 4.0), facing, 0.7 if e.dead else 0.5)
@@ -475,8 +475,8 @@ func pray(restore: bool = true, duration: float = 1.0) -> void:
 	velocity = Vector2.ZERO
 
 
-## A timed guard: in the first moments of the parry, a light blow from the front is turned aside and the attacker is left open.
-## Heavy grabs, charges and projectiles cannot be parried; they must be dodged.
+## Defesa temporizada: nos primeiros instantes do aparo, um golpe leve frontal é desviado e o atacante fica exposto.
+## Agarrões pesados, investidas e projéteis não podem ser aparados; é preciso esquivar.
 func _start_parry() -> void:
 	state = "parry"
 	parry_hit = false
@@ -487,7 +487,7 @@ func _start_parry() -> void:
 func _parry_success(attacker, from_x: float) -> void:
 	parries += 1
 	parry_hit = true
-	# The next blow within a moment is the strong counter.
+	# O próximo golpe dentro de um breve intervalo será o contra-ataque forte.
 	counter_t = 0.9
 	invuln = 0.5
 	hit_pause = 0.12
@@ -565,7 +565,7 @@ func revive(pos: Vector2) -> void:
 	controllable = true
 
 
-# ---------- visual (placeholder desenhado por código) ----------
+# ---------- visual (representação provisória desenhada por código) ----------
 func _draw() -> void:
 	draw_ellipse_shadow()
 	if state == "dead":
@@ -613,7 +613,7 @@ func apply_penitence(id: String) -> void:
 	hp = minf(hp, max_hp)
 
 func begin_execution(target) -> bool:
-	# The coffin carrier can only be executed once the stone has broken.
+	# O carregador de caixão só pode ser executado depois que a pedra quebrar.
 	if target != null and is_instance_valid(target) and target.kind == 8 and not target.exposed:
 		return false
 	if state != "idle" or not has_weapon or not is_on_floor() or not is_instance_valid(target): return false
@@ -627,7 +627,7 @@ func begin_execution(target) -> bool:
 	state_t = EXECUTION_TIME
 	facing = 1 if target.position.x >= position.x else -1
 	target.executing = true
-	# A stunned flyer is brought down to the penitent's level, so the paired animation lines up with the ground.
+	# Um voador atordoado desce ao nível do penitente para alinhar a animação conjunta com o chão.
 	if target.family == "flyer": target.position.y = position.y
 	target.execution_progress = 0
 	target.velocity = Vector2.ZERO
@@ -647,7 +647,7 @@ func can_drop() -> bool:
 
 func _update_sword() -> void:
 	if sword == null: return
-	# Attack/ritual drawings already include their own blade; never add a second one.
+	# Os desenhos de ataque e ritual já incluem a lâmina; nunca acrescenta uma segunda.
 	sword.visible = has_weapon and state == "idle" and not cinematic_focus and animator.animation in ["idle","run"]
 	if not sword.visible: return
 	var wrist := Vector2(174,135)
@@ -656,7 +656,7 @@ func _update_sword() -> void:
 	var bob := sin(anim_t*(16 if animator.animation=="run" else 3))*1.2
 	var hand := (wrist-Vector2(128,250))*0.44+Vector2(0,bob)
 	var angle := 0.75
-	# Keep the point above the collision floor during the low backswing of a run.
+	# Mantém a ponta acima do piso de colisão durante o movimento baixo da espada na corrida.
 	var blade_length := (2050-SWORD_GRIP.x)*SWORD_SCALE
 	angle = minf(angle,asin(clampf((-3-hand.y)/blade_length,-1,1)))
 	sword.position = Vector2(hand.x*facing,hand.y)

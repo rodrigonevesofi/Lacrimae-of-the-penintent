@@ -1,5 +1,5 @@
 extends SceneTree
-## Review only; no campaign scenes or manifest are changed.
+## Apenas revisão; nenhuma cena ou manifesto da campanha é alterado.
 var ids=["01_maos_na_roda","02_mao_pequena","02_mao_pequena_sem_sol","03_figura_atras","04_portao_fechado"]
 var images: Array=[]
 var fragment: Texture2D

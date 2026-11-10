@@ -25,7 +25,7 @@ def risk(m):
     return 'Sem alerta pelo critério'
 
 def inventory():
-    # Read actual room declarations, rather than guessing from every root PNG.
+    # Lê as declarações reais das salas, em vez de deduzir a partir de cada PNG da raiz.
     layout = (ROOT/'scripts/act_one_layout.gd').read_text()
     room_art = sorted(set(re.findall(r'"art"\s*:\s*"([^"]+)"', layout)))
     if not room_art:
@@ -34,7 +34,7 @@ def inventory():
              for p in sorted((ROOT/'assets'/folder).rglob('*.png'))}
     for name in room_art:
         paths[ROOT/'assets'/f'{name}.png'] = 'fundo de sala'
-    # Opening is another full-screen key illustration, outside the requested directories.
+    # A abertura é outra ilustração principal em tela cheia, fora dos diretórios solicitados.
     if (ROOT/'assets/opening.png').exists():
         paths[ROOT/'assets/opening.png'] = 'abertura (adicional)'
     return paths
@@ -46,7 +46,7 @@ def audit():
         with Image.open(path) as im:
             rgba = im.convert('RGBA')
             opaque = rgba.getchannel('A').getextrema() == (255, 255)
-            # Explicit backdrop for any future alpha-bearing illustration.
+            # Fundo explícito para futuras ilustrações com canal alfa.
             rgb = Image.alpha_composite(Image.new('RGBA', im.size, (0,0,0,255)), rgba).convert('RGB')
             result = metrics(rgb)
             size = list(im.size)

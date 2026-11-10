@@ -1,5 +1,5 @@
 extends "res://tests/exploration_smoke.gd"
-## Validates the expanded Act I: secret rooms, masonry terrain and the new loops.
+## Valida o Ato I expandido: salas secretas, terreno de alvenaria e novos circuitos.
 const Layout = preload("res://scripts/act_one_layout.gd")
 
 func supported(pos: Vector2, floor_y: float) -> bool:
@@ -25,7 +25,7 @@ func room_of(x: float) -> String:
 func static_checks() -> void:
 	var rooms: Dictionary = Layout.rooms()
 	var blocks: Array[Rect2] = Layout.blocks()
-	# Geometry: rooms never overlap horizontally, every backdrop exists.
+	# Geometria: salas nunca se sobrepõem horizontalmente e todos os fundos existem.
 	var overlap := false
 	var missing_art := false
 	for a in rooms:
@@ -41,7 +41,7 @@ func static_checks() -> void:
 	for a in arts:
 		if arts.count(a) > 1: repeated = true
 	expect(not repeated,"every explorable room has its own backdrop")
-	# Connectivity: all ten rooms are reachable from the city.
+	# Conectividade: as dez salas são acessíveis a partir da cidade.
 	var seen: Array = ["city"]
 	var changed := true
 	while changed:
@@ -56,7 +56,7 @@ func static_checks() -> void:
 		if not supported(link.pa,rooms[link.a].floor) or not supported(link.pb,rooms[link.b].floor): ends_ok = false
 		if inside_block(link.pa) or inside_block(link.pb): ends_ok = false
 	expect(ends_ok,"every doorway stands on stone, inside its own room, clear of masonry")
-	# Terrain: every block is one jump (or one step of a stair) and sits inside a room.
+	# Terreno: cada bloco tem a altura de um salto (ou degrau) e fica dentro de uma sala.
 	var blocks_ok := true
 	for b in blocks:
 		var id := room_of(b.position.x)
@@ -69,7 +69,7 @@ func static_checks() -> void:
 		if rise > 110 or b.position.x < rooms[id].bounds.position.x or b.end.x > rooms[id].bounds.end.x: blocks_ok = false
 		if not is_equal_approx(b.end.y,rooms[id].floor): blocks_ok = false
 	expect(blocks_ok,"masonry stays within one jump of the floor or a lower step")
-	# Nothing is placed inside, or patrols into, the masonry.
+	# Nada é colocado dentro da alvenaria nem a atravessa em patrulha.
 	var spawn_ok := true
 	for d in Layout.enemies():
 		var pos := Vector2(d[2],d[3])
@@ -93,7 +93,7 @@ func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	game._start_game(false,false)
-	# The route tests walk through rooms with quiet enemies; locked arenas have their own tests in combat_smoke.
+	# Os testes de rota percorrem salas com inimigos inativos; arenas bloqueadas têm testes próprios em combat_smoke.
 	game.exploration.arenas_enabled = false
 	for i in range(3): await close_message()
 	quiet_enemies()
@@ -101,7 +101,7 @@ func run() -> void:
 	game.player.has_double_jump = true
 	static_checks()
 	var ex = game.exploration
-	# Secret hall: archive shelf -> nave -> coro and loft -> refuge shelf.
+	# Salão secreto: prateleira do arquivo -> nave -> coro e mezanino -> prateleira do refúgio.
 	ex.travel("archive",Vector2(17340,280))
 	await frames(20)
 	expect(await go(17400,280),"reach the concealed door on the archive shelf")
@@ -125,7 +125,7 @@ func run() -> void:
 	expect(await go(23850,600),"cross the dais and reach the choir door")
 	await interact()
 	expect(ex.room == "refuge" and absf(game.player.position.y-280.0) < 40.0,"choir door lands on the refuge shelf, a new loop")
-	# Bell terrace: belfry top gallery -> terrace -> walkway -> cloister, then back and onward to the court.
+	# Terraço dos sinos: galeria superior da torre -> terraço -> passagem -> claustro, depois retorno e avanço ao pátio.
 	ex.travel("belfry",Vector2(14380,-100))
 	await frames(20)
 	expect(await go(14420,-100),"reach the belfry's upper door")

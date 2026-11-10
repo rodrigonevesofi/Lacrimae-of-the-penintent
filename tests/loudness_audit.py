@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 CREATURES={'devorador_rugido','devorador_bote','flagelante_chicote','flagelante_investida',
            'bruxa_sussurro','bruxa_leque','asmodeia_aviso','asmodeia_estilhaco','duelista_cacete'}
 SCENE={'altar','bell','breath','knock','corrente_cede','sino_surdo','guilt'}
-# Starting points for later listening, not loudness standards or automatic normalization.
+# Pontos de partida para escuta posterior, não padrões de volume nem normalização automática.
 TARGETS={'trilhas':-24.0,'efeitos de ataque/ação':-18.0,'sons de cena':-23.0,'sons de criatura':-20.0}
 
 def db(amplitude):
@@ -32,7 +32,7 @@ def pcm_decode(raw,width,channels):
 
 def levels(samples,sr):
     if not len(samples):raise ValueError('Empty WAV')
-    energy=np.mean(samples*samples,axis=1)  # average channels; do not count stereo twice
+    energy=np.mean(samples*samples,axis=1)  # Média dos canais; não conta o estéreo duas vezes.
     n=min(len(energy),max(1,round(sr*.100)))
     cumulative=np.concatenate(([0.0],np.cumsum(energy,dtype=np.float64)))
     windows=(cumulative[n:]-cumulative[:-n])/n
@@ -50,8 +50,8 @@ def group_for(name):
     return 'efeitos de ataque/ação'
 
 def current_gain(name,group):
-    if name=='guilt':return None # variable -42..-5, muted in title/quiet memory
-    if group=='trilhas':return -3.0 # normal context; scenes duck this further
+    if name=='guilt':return None # Variável de -42 a -5; silenciado no título e na memória silenciosa.
+    if group=='trilhas':return -3.0 # Contexto normal; as cenas reduzem ainda mais este nível.
     if name=='step':return -7.0
     if name.startswith('murmurio'):return -8.0
     if name in CREATURES:return -4.0
@@ -79,12 +79,12 @@ def audit():
     proposals=[]
     for group,target in TARGETS.items():
         members=[r for r in rows if r['group']==group and r['reference_runtime_gain_db'] is not None and r['max_100ms_rms_dbfs'] is not None]
-        # Exclude legacy unused track from runtime proposal, but keep it in the exhaustive table.
+        # Exclui a faixa antiga sem uso da proposta de execução, mas a mantém na tabela completa.
         members=[r for r in members if not r['file'].endswith('/vespera_lament.wav')]
         values=[r['max_100ms_rms_dbfs']+r['reference_runtime_gain_db'] for r in members]
         median=float(np.median(values))
         desired=target-median
-        # Reserve -3dBFS per voice. This does not protect the summed master bus.
+        # Reserva -3dBFS por voz. Isso não protege a soma na saída principal.
         peak=max(r['peak_dbfs']+r['reference_runtime_gain_db'] for r in members)
         delta=min(desired,-3-peak)
         proposals.append({'group':group,'files_in_proposal':len(members),'reference_100ms_median_dbfs':median,

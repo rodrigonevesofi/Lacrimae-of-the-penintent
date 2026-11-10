@@ -50,7 +50,7 @@ def run():
   assert b and min(b[:2])>=24 and max(b[2:])<=232,(i,b)
   icons.append(b)
  result['icons']={'bounds':icons,'margin_at_alpha40':24,'count':24}
- # Compare visible intensity of each paired silhouette. Does not prove identical drawings.
+ # Compara a intensidade visível de cada par de silhuetas. Não comprova desenhos idênticos.
  means=[]
  for i in range(24):
   f=im.crop((i%6*256,i//6*256,i%6*256+256,i//6*256+256));means.append(brightness(f)['mean_over_black'])

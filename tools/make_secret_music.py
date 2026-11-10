@@ -2,8 +2,8 @@
 from pathlib import Path
 import numpy as np, wave, json
 ROOT=Path(__file__).resolve().parents[1];SR=44100;D=16;N=SR*D;t=np.arange(N)/SR
-# Initial reference cell, observed around0.5,1.5,2.5,3.5s of ost_exploration:
-# F4,A4,F5,D4. It is a partial spectral transcription, not the entire score.
+# Célula inicial de referência, observada por volta de 0,5; 1,5; 2,5; 3,5 s de ost_exploration:
+# F4,A4,F5,D4. Transcrição espectral parcial, não a partitura completa.
 MOTIF=[349.228,440.0,698.456,293.665]
 def osc(hz,phase=0):return np.sin(2*np.pi*(round(hz*D)/D)*t+phase)
 def note(hz,start,length,phase=0):
@@ -29,7 +29,7 @@ results=[]
 for index,name in enumerate(['ost_nave','ost_terraco','ost_patio']):
     melody=sum(note(f/(2 if index==2 else 1),i*4,6,.1*index)*.12 for i,f in enumerate(MOTIF))
     if index==0:
-        # Sparse organ and vowel-like harmonic choir, slow breath.
+        # Órgão esparso e coro harmônico semelhante a vogais, respiração lenta.
         base=.32*pad(73.416)+.17*choir(110)+.04*pad(146.832,.12)
         left=base+melody+.03*wind(201);right=.98*base+melody*.97+.03*wind(202)
         peak=.20
