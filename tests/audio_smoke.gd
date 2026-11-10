@@ -1,5 +1,5 @@
 extends SceneTree
-## The sound system: buses, limiter, reverb of each place, variation, positional sound, and hooks for events.
+## Sistema de som: canais, limitador, reverberação por lugar, variação, som posicional e integração com eventos.
 var game
 var checks := 0
 var failures := 0
@@ -31,7 +31,7 @@ func run() -> void:
 	expect(limited,"the master bus has a limiter below full scale, so a stack of loud sounds cannot clip")
 	expect(s.reverb != null,"effects carry a reverb")
 	expect(s.ambience.bus == "Music" and s.effects["hit"].bus == "SFX","players are routed to their buses")
-	# Reverb follows the place.
+	# A reverberação acompanha o lugar.
 	game.exploration.room = "nave"
 	for i in range(200): s._process(0.1)
 	var nave_wet := float(s.reverb.get("wet"))
@@ -39,7 +39,7 @@ func run() -> void:
 	for i in range(200): s._process(0.1)
 	var city_wet := float(s.reverb.get("wet"))
 	expect(nave_wet > city_wet + 0.15,"the nave rings more than the open city (%.2f against %.2f)" % [nave_wet,city_wet])
-	# Variation: the same blow does not sound the same twice.
+	# Variação: o mesmo golpe não soa igual duas vezes.
 	var pitches := {}
 	for i in range(12):
 		s.play_sfx("hit")
@@ -50,7 +50,7 @@ func run() -> void:
 		s.play_sfx("bell")
 		fixed[s.effects["bell"].pitch_scale] = true
 	expect(fixed.size() == 1,"the bell and the narrative sounds are always the same")
-	# Positional sound.
+	# Som posicional.
 	var children_before: int = game.get_child_count()
 	s.played.clear()
 	s.last_time.clear()
@@ -62,7 +62,7 @@ func run() -> void:
 	expect(found != null and found.global_position.x > game.player.global_position.x + 300.0,"it sits to the right of the penitent")
 	s.play_sfx_at("devorador_rugido",game.player.global_position)
 	expect(game.get_child_count() == children_before + 1,"the same sound cannot be stacked within 70 ms")
-	# Hooks: events that used to be silent now announce themselves, and are inert until a file exists.
+	# Integração: eventos antes silenciosos passam a emitir sons; ficam inativos até existir um arquivo.
 	s.played.clear()
 	game.player.has_weapon = true
 	for e in get_nodes_in_group("enemies"): e.queue_free()
@@ -82,7 +82,7 @@ func run() -> void:
 	for name in s.HOOK_NAMES:
 		if not ResourceLoader.exists("res://assets/audio/%s.wav" % name): expect(not s.effects.has(name),"hook %s is inert until its file exists" % name)
 		break
-	# Places: each room has its own texture under the music, and its own floor underfoot.
+	# Lugares: cada sala tem sua textura sonora sob a música e sua superfície sob os pés.
 	game.exploration.room = "cistern"
 	for i in range(30): s._process(0.1)
 	expect(s.beds[0].playing and s.beds[0].stream == s.bed_streams.get("cistern"),"the cistern has its own sound of water under the music")

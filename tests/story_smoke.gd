@@ -58,7 +58,7 @@ func run() -> void:
 	expect(game.lore[3].text.contains("Foi a justiça"), "gate inscription carries literary motif without author label")
 	expect(game.story_pickup_text("doll", "").contains("sol") and game.story_pickup_text("register", "").contains("sol"), "doll and register share a physical clue")
 	expect(game.story_pickup_text("register", "").contains("Alba"), "record supplies an individual identity")
-	# Leaving the doll first does not magically reveal its name.
+	# Deixar a boneca primeiro não revela seu nome magicamente.
 	game.doll_found = true
 	var health: float = game.player.hp
 	var guilt: float = game.player.culpa
@@ -96,7 +96,7 @@ func run() -> void:
 	game.story_flags.clear()
 	game._load()
 	expect(game.story_flags.has("names_read") and game.story_flags.has("memorial_named"), "story decisions survive save and load")
-	# A previous version has no story_flags field; the other progress must survive.
+	# Uma versão anterior não possui o campo story_flags; o restante do progresso deve persistir.
 	var old_save = JSON.parse_string(FileAccess.get_file_as_string(game.SAVE_PATH))
 	old_save.erase("story_flags")
 	var file := FileAccess.open(game.SAVE_PATH, FileAccess.WRITE)

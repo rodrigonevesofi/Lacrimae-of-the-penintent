@@ -1,5 +1,5 @@
 extends SceneTree
-## Combat rules: the parry, poise, the weight of a blow, and the new numbers.
+## Regras de combate: aparo, equilíbrio, peso dos golpes e novos valores.
 var game
 var p
 var checks := 0
@@ -42,7 +42,7 @@ func run() -> void:
 	await frames(2)
 	var Enemy = game.EnemyScript
 
-	# --- Numbers: a common creature takes 3 to 6 sword blows, the elites more, and the Guardian is a long fight.
+	# --- Valores: uma criatura comum recebe de 3 a 6 golpes de espada, elites recebem mais e o Guardião exige combate longo.
 	var average := 23.0
 	var commons_ok := true
 	for kind in [0,1,4,5,6,7]:
@@ -52,7 +52,7 @@ func run() -> void:
 	expect(Enemy.TYPES[3].hp / average >= 6.0,"the Devourer is an elite: at least six blows")
 	expect(Enemy.TYPES[2].hp >= 1300.0,"the Guardian has the health of a long fight (1400 after the boss probe: 6 wins in 10, 48 s)")
 
-	# --- Parry: timed, frontal, only for light blows.
+	# --- Aparo: temporizado, frontal e apenas para golpes leves.
 	await reset_player()
 	var devotee = spawn(0,Vector2(960,600))
 	p._start_parry()
@@ -93,7 +93,7 @@ func run() -> void:
 	await frames(3)
 	expect(p.state == "idle" and p.parry_cd > 0.0,"the guard ends and has a short cooldown")
 
-	# --- Poise: light blows do not interrupt every attack; enough of them do.
+	# --- Equilíbrio: golpes leves não interrompem todos os ataques; acertos suficientes interrompem.
 	await reset_player()
 	var brute = spawn(0,Vector2(960,600))
 	brute.state = "windup"
@@ -104,7 +104,7 @@ func run() -> void:
 	brute.take_hit(20.0,p.global_position.x)
 	expect(brute.state in ["hurt","stagger"],"three blows break its poise")
 
-	# --- The coffin carrier: the stone guards his front until it breaks.
+	# --- Carregador de caixão: a pedra protege sua frente até quebrar.
 	await reset_player()
 	var carrier = spawn(8,Vector2(960,600))
 	carrier.facing = -1
@@ -133,7 +133,7 @@ func run() -> void:
 	expect(p.begin_execution(carrier),"once the stone is broken and he is open, he can be executed")
 	await frames(2)
 	expect(Enemy.BESTIARY.has(8) and Enemy.TYPES[8].actor == "carregador","the carrier has a name, a note and his own art")
-	# --- The Guardian is colossal.
+	# --- O Guardião é colossal.
 	var boss_moves := {}
 	var probe_boss = spawn(2,Vector2(4300,600))
 	probe_boss.awake = true
@@ -162,7 +162,7 @@ func run() -> void:
 	probe_boss.queue_free()
 	expect(Enemy.TYPES[2].actor == "guardiao_colosso" and Enemy.TYPES[2].body.y / p.body_rect().size.y >= 3.0,"the Guardian stands at least three times the penitent (%.1f)" % (Enemy.TYPES[2].body.y / p.body_rect().size.y))
 
-	# --- The weight of a blow: stop on the hit, longer on the kill, sparks and blood.
+	# --- Peso do golpe: pausa no impacto, maior ao matar, faíscas e sangue.
 	await reset_player()
 	var weak = spawn(0,Vector2(960,600))
 	weak.hp = 10.0
@@ -185,7 +185,7 @@ func run() -> void:
 	p._attack_hits()
 	expect(p.hit_pause >= 0.08,"an ordinary hit stops the frame for a moment")
 
-	# --- Boss: a third phase below a quarter of its health.
+	# --- Chefe: terceira fase abaixo de um quarto da vida.
 	var boss = spawn(2,Vector2(4200,600))
 	boss.awake = true
 	boss.hp = boss.max_hp * 0.2
@@ -193,7 +193,7 @@ func run() -> void:
 	expect(boss.phase == 3,"the Guardian has a third phase at a quarter of its health")
 
 
-	# --- Arenas: the exits close, waves come one after another, and the way opens when the last one falls.
+	# --- Arenas: as saídas fecham, as levas se sucedem e o caminho abre quando a última cai.
 	var ex = game.exploration
 	ex.arenas_enabled = true
 	ex.arenas_done = []
@@ -227,7 +227,7 @@ func run() -> void:
 	ex.update_arena()
 	expect(ex.arena_active == "" and ex.arena_bodies.is_empty() and not ex.arenas_done.has("cistern"),"dying releases the arena so it can be tried again")
 	p.state = "idle"
-	# Every enemy in the act sits where it can act: no long stretch of the main route is free of threat.
+	# Cada inimigo do ato fica onde pode agir: nenhum trecho longo da rota principal fica sem ameaça.
 	var rooms_data: Dictionary = preload("res://scripts/act_one_layout.gd").rooms()
 	var spacing_ok := true
 	var worst := 0.0

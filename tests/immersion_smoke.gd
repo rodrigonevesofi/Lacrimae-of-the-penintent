@@ -49,7 +49,7 @@ func run() -> void:
 	Input.action_release("interact")
 	expect(game.memorial_honored,"player can leave doll at memorial")
 	if game.narrative.mode == "memorial":
-		# The offering is now a silent scene; its written record follows it.
+		# A oferenda agora é uma cena silenciosa, seguida de seu registro escrito.
 		game.narrative.elapsed = game.narrative.MEMORIAL_DURATION
 		game.narrative._process(0.0)
 	game.message_t = 0

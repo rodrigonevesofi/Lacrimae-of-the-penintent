@@ -41,7 +41,7 @@ def run():
     b=old.crop((0,0,256,256)).getchannel('A').point(lambda x:255 if x>40 else 0).getbbox()
     result={'atlas':{'size':[1536,1024],'distinct_frames':24,'bounds':boxes,'nominal_anchor':[128,250],'first_parry_height_ratio_to_original_idle':(boxes[0][3]-boxes[0][1])/(b[3]-b[1])},'original_checker_fixture':checker,'gates':gates}
     (ROOT/'docs/v19-assets-result.json').write_text(json.dumps(result,indent=2)+'\n')
-    # Requested diagnostic contact sheet; does not change the production atlas.
+    # Folha de contato diagnóstica solicitada; não altera o atlas de produção.
     contact=Image.new('RGB',(1536,4*284),(18,23,29));d=ImageDraw.Draw(contact)
     for i,c in enumerate(cells):
         x=i%6*256;y=i//6*284

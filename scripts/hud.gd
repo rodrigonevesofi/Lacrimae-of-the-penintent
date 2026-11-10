@@ -117,7 +117,7 @@ func _bar(pos: Vector2, w: float, h: float, frac: float, col: Color) -> void:
 func _draw_play(vs: Vector2) -> void:
 	var p = game.player
 	if p.damage_flash > 0: draw_rect(Rect2(Vector2.ZERO,vs),Color(0.5,0.015,0.025,p.damage_flash*0.5))
-	# The two vessels share an ornamental frame, but retain clear fill and labels.
+	# Os dois recipientes compartilham uma moldura ornamental, mantendo preenchimento e rótulos legíveis.
 	draw_texture_rect(ui_regions.seal,Rect2(18,20,84,100),false)
 	_ornate_bar(Rect2(80,-4,370,96),p.hp/p.max_hp,Color("8f182b"))
 	_ornate_bar(Rect2(80,29,330,82),p.culpa/100.0,Color("aa874d"))
@@ -133,7 +133,7 @@ func _draw_play(vs: Vector2) -> void:
 		draw_texture_rect(ui_regions.flask,Rect2(122+i*30,104,20,37),false,Color.WHITE if i<p.flasks else Color(0.35,0.32,0.34,0.75))
 	if p.penitence != "none":
 		_text(Vector2(122,159),"Pregos da Contrição" if p.penitence == "nails" else "Correntes do Voto",13,Color("c6af8b"))
-	# A small relic counter, rather than large detached UI text.
+	# Um pequeno contador de relíquias, em vez de texto grande e isolado na interface.
 	_panel(Rect2(vs.x-222,18,198,67))
 	draw_texture_rect(ui_regions.tear,Rect2(vs.x-212,28,30,43),false)
 	_text(Vector2(vs.x-170,61),str(p.lagrimas),28,Color("e8d8bd"))
@@ -241,8 +241,8 @@ func _draw_ending(vs: Vector2) -> void:
 		"Esta é apenas a primeira etapa da peregrinação.",
 	]
 	if ending_art != null:
-		# The closing picture holds the whole screen. The Penitente and the lantern stay clear; the four lines
-		# come one at a time in the dark strip below, and the end card arrives when ENTER becomes available.
+		# A imagem de encerramento ocupa a tela inteira. O Penitente e a lanterna permanecem nítidos; as quatro linhas
+		# surgem uma por vez na faixa escura inferior, e a tela final aparece quando ENTER fica disponível.
 		draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 1.0))
 		draw_texture_rect(ending_art, Rect2(Vector2.ZERO, vs), false, Color(1, 1, 1, fa))
 		draw_rect(Rect2(0, vs.y - 120, vs.x, 120), Color(0, 0, 0, 0.5 * fa))

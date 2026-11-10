@@ -1,5 +1,5 @@
 extends RefCounted
-## Diegetic text lives here; literary sources are documented outside the game.
+## Os textos do universo do jogo ficam aqui; as fontes literárias são documentadas fora do jogo.
 
 const PICKUPS := {
 	"doll": "Um pequeno sol foi bordado no pulso esquerdo.\nA costura foi refeita tantas vezes que atravessou o tecido.\n\nEntre os cobertores há espaço para alguém que não chegou.\nQuem a esperava não levou a boneca consigo.",

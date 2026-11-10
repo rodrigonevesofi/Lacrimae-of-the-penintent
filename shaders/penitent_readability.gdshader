@@ -1,7 +1,7 @@
 shader_type canvas_item;
 render_mode unshaded;
 
-// The adjustment is local to the Penitent, not an exposure change to the room.
+// O ajuste é local ao Penitente, sem alterar a exposição da sala.
 uniform float midtone_gain : hint_range(1.0, 1.5) = 1.24;
 uniform float color_strength : hint_range(0.8, 1.3) = 1.08;
 uniform float edge_strength : hint_range(0.0, 1.0) = 0.30;
@@ -20,7 +20,7 @@ void fragment() {
 	float metal = smoothstep(0.12, 0.65, luminance);
 	vec3 richer = mix(vec3(luminance), paint.rgb, color_strength);
 	vec3 readable = richer * mix(1.025, midtone_gain, metal);
-	// A restrained warm edge keeps steel distinct from both ochre and slate walls.
+	// Uma borda quente discreta distingue o aço das paredes ocres e cinzentas.
 	readable += vec3(0.020, 0.014, 0.007) * metal;
 	vec2 step_uv = TEXTURE_PIXEL_SIZE * 1.8;
 	vec2 minimum = frame_bounds.xy + TEXTURE_PIXEL_SIZE * 0.5;

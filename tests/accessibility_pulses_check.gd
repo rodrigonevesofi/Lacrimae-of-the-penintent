@@ -1,6 +1,6 @@
 extends SceneTree
-## Accessibility of the guilt scenes: sound has a visual equivalent, scenes can be skipped, and flashes stay rare.
-## Measures what the scripts do; it says nothing about how the scenes feel to a person.
+## Acessibilidade das cenas de culpa: sons têm equivalentes visuais, cenas podem ser puladas e clarões são raros.
+## Mede o comportamento dos scripts; não avalia a experiência das pessoas.
 var game
 var checks := 0
 var failures := 0
@@ -15,7 +15,7 @@ func frames(n: int) -> void:
 		await physics_frame
 		await process_frame
 
-## Plays a whole scene in 1/60 s steps and returns {flashes: [times], peak: max flash strength}.
+## Reproduz uma cena inteira em passos de 1/60 s e retorna {flashes: [tempos], peak: intensidade máxima do clarão}.
 func play(mode: String,arg: int = 0) -> Dictionary:
 	var n = game.narrative
 	n.begin(mode,arg)
@@ -55,7 +55,7 @@ func run() -> void:
 	var GuiltText = preload("res://scripts/guilt_text.gd")
 	var narrative_source := FileAccess.get_file_as_string("res://scripts/narrative.gd")
 
-	# Flashes: at most three per second, and never a full-screen white.
+	# Clarões: no máximo três por segundo, nunca branco em tela cheia.
 	var scenes := [["echo",0],["echo",1],["echo",2],["memorial",0],["memorial",1],["memory",0],["boss_intro",0],["boss_end",0]]
 	for entry in scenes:
 		var result := play(entry[0],entry[1])
@@ -67,7 +67,7 @@ func run() -> void:
 	var memory := play("memory")
 	expect(memory.flashes.size() == 3,"the memory flashes exactly once for each of its three knocks")
 
-	# Skipping: not in the first moments, and always with time to spare.
+	# Pulo de cena: indisponível nos primeiros instantes e sempre com tempo de sobra.
 	for mode in ["echo","memorial","memory","boss_intro","boss_end"]:
 		n.begin(mode,0)
 		n.elapsed = 0.4
@@ -83,7 +83,7 @@ func run() -> void:
 		n.finish()
 		if n.mode != "": n.finish()
 
-	# Sound with a visual equivalent: every essential sound has text or a flash on screen.
+	# Som com equivalente visual: todo som essencial tem texto ou clarão na tela.
 	expect(GuiltText.echo_line(0).to_lower().contains("bate"),"the knocks of the first echo are described in text")
 	expect(GuiltText.echo_line(1).to_lower().contains("abra"),"the voice of the second echo is written out")
 	expect(GuiltText.echo_line(2).to_lower().contains("aqui"),"the murmur of the third echo is written out")

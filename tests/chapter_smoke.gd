@@ -1,5 +1,5 @@
 extends SceneTree
-## Run with a disposable XDG_DATA_HOME. This suite creates and removes its save.
+## Executar com XDG_DATA_HOME descartável. Esta suíte cria e remove seu próprio salvamento.
 var failures := 0
 var checks := 0
 var capture := false
@@ -44,7 +44,7 @@ func close_dialogue() -> void:
 	await frames(2)
 
 func run() -> void:
-	# Refuse to delete progress from a previous or player-owned save.
+	# Recusa excluir o progresso de um salvamento anterior ou pertencente ao jogador.
 	if FileAccess.file_exists("user://lacrimae_save.json"):
 		push_error("Use a fresh disposable XDG_DATA_HOME; a save already exists.")
 		quit(2)
@@ -108,7 +108,7 @@ func run() -> void:
 	game.player.hit_list.clear()
 	game.player._attack_hits()
 	expect(enemy.hp < enemy_hp, "sword hit damages an enemy")
-	# Enemies are tougher now: leave this one at the edge of death so the penance is what finishes it.
+	# Os inimigos estão mais resistentes: deixa este à beira da morte para que a penitência o finalize.
 	enemy.hp = minf(enemy.hp, 30.0)
 	game.player.culpa = 60
 	game.player._do_penance()

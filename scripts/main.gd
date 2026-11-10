@@ -1,5 +1,5 @@
 extends Node2D
-## Cena principal: monta a fase, luzes, jogador, HUD, save e narrativa.
+## Cena principal: monta a fase, luzes, jogador, HUD, salvamento e narrativa.
 
 const Util = preload("res://scripts/util.gd")
 const GuiltText = preload("res://scripts/guilt_text.gd")
@@ -154,9 +154,9 @@ func _build_art() -> void:
 	add_child(art)
 
 
-## Accessibility: removes flashes, light oscillation and camera shake from the guilt and Guardian scenes.
-## Sounds, captions, durations and everything that affects play stay as they are. The choice is global
-## and survives new games; it lives apart from the save file.
+## Acessibilidade: remove clarões, oscilação de luz e tremor de câmera das cenas de culpa e do Guardião.
+## Sons, legendas, durações e tudo que afeta a jogabilidade permanecem iguais. A escolha é global
+## e persiste em novos jogos; fica separada do arquivo de salvamento.
 func _load_settings() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load(SETTINGS_PATH) == OK:
@@ -168,7 +168,7 @@ func set_reduced_pulses(enabled: bool) -> void:
 	cfg.load(SETTINGS_PATH)
 	cfg.set_value("accessibility", "reduced_pulses", enabled)
 	cfg.save(SETTINGS_PATH)
-	# Applies at once: any flash or shake already under way is cleared.
+	# Aplicação imediata: qualquer clarão ou tremor em andamento é interrompido.
 	if narrative != null:
 		narrative.flash = 0.0
 		narrative.pulse = 0.0
@@ -424,7 +424,7 @@ func _on_enemy_killed(e) -> void:
 		ending_countdown = 3.5
 		toast("O Guardião dos Sinos silencia.")
 		if narrative.mode != "": narrative.finish()
-		# The bell goes quiet first; the memory of the gates follows on its own.
+		# Primeiro o sino silencia; a memória dos portões vem em seguida por conta própria.
 		narrative.begin("boss_end")
 		if boss_wall != null and is_instance_valid(boss_wall):
 			boss_wall.queue_free()
@@ -474,7 +474,7 @@ func toast(s: String) -> void:
 	toast_t = 5.0 if s.length() > 70 else 3.0
 
 
-## The recovered fragment comes apart into light where it lay.
+## O fragmento recuperado se desfaz em luz no local onde estava.
 func _dissolve_fragment(pos: Vector2) -> void:
 	var anchor := Node2D.new()
 	anchor.position = pos + FRAGMENT_LIFT
@@ -486,7 +486,7 @@ func _dissolve_fragment(pos: Vector2) -> void:
 	animation.select("dissolve", 1)
 	animation.animation_finished.connect(anchor.queue_free)
 
-## One-shot combat effect from the painted atlas: sword sparks, blood, parry flash, landing dust.
+## Efeito de combate de execução única no atlas pintado: faíscas da espada, sangue, clarão de aparo e poeira de aterrissagem.
 func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55, actor: String = "efeitos", tint: Color = Color.WHITE) -> void:
 	var anchor := Node2D.new()
 	anchor.position = pos
@@ -517,7 +517,7 @@ func shake_cam(amount: float) -> void:
 		player.shake = maxf(player.shake, amount)
 
 
-# ---------------------------------------------------------------- save
+# ---------------------------------------------------------------- salvamento
 func _save() -> void:
 	var data := {
 		"story_flags": story_flags,
@@ -547,7 +547,7 @@ func _save() -> void:
 		f.close()
 
 
-## Loading never trusts the file: damaged, old or edited saves fall back to safe values instead of failing.
+## O carregamento nunca confia no arquivo: salvamentos danificados, antigos ou editados usam valores seguros em vez de causar falhas.
 func _clean_int(value, fallback: int, lo: int, hi: int) -> int:
 	if value is int or value is float:
 		if is_nan(float(value)) or is_inf(float(value)): return fallback
@@ -619,7 +619,7 @@ func _delete_save() -> void:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
 
 
-# ---------------------------------------------------------------- loop
+# ---------------------------------------------------------------- ciclo
 func _process(delta: float) -> void:
 	t += delta
 	prayer_cooldown = maxf(prayer_cooldown - delta, 0.0)
@@ -691,7 +691,7 @@ func _play_update(delta: float) -> void:
 		if ending_countdown <= 0.0: toast("O Guardião caiu. Você pode voltar às passagens ou contemplar a Lágrima junto aos portões.")
 
 	var pp: Vector2 = player.global_position
-	# Recovery precedes optional interactions, including NPCs and altars.
+	# A recuperação precede interações opcionais, incluindo personagens e altares.
 	if stain_active and pp.distance_to(stain_pos) < 50:
 		_dissolve_fragment(stain_pos)
 		player.lagrimas += stain_amount
@@ -699,7 +699,7 @@ func _play_update(delta: float) -> void:
 		stain_amount = 0
 		toast("Fragmento recuperado. A capacidade da penitência foi restaurada.")
 		if echo_count < GuiltText.ECHO.size() and player.state == "idle" and narrative.mode == "":
-			# The first recoveries each reveal a little more of what was heard. Nothing changes in the numbers.
+			# As primeiras recuperações revelam um pouco mais do que foi ouvido. Os valores numéricos permanecem iguais.
 			narrative.begin("echo", echo_count)
 			echo_count += 1
 		else:
@@ -751,7 +751,7 @@ func _play_update(delta: float) -> void:
 				memorial_honored = true
 				if known_name and not story_flags.has("memorial_named"): story_flags.append("memorial_named")
 				_save()
-				# A scene, not a window: the player kneels, the bell sounds once, and no reward interrupts the silence.
+				# Uma cena, não uma janela: o jogador se ajoelha, o sino soa uma vez e nenhuma recompensa interrompe o silêncio.
 				narrative.begin("memorial", 1 if known_name else 0)
 			return
 

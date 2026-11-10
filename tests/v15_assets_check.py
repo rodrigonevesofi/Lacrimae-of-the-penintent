@@ -19,7 +19,7 @@ for name,duration in DURATIONS.items():
 im=Image.open(ROOT/'assets/ending/ato1_portoes.png')
 assert im.format=='PNG' and im.size==(1920,1080)
 assert im.convert('RGBA').getchannel('A').getextrema()==(255,255)
-# Quantitative only: dark lower caption band, not a contrast certification for arbitrary text.
+# Apenas quantitativo: faixa escura inferior de legendas, sem certificar contraste de texto arbitrário.
 band=np.asarray(im.convert('RGB').crop((0,920,1920,1080)),dtype=float)
 luma=band@np.array([.2126,.7152,.0722]);assert luma.mean()<35
 result={'audio':report,'ending':{'size':list(im.size),'opaque':True,'caption_band_mean_luma_255':round(float(luma.mean()),2)}}

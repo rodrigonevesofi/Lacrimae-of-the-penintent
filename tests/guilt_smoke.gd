@@ -1,5 +1,5 @@
 extends SceneTree
-## Guilt scenes: echo of a recovered fragment, the memorial offering, the memory of the gates, three knocks.
+## Cenas de culpa: eco de fragmento recuperado, oferenda no memorial, memória dos portões e três batidas.
 var game
 var p
 var checks := 0
@@ -42,7 +42,7 @@ func run() -> void:
 	var n = game.narrative
 	var sound = game.soundscape
 
-	# --- Echo of the guilt fragment: three scenes, each reveals a little more, nothing changes in the numbers.
+	# --- Eco do fragmento de culpa: três cenas revelam um pouco mais a cada vez, sem alterar os valores.
 	var knocks_before: int = sound.knock_count
 	await die_and_return()
 	var culpa_after_return: float = p.culpa
@@ -97,7 +97,7 @@ func run() -> void:
 	expect(game.echo_count == 4,"the echo count survives save and load")
 	expect(game.death_count >= 4 and game.GuiltText.death_line(0) != game.GuiltText.death_line(1),"death keeps its own witness lines")
 
-	# --- Memorial offering: a scene of silence, then the written record, with no reward.
+	# --- Oferenda no memorial: cena de silêncio seguida do registro escrito, sem recompensa.
 	game.doll_found = true
 	game.memorial_honored = false
 	game.story_flags.clear()
@@ -123,7 +123,7 @@ func run() -> void:
 	expect(p.lagrimas == before_tears and p.flasks == before_flasks and absf(p.culpa - before_culpa) < 0.01,"the offering gives nothing: no tears, flasks, or lowered guilt")
 	await close_messages()
 
-	# --- Memory of the gates: 15 to 30 seconds, never asks for an action, ends on three knocks and a cut.
+	# --- Memória dos portões: 15 a 30 segundos, sem pedir ação, termina com três batidas e um corte.
 	expect(n.MEMORY_DURATION >= 15.0 and n.MEMORY_DURATION <= 30.0,"the memory lasts between 15 and 30 seconds")
 	var memory_knocks: int = sound.knock_count
 	n.begin("memory")
@@ -146,7 +146,7 @@ func run() -> void:
 	Input.action_release("interact")
 	expect(n.mode == "","after the cry the memory can be skipped")
 
-	# --- Every beat paints without errors, with and without the doll.
+	# --- Cada momento desenha sem erros, com e sem a boneca.
 	for doll in [false,true]:
 		game.doll_found = doll
 		n.begin("memory")
@@ -157,7 +157,7 @@ func run() -> void:
 	expect(true,"all beats of the memory painted without script errors")
 
 
-	# --- The Bell Guardian: the rope that is not there, then silence, then the memory.
+	# --- Guardião do Sino: a corda ausente, depois silêncio e então a memória.
 	n.begin("boss_intro")
 	expect(n.mode == "boss_intro" and not p.controllable,"the Guardian's arrival holds control for a short scene")
 	n.elapsed = 1.0
@@ -187,7 +187,7 @@ func run() -> void:
 	await create_timer(2.6,true,false,true).timeout
 	expect(sound.knock_count - knocks_phase == 3,"past half its strength the Guardian is answered by three knocks")
 
-	# --- Three knocks when the high chain gives way; the water chain stays quiet.
+	# --- Três batidas quando a corrente alta cede; a corrente da água permanece silenciosa.
 	var knocks_chain: int = sound.knock_count
 	game.story_chain_released("water")
 	await create_timer(0.3,true,false,true).timeout

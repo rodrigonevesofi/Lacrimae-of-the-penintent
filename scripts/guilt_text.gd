@@ -1,6 +1,6 @@
 extends RefCounted
-## Texts for the guilt scenes. Kept apart from story_text.gd so narrative and scene work do not collide.
-## Nothing here reveals the ritual, the request for forgetting, or who the voices belong to.
+## Textos das cenas de culpa. Separados de story_text.gd para evitar conflitos entre o trabalho narrativo e o das cenas.
+## Nada aqui revela o ritual, o pedido de esquecimento ou a quem pertencem as vozes.
 
 const ECHO := [
 	"Longe, alguém bate.\nTrês vezes. Depois, nada.",

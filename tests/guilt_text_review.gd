@@ -23,14 +23,14 @@ func run():
 	for key in constants:
 		if constants[key] is Array:
 			for phrase in constants[key]:examine(str(phrase),"guilt_text/"+str(key),true)
-	# Conservative overapproximation of the narrative's quoted prose, including branches.
+	# Aproximação conservadora por excesso da prosa citada na narrativa, incluindo ramificações.
 	var source:=FileAccess.get_file_as_string("res://scripts/narrative.gd")
 	var regex:=RegEx.new()
 	regex.compile('"(?:[^"\\\\]|\\\\.)*"')
 	for match_string in regex.search_all(source):
 		var phrase: String=match_string.get_string().substr(1,match_string.get_string().length()-2).c_unescape()
 		if phrase.contains(" ") and not phrase.begins_with("res://"):
-			# Prayer UI explicitly describes healing; it is not a guilt-scene promise.
+			# A interface de oração descreve a cura explicitamente; não é uma promessa da cena de culpa.
 			examine(phrase,"narrative literal",not phrase.begins_with("Ao concluir:"))
 	print("GUILT_TEXT_REVIEW: ",checked," phrases; ",failures," failures. Lexical coverage only; unknown proper name and paraphrases require editorial review.")
 	quit(0 if failures==0 else 1)

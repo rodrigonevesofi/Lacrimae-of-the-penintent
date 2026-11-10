@@ -37,12 +37,12 @@ func sample(scene: String,index: int):
 		record(label,"batidas",events.size()==3,"Cada batida final aciona um pulso branco; contagem visual três.")
 		record(label,"vozes",n.voice_played and n.GuiltText.MEMORY_CAPTIONS[0].to_lower().contains("vozes"),"Legenda menciona vozes; montagem também escreve Abra/Ainda estamos aqui.")
 	if scene in ["memorial","memory"]:
-		# Conservative criterion: an explicit bell subtitle or an identifiable animated bell,
-		# rather than assuming that any camera zoom means a bell to a deaf player.
+		# Critério conservador: legenda explícita de sino ou sino animado identificável,
+		# sem presumir que qualquer aproximação de câmera represente um sino para um jogador surdo.
 		var source=FileAccess.get_file_as_string("res://scripts/narrative.gd")
 		var explicit_bell=source.contains('"[Sino') or source.contains('"[Badalada') or source.contains("draw_bell(")
 		record(label,"sino",explicit_bell,"Não foi encontrado equivalente explícito para a badalada inicial. Zoom/título sinalizam a cena, mas não identificam um sino. Revisar se o som é apenas atmosférico ou informação essencial.")
-	# Exercise the actual input path before and after the defined minimum.
+	# Exercita o caminho real de entrada antes e depois do mínimo definido.
 	if n.mode!="":n.finish()
 	n.begin(scene,index);n.set_process(true)
 	var minimum={"echo":2.0,"memorial":2.8,"memory":n.GRIEF_DURATION+.2}[scene]

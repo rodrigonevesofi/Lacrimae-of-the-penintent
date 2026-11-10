@@ -1,5 +1,5 @@
 extends SceneTree
-## Isolated input-driven probe. No game source or balancing values are changed.
+## Sondagem isolada por comandos de entrada. Não altera o código do jogo nem valores de balanceamento.
 const Enemy = preload("res://scripts/enemy.gd")
 const LIMIT := 40.0
 const SEEDS := [11,23,37]

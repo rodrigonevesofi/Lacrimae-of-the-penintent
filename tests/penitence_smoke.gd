@@ -103,7 +103,7 @@ func run() -> void:
 	expect(not game.stain_active and p.culpa_capacity() == 100, "recovery restores capacity with zero currency")
 	e._physics_process(0.016)
 	expect(not e.fed_by_guilt, "recovery immediately removes empowerment")
-	# A second death replaces one fragment, rather than stacking permanent penalties.
+	# Uma segunda morte substitui um fragmento, sem acumular penalidades permanentes.
 	p.position = Vector2(1700,600)
 	p.lagrimas = 45
 	p.die()
@@ -122,7 +122,7 @@ func run() -> void:
 		old_enemy.set_physics_process(false)
 		if old_enemy.kind != 2: old_enemy.queue_free()
 	await frames(2)
-	# Test real enemy stagger, two distinct animations and rewards at contact only.
+	# Testa o atordoamento real do inimigo, duas animações distintas e recompensas apenas no contato.
 	for kind in [0,1]:
 		p.revive(Vector2(650,600))
 		p.hp = 40
@@ -179,7 +179,7 @@ func run() -> void:
 	game.art._process(0.016)
 	expect(game.art.global_transform == before, "landmarks remain fixed to world coordinates")
 	expect(not game.lore[1].text.contains("Mateus 5:4") and not game.lore[2].text.contains("João 8:7"), "inscriptions omit chapter and verse labels")
-	# Exercise modifiers through the actual damage paths, not just their metadata.
+	# Exercita os modificadores pelos caminhos reais de dano, não apenas pelos metadados.
 	victim.queue_free()
 	await frames(2)
 	var sword_target = game.EnemyScript.new()

@@ -89,7 +89,7 @@ func set_camera() -> void:
 	c.limit_left = int(b.position.x)
 	c.limit_right = int(b.end.x)
 	var graphic_top: float = -770 if room == "city" else rooms[room].floor - art_height(room) * ground_line(room)
-	# Camera2D applies its -110 offset after limits; compensate to keep the floor visible.
+	# Camera2D aplica o deslocamento de -110 após os limites; compensa para manter o chão visível.
 	c.limit_top = int(maxf(b.position.y,graphic_top)+110)
 	c.limit_bottom = int(rooms[room].floor + 220)
 	c.reset_smoothing()
@@ -262,7 +262,7 @@ func _finish_arena(a: Dictionary) -> void:
 	game._save()
 
 func abort_arena() -> void:
-	## The penitent fell, or left: the fight resets and can be tried again.
+	## O penitente caiu ou saiu: o combate reinicia e pode ser tentado novamente.
 	for e in arena_enemies:
 		if is_instance_valid(e): e.queue_free()
 	arena_enemies.clear()
@@ -309,7 +309,7 @@ func update(_delta: float) -> bool:
 				var face := Layout.passage_face(link,not forward)
 				request_travel(str(face.room),face.foot + Vector2(face.arrival_dir * face.spawn_offset,0),int(face.arrival_dir))
 		return true
-	# Both bell mechanisms are in different vertical routes, not on the main corridor.
+	# Os dois mecanismos do sino ficam em rotas verticais distintas, fora do corredor principal.
 	for entry in [{"id":"water","room":"cistern","pos":Vector2(9650,40)}, {"id":"vigil","room":"belfry","pos":Vector2(15120,-260)}]:
 		if room != entry.room or p.distance_to(entry.pos) > 65 or bells.has(entry.id): continue
 		game.prompt = "[E] Soltar a corrente dos sinos"
@@ -341,7 +341,7 @@ func update(_delta: float) -> bool:
 		game.prompt = "Duas correntes prendem a passagem · cisterna e campanário"
 	if room != "city":
 		game.area_name = rooms[room].name
-		# Altars in branches use the same prayer, equipment and checkpoint systems.
+		# Os altares das ramificações usam os mesmos sistemas de oração, equipamento e pontos de controle.
 		for i in range(3,game.altars.size()):
 			if p.distance_to(game.altars[i]) < 65:
 				game.prompt = "[E] Orar  ·  [V] Penitências  ·  [R] Oferecer %d lágrimas" % (100 * (game.player.upgrades+1))
