@@ -8,6 +8,9 @@ const EnemyScript = preload("res://scripts/enemy.gd")
 const HudScript = preload("res://scripts/hud.gd")
 const WorldArt = preload("res://scripts/world_art.gd")
 const Story = preload("res://scripts/story_text.gd")
+const ConfessorScript = preload("res://scripts/confessor.gd")
+const ConfessionPanel = preload("res://scripts/confession_panel.gd")
+const Telemetry = preload("res://scripts/telemetry.gd")
 
 const GROUND_Y := 600.0
 const WORLD_W := 30000.0
@@ -15,6 +18,11 @@ const SAVE_PATH := "user://lacrimae_save.json"
 
 var narrative
 var exploration
+## Confessionário (IA) e telemetria local; veja docs/confessionario.md.
+var confessor
+var confession_panel
+var confession_open := false
+var telemetry
 var pending_altar := -1
 var prayer_cooldown := 0.0
 var memory_seen := false
@@ -127,6 +135,12 @@ func _ready() -> void:
 	has_save = FileAccess.file_exists(SAVE_PATH)
 	_load_settings()
 	_setup_input()
+	telemetry = Telemetry.new()
+	telemetry.load_data()
+	telemetry.start_session()
+	confessor = ConfessorScript.new()
+	confessor.game = self
+	add_child(confessor)
 	soundscape = preload("res://scripts/soundscape.gd").new()
 	add_child(soundscape)
 	_build_art()
@@ -233,6 +247,7 @@ func dev_input(event: InputEvent) -> bool:
 	return true
 
 func toggle_pause() -> void:
+	if confession_open: return
 	if state == "title" or state == "ending" or (narrative != null and narrative.mode != ""):
 		return
 	paused = not paused
@@ -337,6 +352,7 @@ func _setup_input() -> void:
 	_add_action("offer", [KEY_R])
 	_add_action("confirm", [KEY_ENTER, KEY_KP_ENTER])
 	_add_action("continue_game", [KEY_C])
+	_add_action("confess", [KEY_C])
 
 
 # ---------------------------------------------------------------- construção
@@ -444,6 +460,10 @@ func _build_hud() -> void:
 	hud = HudScript.new()
 	hud.game = self
 	cl.add_child(hud)
+	confession_panel = ConfessionPanel.new()
+	confession_panel.game = self
+	confession_panel.confessor = confessor
+	cl.add_child(confession_panel)
 
 
 func _add_flicker_light(pos: Vector2, col: Color, energy: float, sc: float) -> PointLight2D:
@@ -576,6 +596,7 @@ func _on_player_died() -> void:
 	penitence_menu = false
 	state = "dead"
 	death_count += 1
+	telemetry.record_death(exploration.room)
 	death_t = 3.0
 
 
@@ -823,6 +844,7 @@ func _update_fx(delta: float) -> void:
 func _play_update(delta: float) -> void:
 	_update_duo(delta)
 	play_time += delta
+	telemetry.tick(delta, exploration.room)
 	prompt = ""
 	if exploration.has_method("is_transitioning") and exploration.is_transitioning(): return
 	if narrative.mode != "":
@@ -928,10 +950,12 @@ func _play_update(delta: float) -> void:
 
 	if near_altar >= 0:
 		var cost: int = 100 * (player.upgrades + 1)
-		prompt = "[E] Orar  ·  [R] Oferecer %d lágrimas (+15 de vida base)  ·  [V] Penitências" % cost
+		prompt = "[E] Orar  ·  [R] Oferecer %d lágrimas (+15 de vida base)  ·  [V] Penitências  ·  [C] Confessar" % cost
 		if player.state == "idle":
 			if Input.is_action_just_pressed("interact"):
 				_pray(near_altar)
+			elif Input.is_action_just_pressed("confess") and player.is_on_floor():
+				open_confession(near_altar)
 			elif Input.is_action_just_pressed("offer"):
 				offer_health()
 	elif near_lore >= 0:
@@ -977,6 +1001,24 @@ func complete_prayer() -> void:
 	_save()
 	spawn_fx(player.global_position + Vector2(0, -50), Color(1.0, 0.85, 0.5))
 	toast("%s — descanso concluído. Os inimigos comuns retornaram." % altar_names[respawn_index])
+
+
+## O Confessionário pausa o mundo: nenhum inimigo age enquanto o peregrino conversa.
+func open_confession(i: int) -> void:
+	if confession_open or i < 0 or i >= altars.size(): return
+	confession_open = true
+	player.velocity = Vector2.ZERO
+	get_tree().paused = true
+	confession_panel.open(altar_names[i])
+
+
+func close_confession() -> void:
+	if not confession_open: return
+	confession_open = false
+	get_tree().paused = false
+	player._clear_combat_input()
+	player.input_release_gate = true
+	telemetry.save()
 
 
 func _take_relic() -> void:
