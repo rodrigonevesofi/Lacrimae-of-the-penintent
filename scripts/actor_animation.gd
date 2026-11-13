@@ -1,6 +1,6 @@
 extends AnimatedSprite2D
 ## Os quadros de animação são desenhos distintos recortados de uma grade regular de origem.
-## A jogabilidade e o contato visual usam a mesma linha do tempo normalizada de seis quadros.
+## A jogabilidade e o contato visual compartilham a linha do tempo normalizada de cada ação.
 static var manifest_cache: Dictionary = {}
 static var frames_cache: Dictionary = {}
 var definitions: Dictionary = {}

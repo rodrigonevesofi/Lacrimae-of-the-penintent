@@ -31,6 +31,9 @@ var execution_target = null
 var execution_contact := false
 var execution_zoom_start := Vector2.ONE
 const EXECUTION_TIME := 1.15
+var execution_length := EXECUTION_TIME
+var execution_wound_at := 0.42
+var execution_kill_at := 0.66
 var cinematic_focus := false
 var ritual_clip := "pray"
 var ritual_progress := 0.0
@@ -300,16 +303,18 @@ func _physics_process(delta: float) -> void:
 
 	if state == "execution":
 		velocity = Vector2.ZERO
-		var progress := 1.0 - state_t / EXECUTION_TIME
+		var progress := 1.0 - state_t / execution_length
 		camera.zoom = execution_zoom_start.lerp(execution_zoom_start * 1.5, sin(clampf(progress, 0, 1) * PI))
 		if is_instance_valid(execution_target):
 			execution_target.execution_progress = clampf(progress, 0, 1)
-			if progress >= 0.42 and not execution_wound:
+			if progress >= execution_wound_at and not execution_wound:
 				# Primeiro ferimento: a lâmina penetra o corpo.
 				execution_wound = true
-				get_tree().call_group("game", "play_sfx", "hit_carne")
-				_blood_burst(_execution_torso(), 0.8, 18)
-			if progress >= 0.66 and not execution_contact:
+				# Quando ferimento e golpe mortal coincidem, usa apenas o jato final.
+				if execution_wound_at < execution_kill_at:
+					get_tree().call_group("game", "play_sfx", "hit_carne")
+					_blood_burst(_execution_torso(), 0.4, 18)
+			if progress >= execution_kill_at and not execution_contact:
 				execution_contact = true
 				var torso := _execution_torso()
 				var ground := Vector2(execution_target.global_position.x, execution_target.global_position.y)
@@ -321,8 +326,8 @@ func _physics_process(delta: float) -> void:
 				get_tree().call_group("game", "play_sfx", "hit_carne")
 				get_tree().call_group("game", "play_sfx", "execucao")
 				# Golpe mortal: sangue em leque, gotas que caem e uma poça que permanece na pedra.
-				_blood_burst(torso, 1.25, 46)
-				get_tree().call_group("game", "spawn_effect", "star", torso, facing, 0.6, "golpe")
+				_blood_burst(torso, 0.6, 46)
+				get_tree().call_group("game", "spawn_effect", _impact_kind(execution_target), torso, facing, 0.3, "impactos")
 				_blood_decal(ground)
 				_slow_motion(0.3, 0.2)
 				add_weight(12.0)
@@ -542,7 +547,7 @@ func _update_animation() -> void:
 		animator.select("raise", facing, minf(revive_t, 0.999))
 		return
 	match state:
-		"execution": animator.select(_execution_clip(), facing, 1 - state_t / EXECUTION_TIME)
+		"execution": animator.select(_execution_clip(), facing, 1 - state_t / execution_length)
 		"air_attack": animator.select("air_attack",facing,1-state_t/AIR_ATTACK_TIME)
 		"air_recover": animator.select("air_land",facing,1-state_t/AIR_RECOVERY_TIME)
 		"attack": animator.select("strong_counter" if counter_attack or finisher else ("attack_a" if combo == 1 else "attack_b"), facing, 1 - state_t / attack_len)
@@ -563,6 +568,10 @@ func _update_animation() -> void:
 				animator.pose("air_drift" if has_weapon else "jump", facing, index)
 			elif landing_t > 0:
 				animator.pose("air_land" if has_weapon else "jump", facing, 4 if landing_t > 0.05 else 5)
+			elif animator.actor == "beatriz" and absf(velocity.x) <= 30.0:
+				# Três faixas de peso: 0–33, 34–66 e 67–100.
+				var weight_pose := 0 if lance_weight < 34.0 else (1 if lance_weight < 67.0 else 2)
+				animator.pose("idle_weight", facing, weight_pose)
 			else:
 				animator.select("run" if absf(velocity.x) > 30 else "idle", facing)
 
@@ -607,8 +616,10 @@ func _attack_hits(aerial: bool = false) -> void:
 		if e.dead or hit_list.has(e):
 			continue
 		if r.intersects(e.hurt_rect()) and _clear_strike(e):
+			# Guarda o material antes de o golpe quebrar a proteção.
+			var impact_kind := _impact_kind(e)
 			# Bronze e armadura ressoam; a carne cede.
-			get_tree().call_group("game", "play_sfx", "hit_metal" if e.kind in [2, 3] else "hit_carne")
+			get_tree().call_group("game", "play_sfx", "hit_carne" if impact_kind == "sangue" else "hit_metal")
 			hit_list.append(e)
 			var dmg := (22.0 if aerial else (38.0 if counter_attack else (34.0 if finisher else (20.0 if combo == 1 else 26.0)))) * sword_multiplier()
 			e.last_hitter = self
@@ -626,7 +637,8 @@ func _attack_hits(aerial: bool = false) -> void:
 			var spot: Vector2 = e.global_position + Vector2(-float(facing) * 14.0, -e.body_size.y * 0.55)
 			# Grandes efeitos pintados: arco da lâmina, estrela no contato, sangue e poça ao matar.
 			get_tree().call_group("game", "spawn_effect", "star", spot, facing, 0.5, "golpe")
-			get_tree().call_group("game", "spawn_effect", "blood", spot + Vector2(float(facing) * 8.0, 4.0), facing, 0.7 if e.dead else 0.5)
+			# Cada material reage de um jeito: faíscas na armadura, lascas na pedra e sangue na carne.
+			get_tree().call_group("game", "spawn_effect", impact_kind, spot + Vector2(float(facing) * 8.0, 4.0), facing, 0.42 if e.dead else 0.34, "impactos")
 			if e.dead and e.family != "flyer":
 				get_tree().call_group("game", "spawn_effect", "pool", Vector2(e.global_position.x, e.global_position.y - 52.0), facing, 0.6, "golpe")
 
@@ -823,8 +835,8 @@ func _draw() -> void:
 	if state == "dead":
 		return
 	draw_set_transform(Vector2.ZERO, 0, Vector2(float(facing), 1))
-	if state == "execution" and is_instance_valid(execution_target) and execution_target.humanoid():
-		var progress := 1 - state_t / EXECUTION_TIME
+	if state == "execution" and animator.actor == "hero" and _execution_clip() == "execute_devotee" and is_instance_valid(execution_target) and execution_target.humanoid():
+		var progress := 1 - state_t / execution_length
 		if progress > 0.18 and progress < 0.7:
 			var wrist := Vector2(32, -58 + maxf(progress - 0.35, 0) * 75)
 			var neck: Vector2 = (execution_target.global_position - global_position) * Vector2(facing, 1) + Vector2(0, -execution_target.body_size.y * 0.78)
@@ -939,7 +951,12 @@ func begin_execution(target) -> bool:
 	execution_wound = false
 	state = "execution"
 	get_tree().call_group("game", "play_sfx", "execucao")
-	state_t = EXECUTION_TIME
+	var clip_data: Dictionary = animator.definitions.get(_execution_clip(), {})
+	execution_length = float(clip_data.get("duration", EXECUTION_TIME))
+	var frames_count := maxf(float(clip_data.get("count", 12)), 1.0)
+	execution_wound_at = float(clip_data.wound_frame) / frames_count if clip_data.has("wound_frame") else 0.42
+	execution_kill_at = float(clip_data.kill_frame) / frames_count if clip_data.has("kill_frame") else 0.66
+	state_t = execution_length
 	facing = 1 if target.position.x >= position.x else -1
 	target.executing = true
 	# Um voador atordoado desce ao nível do penitente para alinhar a animação conjunta com o chão.
@@ -948,7 +965,7 @@ func begin_execution(target) -> bool:
 	target.velocity = Vector2.ZERO
 	target.facing = -facing
 	velocity = Vector2.ZERO
-	invuln = EXECUTION_TIME + 0.1
+	invuln = execution_length + 0.1
 	attack_buffer = 0
 	roll_buffer = 0
 	return true
@@ -979,7 +996,19 @@ func _start_plunge() -> void:
 	velocity = Vector2(0.0, 950.0)
 	get_tree().call_group("game", "play_sfx", "swing")
 
-## Arremessa a criatura para trás e, se caminha, para cima: o golpe forte desloca o corpo atingido.
+## Armadura solta faíscas, o caixão solta pedra e os demais corpos sangram.
+func _impact_kind(e) -> String:
+	if e.kind == 2 or e.kind == 3:
+		return "faiscas"
+	if e.kind == 8 and not e.exposed:
+		return "pedra"
+	return "sangue"
+
+func _room_is(id: String) -> bool:
+	var director = get_tree().get_first_node_in_group("game")
+	return director != null and director.exploration.room == id
+
+## Arremessa a criatura para trás e, se caminha, para cima.
 func _launch(e, push: float, lift: float) -> void:
 	if not is_instance_valid(e) or e.dead or e.kind == 2:
 		return
@@ -1022,6 +1051,7 @@ func _heavy_hits() -> void:
 			continue
 		hit_list.append(e)
 		landed = true
+		var impact_kind := _impact_kind(e)
 		var dmg := lerpf(28.0, 62.4, clampf(heavy_t / HEAVY_FULL, 0.0, 1.0)) * sword_multiplier()
 		e.last_hitter = self
 		e.take_hit(dmg, global_position.x)
@@ -1030,7 +1060,7 @@ func _heavy_hits() -> void:
 		e.hit_pause = maxf(e.hit_pause, 0.085)
 		var spot: Vector2 = e.global_position + Vector2(0.0, -e.body_size.y * 0.55)
 		get_tree().call_group("game", "spawn_effect", "star", spot, facing, 0.75, "golpe")
-		get_tree().call_group("game", "spawn_effect", "blood", spot, facing, 0.9)
+		get_tree().call_group("game", "spawn_effect", impact_kind, spot, facing, 0.5, "impactos")
 		if e.dead and e.family != "flyer":
 			get_tree().call_group("game", "spawn_effect", "pool", Vector2(e.global_position.x, e.global_position.y - 52.0), facing, 0.6, "golpe")
 	if landed:
@@ -1044,6 +1074,8 @@ func _heavy_hits() -> void:
 func _plunge_impact() -> void:
 	shake = maxf(shake, 8.0)
 	get_tree().call_group("game", "spawn_effect", "poeira", global_position, facing, 0.85, "onda_golpe")
+	var floor_kind := "osso" if _room_is("ossuary") else "pedra"
+	get_tree().call_group("game", "spawn_effect", floor_kind, global_position + Vector2(0.0, -20.0), facing, 0.45, "impactos")
 	get_tree().call_group("game", "play_sfx", "mergulho_impacto")
 	get_tree().call_group("game", "play_sfx", "chefe_pancada")
 	for e in get_tree().get_nodes_in_group("enemies"):
@@ -1152,8 +1184,20 @@ func _blood_burst(at: Vector2, size: float, drops: int) -> void:
 	spray.initial_velocity_min = 240.0
 	spray.initial_velocity_max = 560.0
 	spray.gravity = Vector2(0, 1500)
-	spray.scale_amount_min = 2.5
-	spray.scale_amount_max = 5.0
+	# Gotas arredondadas de 2–5 pixels, em vez de quadrados grandes.
+	var drop_gradient := Gradient.new()
+	drop_gradient.colors = PackedColorArray([Color.WHITE, Color(1, 1, 1, 0)])
+	var drop_texture := GradientTexture2D.new()
+	drop_texture.gradient = drop_gradient
+	drop_texture.width = 8
+	drop_texture.height = 8
+	drop_texture.fill = GradientTexture2D.FILL_RADIAL
+	drop_texture.fill_from = Vector2(0.5, 0.5)
+	drop_texture.fill_to = Vector2(1.0, 0.5)
+	spray.texture = drop_texture
+	spray.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	spray.scale_amount_min = 0.3
+	spray.scale_amount_max = 0.625
 	spray.color = Color(0.55, 0.02, 0.04)
 	spray.z_index = 7
 	spray.position = at

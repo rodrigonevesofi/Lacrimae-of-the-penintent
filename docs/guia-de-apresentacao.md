@@ -7,7 +7,7 @@ Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3
    - combo de três golpes (**J J J**) e o arremate;
    - **aparo** (**L**) quando aparecer o anel dourado, seguido do contra-ataque forte;
    - **golpe carregado** (segure **I**);
-   - **golpe descendente** (**↓ + J** no ar);
+   - **golpe descendente** (**S + J** no ar);
    - inimigo aberto → **execução** (**E**), com sangue e câmera lenta.
 3. **Exploração (1 min):** mostre um **portão marcado** (arco dourado) e um trancado (vermelho); abra o mapa (**TAB**).
 4. **Arena (1 min):** **F3**, vá para a **Cisterna dos Nomes**; entre no trecho com os portões erguidos: eles fecham, vêm as ondas, abrem ao vencer.
@@ -16,3 +16,5 @@ Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3
 7. **Chefe (2 min):** **B** no modo dev (arena do chefe), **G** para não morrer durante a demonstração: o **encontro dentro do jogo** com o Guardião dos Sinos (escala, rosto, lembrança em fogo, grito) e a luta.
 
 Dicas: **P** reduz pulsos e tremores; **M** silencia; **ESC** pausa e mostra os controles.
+
+Na demonstração da dupla, mostre Beatriz acompanhando o Penitente e assuma o controle dela pelo teclado numérico. Compare as três posturas conforme o peso da lança e ore no altar para aliviar o peso. Use duas criaturas diferentes para mostrar que cada uma provoca um gesto de execução próprio.
