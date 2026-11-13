@@ -197,8 +197,8 @@ func draw_doorway(face: Dictionary, locked: bool) -> void:
 	draw_set_transform(foot,0,Vector2(float(face.facing),1))
 	draw_texture_rect_region(doorway_art,Rect2(-width/2,-width*floor_anchor/512,width,width),source)
 	draw_set_transform(Vector2.ZERO)
-	# Whatever the room's art, a doorway must read as a way through: a lit arch over the opening, light on the
-	# threshold and a sigil above it. Gold when it opens, red when it is barred.
+	# Toda passagem precisa ser reconhecível: arco iluminado sobre a abertura, luz na
+	# soleira e símbolo acima dela. Dourado quando aberta, vermelho quando bloqueada.
 	var col := Color(0.95, 0.33, 0.28) if locked else Color(1.0, 0.82, 0.42)
 	var mid := foot + Vector2(0, -width * 0.40)
 	draw_rect(Rect2(foot.x - width * 0.30, foot.y - width * 0.78, width * 0.60, width * 0.78), Color(col, 0.07))

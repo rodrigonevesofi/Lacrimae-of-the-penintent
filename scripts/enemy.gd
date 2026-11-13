@@ -76,7 +76,7 @@ var announced := false
 var phase_two_heard := false
 var attacks_done := 0
 var prev_state := ""
-## Who struck last (for the weight of Beatriz's lance), and the nearest standing penitent as the target.
+## Guarda quem deu o último golpe, para o peso da lança, e escolhe o penitente de pé mais próximo como alvo.
 var last_hitter = null
 var retarget_t := 0.0
 ## Equilíbrio: golpes leves só fazem a criatura recuar após acumular acertos suficientes; até lá ela continua atacando.

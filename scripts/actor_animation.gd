@@ -32,7 +32,8 @@ func configure(actor_name: String, scale_factor: float) -> void:
 	for clip in definitions:
 		var data: Dictionary = definitions[clip]
 		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
-		var grid: Array = data.get("grid", [6, 4])
+		# Aceita o formato legado grid e a quantidade de fileiras da v32.
+		var grid: Array = data.get("grid", [6, int(data.get("rows", 4))])
 		var columns := int(grid[0])
 		var cell := sheet.get_size() / Vector2(columns, int(grid[1]))
 		sprite_frames.add_animation(clip)

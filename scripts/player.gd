@@ -22,8 +22,8 @@ var animator
 var sword: Sprite2D
 const SWORD_GRIP := Vector2(410, 360)
 const SWORD_SCALE := 0.035
-## Where the fist is in each drawing of hero_motion.png (cell coordinates, 256 x 256), measured frame by frame.
-## The sword's grip is placed exactly there, so the hand closes on the handle instead of hanging beside it.
+## Posição do punho em cada desenho de hero_motion.png (coordenadas da célula de 256 x 256), medida quadro a quadro.
+## A empunhadura ocupa esse ponto para a mão fechar no cabo, em vez de ficar solta ao lado.
 const IDLE_GRIPS := [Vector2(177,159),Vector2(184,157),Vector2(183,154),Vector2(185,147),Vector2(180,156),Vector2(181,158)]
 const RUN_GRIPS := [Vector2(210,116),Vector2(202,133),Vector2(209,122),Vector2(222,98),Vector2(196,143),Vector2(200,141)]
 var penitence := "none"
@@ -41,7 +41,7 @@ var parry_hit := false
 var counter_t := 0.0
 var counter_attack := false
 var execution_wound := false
-## Combat beyond the plain strike: a three-blow chain (the third is a finisher), a charged heavy blow, and a plunge from the air.
+## Combate: sequência de três golpes com arremate no terceiro, golpe pesado carregado e ataque descendente.
 const HEAVY_STRIKE_TIME := 0.32
 const HEAVY_FULL := 0.9
 var combo_step := 0
@@ -58,23 +58,23 @@ var roll_direction := 0.0
 var parry_direction := 0.0
 var camera_focus_x := 0.0
 var plunge_landed := false
-## Development mode (F3): fly through walls and take no damage, to show the rooms.
-## Two penitents carry the same burden: the Penitent and Beatriz. One walks the world at a time (T swaps);
-## each has her own life, and when one is close to death the other can bleed to save her (H).
+## Modo de desenvolvimento (F3): atravessa paredes e evita dano para apresentar as salas.
+## Dois penitentes carregam o mesmo fardo: o Penitente e Beatriz. No modo solo, T troca quem está em cena;
+## cada um tem sua vida e, perto da morte, o outro pode sangrar para salvá-lo (H).
 const CHARACTERS := {
 	"penitente": {"name": "PENITENTE", "speed": 1.0, "reach": 1.0, "damage": 1.0, "attack_time": 1.0, "tint": Color(1, 1, 1)},
 	"beatriz": {"name": "BEATRIZ", "speed": 0.92, "reach": 1.6, "damage": 1.2, "attack_time": 1.15, "tint": Color(0.86, 0.74, 0.96)},
 }
 var character := "penitente"
 var partner_hp := 100.0
-## The lance of Beatriz grows heavier with every sin it purges (contrapasso): slower and stronger, until she prays.
+## A lança de Beatriz pesa mais a cada pecado purgado (contrapasso): fica lenta e forte, até ela orar.
 var lance_weight := 0.0
 var swap_cd := 0.0
 var share_cd := 0.0
 var attack_len := ATTACK_TIME
 var lance: Node2D
-## Both penitents walk together. The second (Beatriz) is driven by the game until a second player presses one
-## of her controls (prefix "p2_"); then she is theirs. Whoever falls is not dead yet: the other can bleed to raise her.
+## Os dois penitentes caminham juntos. O jogo controla Beatriz até o segundo jogador usar um
+## dos comandos dela (prefixo "p2_"). Quem cai ainda pode receber sangue do parceiro para se levantar.
 var is_partner := false
 var prefix := ""
 var ai := false
@@ -150,7 +150,7 @@ func _ready() -> void:
 	sword_surface.set_shader_parameter("edge_strength",0.16)
 	sword.material = sword_surface
 	add_child(sword)
-	# The lance of Beatriz (a stand-in drawing until her own art exists): a shaft of beaten iron and a grey point.
+	# Lança provisória de Beatriz quando a arte própria está ausente: haste de ferro batido e ponta cinzenta.
 	lance = Node2D.new()
 	lance.z_index = 1
 	var shaft := Polygon2D.new()
@@ -163,9 +163,9 @@ func _ready() -> void:
 	lance.add_child(point)
 	lance.visible = false
 	add_child(lance)
-	# In front of the body: the handle covers the fingers, so the hand reads as closed on it.
+	# À frente do corpo: o cabo cobre os dedos para a mão parecer fechada na empunhadura.
 	sword.z_index = 1
-	# Follow the drawing the moment it changes, not one physics step later: the fist moves up to 30 px between run frames.
+	# Acompanha o desenho assim que muda: o punho se desloca até 30 pixels entre quadros de corrida.
 	animator.frame_changed.connect(_update_sword)
 	animator.animation_changed.connect(_update_sword)
 	add_to_group("player")
@@ -190,7 +190,7 @@ func _ready() -> void:
 	camera.limit_bottom = 800
 	camera.limit_top = -300
 	add_child(camera)
-	# Only the Penitent's camera looks at the world; the partner's stays off.
+	# A câmera do Penitente enquadra o mundo; a câmera da parceira fica desligada.
 	if is_partner: camera.enabled = false
 	add_to_group("players")
 	safe_pos = global_position
@@ -305,7 +305,7 @@ func _physics_process(delta: float) -> void:
 		if is_instance_valid(execution_target):
 			execution_target.execution_progress = clampf(progress, 0, 1)
 			if progress >= 0.42 and not execution_wound:
-				# The first wound: the blade goes in.
+				# Primeiro ferimento: a lâmina penetra o corpo.
 				execution_wound = true
 				get_tree().call_group("game", "play_sfx", "hit_carne")
 				_blood_burst(_execution_torso(), 0.8, 18)
@@ -320,7 +320,7 @@ func _physics_process(delta: float) -> void:
 				hit_pause = 0.1
 				get_tree().call_group("game", "play_sfx", "hit_carne")
 				get_tree().call_group("game", "play_sfx", "execucao")
-				# The killing blow: blood thrown in a fan, drops that fall, and a pool that stays on the stone.
+				# Golpe mortal: sangue em leque, gotas que caem e uma poça que permanece na pedra.
 				_blood_burst(torso, 1.25, 46)
 				get_tree().call_group("game", "spawn_effect", "star", torso, facing, 0.6, "golpe")
 				_blood_decal(ground)
@@ -535,6 +535,12 @@ func _update_animation() -> void:
 	if cinematic_focus:
 		animator.select(ritual_clip, facing, ritual_progress)
 		return
+	if state == "fallen":
+		animator.select("death", facing, 0.999)
+		return
+	if revive_t > 0.0 and state == "idle" and animator.actor == "beatriz":
+		animator.select("raise", facing, minf(revive_t, 0.999))
+		return
 	match state:
 		"execution": animator.select(_execution_clip(), facing, 1 - state_t / EXECUTION_TIME)
 		"air_attack": animator.select("air_attack",facing,1-state_t/AIR_ATTACK_TIME)
@@ -576,7 +582,7 @@ func _start_attack() -> void:
 		facing = 1 if d > 0.0 else -1
 	get_tree().call_group("game", "play_sfx", "lanca_estocada" if character == "beatriz" else "swing")
 	attack_buffer = 0.0
-	# A chain of three: the third blow, inside the window, is the finisher.
+	# Sequência de três: o terceiro golpe dentro do intervalo é o arremate.
 	combo_step = (combo_step + 1) % 3 if combo_window > 0.0 else 0
 	finisher = combo_step == 2
 	combo_window = float(COMBO_DURATIONS[combo_step]) * attack_scale() + 0.30
@@ -748,7 +754,7 @@ func die() -> void:
 		return
 	var other = partner()
 	if other != null and other.standing():
-		# Not dead yet: she lies bleeding until the other gives her blood.
+		# Ainda não morreu: permanece no chão até receber sangue do parceiro.
 		get_tree().call_group("game", "play_sfx", "hurt")
 		get_tree().call_group("game", "play_sfx", "caido")
 		state = "fallen"
@@ -759,7 +765,7 @@ func die() -> void:
 		get_tree().call_group("game", "toast", "%s caiu. Chegue perto e segure H para dar sangue." % str(CHARACTERS[character].name).capitalize())
 		return
 	if other != null and other.state == "fallen":
-		# Both have fallen: the penance ends here, for the two of them.
+		# Os dois caíram: a penitência termina para ambos.
 		other.state = "dead"
 		other.hp = 0.0
 	get_tree().call_group("game", "play_sfx", "death")
@@ -874,7 +880,7 @@ func add_weight(amount: float) -> void:
 	if character == "beatriz":
 		lance_weight = clampf(lance_weight + amount, 0.0, 100.0)
 
-## T: the other penitent takes up the burden. Each keeps her own life.
+## T: o outro penitente assume o fardo; cada um mantém sua própria vida.
 func swap_character() -> bool:
 	if swap_cd > 0.0 or state != "idle" or not is_on_floor() or cinematic_focus or partner_hp <= 0.0:
 		return false
@@ -889,7 +895,7 @@ func swap_character() -> bool:
 	get_tree().call_group("game", "toast", ("Beatriz ergue a lança." if character == "beatriz" else "O Penitente retoma a espada."))
 	return true
 
-## H: when the one walking is close to death, the other bleeds part of her life to save her: the penance is shared.
+## H: perto da morte, o outro doa parte da vida para salvar quem está em cena; a penitência é compartilhada.
 func share_blood() -> bool:
 	if share_cd > 0.0 or hp > max_hp * 0.25 or partner_hp <= max_hp * 0.30 or state == "dead":
 		return false
@@ -903,8 +909,8 @@ func share_blood() -> bool:
 	return true
 
 func apply_character() -> void:
-	# Until Beatriz has her own drawings, she wears the Penitent's body, tinted, with her lance.
-	var own_art: bool = animator.definitions.has("beatriz")
+	# Usa os desenhos próprios de Beatriz quando as folhas estão disponíveis.
+	var own_art: bool = ResourceLoader.exists("res://assets/animation/beatriz_movimento.png") and ResourceLoader.exists("res://assets/animation/beatriz_combate.png")
 	if character == "beatriz" and own_art:
 		animator.configure("beatriz", 0.44)
 		animator.modulate = Color.WHITE
@@ -973,7 +979,7 @@ func _start_plunge() -> void:
 	velocity = Vector2(0.0, 950.0)
 	get_tree().call_group("game", "play_sfx", "swing")
 
-## Throws a creature back (and up, if it walks): a strong blow moves the body it hits.
+## Arremessa a criatura para trás e, se caminha, para cima: o golpe forte desloca o corpo atingido.
 func _launch(e, push: float, lift: float) -> void:
 	if not is_instance_valid(e) or e.dead or e.kind == 2:
 		return
@@ -982,7 +988,7 @@ func _launch(e, push: float, lift: float) -> void:
 		e.velocity = Vector2.ZERO
 		return
 	if character == "beatriz" and not (e.kind == 8 and not e.exposed):
-		# The lance does not throw: it impales and holds the creature where it stands.
+		# A lança empala e mantém a criatura no lugar.
 		get_tree().call_group("game", "play_sfx", "empalar")
 		e.state = "stagger"
 		e.state_t = 1.2
@@ -995,7 +1001,7 @@ func _launch(e, push: float, lift: float) -> void:
 	e.poise = e.POISE.get(e.kind, 40.0)
 	e.velocity = Vector2(float(facing) * push, lift if e.family == "walker" else lift * 0.5)
 
-## A moment of slow motion on the strongest blows, so the hit is felt.
+## Breve câmera lenta nos golpes mais fortes para dar peso ao impacto.
 func _slow_motion(scale: float, seconds: float) -> void:
 	var game = get_tree().get_first_node_in_group("game")
 	if (game != null and game.reduced_pulses) or Engine.time_scale < 0.99:
@@ -1006,7 +1012,7 @@ func _slow_motion(scale: float, seconds: float) -> void:
 func _heavy_hits() -> void:
 	var full := heavy_t >= HEAVY_FULL
 	if full:
-		get_tree().call_group("game", "spawn_effect", "charged", global_position + Vector2(facing * 65.0, 0), facing, 0.65, "impacto_chao")
+		get_tree().call_group("game", "spawn_effect", "anel", global_position + Vector2(facing * 65.0, 0), facing, 0.65, "onda_golpe")
 	var long := 134.0 * float(CHARACTERS[character].reach)
 	var reach := Rect2(global_position + Vector2(0.0 if facing > 0 else -long, -94.0), Vector2(long, 94.0))
 	get_tree().call_group("game", "spawn_effect", "arc", global_position + Vector2(facing * 70.0, -56.0), facing, 0.95, "golpe")
@@ -1037,7 +1043,7 @@ func _heavy_hits() -> void:
 
 func _plunge_impact() -> void:
 	shake = maxf(shake, 8.0)
-	get_tree().call_group("game", "spawn_effect", "dust", global_position, facing, 1.05, "impacto_chao")
+	get_tree().call_group("game", "spawn_effect", "poeira", global_position, facing, 0.85, "onda_golpe")
 	get_tree().call_group("game", "play_sfx", "mergulho_impacto")
 	get_tree().call_group("game", "play_sfx", "chefe_pancada")
 	for e in get_tree().get_nodes_in_group("enemies"):
@@ -1051,7 +1057,7 @@ func _plunge_impact() -> void:
 			_launch(e, 280.0, -260.0)
 			facing = keep
 
-## The shared blood: she gives part of her own life to raise the one who fell.
+## Sangue compartilhado: doa parte da própria vida para levantar quem caiu.
 func _raise(other) -> void:
 	var given := minf(max_hp * 0.35, hp - 1.0)
 	if given < 5.0:
@@ -1068,7 +1074,7 @@ func _raise(other) -> void:
 	get_tree().call_group("game", "play_sfx", "levanta")
 	get_tree().call_group("game", "toast", "Sangue compartilhado: %s se levanta." % str(other.CHARACTERS[other.character].name).capitalize())
 
-## The game drives Beatriz while no second player has taken her: she follows, fights, parries and raises the Penitent.
+## O jogo controla Beatriz até o segundo jogador assumir: ela segue, luta, apara e levanta o Penitente.
 func _ai_think(delta: float) -> void:
 	ai_tap.clear()
 	ai_held.clear()
@@ -1115,8 +1121,8 @@ func _ai_think(delta: float) -> void:
 	if is_on_wall() and absf(ai_axis) > 0.0 and is_on_floor():
 		ai_tap["jump"] = true
 
-## Each creature has its own execution when the Penitent's animation for it exists ("execute_<actor>");
-## until then, the shared one for humanoids or for the weeper.
+## Cada criatura usa sua execução própria quando a animação correspondente existe ("execute_<actor>");
+## enquanto isso, usa a execução compartilhada de humanoides ou do Chorão.
 func _execution_clip() -> String:
 	if is_instance_valid(execution_target):
 		var own := "execute_" + str(execution_target.TYPES[execution_target.kind].actor)
@@ -1161,7 +1167,7 @@ func _blood_decal(ground: Vector2) -> void:
 	if game == null or not ResourceLoader.exists("res://assets/animation/efeitos_golpe.png"): return
 	var old := get_tree().get_nodes_in_group("blood_decals")
 	while old.size() >= BLOOD_DECALS_MAX:
-		# Leave the count at once; the node itself goes at the end of the frame.
+		# Retira da contagem imediatamente; o nó é removido no fim do quadro.
 		var oldest = old.pop_front()
 		oldest.remove_from_group("blood_decals")
 		oldest.queue_free()
@@ -1193,7 +1199,7 @@ func _update_sword() -> void:
 	if sword == null: return
 	if lance != null: lance.visible = false
 	if animator.actor == "beatriz":
-		# Her own drawings carry the lance.
+		# Os desenhos próprios já incluem a lança.
 		sword.visible = false
 		return
 	# Os desenhos de ataque e ritual já incluem a lâmina; nunca acrescenta uma segunda.
@@ -1201,7 +1207,7 @@ func _update_sword() -> void:
 	if not sword.visible: return
 	var grips: Array = RUN_GRIPS if animator.animation == "run" else IDLE_GRIPS
 	var wrist: Vector2 = grips[clampi(animator.frame, 0, grips.size() - 1)]
-	# The drawings already breathe and swing; the sword follows the fist, with no extra motion of its own.
+	# Os desenhos já respiram e se movem; a espada acompanha o punho sem movimento adicional.
 	var hand := (wrist-Vector2(128,250))*0.44
 	var angle := 0.75
 	# Mantém a ponta acima do piso de colisão durante o movimento baixo da espada na corrida.
@@ -1212,7 +1218,7 @@ func _update_sword() -> void:
 	sword.rotation = angle*facing
 	sword.modulate = animator.modulate
 	if character != "penitente" and lance != null:
-		# Beatriz holds the lance in the same fist, point forward and down.
+		# Beatriz segura a lança no mesmo punho, com a ponta para a frente e para baixo.
 		lance.visible = true
 		lance.position = sword.position
 		lance.rotation = sword.rotation

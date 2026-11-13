@@ -26,8 +26,8 @@ func trim_for(name: String) -> float:
 const CREATURE_SFX := ["devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
 ## Sons de eventos antes silenciosos. Cada um só é carregado se o arquivo existir, deixando os pontos de integração
 ## prontos antes dos sons: assim que um arquivo com esse nome chega a assets/audio/, ele toca.
-## Hooks for the new combat and the two penitents, waiting for their recordings (see prompts-sons.md).
-## Kept apart from HOOK_NAMES, whose every entry already has a file.
+## Pontos de áudio do combate e da dupla; os arquivos fornecidos na v32 ativam esses eventos.
+## Mantidos separados de HOOK_NAMES por compatibilidade com pacotes anteriores.
 const PENDING_HOOKS := ["golpe_carregado_carga", "golpe_carregado_solta", "mergulho_impacto", "arremate", "empalar", "sangue_compartilhado", "caido", "levanta"]
 const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "dor", "aterrissagem", "coleta", "porta", "projetil", "projetil_impacto", "espinho", "aparo", "execucao", "portao_fecha", "portao_abre", "ui_mover", "ui_confirmar"]
 ## Os sons narrativos são sempre reproduzidos da mesma forma; os demais variam um pouco em altura e volume.

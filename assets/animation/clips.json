@@ -1095,7 +1095,8 @@
       "anchor": [
         128,
         128
-      ]
+      ],
+      "rows": 2
     },
     "ring": {
       "sheet": "onda_grito",
@@ -1106,7 +1107,8 @@
       "anchor": [
         128,
         128
-      ]
+      ],
+      "rows": 2
     },
     "ring_weak": {
       "sheet": "onda_grito",
@@ -1117,54 +1119,251 @@
       "anchor": [
         128,
         128
-      ]
+      ],
+      "rows": 2
     }
   },
-  "impacto_chao": {
+  "beatriz": {
+    "idle": {
+      "sheet": "beatriz_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 7,
+      "loop": true
+    },
+    "run": {
+      "sheet": "beatriz_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 14,
+      "loop": true
+    },
+    "roll": {
+      "sheet": "beatriz_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 14,
+      "loop": false
+    },
+    "jump": {
+      "sheet": "beatriz_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "hurt": {
+      "sheet": "beatriz_reacoes",
+      "start": 6,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "death": {
+      "sheet": "beatriz_reacoes",
+      "start": 9,
+      "count": 5,
+      "fps": 8,
+      "loop": false
+    },
+    "cry": {
+      "sheet": "beatriz_rituais",
+      "start": 0,
+      "count": 6,
+      "fps": 8,
+      "loop": false
+    },
+    "attack_a": {
+      "sheet": "beatriz_combate",
+      "start": 0,
+      "count": 6,
+      "fps": 14,
+      "loop": false
+    },
+    "attack_b": {
+      "sheet": "beatriz_combate",
+      "start": 6,
+      "count": 6,
+      "fps": 14,
+      "loop": false
+    },
+    "heal": {
+      "sheet": "beatriz_rituais",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "pray": {
+      "sheet": "beatriz_rituais",
+      "start": 0,
+      "count": 6,
+      "fps": 8,
+      "loop": false
+    },
+    "cry_start": {
+      "sheet": "beatriz_rituais",
+      "start": 0,
+      "count": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "cry_hold": {
+      "sheet": "beatriz_rituais",
+      "start": 3,
+      "count": 2,
+      "fps": 6,
+      "loop": true
+    },
+    "cry_wipe": {
+      "sheet": "beatriz_rituais",
+      "start": 3,
+      "count": 2,
+      "fps": 8,
+      "loop": false
+    },
+    "cry_end": {
+      "sheet": "beatriz_rituais",
+      "start": 4,
+      "count": 2,
+      "fps": 8,
+      "loop": false
+    },
+    "execute_devotee": {
+      "sheet": "beatriz_rituais",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false
+    },
+    "execute_mourner": {
+      "sheet": "beatriz_rituais",
+      "start": 12,
+      "count": 12,
+      "fps": 12,
+      "loop": false
+    },
+    "air_attack": {
+      "sheet": "beatriz_reacoes",
+      "start": 21,
+      "count": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "air_land": {
+      "sheet": "beatriz_movimento",
+      "start": 16,
+      "count": 2,
+      "fps": 12,
+      "loop": false
+    },
+    "air_drift": {
+      "sheet": "beatriz_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "memorial_kneel": {
+      "sheet": "beatriz_rituais",
+      "start": 0,
+      "count": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "memorial_place": {
+      "sheet": "beatriz_rituais",
+      "start": 3,
+      "count": 2,
+      "fps": 6,
+      "loop": false
+    },
+    "memorial_hold": {
+      "sheet": "beatriz_rituais",
+      "start": 3,
+      "count": 2,
+      "fps": 6,
+      "loop": true
+    },
+    "memorial_rise": {
+      "sheet": "beatriz_rituais",
+      "start": 4,
+      "count": 2,
+      "fps": 8,
+      "loop": false
+    },
+    "parry": {
+      "sheet": "beatriz_reacoes",
+      "start": 0,
+      "count": 6,
+      "fps": 14,
+      "loop": false
+    },
+    "parry_recoil": {
+      "sheet": "beatriz_reacoes",
+      "start": 2,
+      "count": 4,
+      "fps": 14,
+      "loop": false
+    },
+    "strong_counter": {
+      "sheet": "beatriz_combate",
+      "start": 12,
+      "count": 6,
+      "fps": 14,
+      "loop": false
+    },
+    "charged_heavy": {
+      "sheet": "beatriz_combate",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false
+    },
+    "raise": {
+      "sheet": "beatriz_reacoes",
+      "start": 14,
+      "count": 6,
+      "fps": 6,
+      "loop": false
+    }
+  },
+  "onda_golpe": {
     "idle": {
       "sheet": "onda_golpe",
-      "count": 6,
-      "fps": 20,
-      "loop": false,
-      "grid": [
-        6,
-        2
-      ],
+      "start": 0,
+      "count": 1,
+      "fps": 1,
+      "loop": true,
+      "rows": 2,
       "anchor": [
         128,
-        242
-      ],
-      "start": 0
+        236
+      ]
     },
-    "dust": {
+    "poeira": {
       "sheet": "onda_golpe",
+      "start": 0,
       "count": 6,
-      "fps": 20,
+      "fps": 14,
       "loop": false,
-      "grid": [
-        6,
-        2
-      ],
+      "rows": 2,
       "anchor": [
         128,
-        242
-      ],
-      "start": 0
+        236
+      ]
     },
-    "charged": {
+    "anel": {
       "sheet": "onda_golpe",
+      "start": 6,
       "count": 6,
-      "fps": 20,
+      "fps": 16,
       "loop": false,
-      "grid": [
-        6,
-        2
-      ],
+      "rows": 2,
       "anchor": [
         128,
-        242
-      ],
-      "start": 6
+        236
+      ]
     }
   }
 }

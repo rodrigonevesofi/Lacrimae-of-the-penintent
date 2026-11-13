@@ -4,15 +4,17 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 
 ## Como jogar
 
-1. Abra o Godot Standard 4.6.3.
+1. Abra o Godot Standard 4.6.3 ou superior (versão 32 validada no 4.7.2).
 2. Importe o arquivo `project.godot`.
 3. Aguarde a importação dos arquivos e pressione **F5**.
 
 ## Controles
 
-- **A / D ou setas:** mover
+- **A / D:** mover o Penitente
 - **Espaço:** pular; **S + Espaço:** descer de uma galeria
 - **J / X:** atacar; no ar, corte aéreo
+- **I (segurar):** carregar golpe pesado; **S + J no ar:** golpe descendente
+- **L:** aparar
 - **K / Shift:** esquivar
 - **E:** interagir ou executar inimigo atordoado
 - **F:** curar
@@ -22,6 +24,12 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **Esc:** pausar
 - **M:** ativar ou silenciar o som
 - **TAB:** abrir o mapa
+- **H:** compartilhar sangue; perto do parceiro caído, segurar para levantá-lo
+- **F3:** modo de desenvolvimento para visitar salas
+
+Beatriz acompanha o Penitente e luta por conta própria. Para assumir o segundo personagem, use **setas** para mover, **↑** para pular, teclado numérico **1** para atacar, **3** para esquivar, **4** para aparar, **5** para carregar golpe, **6** para curar, **0** para doar sangue e **Enter numérico** para interagir. Também é possível usar um segundo controle.
+
+A [integração da versão 32](docs/v32-integracao.md) inclui os sons enviados pelo autor, a arte adaptada de Beatriz e a correção dos efeitos de duas fileiras.
 
 O primeiro ato tem dez locais interligados: sete no percurso principal e três salas secretas (Nave do Silêncio, Terraço dos Sinos e Pátio dos Portões Selados). Há relevo de alvenaria no chão, galerias elevadas, quinze passagens, quatro atalhos, nove altares, nove descobertas opcionais e um mapa. Inclui penitências equipáveis, fragmentos de culpa e a homenagem no memorial dos portões.
 

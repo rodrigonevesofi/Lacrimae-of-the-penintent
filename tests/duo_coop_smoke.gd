@@ -1,5 +1,5 @@
 extends SceneTree
-## The Penitent and Beatriz together on screen: the game drives her until a second player takes her.
+## Penitente e Beatriz juntos em cena: o jogo controla Beatriz até o segundo jogador assumir.
 var game
 var p
 var b
@@ -32,14 +32,17 @@ func run() -> void:
 	await frames(2)
 	expect(b != null and b.character == "beatriz" and b.ai and p.character == "penitente","Beatriz walks beside the Penitent, driven by the game")
 	expect(b.camera.enabled == false and p.camera.enabled,"one camera for the two")
+	expect(b.animator.actor == "beatriz" and p.animator.actor == "hero","Beatriz is drawn as herself, not as the Penitent")
+	await frames(3)
+	expect(not b.lance.visible and not b.sword.visible,"her own drawings carry the lance: no stand-in lance, no sword")
 	expect(not InputMap.action_has_event("left", _key(KEY_LEFT)) and InputMap.action_has_event("p2_left", _key(KEY_LEFT)),"the arrows belong to Beatriz; A and D to the Penitent")
-	# She follows
+	# Acompanhamento
 	p.revive(Vector2(1400,600))
 	b.global_position = Vector2(1000,600)
 	await frames(90)
 	expect(absf(b.global_position.x - p.global_position.x) < 260.0,"she follows the Penitent (%.0f px apart)" % absf(b.global_position.x - p.global_position.x))
 	expect(absf(p.camera_focus_x) > 5.0, "a câmera mantém o enquadramento compartilhado entre quadros")
-	# Enemies take the nearest
+	# Inimigos escolhem o penitente mais próximo
 	var e = game.EnemyScript.new()
 	e.setup(0,Vector2(b.global_position.x - 80.0,600),0,p)
 	e.room_id = "city"
@@ -49,7 +52,7 @@ func run() -> void:
 	expect(e.player == b,"a creature turns on the nearest penitent")
 	e.queue_free()
 	await frames(2)
-	# Falling and raising
+	# Queda e resgate
 	b.global_position = p.global_position + Vector2(-50,0)
 	p.invuln = 0
 	p.take_hit(999.0, p.global_position.x + 30.0)
@@ -61,7 +64,7 @@ func run() -> void:
 			raised = true
 			break
 	expect(raised and p.hp > 0.0 and b.hp < b.max_hp,"Beatriz comes and bleeds to raise him")
-	# Both fall
+	# Queda dos dois
 	b.invuln = 0
 	b.take_hit(999.0, b.global_position.x + 30.0)
 	expect(b.state == "fallen","now she falls")
@@ -72,7 +75,7 @@ func run() -> void:
 	game.death_t = 0.0
 	await frames(4)
 	expect(p.standing() and b.standing(),"both rise again at the altar")
-	# Drop-in
+	# Entrada do segundo jogador
 	Input.action_press("p2_attack")
 	await frames(2)
 	Input.action_release("p2_attack")
@@ -97,11 +100,11 @@ func run() -> void:
 	expect(b.state == "roll", "o jogador 2 preserva a esquiva durante o impacto")
 	expect(p.state == "idle", "comandos do jogador 2 não acionam o Penitente")
 	b.ai = true
-	# Left behind
+	# Parceira deixada para trás
 	b.global_position = Vector2(30000, 600)
 	await frames(3)
 	expect(b.global_position.distance_to(p.global_position) < 200.0,"left behind, she reappears beside him")
-	# Scenes freeze her
+	# Cenas pausam os movimentos da parceira
 	game.narrative.begin("echo")
 	var before: Vector2 = b.global_position
 	b.ai_axis = 1.0
