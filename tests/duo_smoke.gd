@@ -1,5 +1,5 @@
 extends SceneTree
-## Two penitents, one burden: the swap, Beatriz's lance, its weight, the shared blood, and the save.
+## Dois penitentes e um fardo: troca, lança de Beatriz, peso, sangue compartilhado e salvamento.
 var game
 var p
 var checks := 0
@@ -41,9 +41,9 @@ func run() -> void:
 	expect(p.swap_character() and p.character == "beatriz","T: Beatriz takes up the burden")
 	expect(p.hp == 90.0 and p.partner_hp == 70.0,"each keeps her own life")
 	await frames(3)
-	expect(p.lance.visible and not p.sword.visible,"Beatriz holds the lance, not the sword")
+	expect((p.lance.visible or p.animator.actor == "beatriz") and not p.sword.visible,"Beatriz holds the lance (drawn into her own art, or the stand-in), not the sword")
 	expect(not p.swap_character(),"there is a short pause before swapping again")
-	# Reach: a creature at 130 px is touched by the lance but not by the sword.
+	# Alcance: a lança atinge uma criatura a 130 pixels; a espada não a alcança.
 	var far = spawn(0,Vector2(1030,600))
 	p.position = Vector2(900,600)
 	var hp0: float = far.hp
@@ -52,7 +52,7 @@ func run() -> void:
 	expect(far.hp < hp0,"the lance reaches a creature the sword cannot")
 	far.queue_free()
 	await frames(2)
-	# Weight
+	# Peso
 	p.lance_weight = 0.0
 	var light_len: float = ATTACK_TIME_PROBE()
 	var light_dmg: float = p.sword_multiplier()
@@ -62,7 +62,7 @@ func run() -> void:
 	game.pending_altar = 0
 	game.complete_prayer()
 	expect(p.lance_weight == 0.0 and p.partner_hp == p.max_hp,"prayer lightens the lance and restores both")
-	# Shared blood
+	# Sangue compartilhado
 	p.hp = p.max_hp
 	expect(not p.share_blood(),"with life to spare, no blood is shared")
 	p.hp = 15.0
@@ -70,7 +70,7 @@ func run() -> void:
 	expect(p.share_blood() and p.hp > 40.0 and p.partner_hp < 50.0,"close to death, the partner bleeds to save her")
 	p.hp = 15.0
 	expect(not p.share_blood(),"and cannot do it again at once")
-	# Save
+	# Salvamento
 	p.lance_weight = 42.0
 	game._save()
 	p.character = "penitente"

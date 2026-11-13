@@ -41,7 +41,7 @@ const BOSS_ART := {
 	"still": "res://assets/boss/guardiao_03_imovel.png",
 }
 var boss_art: Dictionary = {}
-## The Guardian's encounter, played inside the world: the scale, the face under the bell, a memory in fire, the scream.
+## Encontro com o Guardião no cenário: escala, rosto sob o sino, memória em chamas e grito.
 const ENCOUNTER_ART := {
 	"close": "res://assets/close/close_04.png",
 	"scream": "res://assets/close/close_04b_grito.png",
@@ -170,7 +170,7 @@ func begin(sequence: String, argument: int = 0) -> void:
 			game.player.state = "cry"
 			game.player.blood_tears = GRIEF_DURATION if sequence == "memory" else duration_of(sequence)
 	elif sequence == "boss_intro" and encounter_ready:
-		# The world stays on screen: save the camera to pull it back and frame the Guardian.
+		# Mantém o mundo em cena: salva a câmera antes de afastá-la e enquadrar o Guardião.
 		var cam: Camera2D = game.player.camera
 		saved_zoom = cam.zoom
 		saved_offset = cam.offset
@@ -180,7 +180,7 @@ func begin(sequence: String, argument: int = 0) -> void:
 	else:
 		game.soundscape.play_sfx("breath")
 
-## How much of each layer of the encounter is on screen at a moment (also used by the tests).
+## Visibilidade de cada camada do encontro em cada instante; também usada pelos testes.
 func encounter_weights(e: float) -> Dictionary:
 	var fire: Array = []
 	for i in range(3):
@@ -221,23 +221,23 @@ func paint_encounter(vs: Vector2) -> void:
 	var bar: float = 78.0 * w.bars
 	panel.draw_rect(Rect2(0, 0, vs.x, bar), Color(0, 0, 0, 1))
 	panel.draw_rect(Rect2(0, vs.y - bar, vs.x, bar), Color(0, 0, 0, 1))
-	# The face under the bell, close.
+	# Aproximação do rosto sob o sino.
 	if w.close > 0.0:
 		panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.82 * w.close))
 		var side := vs.y * 0.74 * (1.0 + (elapsed - 2.4) * 0.025)
 		panel.draw_texture_rect(encounter_art.close, Rect2(Vector2((vs.x - side) * 0.5, (vs.y - side) * 0.42), Vector2(side, side)), false, Color(1, 1, 1, w.close))
-	# The memory in fire: three pictures in another hand.
+	# Memória em chamas: três imagens de outra autoria.
 	for i in range(3):
 		var a: float = w.fire[i]
 		if a <= 0.0: continue
 		var size := vs * (1.02 + (elapsed - 5.2 - i * 1.13) * 0.015)
 		panel.draw_texture_rect(encounter_art["fire%d" % (i + 1)], Rect2(-(size - vs) * 0.5, size), false, Color(1, 1, 1, a))
-	# The scream.
+	# O grito.
 	if w.scream > 0.0:
 		panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.86 * w.scream))
 		var big := vs.y * 0.86
 		panel.draw_texture_rect(encounter_art.scream, Rect2(Vector2((vs.x - big) * 0.5, (vs.y - big) * 0.45), Vector2(big, big)), false, Color(1, 1, 1, w.scream))
-	# Lore, as the description of a thing: the gothic hand in the lore frame.
+	# História como descrição de um objeto: escrita gótica na moldura narrativa.
 	var lines: Array = GuiltText.BOSS_INTRO
 	for i in range(mini(lines.size(), 2)):
 		var a: float = w["line%d" % i]

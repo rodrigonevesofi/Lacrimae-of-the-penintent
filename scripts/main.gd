@@ -178,7 +178,7 @@ func set_reduced_pulses(enabled: bool) -> void:
 func is_reduced_pulses_enabled() -> bool:
 	return reduced_pulses
 
-## Development mode (F3), to show the rooms: choose a room and go there, fly through walls, take no damage.
+## Modo de desenvolvimento (F3): escolhe e visita salas, atravessa paredes e evita dano durante a apresentação.
 var dev_mode := false
 var dev_index := 0
 
@@ -186,7 +186,7 @@ func dev_rooms() -> Array:
 	return exploration.rooms.keys()
 
 func dev_spawn(id: String) -> Vector2:
-	# Arrive through the first doorway of that room, so the Penitent stands on its floor.
+	# Chega pela primeira passagem da sala para posicionar o Penitente sobre o piso.
 	if id == "city": return Vector2(900, 600)
 	for link in exploration.passages:
 		if link.a == id: return link.pa
@@ -302,7 +302,7 @@ func _setup_input() -> void:
 	_add_action("heavy", [KEY_I])
 	_add_action("swap", [KEY_T])
 	_add_action("share_blood", [KEY_H])
-	# Player 2 (Beatriz): the arrows and the numeric keypad, or the second gamepad.
+	# Jogador 2 (Beatriz): setas e teclado numérico, ou o segundo controle.
 	_add_action("p2_left", [KEY_LEFT])
 	_add_action("p2_right", [KEY_RIGHT])
 	_add_action("p2_jump", [KEY_UP, KEY_KP_8])
@@ -378,8 +378,8 @@ func _build_player() -> void:
 	player.died.connect(_on_player_died)
 
 
-## The second penitent, Beatriz, walks beside the Penitent from the start. Automated tests written for one
-## penitent run alone (they pass --script) unless they ask for her with enable_duo(true).
+## Beatriz caminha ao lado do Penitente desde o início. Testes automáticos escritos para um
+## penitente rodam sozinhos (--script), exceto quando ativam a dupla com enable_duo(true).
 var partner = null
 var duo_wanted := not OS.get_cmdline_args().has("--script")
 
@@ -417,12 +417,12 @@ func _update_duo(delta: float) -> void:
 				partner.ai = false
 				toast("Jogador 2 assumiu Beatriz. (F4 devolve ao jogo)")
 				break
-	# One camera for the two: it leans toward the midpoint between them.
+	# Uma câmera para os dois: aproxima o foco do ponto médio entre eles.
 	var cam: Camera2D = player.camera
 	if narrative.mode == "" and not player.cinematic_focus and player.state != "execution":
 		var mid := clampf((partner.global_position.x - player.global_position.x) * 0.5, -260.0, 260.0) if partner.standing() else 0.0
 		player.camera_focus_x = lerpf(player.camera_focus_x, mid, minf(delta * 4.0, 1.0))
-	# Too far, or left behind in another room: she reappears beside the Penitent.
+	# Se ficar muito longe ou em outra sala, ela reaparece ao lado do Penitente.
 	if not exploration.is_transitioning() and partner.state != "fallen" and player.standing():
 		var far: float = partner.global_position.distance_to(player.global_position)
 		if far > 900.0 or exploration.room_at(partner.global_position) != exploration.room:
@@ -554,7 +554,7 @@ func _spawn_enemies() -> void:
 
 
 func _on_enemy_killed(e) -> void:
-	# Every life the lance takes makes it heavier (contrapasso): the weight goes to whoever struck it down.
+	# Cada vida tomada pela lança aumenta seu peso (contrapasso); o peso vai para quem matou.
 	var killer = e.get("last_hitter")
 	if killer != null and is_instance_valid(killer): killer.add_weight(6.0)
 	else: player.add_weight(6.0)
@@ -964,7 +964,7 @@ func complete_prayer() -> void:
 	pending_altar = -1
 	player.hp = player.max_hp
 	player.flasks = player.max_flasks
-	# Prayer restores both penitents and lightens the lance.
+	# A oração restaura os dois penitentes e alivia o peso da lança.
 	player.partner_hp = player.max_hp
 	player.lance_weight = 0.0
 	if partner != null and is_instance_valid(partner):

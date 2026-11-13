@@ -89,11 +89,13 @@ func run() -> void:
 	expect(p.sword.visible,"weapon returns to grip after aerial recovery")
 	# Espelha a área dedicada de golpe aéreo contra um alvo à esquerda.
 	var left_target=game.EnemyScript.new()
-	left_target.setup(1,p.position+Vector2(-55,-65),0,p)
+	# Mantém o alvo abaixo da plataforma elevada, sem uma parede entre os dois.
+	left_target.setup(1,p.position+Vector2(-55,-20),0,p)
 	game.add_child(left_target)
 	left_target.set_physics_process(false)
 	p.facing=-1
 	p.hit_list.clear()
+	expect(p._clear_strike(left_target), "o alvo à esquerda está em espaço livre")
 	p._attack_hits(true)
 	expect(is_equal_approx(left_target.hp,left_target.max_hp-22),"aerial hit area mirrors to the left")
 	p.revive(Vector2(1500,600))

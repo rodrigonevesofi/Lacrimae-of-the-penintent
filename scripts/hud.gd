@@ -128,7 +128,7 @@ func _draw_play(vs: Vector2) -> void:
 	_text(Vector2(126,23),"VIGÍLIA",11,Color("dfc8a0"))
 	_text(Vector2(314,46),"%d / %d" % [ceil(p.hp),p.max_hp],12,Color("f2dfc7"))
 	_text(Vector2(123,98),"CULPA",11,Color("c8ad83"))
-	# Who walks, who waits: the partner's life, and the weight of Beatriz's lance.
+	# Mostra a vida da parceira e o peso da lança de Beatriz.
 	var duo: bool = game.partner != null and is_instance_valid(game.partner)
 	var q = game.partner if duo else null
 	var other: String = "beatriz" if p.character == "penitente" else "penitente"

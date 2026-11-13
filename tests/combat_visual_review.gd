@@ -55,6 +55,31 @@ func run() -> void:
 	p._plunge_impact()
 	await frames(4)
 	await capture("04-onda-descendente")
+	await frames(30)
+	for foe in get_nodes_in_group("enemies"): foe.queue_free()
+	await frames(2)
+	var b = game.partner
+	b.ai = false
+	b.set_physics_process(false)
+	p.set_physics_process(false)
+	p.revive(Vector2(1450, 600))
+	p.state = "idle"
+	b.position = Vector2(1580, 600)
+	b.has_weapon = true
+	b.facing = 1
+	b._start_attack()
+	b.state_t = b.attack_len * 0.55
+	game.toast_t = 0
+	await frames(3)
+	await capture("05-beatriz-estocada")
+	b.state = "fallen"
+	await frames(3)
+	await capture("06-beatriz-caida")
+	b.state = "idle"
+	b.revive_t = 0.55
+	p.state = "fallen"
+	await frames(3)
+	await capture("07-sangue-compartilhado")
 	game.queue_free()
 	game = null
 	await frames(10)
