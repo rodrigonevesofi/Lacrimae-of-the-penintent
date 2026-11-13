@@ -41,6 +41,21 @@ const BOSS_ART := {
 	"still": "res://assets/boss/guardiao_03_imovel.png",
 }
 var boss_art: Dictionary = {}
+## The Guardian's encounter, played inside the world: the scale, the face under the bell, a memory in fire, the scream.
+const ENCOUNTER_ART := {
+	"close": "res://assets/close/close_04.png",
+	"scream": "res://assets/close/close_04b_grito.png",
+	"fire1": "res://assets/memoria_fogo/guardiao_fogo_01.png",
+	"fire2": "res://assets/memoria_fogo/guardiao_fogo_02.png",
+	"fire3": "res://assets/memoria_fogo/guardiao_fogo_03.png",
+	"frame": "res://assets/ui/moldura_lore.png",
+}
+const ENCOUNTER_DURATION := 11.0
+var encounter_art: Dictionary = {}
+var encounter_ready := false
+var encounter_on := false
+var encounter_marks: Dictionary = {}
+var gothic: Font
 var echo_index := 0
 var knocks_done := 0
 var flash := 0.0
@@ -84,6 +99,10 @@ func _ready() -> void:
 		if ResourceLoader.exists(MEMORY_ART[key]): memory_art[key] = load(MEMORY_ART[key])
 	for key in BOSS_ART:
 		if ResourceLoader.exists(BOSS_ART[key]): boss_art[key] = load(BOSS_ART[key])
+	for key in ENCOUNTER_ART:
+		if ResourceLoader.exists(ENCOUNTER_ART[key]): encounter_art[key] = load(ENCOUNTER_ART[key])
+	encounter_ready = encounter_art.size() == ENCOUNTER_ART.size()
+	if ResourceLoader.exists("res://assets/fonts/UnifrakturMaguntia-Book.ttf"): gothic = load("res://assets/fonts/UnifrakturMaguntia-Book.ttf")
 	title_font = load("res://assets/title_font.ttf")
 	panel = Control.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -101,7 +120,7 @@ func duration_of(sequence: String) -> float:
 		"prayer": return PRAYER_DURATION
 		"echo": return ECHO_DURATION
 		"memorial": return MEMORIAL_DURATION
-		"boss_intro": return BOSS_INTRO_DURATION
+		"boss_intro": return ENCOUNTER_DURATION if encounter_ready else BOSS_INTRO_DURATION
 		"boss_end": return BOSS_END_DURATION
 	return MEMORY_DURATION
 
@@ -150,8 +169,85 @@ func begin(sequence: String, argument: int = 0) -> void:
 		else:
 			game.player.state = "cry"
 			game.player.blood_tears = GRIEF_DURATION if sequence == "memory" else duration_of(sequence)
+	elif sequence == "boss_intro" and encounter_ready:
+		# The world stays on screen: save the camera to pull it back and frame the Guardian.
+		var cam: Camera2D = game.player.camera
+		saved_zoom = cam.zoom
+		saved_offset = cam.offset
+		saved_limits = [cam.limit_left, cam.limit_right, cam.limit_top, cam.limit_bottom]
+		encounter_on = true
+		encounter_marks.clear()
 	else:
 		game.soundscape.play_sfx("breath")
+
+## How much of each layer of the encounter is on screen at a moment (also used by the tests).
+func encounter_weights(e: float) -> Dictionary:
+	var fire: Array = []
+	for i in range(3):
+		var s0 := 5.2 + i * 1.13
+		fire.append(smoothstep(s0, s0 + 0.25, e) * (1.0 - smoothstep(s0 + 1.13, s0 + 1.38, e)))
+	return {
+		"bars": smoothstep(0.0, 0.8, e) * (1.0 - smoothstep(9.6, ENCOUNTER_DURATION, e)),
+		"wide": smoothstep(0.0, 1.2, e) * (1.0 - smoothstep(9.4, ENCOUNTER_DURATION, e)),
+		"close": smoothstep(2.4, 2.9, e) * (1.0 - smoothstep(4.9, 5.3, e)),
+		"fire": fire,
+		"scream": smoothstep(8.5, 8.7, e) * (1.0 - smoothstep(9.3, 9.6, e)),
+		"line0": smoothstep(0.8, 1.3, e) * (1.0 - smoothstep(2.3, 2.6, e)),
+		"line1": smoothstep(3.0, 3.5, e) * (1.0 - smoothstep(4.7, 5.1, e)),
+	}
+
+func update_encounter() -> void:
+	var w := encounter_weights(elapsed)
+	var cam: Camera2D = game.player.camera
+	var boss_dx := 0.0
+	if game.boss != null and is_instance_valid(game.boss):
+		boss_dx = clampf(game.boss.global_position.x - game.player.global_position.x, -600.0, 600.0)
+	cam.zoom = saved_zoom.lerp(saved_zoom * 0.82, w.wide)
+	cam.offset = saved_offset.lerp(Vector2(boss_dx * 0.5, -90.0), w.wide)
+	if elapsed >= 5.2 and not encounter_marks.has("memory"):
+		encounter_marks["memory"] = true
+		game.soundscape.play_sfx("sino_surdo")
+		caption_sound("[Sino grave, abafado]", 2.4)
+	if elapsed >= 8.6 and not encounter_marks.has("scream"):
+		encounter_marks["scream"] = true
+		game.soundscape.play_sfx("chefe_morte")
+		caption_sound("[Grito de bronze]", 2.0)
+		if game.boss != null and is_instance_valid(game.boss):
+			var mouth: Vector2 = game.boss.global_position + Vector2(float(game.boss.facing) * 30.0, -260.0)
+			game.spawn_effect("ring", mouth, 1, 1.6, "onda", Color(1.0, 0.55, 0.5))
+
+func paint_encounter(vs: Vector2) -> void:
+	var w := encounter_weights(elapsed)
+	var bar: float = 78.0 * w.bars
+	panel.draw_rect(Rect2(0, 0, vs.x, bar), Color(0, 0, 0, 1))
+	panel.draw_rect(Rect2(0, vs.y - bar, vs.x, bar), Color(0, 0, 0, 1))
+	# The face under the bell, close.
+	if w.close > 0.0:
+		panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.82 * w.close))
+		var side := vs.y * 0.74 * (1.0 + (elapsed - 2.4) * 0.025)
+		panel.draw_texture_rect(encounter_art.close, Rect2(Vector2((vs.x - side) * 0.5, (vs.y - side) * 0.42), Vector2(side, side)), false, Color(1, 1, 1, w.close))
+	# The memory in fire: three pictures in another hand.
+	for i in range(3):
+		var a: float = w.fire[i]
+		if a <= 0.0: continue
+		var size := vs * (1.02 + (elapsed - 5.2 - i * 1.13) * 0.015)
+		panel.draw_texture_rect(encounter_art["fire%d" % (i + 1)], Rect2(-(size - vs) * 0.5, size), false, Color(1, 1, 1, a))
+	# The scream.
+	if w.scream > 0.0:
+		panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.86 * w.scream))
+		var big := vs.y * 0.86
+		panel.draw_texture_rect(encounter_art.scream, Rect2(Vector2((vs.x - big) * 0.5, (vs.y - big) * 0.45), Vector2(big, big)), false, Color(1, 1, 1, w.scream))
+	# Lore, as the description of a thing: the gothic hand in the lore frame.
+	var lines: Array = GuiltText.BOSS_INTRO
+	for i in range(mini(lines.size(), 2)):
+		var a: float = w["line%d" % i]
+		if a <= 0.0: continue
+		var band := Rect2(vs.x * 0.12, vs.y - 78.0 - 104.0, vs.x * 0.76, 96.0)
+		panel.draw_texture_rect(encounter_art.frame, band, false, Color(1, 1, 1, 0.95 * a))
+		var face: Font = gothic if gothic != null else font
+		panel.draw_string(face, Vector2(band.position.x, band.position.y + 60.0), lines[i], HORIZONTAL_ALIGNMENT_CENTER, band.size.x, 27, Color(0.93, 0.86, 0.72, a))
+	if can_skip():
+		text_at(Vector2(0, vs.y - 18), "[E] Seguir", 13, Color(0.7, 0.66, 0.6, 0.7), vs.x)
 
 func restore_camera() -> void:
 	if saved_limits.is_empty():
@@ -165,6 +261,7 @@ func restore_camera() -> void:
 	camera.limit_bottom = saved_limits[3]
 	saved_limits.clear()
 	game.player.cinematic_focus = false
+	encounter_on = false
 
 func finish() -> void:
 	var previous := mode
@@ -226,6 +323,9 @@ func cry_timeline(duration: float) -> void:
 		game.player.ritual_progress = minf((elapsed - (duration - 2.4)) / 1.4, 0.999)
 
 func update_focus() -> void:
+	if encounter_on and mode == "boss_intro":
+		update_encounter()
+		return
 	if not has_focus():
 		if game.player.cinematic_focus:
 			restore_camera()
@@ -481,6 +581,9 @@ func boss_still(key: String, alpha: float, vs: Vector2, push: float) -> bool:
 
 ## O Guardião do Sino: a corda ausente, a mão que continua puxando, o bronze imóvel.
 func paint_boss(vs: Vector2) -> void:
+	if mode == "boss_intro" and encounter_on:
+		paint_encounter(vs)
+		return
 	var span := duration_of(mode)
 	var open := smoothstep(0.0, 0.9, elapsed) * (1.0 - smoothstep(span - 0.9, span, elapsed))
 	panel.draw_rect(Rect2(Vector2.ZERO, vs), Color(0.005, 0.006, 0.008, 1.0))

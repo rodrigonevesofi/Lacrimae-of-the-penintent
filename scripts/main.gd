@@ -178,6 +178,60 @@ func set_reduced_pulses(enabled: bool) -> void:
 func is_reduced_pulses_enabled() -> bool:
 	return reduced_pulses
 
+## Development mode (F3), to show the rooms: choose a room and go there, fly through walls, take no damage.
+var dev_mode := false
+var dev_index := 0
+
+func dev_rooms() -> Array:
+	return exploration.rooms.keys()
+
+func dev_spawn(id: String) -> Vector2:
+	# Arrive through the first doorway of that room, so the Penitent stands on its floor.
+	if id == "city": return Vector2(900, 600)
+	for link in exploration.passages:
+		if link.a == id: return link.pa
+		if link.b == id: return link.pb
+	var r: Dictionary = exploration.rooms[id]
+	return Vector2(r.bounds.position.x + 240.0, r.floor)
+
+func dev_teleport(id: String) -> void:
+	if not exploration.rooms.has(id): return
+	exploration.abort_arena()
+	exploration.travel(id, dev_spawn(id))
+	player.velocity = Vector2.ZERO
+	toast("MODO DEV · " + str(exploration.rooms[id].name))
+
+func toggle_dev() -> void:
+	dev_mode = not dev_mode
+	if not dev_mode:
+		player.dev_fly = false
+		player.dev_god = false
+	toast("MODO DEV " + ("LIGADO · ↑↓ sala · ENTER ir · G invencível · N voar · B chefe" if dev_mode else "DESLIGADO"))
+
+func dev_input(event: InputEvent) -> bool:
+	if not (event is InputEventKey and event.pressed and not event.echo):
+		return false
+	if event.keycode == KEY_F4 and state == "play" and partner != null and is_instance_valid(partner):
+		partner.ai = not partner.ai
+		toast("Beatriz: " + ("o jogo controla" if partner.ai else "Jogador 2 controla"))
+		return true
+	if event.keycode == KEY_F3 and state == "play":
+		toggle_dev()
+		return true
+	if not dev_mode or state != "play":
+		return false
+	var rooms := dev_rooms()
+	match event.keycode:
+		KEY_UP: dev_index = (dev_index - 1 + rooms.size()) % rooms.size()
+		KEY_DOWN: dev_index = (dev_index + 1) % rooms.size()
+		KEY_ENTER, KEY_KP_ENTER: dev_teleport(rooms[dev_index])
+		KEY_G: player.dev_god = not player.dev_god
+		KEY_N: player.dev_fly = not player.dev_fly
+		KEY_B:
+			exploration.travel("city", Vector2(3700, 600))
+		_: return false
+	return true
+
 func toggle_pause() -> void:
 	if state == "title" or state == "ending" or (narrative != null and narrative.mode != ""):
 		return
@@ -203,6 +257,8 @@ func advance_message() -> void:
 		prologue_page = -1
 		message_text = ""
 		player.controllable = true
+		player._clear_combat_input()
+		player.input_release_gate = true
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -234,7 +290,7 @@ func _add_action(action: String, keys: Array) -> void:
 
 func _setup_input() -> void:
 	_add_action("map", [KEY_TAB])
-	_add_action("down", [KEY_S, KEY_DOWN])
+	_add_action("down", [KEY_S])
 	_add_action("penitence_menu", [KEY_V])
 	_add_action("penitence_none", [KEY_1])
 	_add_action("penitence_nails", [KEY_2])
@@ -243,9 +299,36 @@ func _setup_input() -> void:
 	_add_action("mute", [KEY_M])
 	_add_action("reduce_pulses", [KEY_P])
 	_add_action("parry", [KEY_L])
-	_add_action("left", [KEY_A, KEY_LEFT])
-	_add_action("right", [KEY_D, KEY_RIGHT])
-	_add_action("jump", [KEY_SPACE, KEY_W, KEY_UP])
+	_add_action("heavy", [KEY_I])
+	_add_action("swap", [KEY_T])
+	_add_action("share_blood", [KEY_H])
+	# Player 2 (Beatriz): the arrows and the numeric keypad, or the second gamepad.
+	_add_action("p2_left", [KEY_LEFT])
+	_add_action("p2_right", [KEY_RIGHT])
+	_add_action("p2_jump", [KEY_UP, KEY_KP_8])
+	_add_action("p2_down", [KEY_DOWN, KEY_KP_2])
+	_add_action("p2_attack", [KEY_KP_1])
+	_add_action("p2_roll", [KEY_KP_3])
+	_add_action("p2_parry", [KEY_KP_4])
+	_add_action("p2_heavy", [KEY_KP_5])
+	_add_action("p2_heal", [KEY_KP_6])
+	_add_action("p2_share_blood", [KEY_KP_0])
+	_add_action("p2_interact", [KEY_KP_ENTER])
+	_add_action("p2_swap", [])
+	for pair in [["p2_jump", JOY_BUTTON_A], ["p2_attack", JOY_BUTTON_X], ["p2_roll", JOY_BUTTON_B], ["p2_heavy", JOY_BUTTON_Y], ["p2_parry", JOY_BUTTON_RIGHT_SHOULDER], ["p2_heal", JOY_BUTTON_LEFT_SHOULDER], ["p2_share_blood", JOY_BUTTON_BACK], ["p2_left", JOY_BUTTON_DPAD_LEFT], ["p2_right", JOY_BUTTON_DPAD_RIGHT], ["p2_down", JOY_BUTTON_DPAD_DOWN]]:
+		var pad := InputEventJoypadButton.new()
+		pad.device = 1
+		pad.button_index = pair[1]
+		InputMap.action_add_event(pair[0], pad)
+	for pair in [["p2_left", -1.0], ["p2_right", 1.0]]:
+		var stick := InputEventJoypadMotion.new()
+		stick.device = 1
+		stick.axis = JOY_AXIS_LEFT_X
+		stick.axis_value = pair[1]
+		InputMap.action_add_event(pair[0], stick)
+	_add_action("left", [KEY_A])
+	_add_action("right", [KEY_D])
+	_add_action("jump", [KEY_SPACE, KEY_W])
 	_add_action("attack", [KEY_J, KEY_X])
 	_add_action("roll", [KEY_K, KEY_SHIFT])
 	_add_action("heal", [KEY_F])
@@ -294,6 +377,58 @@ func _build_player() -> void:
 	add_child(player)
 	player.died.connect(_on_player_died)
 
+
+## The second penitent, Beatriz, walks beside the Penitent from the start. Automated tests written for one
+## penitent run alone (they pass --script) unless they ask for her with enable_duo(true).
+var partner = null
+var duo_wanted := not OS.get_cmdline_args().has("--script")
+
+func enable_duo(on: bool) -> void:
+	duo_wanted = on
+	if on and (partner == null or not is_instance_valid(partner)):
+		player.character = "penitente"
+		player.apply_character()
+		partner = PlayerScript.new()
+		partner.is_partner = true
+		partner.prefix = "p2_"
+		partner.ai = true
+		partner.character = "beatriz"
+		partner.position = player.global_position + Vector2(-70.0, 0.0)
+		add_child(partner)
+		partner.apply_character()
+		partner.has_weapon = player.has_weapon
+		partner.hp = clampf(player.partner_hp, 1.0, partner.max_hp)
+		partner.lance_weight = player.lance_weight
+		partner.died.connect(_on_player_died)
+	elif not on and partner != null and is_instance_valid(partner):
+		partner.remove_from_group("players")
+		partner.queue_free()
+		partner = null
+
+func _update_duo(delta: float) -> void:
+	if duo_wanted and (partner == null or not is_instance_valid(partner)):
+		enable_duo(true)
+	if partner == null or not is_instance_valid(partner):
+		return
+	partner.has_weapon = player.has_weapon
+	if partner.ai:
+		for a in ["left", "right", "jump", "attack", "roll", "parry", "heavy", "heal", "share_blood"]:
+			if Input.is_action_just_pressed("p2_" + a):
+				partner.ai = false
+				toast("Jogador 2 assumiu Beatriz. (F4 devolve ao jogo)")
+				break
+	# One camera for the two: it leans toward the midpoint between them.
+	var cam: Camera2D = player.camera
+	if narrative.mode == "" and not player.cinematic_focus and player.state != "execution":
+		var mid := clampf((partner.global_position.x - player.global_position.x) * 0.5, -260.0, 260.0) if partner.standing() else 0.0
+		player.camera_focus_x = lerpf(player.camera_focus_x, mid, minf(delta * 4.0, 1.0))
+	# Too far, or left behind in another room: she reappears beside the Penitent.
+	if not exploration.is_transitioning() and partner.state != "fallen" and player.standing():
+		var far: float = partner.global_position.distance_to(player.global_position)
+		if far > 900.0 or exploration.room_at(partner.global_position) != exploration.room:
+			partner.global_position = player.global_position + Vector2(-60.0 * player.facing, -10.0)
+			partner.velocity = Vector2.ZERO
+			spawn_effect("dust", partner.global_position + Vector2(0.0, -30.0), 1, 0.7)
 
 func _build_fx_layer() -> void:
 	fxn = Node2D.new()
@@ -419,6 +554,10 @@ func _spawn_enemies() -> void:
 
 
 func _on_enemy_killed(e) -> void:
+	# Every life the lance takes makes it heavier (contrapasso): the weight goes to whoever struck it down.
+	var killer = e.get("last_hitter")
+	if killer != null and is_instance_valid(killer): killer.add_weight(6.0)
+	else: player.add_weight(6.0)
 	if e.kind == 2:
 		boss_defeated = true
 		ending_countdown = 3.5
@@ -447,6 +586,8 @@ func _respawn() -> void:
 	player.lagrimas = 0
 	player.add_culpa(25)
 	player.revive(altars[respawn_index])
+	if partner != null and is_instance_valid(partner):
+		partner.revive(altars[respawn_index] + Vector2(-70.0, 0.0))
 	exploration.room = exploration.room_at(player.position)
 	exploration.set_camera()
 	_spawn_enemies()
@@ -528,6 +669,9 @@ func _save() -> void:
 		"stain_active": stain_active,
 		"stain_amount": stain_amount,
 		"stain_pos": [stain_pos.x, stain_pos.y],
+		"character": player.character,
+		"partner_hp": partner.hp if partner != null and is_instance_valid(partner) else player.partner_hp,
+		"lance_weight": partner.lance_weight if partner != null and is_instance_valid(partner) else player.lance_weight,
 		"memory_seen": memory_seen,
 		"echo_count": echo_count,
 		"iria_met": iria_met,
@@ -606,6 +750,16 @@ func _load() -> void:
 	var saved_stain = parsed.get("stain_pos", [0, 600])
 	if saved_stain is Array and saved_stain.size() == 2:
 		stain_pos = Vector2(_clean_float(saved_stain[0], 0.0, 20.0, WORLD_W - 20.0), _clean_float(saved_stain[1], 600.0, -600.0, 1300.0))
+	var saved_character = parsed.get("character", "penitente")
+	player.character = saved_character if saved_character is String and player.CHARACTERS.has(saved_character) else "penitente"
+	player.partner_hp = _clean_float(parsed.get("partner_hp", player.max_hp), player.max_hp, 1.0, player.max_hp)
+	player.lance_weight = _clean_float(parsed.get("lance_weight", 0.0), 0.0, 0.0, 100.0)
+	player.apply_character()
+	if partner != null and is_instance_valid(partner):
+		player.character = "penitente"
+		player.apply_character()
+		partner.hp = clampf(player.partner_hp, 1.0, partner.max_hp)
+		partner.lance_weight = player.lance_weight
 	player.add_culpa(0)
 	var saved_exploration = parsed.get("exploration", {})
 	exploration.restore(saved_exploration if typeof(saved_exploration) == TYPE_DICTIONARY else {})
@@ -667,6 +821,7 @@ func _update_fx(delta: float) -> void:
 
 
 func _play_update(delta: float) -> void:
+	_update_duo(delta)
 	play_time += delta
 	prompt = ""
 	if exploration.has_method("is_transitioning") and exploration.is_transitioning(): return
@@ -809,6 +964,13 @@ func complete_prayer() -> void:
 	pending_altar = -1
 	player.hp = player.max_hp
 	player.flasks = player.max_flasks
+	# Prayer restores both penitents and lightens the lance.
+	player.partner_hp = player.max_hp
+	player.lance_weight = 0.0
+	if partner != null and is_instance_valid(partner):
+		partner.hp = partner.max_hp
+		partner.flasks = partner.max_flasks
+		partner.lance_weight = 0.0
 	player.invuln = 1.2
 	soundscape.chime()
 	_spawn_enemies()

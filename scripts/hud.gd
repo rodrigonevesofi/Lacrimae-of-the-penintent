@@ -51,9 +51,10 @@ func _draw() -> void:
 	if game.state == "ending":
 		_draw_ending(vs)
 		return
-	if game.narrative != null and game.narrative.has_focus():
+	if game.narrative != null and (game.narrative.has_focus() or game.narrative.encounter_on):
 		return
 	_draw_play(vs)
+	if game.dev_mode: _draw_dev(vs)
 	if game.exploration.map_open: _draw_map(vs)
 	if game.exploration.transition > 0: draw_rect(Rect2(Vector2.ZERO,vs),Color(0.02,0.015,0.02,game.exploration.transition/0.4))
 	if game.penitence_menu: _draw_penitences(vs)
@@ -67,6 +68,9 @@ func _heading(pos: Vector2, text: String, font_size: int, color: Color, width: f
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if game.dev_input(event):
+		get_viewport().set_input_as_handled()
+		return
 	if (game.state == "title" or game.paused) and event.is_action_pressed("reduce_pulses"):
 		game.set_reduced_pulses(not game.reduced_pulses)
 		get_viewport().set_input_as_handled()
@@ -124,6 +128,27 @@ func _draw_play(vs: Vector2) -> void:
 	_text(Vector2(126,23),"VIGÍLIA",11,Color("dfc8a0"))
 	_text(Vector2(314,46),"%d / %d" % [ceil(p.hp),p.max_hp],12,Color("f2dfc7"))
 	_text(Vector2(123,98),"CULPA",11,Color("c8ad83"))
+	# Who walks, who waits: the partner's life, and the weight of Beatriz's lance.
+	var duo: bool = game.partner != null and is_instance_valid(game.partner)
+	var q = game.partner if duo else null
+	var other: String = "beatriz" if p.character == "penitente" else "penitente"
+	_text(Vector2(200,23),"· " + str(p.CHARACTERS[p.character].name),11,Color("e8d6b0"))
+	var other_ratio: float = (q.hp / q.max_hp) if duo else (p.partner_hp / p.max_hp)
+	draw_rect(Rect2(232,112,130,7),Color(0,0,0,0.6))
+	draw_rect(Rect2(232,112,130*clampf(other_ratio,0,1),7),Color("6b2030"))
+	var tag: String = ((" (jogo · J2 assume)" if q.ai else " (Jogador 2)") if duo else " (T)")
+	_text(Vector2(368,119),str(p.CHARACTERS[other].name).capitalize() + tag,10,Color("b9ad98"))
+	var lance_holder = q if duo else (p if p.character == "beatriz" else null)
+	if lance_holder != null:
+		draw_rect(Rect2(232,124,130,5),Color(0,0,0,0.6))
+		draw_rect(Rect2(232,124,130*lance_holder.lance_weight/100.0,5),Color("8a8a90"))
+		_text(Vector2(368,130),"Peso da lança",10,Color("a8a8ae"))
+	if duo and q.state == "fallen":
+		_text(Vector2(232,146),"Beatriz caiu · chegue perto e segure H",12,Color("e05a5a"))
+	elif duo and p.state == "fallen":
+		_text(Vector2(232,146),"Você caiu · Beatriz pode te levantar",12,Color("e05a5a"))
+	elif not duo and p.hp <= p.max_hp * 0.25 and p.partner_hp > p.max_hp * 0.30 and p.share_cd <= 0.0:
+		_text(Vector2(232,146),"H · Sangue compartilhado",12,Color("e05a5a"))
 	if game.stain_active:
 		draw_rect(Rect2(80+330*0.122+330*0.785*0.75,29+82*0.48,330*0.785*0.25,82*0.17),Color("342f38"))
 		_text(Vector2(259,98),"Culpa pendente · capacidade 75%",11,Color("c79c97"))
@@ -159,7 +184,7 @@ func _draw_play(vs: Vector2) -> void:
 		_panel(Rect2(150,vs.y-51,vs.x-300,41))
 		_text(Vector2(0,vs.y-24),game.prompt,16,Color("eedcc0"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	elif game.play_time < 18 and game.message_text == "":
-		_text(Vector2(0,vs.y-24),"A/D · mover     ESPAÇO · saltar     J · espada     L · aparo     K · esquiva     E · examinar     TAB · mapa",14,Color("c7baa4"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+		_text(Vector2(0,vs.y-24),"A/D · mover     ESPAÇO · saltar     J · espada (3 golpes)     I · carregado     L · aparo     K · esquiva     E · examinar     TAB · mapa",14,Color("c7baa4"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	if game.toast_t > 0:
 		var text_lines := _wrap(game.toast_text,800,17)
 		for i in range(text_lines.size()):
@@ -263,12 +288,29 @@ func _draw_ending(vs: Vector2) -> void:
 	_text(Vector2(0, vs.y - 80.0), "ENTER  —  voltar ao título", 20, Color(0.85, 0.8, 0.78, ta), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 
 
+func _draw_dev(vs: Vector2) -> void:
+	var rooms: Array = game.dev_rooms()
+	var box := Rect2(vs.x - 330, 140, 310, 40 + rooms.size() * 22 + 70)
+	draw_rect(box, Color(0, 0, 0, 0.72))
+	draw_rect(box, Color(1.0, 0.82, 0.42, 0.9), false, 2.0)
+	_text(Vector2(box.position.x + 12, box.position.y + 24), "MODO DEV  (F3)", 16, Color("e8c873"))
+	for k in range(rooms.size()):
+		var sel: bool = k == game.dev_index
+		var here: bool = rooms[k] == game.exploration.room
+		var label: String = ("▶ " if sel else "   ") + str(game.exploration.rooms[rooms[k]].name).capitalize() + ("  •" if here else "")
+		_text(Vector2(box.position.x + 12, box.position.y + 48 + k * 22), label, 14, Color("ffffff") if sel else Color("c5c0b3"))
+	var y := box.position.y + 52 + rooms.size() * 22
+	var pos: Vector2 = game.player.global_position
+	_text(Vector2(box.position.x + 12, y), "↑↓ sala · ENTER ir · B chefe", 13, Color("a8a397"))
+	_text(Vector2(box.position.x + 12, y + 20), "G invencível: %s · N voar: %s" % ["SIM" if game.player.dev_god else "não", "SIM" if game.player.dev_fly else "não"], 13, Color("a8a397"))
+	_text(Vector2(box.position.x + 12, y + 40), "posição %d, %d" % [int(pos.x), int(pos.y)], 13, Color("7f7b72"))
+
 func _draw_pause(vs: Vector2) -> void:
 	draw_rect(Rect2(Vector2.ZERO, vs), Color(0.015, 0.018, 0.024, 0.95))
 	_panel(Rect2(220,95,vs.x-440,590))
 	_heading(Vector2(0, 182), "A PEREGRINAÇÃO AGUARDA", 30, GOLD, vs.x)
 	_text(Vector2(0, 228), "PAUSA", 14, Color("a6a49e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "L    Aparo (aperte quando o golpe chegar)", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som", "TAB    Cartografia · S+ESPAÇO    Descer"]
+	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "L    Aparo (aperte quando o golpe chegar)", "I    Golpe carregado (segure e solte)", "H    Levantar Beatriz caída (segure perto dela)", "Jogador 2: setas, Num1 ataque, Num3 esquiva, Num4 aparo", "Num5 carregado, Num6 cura, Num0 sangue · F4 IA/J2", "↓ + J no ar    Golpe descendente", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som", "TAB    Cartografia · S+ESPAÇO    Descer"]
 	for i in range(controls.size()):
 		_text(Vector2(430, 268 + i * 27), controls[i], 18, Color("c5c0b3"))
 	_text(Vector2(430, 574), "P    Reduzir pulsos e tremores: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 18, Color("e0d3b0") if game.reduced_pulses else Color("c5c0b3"))

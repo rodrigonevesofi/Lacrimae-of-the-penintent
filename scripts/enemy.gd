@@ -76,9 +76,13 @@ var announced := false
 var phase_two_heard := false
 var attacks_done := 0
 var prev_state := ""
+## Who struck last (for the weight of Beatriz's lance), and the nearest standing penitent as the target.
+var last_hitter = null
+var retarget_t := 0.0
 ## Equilíbrio: golpes leves só fazem a criatura recuar após acumular acertos suficientes; até lá ela continua atacando.
 const POISE := {0: 45.0, 1: 35.0, 4: 60.0, 5: 30.0, 6: 40.0, 7: 45.0, 8: 9999.0}
 var poise := 40.0
+var poise_recovery := 0.0
 ## Carregador de caixão: a pedra nas costas protege sua frente até quebrar.
 var coffin := 60.0
 var exposed := false
@@ -192,6 +196,7 @@ func parried() -> void:
 func take_hit(dmg: float, from_x: float) -> void:
 	if dead or executing:
 		return
+	poise_recovery = 1.4
 	if state == "stagger":
 		dmg *= 1.6
 	if kind == 8 and not exposed and state != "recover" and (from_x - global_position.x) * float(facing) > 0.0:
@@ -308,6 +313,18 @@ func _die() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	retarget_t -= delta
+	if retarget_t <= 0.0:
+		retarget_t = 0.3
+		var best = null
+		var best_d := 99999.0
+		for who in get_tree().get_nodes_in_group("players"):
+			if not is_instance_valid(who) or not who.standing(): continue
+			var d: float = who.global_position.distance_to(global_position)
+			if d < best_d:
+				best_d = d
+				best = who
+		if best != null: player = best
 	var game = get_tree().get_first_node_in_group("game")
 	if game != null and (game.state != "play" or game.message_text != "" or game.narrative.mode != "" or game.penitence_menu or (game.exploration != null and (game.exploration.map_open or game.exploration.is_transitioning() or game.exploration.room != room_id))):
 		return
@@ -345,6 +362,9 @@ func _physics_process(delta: float) -> void:
 	if player == null or not is_instance_valid(player):
 		return
 	rage_t = maxf(rage_t - delta, 0.0)
+	poise_recovery = maxf(poise_recovery - delta, 0.0)
+	if poise_recovery <= 0.0 and state not in ["hurt", "stagger"]:
+		poise = move_toward(poise, float(POISE.get(kind, 40.0)), 18.0 * delta)
 	_state_sounds()
 	match kind:
 		0, 7:
@@ -397,7 +417,7 @@ func _walker(delta: float) -> void:
 				velocity.x = facing * (150.0 if fed_by_guilt else 115.0)
 			else:
 				velocity.x = 0.0
-			if dist < 72.0 and dy < 90.0 and cd <= 0.0 and alive:
+			if dist < 72.0 and dy < 90.0 and cd <= 0.0 and alive and _melee_slot_available():
 				state = "windup"
 				state_t = 0.55
 				velocity.x = 0.0
@@ -429,6 +449,22 @@ func _walker(delta: float) -> void:
 			if state_t <= 0.0:
 				state = "chase"
 	move_and_slide()
+
+
+func _melee_slot_available() -> bool:
+	# Companheiros no mesmo lado se alternam; um flanqueador ainda pode atacar pelo outro lado.
+	var origin := global_position + Vector2(0, -40)
+	var ray := PhysicsRayQueryParameters2D.create(origin, player.global_position + Vector2(0, -40), 1)
+	if not get_world_2d().direct_space_state.intersect_ray(ray).is_empty(): return false
+	for other in get_tree().get_nodes_in_group("enemies"):
+		if other == self or other.dead or other.room_id != room_id or other.kind not in [0, 7]: continue
+		if other.player != player: continue
+		if other.state not in ["windup", "strike"]: continue
+		var side := signf(global_position.x - player.global_position.x)
+		var other_side := signf(other.global_position.x - player.global_position.x)
+		if side == other_side and absf(other.global_position.x - player.global_position.x) < 150.0:
+			return false
+	return true
 
 
 # ---------- Duelistas ("Duelo a cacetadas"): dois homens presos a um combate entre si ----------

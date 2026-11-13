@@ -173,7 +173,7 @@ func run() -> void:
 	p.combo = 1
 	var effects_before: int = game.get_child_count()
 	p._attack_hits()
-	expect(weak.dead and p.hit_pause >= 0.15,"a killing blow holds the frame longer than a common hit")
+	expect(weak.dead and p.hit_pause >= 0.075 and p.hit_pause < 0.12,"a killing blow holds longer than a light hit without a long freeze")
 	expect(game.get_child_count() > effects_before,"a blow throws sparks and blood from the painted atlas")
 	var big := 0
 	for child in game.get_children():
@@ -183,7 +183,7 @@ func run() -> void:
 	p.hit_list.clear()
 	p.hit_pause = 0
 	p._attack_hits()
-	expect(p.hit_pause >= 0.08,"an ordinary hit stops the frame for a moment")
+	expect(p.hit_pause >= 0.035 and p.hit_pause < 0.075,"an ordinary hit stops the frame for a moment")
 
 	# --- Chefe: terceira fase abaixo de um quarto da vida.
 	var boss = spawn(2,Vector2(4200,600))
