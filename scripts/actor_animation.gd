@@ -32,14 +32,17 @@ func configure(actor_name: String, scale_factor: float) -> void:
 	for clip in definitions:
 		var data: Dictionary = definitions[clip]
 		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
-		var cell := sheet.get_size() / Vector2(6, 4)
+		var grid: Array = data.get("grid", [6, 4])
+		var columns := int(grid[0])
+		var cell := sheet.get_size() / Vector2(columns, int(grid[1]))
 		sprite_frames.add_animation(clip)
 		sprite_frames.set_animation_loop(clip, data.get("loop", true))
 		sprite_frames.set_animation_speed(clip, float(data.get("fps", 12)))
 		for i in range(int(data["count"])):
 			var index := int(data["start"]) + i
-			var start := Vector2(roundf((index % 6) * cell.x), roundf((index / 6) * cell.y))
-			var end := Vector2(roundf((index % 6 + 1) * cell.x), roundf((index / 6 + 1) * cell.y))
+			var row := floori(float(index) / columns)
+			var start := Vector2(roundf((index % columns) * cell.x), roundf(row * cell.y))
+			var end := Vector2(roundf((index % columns + 1) * cell.x), roundf((row + 1) * cell.y))
 			var region := AtlasTexture.new()
 			region.atlas = sheet
 			region.region = Rect2(start, end - start)

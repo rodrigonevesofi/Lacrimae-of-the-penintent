@@ -90,9 +90,11 @@
     },
     {
       "captions": [
-        "[Sino]"
+        "[Sino]",
+        "[Sino grave, abafado]",
+        "[Grito de bronze]"
       ],
-      "duration": 6.5,
+      "duration": 11.0,
       "flash": 0.0,
       "index": 0,
       "knocks": 0,

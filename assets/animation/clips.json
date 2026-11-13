@@ -1119,5 +1119,52 @@
         128
       ]
     }
+  },
+  "impacto_chao": {
+    "idle": {
+      "sheet": "onda_golpe",
+      "count": 6,
+      "fps": 20,
+      "loop": false,
+      "grid": [
+        6,
+        2
+      ],
+      "anchor": [
+        128,
+        242
+      ],
+      "start": 0
+    },
+    "dust": {
+      "sheet": "onda_golpe",
+      "count": 6,
+      "fps": 20,
+      "loop": false,
+      "grid": [
+        6,
+        2
+      ],
+      "anchor": [
+        128,
+        242
+      ],
+      "start": 0
+    },
+    "charged": {
+      "sheet": "onda_golpe",
+      "count": 6,
+      "fps": 20,
+      "loop": false,
+      "grid": [
+        6,
+        2
+      ],
+      "anchor": [
+        128,
+        242
+      ],
+      "start": 6
+    }
   }
 }

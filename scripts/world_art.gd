@@ -197,6 +197,18 @@ func draw_doorway(face: Dictionary, locked: bool) -> void:
 	draw_set_transform(foot,0,Vector2(float(face.facing),1))
 	draw_texture_rect_region(doorway_art,Rect2(-width/2,-width*floor_anchor/512,width,width),source)
 	draw_set_transform(Vector2.ZERO)
+	# Whatever the room's art, a doorway must read as a way through: a lit arch over the opening, light on the
+	# threshold and a sigil above it. Gold when it opens, red when it is barred.
+	var col := Color(0.95, 0.33, 0.28) if locked else Color(1.0, 0.82, 0.42)
+	var mid := foot + Vector2(0, -width * 0.40)
+	draw_rect(Rect2(foot.x - width * 0.30, foot.y - width * 0.78, width * 0.60, width * 0.78), Color(col, 0.07))
+	draw_arc(mid, width * 0.36, PI, TAU, 32, Color(col, 0.75), 3.0)
+	draw_line(mid + Vector2(-width * 0.36, 0), Vector2(foot.x - width * 0.36, foot.y), Color(col, 0.55), 2.0)
+	draw_line(mid + Vector2(width * 0.36, 0), Vector2(foot.x + width * 0.36, foot.y), Color(col, 0.55), 2.0)
+	draw_rect(Rect2(foot.x - width * 0.36, foot.y - 4.0, width * 0.72, 4.0), Color(col, 0.6))
+	var sigil := mid + Vector2(0, -width * 0.36 - 26.0)
+	draw_colored_polygon(PackedVector2Array([sigil + Vector2(0, -12), sigil + Vector2(9, 0), sigil + Vector2(0, 12), sigil + Vector2(-9, 0)]), Color(col, 0.95))
+	draw_polyline(PackedVector2Array([sigil + Vector2(-8, 18), sigil + Vector2(0, 26), sigil + Vector2(8, 18)]), Color(col, 0.9), 2.5)
 
 func build_memorial() -> void:
 	memorial_base = Sprite2D.new()

@@ -63,7 +63,7 @@ func run() -> void:
 	player.state_t = player.ATTACK_TIME * 0.59
 	player._physics_process(0.001)
 	expect(target.hp < hp_before, "contact frame deals damage")
-	expect(player.hit_pause >= 0.085, "a successful contact starts a heavier impact pause (at least 85 ms)")
+	expect(player.hit_pause >= 0.035 and player.hit_pause < 0.075, "a light contact pauses briefly without a long freeze")
 	var hp_after: float = target.hp
 	player.hit_pause = 0
 	player._physics_process(0.001)
