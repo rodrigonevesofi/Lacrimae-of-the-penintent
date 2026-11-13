@@ -132,7 +132,7 @@ func run() -> void:
 	await frames(2)
 	expect(p.begin_execution(d),"the Devourer can be executed")
 	await frames(6)
-	expect(p.animator.animation == "execute_devotee" and d.animator.animation == "executed","executing a brute uses the humanoid execution art")
+	expect(p.animator.animation == "execute_devorador" and d.animator.animation == "executed", "executar o Devorador usa a nova sequência própria")
 	await frames(90)
 	expect(d.dead,"the execution kills him")
 	await clear()
