@@ -1,0 +1,10 @@
+; Copie este arquivo como "ia_local.cfg" (na mesma pasta) e cole sua chave do Gemini.
+; Chave gratuita: https://aistudio.google.com/apikey
+; O arquivo ia_local.cfg está no .gitignore: a chave NUNCA deve ir para o GitHub.
+; Num jogo exportado, use user://ia.cfg (mesmo formato) ou a variável GEMINI_API_KEY.
+
+[gemini]
+api_key="COLE_SUA_CHAVE_AQUI"
+model="gemini-3.5-flash-lite"
+; MINIMAL deixa a resposta mais rápida. Deixe vazio ("") para não enviar thinkingConfig.
+thinking_level="MINIMAL"

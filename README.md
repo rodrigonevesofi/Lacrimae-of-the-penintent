@@ -25,6 +25,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **M:** ativar ou silenciar o som
 - **TAB:** abrir o mapa
 - **H:** compartilhar sangue; perto do parceiro caído, segurar para levantá-lo
+- **C (no altar):** abrir o Confessionário, um chat com IA (Gemini) que tira dúvidas e dá pistas; veja [docs/confessionario.md](docs/confessionario.md)
 - **F3:** modo de desenvolvimento para visitar salas
 
 Beatriz acompanha o Penitente e luta por conta própria. Para assumir o segundo personagem, use **setas** para mover, **↑** para pular, teclado numérico **1** para atacar, **3** para esquivar, **4** para aparar, **5** para carregar golpe, **6** para curar, **0** para doar sangue e **Enter numérico** para interagir. Também é possível usar um segundo controle.
