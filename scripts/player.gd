@@ -90,6 +90,8 @@ signal fell
 var dev_fly := false
 var dev_god := false
 const BLOOD_DECALS_MAX := 14
+## Mancha vermelha nas bordas da tela no golpe mortal de uma execução (desenhada pelo HUD).
+var gore_flash := 0.0
 var parries := 0
 const PARRY_TIME := 0.46
 const PARRY_WINDOW := 0.22
@@ -228,9 +230,11 @@ func body_rect() -> Rect2:
 
 # ---------- física / estados ----------
 func _physics_process(delta: float) -> void:
+	# A mancha dura meio segundo real, inclusive durante execução e pausa de impacto.
+	gore_flash = maxf(gore_flash - delta / maxf(Engine.time_scale, 0.01), 0.0)
 	if is_partner:
 		var director = get_tree().get_first_node_in_group("game")
-		if director != null and (director.state != "play" or director.narrative.mode != "" or director.exploration.is_transitioning() or director.message_text != ""):
+		if director != null and (director.state != "play" or director.narrative.mode != "" or director.exploration.is_transitioning() or director.message_text != "" or director.dev_mode or director.exploration.map_open or director.penitence_menu):
 			_clear_combat_input()
 			input_release_gate = true
 			velocity = Vector2.ZERO
@@ -313,7 +317,13 @@ func _physics_process(delta: float) -> void:
 				# Quando ferimento e golpe mortal coincidem, usa apenas o jato final.
 				if execution_wound_at < execution_kill_at:
 					get_tree().call_group("game", "play_sfx", "hit_carne")
-					_blood_burst(_execution_torso(), 0.4, 18)
+					get_tree().call_group("game", "play_sfx", "carne_rasga")
+					var wound := _execution_torso()
+					_blood_burst(wound, 1.0, 40)
+					get_tree().call_group("game", "spawn_effect", "sangue", wound, facing, 0.55, "impactos")
+					get_tree().call_group("game", "blood_splats", execution_target.global_position, facing, 5, 0.9)
+					hit_pause = maxf(hit_pause, 0.06)
+					shake = maxf(shake, 4.0)
 			if progress >= execution_kill_at and not execution_contact:
 				execution_contact = true
 				var torso := _execution_torso()
@@ -325,14 +335,24 @@ func _physics_process(delta: float) -> void:
 				hit_pause = 0.1
 				get_tree().call_group("game", "play_sfx", "hit_carne")
 				get_tree().call_group("game", "play_sfx", "execucao")
-				# Golpe mortal: sangue em leque, gotas que caem e uma poça que permanece na pedra.
-				_blood_burst(torso, 0.6, 46)
-				get_tree().call_group("game", "spawn_effect", _impact_kind(execution_target), torso, facing, 0.3, "impactos")
+				get_tree().call_group("game", "play_sfx", "execucao_impacto")
+				get_tree().call_group("game", "play_sfx", "osso_quebra")
+				# Golpe mortal: um jato arterial em pulsos, névoa de sangue, gotas que caem e se espalham
+				# pelo chão, uma poça larga e a borda da tela manchada de vermelho.
+				hit_pause = 0.16
+				shake = 10
+				_blood_burst(torso, 1.6, 90)
+				_arterial_spray(torso, 4)
+				get_tree().call_group("game", "spawn_effect", "sangue", torso, facing, 0.85, "impactos")
+				get_tree().call_group("game", "spawn_effect", "star", torso, facing, 0.6, "golpe")
+				get_tree().call_group("game", "blood_splats", ground, facing, 14, 1.4)
 				_blood_decal(ground)
-				_slow_motion(0.3, 0.2)
+				gore_flash = 0.5
+				_slow_motion(0.25, 0.3)
 				add_weight(12.0)
 		if state_t <= 0:
 			if is_instance_valid(execution_target): execution_target.executing = false
+			get_tree().call_group("game", "play_sfx", "lamina_sai")
 			execution_target = null
 			camera.zoom = execution_zoom_start
 			state = "idle"
@@ -639,8 +659,13 @@ func _attack_hits(aerial: bool = false) -> void:
 			get_tree().call_group("game", "spawn_effect", "star", spot, facing, 0.5, "golpe")
 			# Cada material reage de um jeito: faíscas na armadura, lascas na pedra e sangue na carne.
 			get_tree().call_group("game", "spawn_effect", impact_kind, spot + Vector2(float(facing) * 8.0, 4.0), facing, 0.42 if e.dead else 0.34, "impactos")
+			if impact_kind == "sangue":
+				get_tree().call_group("game", "play_sfx", "carne_rasga")
+				# A carne sangra a cada corte: um jato curto e gotas que caem no chão.
+				_blood_burst(spot, 0.75 if e.dead else 0.45, 26 if e.dead else 12)
+				get_tree().call_group("game", "blood_splats", Vector2(e.global_position.x, e.global_position.y), facing, 6 if e.dead else 2, 1.0 if e.dead else 0.6)
 			if e.dead and e.family != "flyer":
-				get_tree().call_group("game", "spawn_effect", "pool", Vector2(e.global_position.x, e.global_position.y - 52.0), facing, 0.6, "golpe")
+				get_tree().call_group("game", "spawn_effect", "pool", Vector2(e.global_position.x, e.global_position.y - 52.0), facing, 0.75, "golpe")
 
 
 func _start_roll() -> void:
@@ -1169,6 +1194,7 @@ func _execution_torso() -> Vector2:
 	return global_position + Vector2(facing * 45, -42)
 
 func _blood_burst(at: Vector2, size: float, drops: int) -> void:
+	get_tree().call_group("game", "play_sfx", "sangue_jato")
 	var game = get_tree().get_first_node_in_group("game")
 	if game == null: return
 	game.spawn_effect("blood", at, facing, size)
@@ -1176,13 +1202,13 @@ func _blood_burst(at: Vector2, size: float, drops: int) -> void:
 	var spray := CPUParticles2D.new()
 	spray.one_shot = true
 	spray.emitting = false
-	spray.amount = drops
-	spray.lifetime = 1.0
+	spray.amount = maxi(drops, 1)
+	spray.lifetime = 1.4
 	spray.explosiveness = 0.95
 	spray.direction = Vector2(float(facing), -0.7)
-	spray.spread = 38.0
-	spray.initial_velocity_min = 240.0
-	spray.initial_velocity_max = 560.0
+	spray.spread = 46.0
+	spray.initial_velocity_min = 220.0
+	spray.initial_velocity_max = 640.0 * clampf(size, 0.6, 1.6)
 	spray.gravity = Vector2(0, 1500)
 	# Gotas arredondadas de 2–5 pixels, em vez de quadrados grandes.
 	var drop_gradient := Gradient.new()
@@ -1196,15 +1222,77 @@ func _blood_burst(at: Vector2, size: float, drops: int) -> void:
 	drop_texture.fill_to = Vector2(1.0, 0.5)
 	spray.texture = drop_texture
 	spray.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	spray.scale_amount_min = 0.3
-	spray.scale_amount_max = 0.625
-	spray.color = Color(0.55, 0.02, 0.04)
+	spray.scale_amount_min = 0.45
+	spray.scale_amount_max = 1.0 + 0.5 * clampf(size, 0.0, 1.6)
+	# Sangue escuro, com gotas um pouco mais vivas e outras quase pretas.
+	var shades := Gradient.new()
+	shades.colors = PackedColorArray([Color(0.62, 0.03, 0.05), Color(0.38, 0.0, 0.02)])
+	spray.color_initial_ramp = shades
 	spray.z_index = 7
 	spray.position = at
 	spray.add_to_group("blood_spray")
 	game.add_child(spray)
 	spray.emitting = true
-	get_tree().create_timer(1.6).timeout.connect(spray.queue_free)
+	get_tree().create_timer(2.0).timeout.connect(spray.queue_free)
+	if size >= 1.4:
+		# Golpe mortal: pedaços de carne arrancados, que giram no ar e caem pesados.
+		var chunks := CPUParticles2D.new()
+		chunks.one_shot = true
+		chunks.amount = 9
+		chunks.lifetime = 1.3
+		chunks.explosiveness = 1.0
+		chunks.direction = Vector2(float(facing), -1.0)
+		chunks.spread = 50.0
+		chunks.initial_velocity_min = 260.0
+		chunks.initial_velocity_max = 520.0
+		chunks.gravity = Vector2(0, 1700)
+		chunks.angular_velocity_min = -540.0
+		chunks.angular_velocity_max = 540.0
+		chunks.texture = drop_texture
+		chunks.scale_amount_min = 1.6
+		chunks.scale_amount_max = 2.8
+		chunks.color = Color(0.3, 0.0, 0.02)
+		chunks.z_index = 7
+		chunks.position = at
+		chunks.add_to_group("blood_spray")
+		game.add_child(chunks)
+		chunks.emitting = true
+		get_tree().create_timer(1.8).timeout.connect(chunks.queue_free)
+	if size >= 0.7:
+		# Névoa fina que fica no ar um instante depois de um corte profundo.
+		var mist := CPUParticles2D.new()
+		mist.one_shot = true
+		mist.amount = int(drops * 0.8)
+		mist.lifetime = 0.7
+		mist.explosiveness = 1.0
+		mist.direction = Vector2(float(facing), -0.3)
+		mist.spread = 70.0
+		mist.initial_velocity_min = 60.0
+		mist.initial_velocity_max = 220.0
+		mist.gravity = Vector2(0, 160)
+		mist.damping_min = 120.0
+		mist.damping_max = 220.0
+		mist.texture = drop_texture
+		mist.scale_amount_min = 0.15
+		mist.scale_amount_max = 0.35
+		mist.color = Color(0.5, 0.02, 0.04, 0.55)
+		mist.z_index = 7
+		mist.position = at
+		mist.add_to_group("blood_spray")
+		game.add_child(mist)
+		mist.emitting = true
+		get_tree().create_timer(1.2).timeout.connect(mist.queue_free)
+
+## O jato arterial: pulsos de sangue que saem da ferida em sequência, como um coração que ainda bate.
+func _arterial_spray(at: Vector2, pulses: int) -> void:
+	for k in range(pulses):
+		var delay := 0.11 * k
+		var strength := 1.0 - 0.18 * k
+		get_tree().create_timer(delay, true, false, true).timeout.connect(func():
+			if not is_inside_tree(): return
+			_blood_burst(at + Vector2(0.0, -4.0 * k), 0.9 * strength, int(34 * strength))
+			get_tree().call_group("game", "blood_splats", Vector2(at.x, global_position.y), facing, 3, 1.0)
+		)
 
 func _blood_decal(ground: Vector2) -> void:
 	var game = get_tree().get_first_node_in_group("game")
@@ -1220,16 +1308,16 @@ func _blood_decal(ground: Vector2) -> void:
 	art.atlas = load("res://assets/animation/efeitos_golpe.png")
 	art.region = Rect2(5 * 256, 3 * 256, 256, 256)
 	pool.texture = art
-	pool.scale = Vector2(0.62, 0.62)
-	pool.modulate = Color(0.78, 0.74, 0.74)
+	pool.scale = Vector2(0.9, 0.75)
+	pool.modulate = Color(0.72, 0.62, 0.62)
 	pool.flip_h = facing < 0
 	pool.z_index = 5
-	pool.position = ground - Vector2(0.0, (215.0 - 128.0) * 0.62)
+	pool.position = ground - Vector2(0.0, (215.0 - 128.0) * 0.75)
 	pool.add_to_group("blood_decals")
 	game.add_child(pool)
 	var fade := pool.create_tween()
-	fade.tween_interval(25.0)
-	fade.tween_property(pool, "modulate:a", 0.0, 4.0)
+	fade.tween_interval(40.0)
+	fade.tween_property(pool, "modulate:a", 0.0, 5.0)
 	fade.tween_callback(pool.queue_free)
 
 func can_drop() -> bool:

@@ -204,7 +204,7 @@ func dev_teleport(id: String) -> void:
 func toggle_dev() -> void:
 	dev_mode = not dev_mode
 	if not dev_mode:
-		player.dev_fly = false
+		_leave_dev_fly()
 		player.dev_god = false
 	toast("MODO DEV " + ("LIGADO · ↑↓ sala · ENTER ir · G invencível · N voar · B chefe" if dev_mode else "DESLIGADO"))
 
@@ -226,11 +226,30 @@ func dev_input(event: InputEvent) -> bool:
 		KEY_DOWN: dev_index = (dev_index + 1) % rooms.size()
 		KEY_ENTER, KEY_KP_ENTER: dev_teleport(rooms[dev_index])
 		KEY_G: player.dev_god = not player.dev_god
-		KEY_N: player.dev_fly = not player.dev_fly
+		KEY_N:
+			if player.dev_fly: _leave_dev_fly()
+			else: player.dev_fly = true
 		KEY_B:
 			exploration.travel("city", Vector2(3700, 600))
 		_: return false
 	return true
+
+func _leave_dev_fly() -> void:
+	if not player.dev_fly: return
+	player.dev_fly = false
+	# Se o voo terminou dentro de alvenaria, recupera o último apoio válido.
+	for child in player.get_children():
+		if not child is CollisionShape2D: continue
+		var query := PhysicsShapeQueryParameters2D.new()
+		query.shape = child.shape
+		query.transform = child.global_transform
+		query.collision_mask = 1
+		query.exclude = [player.get_rid()]
+		query.margin = 0.0
+		if not player.get_world_2d().direct_space_state.intersect_shape(query, 1).is_empty():
+			var safe: Vector2 = player.safe_pos
+			exploration.travel(exploration.room_at(safe), safe)
+			break
 
 func toggle_pause() -> void:
 	if state == "title" or state == "ending" or (narrative != null and narrative.mode != ""):
@@ -411,7 +430,8 @@ func _update_duo(delta: float) -> void:
 	if partner == null or not is_instance_valid(partner):
 		return
 	partner.has_weapon = player.has_weapon
-	if partner.ai:
+	var gameplay_input: bool = not paused and not dev_mode and message_text.is_empty() and narrative.mode.is_empty() and not penitence_menu and not exploration.map_open and not exploration.is_transitioning()
+	if partner.ai and gameplay_input:
 		for a in ["left", "right", "jump", "attack", "roll", "parry", "heavy", "heal", "share_blood"]:
 			if Input.is_action_just_pressed("p2_" + a):
 				partner.ai = false
@@ -628,6 +648,55 @@ func _dissolve_fragment(pos: Vector2) -> void:
 	animation.animation_finished.connect(anchor.queue_free)
 
 ## Efeito de combate de execução única no atlas pintado: faíscas da espada, sangue, clarão de aparo e poeira de aterrissagem.
+## Respingos de sangue que caem e ficam no chão: manchas irregulares, umas maiores, outras em gotas,
+## espalhadas à frente do golpe e aparecendo aos poucos, como se ainda estivessem caindo.
+const BLOOD_SPLATS_MAX := 90
+
+func blood_splats(ground: Vector2, flip: int, count: int, spread: float = 1.0) -> void:
+	for k in range(count):
+		var dx := (randf() * 150.0 - 25.0) * spread * float(flip)
+		var delay := 0.08 + randf() * 0.45
+		var size := lerpf(4.0, 15.0, randf()) * (1.15 if k == 0 else 1.0)
+		get_tree().create_timer(delay, true, false, true).timeout.connect(_place_splat.bind(Vector2(ground.x + dx, ground.y), size))
+
+func _place_splat(at: Vector2, size: float) -> void:
+	# Projeta a mancha no chão ou na galeria, inclusive quando o alvo está no ar.
+	var query := PhysicsRayQueryParameters2D.create(at - Vector2(0, 4), at + Vector2(0, 1200), 1)
+	var floor_hit := get_world_2d().direct_space_state.intersect_ray(query)
+	if floor_hit.is_empty(): return
+	at = floor_hit.position
+	var old := get_tree().get_nodes_in_group("blood_splats")
+	while old.size() >= BLOOD_SPLATS_MAX:
+		var oldest = old.pop_front()
+		oldest.remove_from_group("blood_splats")
+		oldest.queue_free()
+	var splat := Node2D.new()
+	splat.position = at + Vector2(0.0, -1.0)
+	splat.z_index = 5
+	splat.add_to_group("blood_splats")
+	var points := PackedVector2Array()
+	var n := 9
+	for i in range(n):
+		var a := TAU * float(i) / float(n)
+		var r := size * (0.6 + randf() * 0.6)
+		points.append(Vector2(cos(a) * r * 1.6, sin(a) * r * 0.32))
+	var stain := Polygon2D.new()
+	stain.polygon = points
+	stain.color = Color(0.36, 0.01, 0.03, 0.92)
+	splat.add_child(stain)
+	var core := Polygon2D.new()
+	var inner := PackedVector2Array()
+	for v in points: inner.append(v * 0.55)
+	core.polygon = inner
+	core.color = Color(0.22, 0.0, 0.02, 0.95)
+	splat.add_child(core)
+	add_child(splat)
+	soundscape.play_sfx_at("respingo_chao", at)
+	var fade := splat.create_tween()
+	fade.tween_interval(40.0)
+	fade.tween_property(splat, "modulate:a", 0.0, 5.0)
+	fade.tween_callback(splat.queue_free)
+
 func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55, actor: String = "efeitos", tint: Color = Color.WHITE) -> void:
 	var anchor := Node2D.new()
 	anchor.position = pos

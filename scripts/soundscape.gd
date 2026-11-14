@@ -29,6 +29,8 @@ const CREATURE_SFX := ["devorador_rugido", "devorador_bote", "flagelante_chicote
 ## Pontos de áudio do combate e da dupla; os arquivos fornecidos na v32 ativam esses eventos.
 ## Mantidos separados de HOOK_NAMES por compatibilidade com pacotes anteriores.
 const PENDING_HOOKS := ["golpe_carregado_carga", "golpe_carregado_solta", "mergulho_impacto", "arremate", "empalar", "sangue_compartilhado", "caido", "levanta"]
+## O Argon entrega estes WAV separadamente; a ausência deles preserva os sons atuais.
+const GORE_HOOKS := ["lamina_sai", "corpo_cai_carne", "corpo_cai_armadura", "esquiva_perfeita", "aviso_aparavel", "aviso_perigo", "execucao_impacto"]
 const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "dor", "aterrissagem", "coleta", "porta", "projetil", "projetil_impacto", "espinho", "aparo", "execucao", "portao_fecha", "portao_abre", "ui_mover", "ui_confirmar"]
 ## Os sons narrativos são sempre reproduzidos da mesma forma; os demais variam um pouco em altura e volume.
 const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
@@ -36,6 +38,10 @@ const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio
 const SPACE := {"city": 0.10, "ossuary": 0.28, "cistern": 0.36, "cloister": 0.30, "belfry": 0.32, "archive": 0.22, "refuge": 0.18, "nave": 0.40, "terrace": 0.16, "court": 0.14}
 ## Famílias de variações: uma solicitação por nome escolhe aleatoriamente uma de suas gravações.
 const FAMILIES := {
+	"sangue_jato": ["sangue_jato_01", "sangue_jato_02", "sangue_jato_03"],
+	"carne_rasga": ["carne_rasga_01", "carne_rasga_02", "carne_rasga_03"],
+	"osso_quebra": ["osso_quebra_01", "osso_quebra_02", "osso_quebra_03"],
+	"respingo_chao": ["respingo_chao_01", "respingo_chao_02", "respingo_chao_03", "respingo_chao_04"],
 	"jump": ["jump_01", "jump_02", "jump_03"],
 	"lanca_estocada": ["lanca_estocada_01", "lanca_estocada_02", "lanca_estocada_03"],
 	"hit_carne": ["hit_carne_01", "hit_carne_02", "hit_carne_03"],
@@ -132,7 +138,7 @@ func _ready() -> void:
 		add_child(layer)
 		beds.append(layer)
 	var every_effect: Array = EFFECT_NAMES.duplicate()
-	for hook in HOOK_NAMES + PENDING_HOOKS:
+	for hook in HOOK_NAMES + PENDING_HOOKS + GORE_HOOKS:
 		if ResourceLoader.exists("res://assets/audio/%s.wav" % hook): every_effect.append(hook)
 	for family in FAMILIES.values():
 		for variant in family:

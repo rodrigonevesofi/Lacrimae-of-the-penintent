@@ -1,7 +1,8 @@
 extends SceneTree
-## An execution is a killing: blood at the first wound and at the killing blow, drops that fall, a pool that stays.
+## Sangue no primeiro ferimento e no golpe mortal, gotas que caem e uma poça que permanece.
 var game
 var checks := 0
+var gore_seen := false
 var failures := 0
 func _initialize() -> void: call_deferred("run")
 func expect(ok: bool,label: String) -> void:
@@ -41,6 +42,7 @@ func execute(kind: int) -> Dictionary:
 		if p.execution_wound and wound_blood == 0: wound_blood = blood_effects()
 		if p.execution_contact and kill_blood == 0:
 			kill_blood = blood_effects()
+			gore_seen = p.gore_flash > 0.0
 			drops = get_nodes_in_group("blood_spray").size()
 		if p.state != "execution": break
 	return {"started": started, "clip": clip, "wound": wound_blood, "kill": kill_blood, "drops": drops, "dead": e.dead}
@@ -57,11 +59,16 @@ func run() -> void:
 	await frames(2)
 	var r: Dictionary = await execute(0)
 	expect(r.started and r.dead,"a staggered devotee is executed")
+	expect(gore_seen,"the screen edge is stained red at the killing blow")
 	expect(r.wound >= 2,"the first wound draws blood (%d)" % r.wound)
 	expect(r.kill >= 2 and r.drops >= 1,"the killing blow throws blood and drops (%d, %d)" % [r.kill, r.drops])
 	await frames(10)
 	expect(get_nodes_in_group("blood_decals").size() >= 1,"a pool of blood stays on the floor")
+	expect(get_nodes_in_group("blood_splats").size() >= 10,"the killing blow spatters the floor with blood (%d splats)" % get_nodes_in_group("blood_splats").size())
 	expect(r.clip == "execute_devotee","the devotee's execution is his own")
+	# O jato continua em pulsos depois do golpe: ainda há gotas sendo lançadas instantes depois.
+	var sprays_now: int = get_nodes_in_group("blood_spray").size()
+	expect(sprays_now >= 2,"blood is still pumping from the wound after the blow (%d sprays)" % sprays_now)
 	var r3: Dictionary = await execute(3)
 	expect(r3.dead and r3.kill >= 2,"every creature bleeds when executed, the Devourer too")
 	expect(r3.clip in ["execute_devorador","execute_devotee"],"the Devourer uses his own execution as soon as it is drawn (%s for now)" % r3.clip)
