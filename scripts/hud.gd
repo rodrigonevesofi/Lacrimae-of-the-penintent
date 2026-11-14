@@ -121,6 +121,18 @@ func _bar(pos: Vector2, w: float, h: float, frac: float, col: Color) -> void:
 func _draw_play(vs: Vector2) -> void:
 	var p = game.player
 	if p.damage_flash > 0: draw_rect(Rect2(Vector2.ZERO,vs),Color(0.5,0.015,0.025,p.damage_flash*0.5))
+	var gore: float = p.gore_flash
+	if game.partner != null and is_instance_valid(game.partner): gore = maxf(gore, game.partner.gore_flash)
+	if gore > 0.0 and not game.reduced_pulses:
+		# Golpe mortal de execução: sangue nas bordas da tela, mais forte nos cantos.
+		var g: float = clampf(gore / 0.5, 0.0, 1.0)
+		var edge := Color(0.42, 0.0, 0.02, 0.55 * g)
+		var clear := Color(0.42, 0.0, 0.02, 0.0)
+		var band: float = vs.y * 0.22
+		draw_polygon(PackedVector2Array([Vector2(0,0),Vector2(vs.x,0),Vector2(vs.x,band),Vector2(0,band)]),PackedColorArray([edge,edge,clear,clear]))
+		draw_polygon(PackedVector2Array([Vector2(0,vs.y-band),Vector2(vs.x,vs.y-band),Vector2(vs.x,vs.y),Vector2(0,vs.y)]),PackedColorArray([clear,clear,edge,edge]))
+		draw_polygon(PackedVector2Array([Vector2(0,0),Vector2(band,0),Vector2(band,vs.y),Vector2(0,vs.y)]),PackedColorArray([edge,clear,clear,edge]))
+		draw_polygon(PackedVector2Array([Vector2(vs.x-band,0),Vector2(vs.x,0),Vector2(vs.x,vs.y),Vector2(vs.x-band,vs.y)]),PackedColorArray([clear,edge,edge,clear]))
 	# Os dois recipientes compartilham uma moldura ornamental, mantendo preenchimento e rótulos legíveis.
 	draw_texture_rect(ui_regions.seal,Rect2(18,20,84,100),false)
 	_ornate_bar(Rect2(80,-4,370,96),p.hp/p.max_hp,Color("8f182b"))
@@ -307,15 +319,19 @@ func _draw_dev(vs: Vector2) -> void:
 
 func _draw_pause(vs: Vector2) -> void:
 	draw_rect(Rect2(Vector2.ZERO, vs), Color(0.015, 0.018, 0.024, 0.95))
-	_panel(Rect2(220,95,vs.x-440,590))
-	_heading(Vector2(0, 182), "A PEREGRINAÇÃO AGUARDA", 30, GOLD, vs.x)
-	_text(Vector2(0, 228), "PAUSA", 14, Color("a6a49e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	var controls := ["A / D ou ← / →    Mover", "ESPAÇO / W / ↑    Saltar", "J / X    Ataque com espada", "K / SHIFT    Esquiva", "L    Aparo (aperte quando o golpe chegar)", "I    Golpe carregado (segure e solte)", "H    Levantar Beatriz caída (segure perto dela)", "Jogador 2: setas, Num1 ataque, Num3 esquiva, Num4 aparo", "Num5 carregado, Num6 cura, Num0 sangue · F4 IA/J2", "↓ + J no ar    Golpe descendente", "F    Lágrima curativa", "Q    Penitência (50% de culpa)", "E    Examinar / orar / continuar", "R    Oferecer lágrimas no altar", "V    Trocar penitências no altar", "M    Ativar / silenciar som", "TAB    Cartografia · S+ESPAÇO    Descer"]
-	for i in range(controls.size()):
-		_text(Vector2(430, 268 + i * 27), controls[i], 18, Color("c5c0b3"))
-	_text(Vector2(430, 574), "P    Reduzir pulsos e tremores: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 18, Color("e0d3b0") if game.reduced_pulses else Color("c5c0b3"))
-	_text(Vector2(0, 605), "O progresso é salvo ao orar e ao obter a espada ou a relíquia.", 15, Color("8f918e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	_heading(Vector2(0, 650), "ESC  ·  Retomar", 22, GOLD, vs.x)
+	_panel(Rect2(170, 75, vs.x - 340, 600))
+	_heading(Vector2(0, 132), "A PEREGRINAÇÃO AGUARDA", 28, GOLD, vs.x)
+	_text(Vector2(215, 182), "PENITENTE · JOGADOR 1", 17, GOLD)
+	_text(Vector2(665, 182), "BEATRIZ · JOGADORA 2", 17, GOLD)
+	var first := ["A / D  ·  mover     ESPAÇO / W  ·  saltar", "J / X  ·  atacar     S + J no ar  ·  mergulho", "I  ·  segurar e soltar golpe carregado", "K / SHIFT  ·  esquivar     L  ·  aparar", "F  ·  curar     Q  ·  penitência", "E  ·  examinar, orar ou executar", "R  ·  oferecer lágrimas no altar", "V  ·  penitências     1 / 2 / 3  ·  escolher", "S + ESPAÇO  ·  descer de uma galeria", "H  ·  doar sangue / segurar para levantar"]
+	var second := ["← / →  ·  mover     ↑ / Num8  ·  saltar", "↓ / Num2  ·  baixo     Num1  ·  atacar", "Num5  ·  segurar e soltar golpe carregado", "Num3  ·  esquivar     Num4  ·  aparar", "Num6  ·  curar", "ENTER numérico  ·  interagir", "Num0  ·  doar sangue / levantar parceiro", "F4  ·  alternar entre IA e jogadora 2", "O primeiro comando de J2 assume Beatriz", "Também aceita o segundo controle"]
+	for i in range(first.size()):
+		_text(Vector2(215, 217 + i * 27), first[i], 16, Color("c5c0b3"))
+		_text(Vector2(665, 217 + i * 27), second[i], 16, Color("c5c0b3"))
+	_text(Vector2(0, 518), "TAB  ·  mapa     M  ·  som     F3  ·  modo dev", 16, Color("c5c0b3"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 550), "P  ·  reduzir pulsos e tremores: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 16, Color("e0d3b0"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 590), "O progresso é salvo ao orar e ao obter a espada ou a relíquia.", 15, Color("8f918e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_heading(Vector2(0, 640), "ESC  ·  Retomar", 22, GOLD, vs.x)
 
 
 func _draw_penitences(vs: Vector2) -> void:

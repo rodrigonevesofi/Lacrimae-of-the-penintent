@@ -156,8 +156,13 @@ func run() -> void:
 		var coins: int = p.lagrimas
 		e._die()
 		expect(p.lagrimas == coins, "kill reward cannot be claimed twice kind %d" % kind)
-		await frames(30)
-		expect(p.state == "idle" and p.execution_target == null, "execution returns control kind %d" % kind)
+		# The killing blow lingers (impact pause and slow motion); control must still return within two seconds.
+		var waited := 0
+		while p.state == "execution" and waited < 120:
+			await frames(1)
+			waited += 1
+		await frames(2)
+		expect(p.state == "idle" and p.execution_target == null, "execution returns control kind %d (%d frames after the kill)" % [kind, waited])
 		expect(p.camera.zoom.is_equal_approx(Vector2.ONE), "execution restores camera zoom kind %d" % kind)
 	p.revive(Vector2(650,600))
 	await frames(3)

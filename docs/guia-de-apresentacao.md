@@ -17,4 +17,15 @@ Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3
 
 Dicas: **P** reduz pulsos e tremores; **M** silencia; **ESC** pausa e mostra os controles.
 
-Na demonstração da dupla, mostre Beatriz acompanhando o Penitente e assuma o controle dela pelo teclado numérico. Compare as três posturas conforme o peso da lança e ore no altar para aliviar o peso. Use duas criaturas diferentes para mostrar que cada uma provoca um gesto de execução próprio.
+
+## Dupla e modo de apresentação
+
+Beatriz começa controlada pela IA. **F4** alterna IA/J2; uma tecla de J2 durante a partida também assume o controle. **←/→** move, **↑/Num8** salta, **↓/Num2** aponta para baixo, **Num1** ataca, **Num3** esquiva, **Num4** apara, **Num5** carrega, **Num6** cura, **Num0** compartilha sangue e **Enter numérico** interage. Segure **H** (Penitente) ou **Num0** (Beatriz) perto do parceiro caído para levantá-lo, gastando vida do doador.
+
+No **F3**, **↑/↓** selecionam a sala e **Enter** transporta; **G** alterna invencibilidade, **N** alterna voo e **B** vai ao chefe. Fechar o voo dentro de alvenaria recupera o último piso seguro. As teclas do painel e do mapa não assumem Beatriz.
+
+## Autoria e ferramentas
+
+Projeto de Rodrigo, desenvolvido no Godot com assistência de Claude e Codex para código, integração, documentação e testes. Há arte produzida com a ferramenta integrada de geração de imagens e referências enviadas pelo autor a partir do Argon; ver `v32-integracao.md`, `v33-integracao.md` e `v33-prompts-arte.md`. Os sons entregues pelo autor foram integrados; os novos pedidos de áudio estão em `prompts-sons-gore-argon.md` e ainda aguardam WAVs. Esta declaração descreve o uso conhecido no projeto; deve acompanhar as regras da disciplina.
+
+As capturas e rotas automatizadas não substituem o ensaio humano com dois jogadores. Na v35 foram validados código e recursos atuais; a lista nova de artes e mecânicas de `prompts-codex-v35.md` permanece separada da integração.
