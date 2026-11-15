@@ -86,7 +86,7 @@ func run() -> void:
 	game.exploration.room = "cistern"
 	for i in range(30): s._process(0.1)
 	expect(s.beds[0].playing and s.beds[0].stream == s.bed_streams.get("cistern"),"the cistern has its own sound of water under the music")
-	expect(s.bed_streams.size() == 10,"all ten places have a texture of their own")
+	expect(s.bed_streams.size() == 11,"all eleven places have a texture of their own (the ten rooms and the Valley)")
 	expect(s.resolve("step").begins_with("step_agua"),"steps in the cistern splash")
 	game.exploration.room = "belfry"
 	expect(s.resolve("step").begins_with("step_madeira"),"steps in the belfry are on wood")

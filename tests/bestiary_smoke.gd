@@ -38,7 +38,8 @@ func data_checks() -> void:
 	for kind in Enemy.TYPES:
 		var t: Dictionary = Enemy.TYPES[kind]
 		if not clips.has(t.actor): data_ok = false; continue
-		if t.family != "boss":
+		# Os chefes (o Guardião e o outro Penitente, que muda de forma) têm animações próprias.
+		if t.family != "boss" and t.family != "mirror":
 			# O carregador de caixão não possui execução própria (nenhuma foi desenhada); as demais criaturas possuem.
 			var needed: Array = ["idle","walk","attack","hurt","death"] if t.actor == "carregador" else ["idle","walk","attack","hurt","death","executed"]
 			for clip in needed:
@@ -46,7 +47,7 @@ func data_checks() -> void:
 		for clip in clips[t.actor]:
 			if not ResourceLoader.exists("res://assets/animation/"+clips[t.actor][clip].sheet+".png"): data_ok = false
 	expect(data_ok,"every creature has a complete animation entry with existing art")
-	expect(Enemy.TYPES.size() == 9,"nine creature types: devotee, weeper, boss, five from Goya and the coffin carrier")
+	expect(Enemy.TYPES.size() == 10,"ten creature types: devotee, weeper, the Guardian, five from Goya, the coffin carrier and the other Penitent")
 	var kinds: Dictionary = {}
 	var groups: Dictionary = {}
 	for d in Layout.enemies():

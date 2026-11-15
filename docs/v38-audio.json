@@ -1,0 +1,31 @@
+{
+  "comparacao": "versão 36 publicada (b21ce91b37027b14092070d9e02b4a2ae8144bb5)",
+  "wavs_anteriores": 127,
+  "anteriores_alterados": [],
+  "novos_recebidos": [
+    {
+      "arquivo": "assets/audio/amb_vale.wav",
+      "sha256": "73c86c48dc66f6ee19bbd1f3d984bb7b6a61efe7cd59250ae5a76bd3ac2b09c3",
+      "canais": 2,
+      "hz": 44100,
+      "bits": 16,
+      "segundos": 30.0,
+      "pico_dbfs": -6.0,
+      "rms_dbfs": -21.42
+    }
+  ],
+  "arquivos_solicitados_nao_recebidos": [
+    "chefe_transforma",
+    "reflexo_devolve",
+    "gota_culpa",
+    "gota_recolhe",
+    "chefe_reza",
+    "placa_cai",
+    "chefe_ajoelha",
+    "capacete_sai",
+    "beatriz_chega",
+    "ost_vale",
+    "ost_revelacao"
+  ],
+  "escuta_humana": false
+}

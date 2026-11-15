@@ -289,6 +289,10 @@ func draw_branch() -> void:
 	var data: Dictionary = ex.rooms[ex.room]
 	var b: Rect2 = data.bounds
 	var floor_y: float = data.floor
+	if data.get("procedural", false):
+		# O Vale é desenhado e animado por vale_scene.gd; aqui só as passagens.
+		draw_passages(ex.room)
+		return
 	var texture: Texture2D = art_texture(data.art)
 	var height: float = ex.art_height(ex.room)
 	# Uma sala alta recebe outra composição, em vez de esticar uma parede horizontal.

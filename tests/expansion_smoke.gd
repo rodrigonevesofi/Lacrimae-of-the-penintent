@@ -36,7 +36,8 @@ func static_checks() -> void:
 	expect(not missing_art,"every room backdrop exists")
 	var arts: Array = []
 	for id in rooms:
-		if id != "city": arts.append(rooms[id].art)
+		# O Vale dos Flagelados é desenhado ao vivo (procedural): não tem pintura própria para comparar.
+		if id != "city" and not rooms[id].get("procedural", false): arts.append(rooms[id].art)
 	var repeated := false
 	for a in arts:
 		if arts.count(a) > 1: repeated = true
@@ -49,7 +50,8 @@ func static_checks() -> void:
 		for link in Layout.passages():
 			if seen.has(link.a) and not seen.has(link.b): seen.append(link.b); changed = true
 			elif seen.has(link.b) and not seen.has(link.a): seen.append(link.a); changed = true
-	expect(seen.size() == rooms.size(),"all rooms form one connected map")
+	# O Vale não tem passagem comum: desce-se a ele pelos portões, depois do Guardião (ver vale_boss_smoke).
+	expect(seen.size() == rooms.size() - 1 and not seen.has("vale"),"the ten rooms of the vigil form one connected map; the Valley is reached only by the descent")
 	var ends_ok := true
 	for link in Layout.passages():
 		if room_of(link.pa.x) != link.a or room_of(link.pb.x) != link.b: ends_ok = false

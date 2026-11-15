@@ -192,6 +192,20 @@ func _draw_play(vs: Vector2) -> void:
 	if b != null and is_instance_valid(b) and b.awake and not b.dead and game.exploration.room == "city":
 		_ornate_bar(Rect2(vs.x/2-300,10,600,112),b.hp/b.max_hp,Color("872a32"),true)
 		_heading(Vector2(0,132),b.display_name,22,Color("d5bd92"),vs.x)
+	var fb = game.final_boss
+	if fb != null and is_instance_valid(fb) and fb.awake and not fb.fallen and game.exploration.room == "vale":
+		# O chefe do Vale: quatro partes de armadura, uma por quarto da barra. O nome não revela quem ele é.
+		_ornate_bar(Rect2(vs.x/2-300,10,600,112),fb.hp/fb.max_hp,Color("872a32"),true)
+		for k in range(1,4):
+			var tick_x: float = vs.x/2-300+600.0*k/4.0
+			draw_line(Vector2(tick_x,52),Vector2(tick_x,82),Color(0.92,0.8,0.55,0.9 if fb.stage < 4-k+1 else 0.35),2)
+		_heading(Vector2(0,132),fb.NOME,22,Color("d5bd92"),vs.x)
+		if fb.intro:
+			_text(Vector2(0,156),"Ele ergue a cabeça.",13,Color("c5c0b3"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+		elif fb.form == "mirror":
+			_text(Vector2(0,156),"REFLEXO · seus golpes voltam para você · apare (L) ou espere a oração",13,Color("e05a5a"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+		else:
+			_text(Vector2(0,156),"FORMA VERDADEIRA · vulnerável por %d s" % int(ceil(maxf(fb.form_t,0.0))),13,Color("e8c873"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	if game.prompt != "" and game.message_text == "" and game.state == "play":
 		_panel(Rect2(150,vs.y-51,vs.x-300,41))
 		_text(Vector2(0,vs.y-24),game.prompt,16,Color("eedcc0"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)

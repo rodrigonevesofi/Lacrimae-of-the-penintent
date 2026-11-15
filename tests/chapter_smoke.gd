@@ -83,7 +83,7 @@ func run() -> void:
 	await close_dialogue()
 	await close_dialogue()
 	expect(game.message_text == "" and game.player.controllable, "closing prologue enables exploration")
-	expect(get_nodes_in_group("enemies").size() == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + 1, "all room encounters and one boss exist")
+	expect(get_nodes_in_group("enemies").size() == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + 2, "all room encounters and the two bosses exist (the Guardian and the other Penitent)")
 	game.player.invuln = 0
 	await screenshot("03-crypt")
 	var initial_x: float = game.player.position.x
@@ -209,6 +209,11 @@ func run() -> void:
 	game._play_update(0.02)
 	expect(game.state == "play", "boss victory leaves side routes available for exploration")
 	game.player.position = Vector2(4700,600)
+	await physics_frame
+	await process_frame
+	expect(game.prompt.find("Vale dos Flagelados") != -1, "after the Guardian, the gates lead down to the Valley, where the last fight waits")
+	# The Valley and its boss have their own test (vale_boss_smoke); here the chapter closes once he has fallen.
+	game.final_defeated = true
 	await interact()
 	expect(game.state == "ending", "player explicitly chooses to close chapter at the gates")
 	game.ending_t = 17

@@ -1,0 +1,422 @@
+[
+  {
+    "nome": "flagelado_movimento",
+    "arquivo": "assets/animation/flagelado_movimento.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "6b13d9abd4304ef519faec980f83472007ed16d246bead3d5fd1beab443eaed0"
+  },
+  {
+    "nome": "close_01",
+    "arquivo": "assets/close/close_01.png",
+    "tamanho": [
+      512,
+      512
+    ],
+    "alpha": false,
+    "sha256": "526d337a359a267c9541b4a5b434a84d8adf88e70962da98c1015ba458e3ef14"
+  },
+  {
+    "nome": "ceu",
+    "arquivo": "assets/vale/ceu.png",
+    "tamanho": [
+      2048,
+      720
+    ],
+    "alpha": false,
+    "sha256": "a110fca3e27c88373f2d5463a37b5859246c92a83777464096d6b334b286d50a"
+  },
+  {
+    "nome": "flagelado_combate",
+    "arquivo": "assets/animation/flagelado_combate.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "b3014fad60c53b8193f6b9c86ac4c3f3c62727fb9d23c33f9d78b19c598dc72e"
+  },
+  {
+    "nome": "flagelado_reacoes",
+    "arquivo": "assets/animation/flagelado_reacoes.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "a676deaf1145a37862f1f027970a26e400a236dd89cd9abba8a69c307336e4cd"
+  },
+  {
+    "nome": "flagelado_estados",
+    "arquivo": "assets/animation/flagelado_estados.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "f6b3d47f56f9151591e4312e0a039ffea89c4c7b40800569c5ee7b2edc85d14b"
+  },
+  {
+    "nome": "close_flagelado_elmo",
+    "arquivo": "assets/close/close_flagelado_elmo.png",
+    "tamanho": [
+      512,
+      512
+    ],
+    "alpha": false,
+    "sha256": "26dfbbe3a00b8423bd0e6f81f9b5b18f75b24c3e8a6d6d28d71b4121624cc999"
+  },
+  {
+    "nome": "close_revelacao_maos",
+    "arquivo": "assets/close/close_revelacao_maos.png",
+    "tamanho": [
+      512,
+      512
+    ],
+    "alpha": false,
+    "sha256": "99f330afd6c91d39f6c03749af0a89a35faf5e6b11ca16a7a589e2cd91fd1d29"
+  },
+  {
+    "nome": "close_dois_rostos",
+    "arquivo": "assets/close/close_dois_rostos.png",
+    "tamanho": [
+      512,
+      512
+    ],
+    "alpha": false,
+    "sha256": "195693ec909a9ebd9355eb51dcdca55bc2baa3df09e0ca7b197d282e63315304"
+  },
+  {
+    "nome": "flagelado_estado1",
+    "arquivo": "assets/animation/flagelado_estado1.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "47de324413975eb87a6047cb0dc41318d4a0ad921b5168b854af526fa4f4f0c2"
+  },
+  {
+    "nome": "flagelado_estado2",
+    "arquivo": "assets/animation/flagelado_estado2.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "642d52f5552ecf453e1ff85058fce04b63cea80cbc8d1ba66212fd438d97caa6"
+  },
+  {
+    "nome": "flagelado_estado3",
+    "arquivo": "assets/animation/flagelado_estado3.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "61165eeb7bbef75a32de6ac29ee3e6be9c210806cb29bb700f82a53ce6d8b99c"
+  },
+  {
+    "nome": "flagelado_estado4",
+    "arquivo": "assets/animation/flagelado_estado4.png",
+    "tamanho": [
+      1536,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "a56a64d516af464ef08bcb1cd945291884d41fd651932d487f485f2c39fe4e1c"
+  },
+  {
+    "nome": "flagelado_transformacao",
+    "arquivo": "assets/animation/flagelado_transformacao.png",
+    "tamanho": [
+      1536,
+      256
+    ],
+    "alpha": true,
+    "sha256": "1be41925032faf05b80d3f99764c714e2e0ac4d0fa9d24011181d8d73453a5cc"
+  },
+  {
+    "nome": "gota_culpa",
+    "arquivo": "assets/animation/gota_culpa.png",
+    "tamanho": [
+      768,
+      128
+    ],
+    "alpha": true,
+    "sha256": "3a305a0de92ab886475f2d6faa0f561e7dabaa30ffc0e80ef38d0d1a159ceab6"
+  },
+  {
+    "nome": "placas_flagelado",
+    "arquivo": "assets/efeitos/placas_flagelado.png",
+    "tamanho": [
+      512,
+      128
+    ],
+    "alpha": true,
+    "sha256": "42ba82d63c1613d40513ec4043d76db3a90f18775a948539b7a242c76e0dfca8"
+  },
+  {
+    "nome": "desfiladeiro_longe",
+    "arquivo": "assets/vale/desfiladeiro_longe.png",
+    "tamanho": [
+      4096,
+      720
+    ],
+    "alpha": true,
+    "sha256": "06f812f8c747ccfe071818992f8cf694a60e03ce43fd13bb91ef7565607198ea"
+  },
+  {
+    "nome": "desfiladeiro_meio",
+    "arquivo": "assets/vale/desfiladeiro_meio.png",
+    "tamanho": [
+      4096,
+      720
+    ],
+    "alpha": true,
+    "sha256": "0d2549cdc2a369b84d9abfb350fd52d698d60082243938cdcad5a5543eeec8f1"
+  },
+  {
+    "nome": "desfiladeiro_perto",
+    "arquivo": "assets/vale/desfiladeiro_perto.png",
+    "tamanho": [
+      4096,
+      720
+    ],
+    "alpha": true,
+    "sha256": "97793ffe0f77288f89370b5493eacf05a5b3917b377e8e535f8e38c1a933ecf7"
+  },
+  {
+    "nome": "forcas",
+    "arquivo": "assets/vale/forcas.png",
+    "tamanho": [
+      1536,
+      512
+    ],
+    "alpha": true,
+    "sha256": "497fc97ec4f3bfe92190c090773876857d16a6f562e2570b3bcb1d9d199399af"
+  },
+  {
+    "nome": "enforcados",
+    "arquivo": "assets/vale/enforcados.png",
+    "tamanho": [
+      1024,
+      256
+    ],
+    "alpha": true,
+    "sha256": "60799c2eeb3cd4db6706588bf7fb843fc337f62c2d5bd449b986fb346943440e"
+  },
+  {
+    "nome": "arvores_mortas",
+    "arquivo": "assets/vale/arvores_mortas.png",
+    "tamanho": [
+      1024,
+      512
+    ],
+    "alpha": true,
+    "sha256": "febf1ff5a7edad12500d8ffaa7d4590770a1e734ec3ca2ad9838b6ef2fa09e5b"
+  },
+  {
+    "nome": "chao",
+    "arquivo": "assets/vale/chao.png",
+    "tamanho": [
+      1024,
+      128
+    ],
+    "alpha": false,
+    "sha256": "0b130df4bab1bfb61ed757bb65c6a09a93fd211dc7cb78ee998bc1d1c904411d"
+  },
+  {
+    "nome": "corvo",
+    "arquivo": "assets/animation/corvo.png",
+    "tamanho": [
+      768,
+      128
+    ],
+    "alpha": true,
+    "sha256": "208171e16ac4bed016a8234f3e11ff2ddc515601913056e123147f76adf90a71"
+  },
+  {
+    "nome": "pendentes",
+    "arquivo": "assets/vida/pendentes.png",
+    "tamanho": [
+      1024,
+      512
+    ],
+    "alpha": true,
+    "sha256": "677771297de20f95a52884d0dc9f59248cbf014e759479ec54e2263939119552"
+  },
+  {
+    "nome": "chama_vela",
+    "arquivo": "assets/animation/chama_vela.png",
+    "tamanho": [
+      768,
+      128
+    ],
+    "alpha": true,
+    "sha256": "1a00279c972fcf4522ac5c82aed63280b8a1ff6f51bf4a881c42bf7b2cf7ce0b"
+  },
+  {
+    "nome": "fumaca_incenso",
+    "arquivo": "assets/animation/fumaca_incenso.png",
+    "tamanho": [
+      768,
+      256
+    ],
+    "alpha": true,
+    "sha256": "00062d447b86978e18557130a4769bebd65f6bf2f457e088a095643d9022478a"
+  },
+  {
+    "nome": "santo_base",
+    "arquivo": "assets/vida/santo_base.png",
+    "tamanho": [
+      1024,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "99ac1bbc15e6bab39a87b079a7cc116671fdc2000d8c0712f819415eb173ec2c"
+  },
+  {
+    "nome": "ossuario_base",
+    "arquivo": "assets/vida/ossuario_base.png",
+    "tamanho": [
+      1024,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "27e923dfbf5c35c2ffeba9d38d3299b2a986fe37c3fa503b4c694f46e44b45ec"
+  },
+  {
+    "nome": "relicario_base",
+    "arquivo": "assets/vida/relicario_base.png",
+    "tamanho": [
+      1024,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "03cc489e7efe7a600db882399e9ac6a6e2012d31824266860297f75d305b2ac9"
+  },
+  {
+    "nome": "santo_movimento",
+    "arquivo": "assets/vida/santo_movimento.png",
+    "tamanho": [
+      1024,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "a19a21c60fad2bf5efb40006a9b5758fc92d1c4736c45d764ba5ec59f17cf5af"
+  },
+  {
+    "nome": "ossuario_movimento",
+    "arquivo": "assets/vida/ossuario_movimento.png",
+    "tamanho": [
+      1024,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "adcd5285c7eb044a9a324195b15a77f52d044ef843121fd028241f0f86a4acde"
+  },
+  {
+    "nome": "relicario_movimento",
+    "arquivo": "assets/vida/relicario_movimento.png",
+    "tamanho": [
+      1024,
+      1024
+    ],
+    "alpha": true,
+    "sha256": "79ef99ddee6506e290cfc6510c1236fc6783ca188c21f1889dae86b9acbc1b53"
+  },
+  {
+    "nome": "glutao",
+    "arquivo": "docs/fichas/glutao.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "32eb04807ee39f40d89260e2d99e6d1a3161d918a44656c00007f1fbb5ba52cc"
+  },
+  {
+    "nome": "disciplinantes",
+    "arquivo": "docs/fichas/disciplinantes.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "866fdceb35c4a6d2f7924fcc739b8e0ef4090a4f09eb4284ca95dd32a8fba1bf"
+  },
+  {
+    "nome": "meio_enterrado",
+    "arquivo": "docs/fichas/meio_enterrado.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "5cb977fadb2fe00863fe91db3203eec0dce4c6bcc1a67600f1922e66f60b8585"
+  },
+  {
+    "nome": "parcas",
+    "arquivo": "docs/fichas/parcas.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "283a5ee9020a2cfd85c829de39e94f322fb11fcfc1a1f9ec4ecd9bde7d48ddeb"
+  },
+  {
+    "nome": "sono",
+    "arquivo": "docs/fichas/sono.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "9539c7a78b90655d6383f7958e5ff5cec8507049910d8dbdc0c42b31bf1ad3e4"
+  },
+  {
+    "nome": "romaria",
+    "arquivo": "docs/fichas/romaria.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "e250e4dbbf654babac98535aec07fd5b2460a003ecf7338448d8ff38739b6be4"
+  },
+  {
+    "nome": "espantalho",
+    "arquivo": "docs/fichas/espantalho.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "0ccdef7f301cc9a6c254da48766c94aec4e73eadf76693963992c219657c4278"
+  },
+  {
+    "nome": "dois_velhos",
+    "arquivo": "docs/fichas/dois_velhos.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "85f9de857a0d1577477820062cbd8c8b9619895a04202ea121fbd130dd6c5618"
+  },
+  {
+    "nome": "viuva",
+    "arquivo": "docs/fichas/viuva.png",
+    "tamanho": [
+      1600,
+      900
+    ],
+    "alpha": false,
+    "sha256": "da56cc285f67e19168f429fab81fcc789b99b107ddb46dc010119709ece9883b"
+  }
+]

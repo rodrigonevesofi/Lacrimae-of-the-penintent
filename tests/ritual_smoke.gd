@@ -52,7 +52,9 @@ func run() -> void:
 	expect(game.player.hp == game.player.max_hp and game.player.flasks == game.player.max_flasks, "completed prayer restores health and cures")
 	expect(game.respawn_index == 1 and game.pending_altar == -1, "completed prayer commits checkpoint once")
 	expect(game.player.camera.zoom == zoom and not game.player.cinematic_focus, "prayer restores camera")
-	expect(get_nodes_in_group("enemies").size() == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + 1, "common foes respawn once without duplicating boss")
+	# Dois chefes existem no mundo: o Guardião dos Sinos e o Penitente do Vale. Nenhum é recriado pela oração.
+	var foes: int = get_nodes_in_group("enemies").size()
+	expect(foes == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + 2, "common foes respawn once without duplicating either boss (%d foes)" % foes)
 	game.memory_seen = false
 	game.narrative.begin("memory")
 	expect(not game.memory_seen, "memory is not marked seen before scene finishes")
