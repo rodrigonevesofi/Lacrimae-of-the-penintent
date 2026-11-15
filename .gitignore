@@ -8,3 +8,6 @@ godot-inicializacao.log
 *.avi
 
 *.log
+
+# Metadados locais de importação das imagens de documentação.
+docs/**/*.import

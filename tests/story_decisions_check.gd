@@ -1,6 +1,6 @@
 extends SceneTree
 ## Decisões narrativas do autor que o Ato I deve respeitar: quem ordenou o fechamento dos portões só é revelado no Ato II,
-## Edran e o Inquisidor pertencem ao Ato II, e o rosto do Penitente nunca é mostrado.
+## Edran e o Inquisidor pertencem ao Ato II, e o rosto do Penitente só aparece na revelação final.
 var checks := 0
 var failures := 0
 func expect(ok: bool,label: String) -> void:
@@ -17,7 +17,18 @@ func _initialize() -> void:
 		if text.contains("inquisidora"): named.append(path.get_file() + " (Inquisidora)")
 		if text.contains("close_01.png"): face.append(path.get_file())
 	expect(named.is_empty(),"Act I names neither Edran nor the Inquisitor %s" % str(named))
-	expect(face.is_empty(),"the Penitent's unmasked face is never used %s" % str(face))
+	expect(face.is_empty(),"outside the final revelation, the Penitent's face is never used %s" % str(face))
+	# Decisão do autor na v38: o rosto aparece uma única vez — no Vale, quando Beatriz tira o capacete.
+	var finale := FileAccess.get_file_as_string("res://scripts/vale_finale.gd")
+	expect(finale.contains("close_01.png") and finale.contains("close_flagelado_elmo.png") and finale.contains("close_revelacao_maos.png") and finale.contains("close_dois_rostos.png"),"the face is shown once: in the Valley, when Beatriz lifts the helmet")
+	var all_scripts := DirAccess.get_files_at("res://scripts")
+	var users := []
+	for f in all_scripts:
+		if f.ends_with(".gd") and f != "vale_finale.gd":
+			var code := FileAccess.get_file_as_string("res://scripts/" + f)
+			for asset in ["close_01.png","close_revelacao_maos.png","close_dois_rostos.png"]:
+				if code.contains(asset): users.append(f)
+	expect(users.is_empty(),"no other script shows the face %s" % str(users))
 	expect(ResourceLoader.exists("res://assets/close/close_01_mascarado.png"),"the masked close of the Penitent is ready for the story encounters")
 	var gates := FileAccess.get_file_as_string("res://scripts/exploration.gd")
 	expect(gates.contains("selo raspado") and gates.contains("raspado a faca"),"the seals at the gates are scraped: who ordered it stays a question")

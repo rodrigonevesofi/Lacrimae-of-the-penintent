@@ -5,6 +5,10 @@ const Util = preload("res://scripts/util.gd")
 const GuiltText = preload("res://scripts/guilt_text.gd")
 const PlayerScript = preload("res://scripts/player.gd")
 const EnemyScript = preload("res://scripts/enemy.gd")
+const FinalBossScript = preload("res://scripts/penitent_boss.gd")
+const ValeScene = preload("res://scripts/vale_scene.gd")
+const AmbientLife = preload("res://scripts/ambient_life.gd")
+const ValeFinale = preload("res://scripts/vale_finale.gd")
 const HudScript = preload("res://scripts/hud.gd")
 const WorldArt = preload("res://scripts/world_art.gd")
 const Story = preload("res://scripts/story_text.gd")
@@ -152,6 +156,21 @@ func _build_art() -> void:
 	art = WorldArt.new()
 	art.game = self
 	add_child(art)
+	vale_back = ValeScene.new()
+	vale_back.game = self
+	add_child(vale_back)
+	vale_front = ValeScene.new()
+	vale_front.game = self
+	vale_front.front = true
+	add_child(vale_front)
+	# A camada viva das demais salas: o que balança, flutua, pinga e queima.
+	life_back = AmbientLife.new()
+	life_back.game = self
+	add_child(life_back)
+	life_front = AmbientLife.new()
+	life_front.game = self
+	life_front.front = true
+	add_child(life_front)
 
 
 ## Acessibilidade: remove clarões, oscilação de luz e tremor de câmera das cenas de culpa e do Guardião.
@@ -197,7 +216,11 @@ func dev_spawn(id: String) -> Vector2:
 func dev_teleport(id: String) -> void:
 	if not exploration.rooms.has(id): return
 	exploration.abort_arena()
-	exploration.travel(id, dev_spawn(id))
+	if id == "vale":
+		# O Vale tem a sua própria entrada: Beatriz fica à beira e a luta final é armada.
+		enter_vale()
+	else:
+		exploration.travel(id, dev_spawn(id))
 	player.velocity = Vector2.ZERO
 	toast("MODO DEV · " + str(exploration.rooms[id].name))
 
@@ -397,7 +420,132 @@ func _build_player() -> void:
 	player.died.connect(_on_player_died)
 
 
-## Beatriz caminha ao lado do Penitente desde o início. Testes automáticos escritos para um
+# ------------------------------------------------------------------ O Vale dos Flagelados e o chefe final
+## O Vale fica além dos portões: só se desce depois que o Guardião dos Sinos cai e a memória dos portões volta.
+## Lá espera o Flagelado (scripts/penitent_boss.gd), que só a revelação mostra ser o próprio Penitente. Beatriz não entra com ele: o vale só deixa passar
+## quem carrega aquela culpa. Ela só atravessa quando a segunda parte da armadura cai.
+const VALE_ENTRANCE := Vector2(30480, 600)
+const VALE_BOSS_POS := Vector2(32300, 600)
+const VALE_LINES := {
+	"enter": "VALE DOS FLAGELADOS\nOnde a culpa permanece.",
+	"held": "Beatriz para à beira do vale. A névoa não a deixa passar:\n\"Ninguém atravessa a culpa de outro.\"",
+	"wake": "Alguém espera entre as forcas, de joelhos, coberto de ferro e dos pecados de outros.",
+	"mirror_first": "Ele ergue a cabeça, olha para você — e veste a sua forma.",
+	"reflect": "O golpe volta para você. Enquanto ele vestir a sua forma, ferir é ferir-se.\nApare o golpe dele (L) — ou espere que ele recolha a sua culpa e reze.",
+	"parry": "O aparo arranca o reflexo. Por um tempo, ele é só o que é.",
+	"prayer": "Ele reza para se perdoar — e, ao rezar, volta a ser quem é.",
+	"mirror": "Ele veste de novo a sua forma.",
+	1: "Cai a primeira placa: a desculpa.\n\"Eu só obedecia.\"",
+	2: "Cai a segunda: o esquecimento.\nQuem não lembra não precisa responder.",
+	3: "Cai a terceira: o castigo.\nPunir-se também é uma maneira de não olhar.",
+	"beatriz": "A névoa se abre. Beatriz atravessa o vale:\nsó se divide o fardo que se admite.",
+	"fallen": "Sem armadura, ele cai de joelhos. Resta o capacete.",
+}
+var final_boss = null
+var final_defeated := false
+var vale_back = null
+var vale_front = null
+var life_back = null
+var life_front = null
+var vale_stage_seen := 0
+var vale_told := {}
+var beatriz_held := false
+var finale = null
+var duo_default := not OS.get_cmdline_args().has("--script")
+
+func _vale_say(key) -> void:
+	if vale_told.has(key): return
+	vale_told[key] = true
+	toast(str(VALE_LINES[key]))
+
+func enter_vale() -> void:
+	exploration.travel("vale", VALE_ENTRANCE, 1)
+	area_name = "VALE DOS FLAGELADOS"
+	area_t = 5.0
+	vale_told.clear()
+	_vale_say("enter")
+	if partner != null and is_instance_valid(partner):
+		# Beatriz fica à beira do vale.
+		beatriz_held = true
+		enable_duo(false)
+		toast(str(VALE_LINES["held"]))
+
+func _update_vale(_delta: float) -> void:
+	if exploration.room != "vale":
+		if beatriz_held and (final_boss == null or not is_instance_valid(final_boss) or final_boss.stage < 2):
+			# Fora do vale, Beatriz volta a caminhar ao lado dele.
+			beatriz_held = false
+			duo_wanted = duo_default
+		return
+	if final_boss == null or not is_instance_valid(final_boss) or final_boss.fallen:
+		return
+	if not final_boss.awake and player.global_position.x > VALE_BOSS_POS.x - 620.0:
+		final_boss.awaken()
+		_vale_say("wake")
+		soundscape.play_sfx("sino_surdo")
+
+func boss_reflected() -> void:
+	_vale_say("reflect")
+
+func boss_revealed(by_prayer: bool) -> void:
+	toast(str(VALE_LINES["prayer" if by_prayer else "parry"]))
+
+func boss_mirrored() -> void:
+	_vale_say("mirror" if vale_told.has("mirror_first") else "mirror_first")
+
+func vale_impulse(at_x: float, strength: float) -> void:
+	if vale_back != null: vale_back.impulse(at_x, strength)
+	if vale_front != null: vale_front.impulse(at_x, strength)
+
+func boss_armor_broke(stage: int) -> void:
+	vale_stage_seen = stage
+	# O vale reage: o céu escurece e o vento aumenta a cada placa que cai.
+	if vale_back != null: vale_back.set_mood(stage / 4.0)
+	if vale_front != null: vale_front.set_mood(stage / 4.0)
+	vale_impulse(final_boss.global_position.x, 3.0)
+	toast(str(VALE_LINES[stage]))
+	if stage == 2:
+		beatriz_arrives()
+
+## Com a segunda placa no chão, Beatriz entra na luta.
+func beatriz_arrives() -> void:
+	beatriz_held = false
+	enable_duo(true)
+	if partner != null and is_instance_valid(partner):
+		partner.global_position = VALE_ENTRANCE + Vector2(40, 0)
+		partner.velocity = Vector2.ZERO
+		partner.hp = partner.max_hp
+		spawn_effect("dust", partner.global_position + Vector2(0, -30), 1, 0.9)
+	soundscape.play_sfx("bell")
+	soundscape.play_sfx("beatriz_chega")
+	get_tree().create_timer(2.6).timeout.connect(func(): toast(str(VALE_LINES["beatriz"])))
+
+## O chefe caiu de joelhos: a luta acabou. Segue a revelação (scripts/vale_finale.gd) e, depois, o encerramento.
+func final_boss_fallen(b) -> void:
+	if finale != null and is_instance_valid(finale): return
+	if vale_back != null: vale_back.set_mood(1.0)
+	if vale_front != null: vale_front.set_mood(1.0)
+	toast(str(VALE_LINES["fallen"]))
+	player.controllable = false
+	if partner == null or not is_instance_valid(partner):
+		# A revelação é dela: se ainda não estava na luta, ela chega agora.
+		beatriz_arrives()
+	finale = ValeFinale.new()
+	finale.game = self
+	finale.boss = b
+	add_child(finale)
+
+func finish_finale() -> void:
+	final_defeated = true
+	if finale != null and is_instance_valid(finale): finale.queue_free()
+	finale = null
+	duo_wanted = duo_default
+	_save()
+	state = "ending"
+	ending_t = 0
+	player.controllable = false
+
+## Beatriz caminha ao lado do Penitente desde o início. Os testes automáticos de um
 ## penitente rodam sozinhos (--script), exceto quando ativam a dupla com enable_duo(true).
 var partner = null
 var duo_wanted := not OS.get_cmdline_args().has("--script")
@@ -517,6 +665,8 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	player.has_double_jump = false
 	relic_taken = false
 	boss_defeated = false
+	final_defeated = false
+	beatriz_held = false
 	respawn_index = 0
 	stain_amount = 0
 	stain_active = false
@@ -558,6 +708,8 @@ func _spawn_enemies() -> void:
 		boss_wall.queue_free()
 	boss_wall = null
 	boss = null
+	final_boss = null
+	for drop in get_tree().get_nodes_in_group("guilt_drops"): drop.queue_free()
 	for d in enemy_defs:
 		var e = EnemyScript.new()
 		e.setup(d[0], Vector2(d[1], d[2]), d[3], player)
@@ -571,6 +723,17 @@ func _spawn_enemies() -> void:
 		add_child(b)
 		b.display_name = "Guardião dos Sinos"
 		boss = b
+	# O chefe final é criado por último: fica no Vale e só desperta lá.
+	if not final_defeated:
+		var fb = FinalBossScript.new()
+		fb.setup(9, VALE_BOSS_POS, 0.0, player)
+		fb.room_id = "vale"
+		fb.killed.connect(_on_enemy_killed)
+		add_child(fb)
+		final_boss = fb
+		vale_stage_seen = 0
+		if vale_back != null: vale_back.set_mood(0.0)
+		if vale_front != null: vale_front.set_mood(0.0)
 
 
 func _on_enemy_killed(e) -> void:
@@ -608,10 +771,14 @@ func _respawn() -> void:
 	player.revive(altars[respawn_index])
 	if partner != null and is_instance_valid(partner):
 		partner.revive(altars[respawn_index] + Vector2(-70.0, 0.0))
+	var died_in_vale: bool = exploration.room == "vale" and not final_defeated
 	exploration.room = exploration.room_at(player.position)
 	exploration.set_camera()
 	_spawn_enemies()
 	state = "play"
+	if died_in_vale:
+		# Quem cai no Vale recomeça à beira dele: a luta volta ao início.
+		enter_vale()
 	toast("Recupere o fragmento: capacidade limitada e inimigos próximos fortalecidos.")
 	_save()
 
@@ -651,6 +818,7 @@ func _dissolve_fragment(pos: Vector2) -> void:
 ## Respingos de sangue que caem e ficam no chão: manchas irregulares, umas maiores, outras em gotas,
 ## espalhadas à frente do golpe e aparecendo aos poucos, como se ainda estivessem caindo.
 const BLOOD_SPLATS_MAX := 90
+var splat_sound_ms := 0
 
 func blood_splats(ground: Vector2, flip: int, count: int, spread: float = 1.0) -> void:
 	for k in range(count):
@@ -665,6 +833,9 @@ func _place_splat(at: Vector2, size: float) -> void:
 	var floor_hit := get_world_2d().direct_space_state.intersect_ray(query)
 	if floor_hit.is_empty(): return
 	at = floor_hit.position
+	if size > 9.0 and Time.get_ticks_msec() - splat_sound_ms > 130:
+		splat_sound_ms = Time.get_ticks_msec()
+		soundscape.play_sfx("respingo_chao")
 	var old := get_tree().get_nodes_in_group("blood_splats")
 	while old.size() >= BLOOD_SPLATS_MAX:
 		var oldest = old.pop_front()
@@ -746,6 +917,10 @@ func spawn_fx(pos: Vector2, col: Color) -> void:
 
 
 func shake_cam(amount: float) -> void:
+	# Uma pancada forte faz balançar o que está pendurado no cenário.
+	if amount >= 5.0 and life_back != null and player != null:
+		life_back.impulse(player.global_position.x, amount / 6.0)
+		vale_impulse(player.global_position.x, amount / 8.0)
 	if player:
 		player.shake = maxf(player.shake, amount)
 
@@ -775,6 +950,7 @@ func _save() -> void:
 		"double_jump": player.has_double_jump,
 		"relic": relic_taken,
 		"boss": boss_defeated,
+		"final": final_defeated,
 		"upgrades": player.upgrades,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -834,6 +1010,7 @@ func _load() -> void:
 	player.has_double_jump = _clean_bool(parsed.get("double_jump", false), false)
 	relic_taken = _clean_bool(parsed.get("relic", false), false)
 	boss_defeated = _clean_bool(parsed.get("boss", false), false)
+	final_defeated = _clean_bool(parsed.get("final", false), false)
 	player.upgrades = _clean_int(parsed.get("upgrades", 0), 0, 0, 50)
 	var saved_penitence = parsed.get("penitence", "none")
 	player.apply_penitence(saved_penitence if saved_penitence is String and saved_penitence in ["none", "nails", "chains"] else "none")
@@ -914,6 +1091,7 @@ func _update_fx(delta: float) -> void:
 
 func _play_update(delta: float) -> void:
 	_update_duo(delta)
+	_update_vale(delta)
 	play_time += delta
 	prompt = ""
 	if exploration.has_method("is_transitioning") and exploration.is_transitioning(): return
@@ -959,6 +1137,12 @@ func _play_update(delta: float) -> void:
 			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
 			return
 	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(Vector2(4700,600)) < 65:
+		if not final_defeated:
+			# Além dos portões fica o Vale, e nele a última luta.
+			prompt = "[E] Descer ao Vale dos Flagelados"
+			if Input.is_action_just_pressed("interact"):
+				enter_vale()
+			return
 		prompt = "[E] Contemplar a primeira Lágrima · encerrar a vigília"
 		if Input.is_action_just_pressed("interact"):
 			state = "ending"

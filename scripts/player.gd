@@ -134,12 +134,16 @@ var pray_duration := 1.0
 var penance_fx := 0.0
 var safe_pos := Vector2.ZERO
 var shake := 0.0
+var impact_direction := Vector2.ZERO
 var roll_cd := 0.0
 var camera: Camera2D
 var light: PointLight2D
 
 
 func _ready() -> void:
+	var visuals = load("res://scripts/combat_visuals.gd").new()
+	visuals.name = "CombatVisuals"
+	add_child(visuals)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	appearance = AtlasTexture.new()
 	appearance.atlas = load("res://assets/characters.png")
@@ -291,7 +295,7 @@ func _physics_process(delta: float) -> void:
 	roll_cd = maxf(roll_cd - delta, 0.0)
 	if camera and not cinematic_focus:
 		var amplitude := 0.0 if game != null and game.reduced_pulses else shake
-		camera.offset = Vector2(camera_focus_x, -110) + Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * amplitude
+		camera.offset = Vector2(camera_focus_x, -110) + Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * amplitude + impact_direction * amplitude * 0.5
 
 	if game != null and game.exploration != null and game.exploration.is_transitioning():
 		velocity = Vector2.ZERO
@@ -352,6 +356,7 @@ func _physics_process(delta: float) -> void:
 				get_tree().call_group("game", "blood_splats", ground, facing, 14, 1.4)
 				_blood_decal(ground)
 				gore_flash = 0.5
+				_blood_tear()
 				_slow_motion(0.25, 0.3)
 				add_weight(12.0)
 		if state_t <= 0:
@@ -792,6 +797,7 @@ func _parry_success(attacker, from_x: float) -> void:
 		get_tree().call_group("game", "toast", "Aparo! O inimigo está aberto: golpeie (dano maior) ou execute com E.")
 
 func take_hit(dmg: float, from_x: float, attacker = null, parryable: bool = false) -> void:
+	impact_direction = Vector2(signf(global_position.x-from_x),-0.25)
 	if dev_god:
 		return
 	if state == "roll" and ROLL_TIME - state_t <= PERFECT_DODGE_WINDOW and attacker != null:
@@ -1012,7 +1018,7 @@ func begin_execution(target) -> bool:
 	if target != null and is_instance_valid(target) and target.kind == 8 and not target.exposed:
 		return false
 	if state != "idle" or not has_weapon or not is_on_floor() or not is_instance_valid(target): return false
-	if target.dead or target.kind == 2 or target.state != "stagger" or target.executing: return false
+	if target.dead or target.kind == 2 or target.kind == 9 or target.state != "stagger" or target.executing: return false
 	if absf(target.position.x - position.x) > 72 or absf(target.position.y - position.y) > (170 if target.family == "flyer" else 80): return false
 	execution_zoom_start = camera.zoom
 	execution_target = target
@@ -1074,7 +1080,7 @@ func _start_plunge() -> void:
 
 ## Armadura solta faíscas, o caixão solta pedra e os demais corpos sangram.
 func _impact_kind(e) -> String:
-	if e.kind == 2 or e.kind == 3:
+	if e.kind == 2 or e.kind == 3 or e.kind == 9:
 		return "faiscas"
 	if e.kind == 8 and not e.exposed:
 		return "pedra"
@@ -1086,7 +1092,7 @@ func _room_is(id: String) -> bool:
 
 ## Arremessa a criatura para trás e, se caminha, para cima.
 func _launch(e, push: float, lift: float) -> void:
-	if not is_instance_valid(e) or e.dead or e.kind == 2:
+	if not is_instance_valid(e) or e.dead or e.kind == 2 or e.kind == 9:
 		return
 	if e.state == "stagger":
 		# Não apaga a abertura de execução que o próprio golpe acabou de criar.
@@ -1353,6 +1359,30 @@ func _blood_burst(at: Vector2, size: float, drops: int) -> void:
 		mist.emitting = true
 		get_tree().create_timer(1.2).timeout.connect(mist.queue_free)
 
+## O Penitente chora sangue, sem entender por quê: depois de cada execução, e sempre que a culpa transborda,
+## uma lágrima vermelha escorre da fenda do capacete. (No Vale se descobre de quem é a culpa.)
+func _blood_tear() -> void:
+	if character != "penitente": return
+	var tear := CPUParticles2D.new()
+	tear.one_shot = true
+	tear.amount = 3
+	tear.lifetime = 1.6
+	tear.explosiveness = 0.2
+	tear.direction = Vector2(0, 1)
+	tear.spread = 4.0
+	tear.initial_velocity_min = 8.0
+	tear.initial_velocity_max = 16.0
+	tear.gravity = Vector2(0, 46)
+	tear.scale_amount_min = 1.6
+	tear.scale_amount_max = 2.2
+	tear.color = Color(0.75, 0.03, 0.05)
+	tear.z_index = 2
+	tear.position = Vector2(float(facing) * 7.0, -84.0)
+	tear.add_to_group("blood_tears")
+	add_child(tear)
+	tear.emitting = true
+	get_tree().create_timer(2.2).timeout.connect(tear.queue_free)
+
 ## O jato arterial: pulsos de sangue que saem da ferida em sequência, como um coração que ainda bate.
 func _arterial_spray(at: Vector2, pulses: int) -> void:
 	for k in range(pulses):
@@ -1362,6 +1392,7 @@ func _arterial_spray(at: Vector2, pulses: int) -> void:
 			if not is_inside_tree(): return
 			get_tree().call_group("game", "spawn_effect", "pulse", at, facing, 0.9 * strength, "jato_arterial")
 			_blood_burst(at + Vector2(0.0, -4.0 * k), 0.9 * strength, int(34 * strength))
+			get_tree().call_group("game", "play_sfx", "sangue_jato")
 			get_tree().call_group("game", "blood_splats", Vector2(at.x, global_position.y), facing, 3, 1.0)
 		)
 
@@ -1512,6 +1543,7 @@ func _clear_strike(target) -> bool:
 	return get_world_2d().direct_space_state.intersect_ray(ray).is_empty()
 
 func _swing_trail() -> void:
+	impact_direction = Vector2(facing,0.18)
 	if swing_effect: return
 	swing_effect = true
 	get_tree().call_group("game", "spawn_effect", "arc", global_position + Vector2(float(facing) * 58.0, -52.0), facing, 0.62, "golpe")

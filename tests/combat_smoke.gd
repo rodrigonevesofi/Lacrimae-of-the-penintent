@@ -233,6 +233,8 @@ func run() -> void:
 	var worst := 0.0
 	for id in rooms_data:
 		if id == "city": continue
+		# O Vale é a arena do chefe final: a ameaça ali é ele.
+		if id == "vale": continue
 		var xs: Array = []
 		for d in preload("res://scripts/act_one_layout.gd").enemies():
 			if d[0] == id: xs.append(float(d[2]))

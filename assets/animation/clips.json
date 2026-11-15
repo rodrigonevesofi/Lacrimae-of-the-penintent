@@ -2135,5 +2135,1356 @@
         160
       ]
     }
+  },
+  "sombra": {
+    "idle": {
+      "sheet": "flagelado_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "flagelado_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel": {
+      "sheet": "flagelado_reacoes",
+      "start": 9,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "pray": {
+      "sheet": "flagelado_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "flagelado_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "armor_break": {
+      "sheet": "flagelado_reacoes",
+      "start": 3,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_a": {
+      "sheet": "flagelado_combate",
+      "start": 0,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_b": {
+      "sheet": "flagelado_combate",
+      "start": 6,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "thrust": {
+      "sheet": "flagelado_combate",
+      "start": 12,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "slam": {
+      "sheet": "flagelado_combate",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "charge": {
+      "sheet": "flagelado_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "release": {
+      "sheet": "flagelado_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "dead": {
+      "sheet": "flagelado_reacoes",
+      "start": 9,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel_down": {
+      "sheet": "flagelado_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "flagelado_0": {
+    "idle": {
+      "sheet": "flagelado_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "flagelado_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel": {
+      "sheet": "flagelado_reacoes",
+      "start": 9,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "pray": {
+      "sheet": "flagelado_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "flagelado_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "armor_break": {
+      "sheet": "flagelado_reacoes",
+      "start": 3,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_a": {
+      "sheet": "flagelado_combate",
+      "start": 0,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_b": {
+      "sheet": "flagelado_combate",
+      "start": 6,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "thrust": {
+      "sheet": "flagelado_combate",
+      "start": 12,
+      "count": 6,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "slam": {
+      "sheet": "flagelado_combate",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "charge": {
+      "sheet": "flagelado_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "release": {
+      "sheet": "flagelado_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "dead": {
+      "sheet": "flagelado_reacoes",
+      "start": 9,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel_down": {
+      "sheet": "flagelado_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "flagelado_1": {
+    "idle": {
+      "sheet": "flagelado_estados",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "flagelado_estado1",
+      "start": 6,
+      "count": 6,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel": {
+      "sheet": "flagelado_estado1",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "pray": {
+      "sheet": "flagelado_estado1",
+      "start": 21,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "flagelado_estado1",
+      "start": 0,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "armor_break": {
+      "sheet": "flagelado_estado1",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_a": {
+      "sheet": "flagelado_estado1",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_b": {
+      "sheet": "flagelado_estado1",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "thrust": {
+      "sheet": "flagelado_estado1",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "slam": {
+      "sheet": "flagelado_estado1",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "charge": {
+      "sheet": "flagelado_estado1",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "release": {
+      "sheet": "flagelado_estado1",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "dead": {
+      "sheet": "flagelado_estado1",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel_down": {
+      "sheet": "flagelado_estado1",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "flagelado_2": {
+    "idle": {
+      "sheet": "flagelado_estados",
+      "start": 6,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "flagelado_estado2",
+      "start": 6,
+      "count": 6,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel": {
+      "sheet": "flagelado_estado2",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "pray": {
+      "sheet": "flagelado_estado2",
+      "start": 21,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "flagelado_estado2",
+      "start": 0,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "armor_break": {
+      "sheet": "flagelado_estado2",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_a": {
+      "sheet": "flagelado_estado2",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_b": {
+      "sheet": "flagelado_estado2",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "thrust": {
+      "sheet": "flagelado_estado2",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "slam": {
+      "sheet": "flagelado_estado2",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "charge": {
+      "sheet": "flagelado_estado2",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "release": {
+      "sheet": "flagelado_estado2",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "dead": {
+      "sheet": "flagelado_estado2",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel_down": {
+      "sheet": "flagelado_estado2",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "flagelado_3": {
+    "idle": {
+      "sheet": "flagelado_estados",
+      "start": 12,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "flagelado_estado3",
+      "start": 6,
+      "count": 6,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel": {
+      "sheet": "flagelado_estado3",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "pray": {
+      "sheet": "flagelado_estado3",
+      "start": 21,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "flagelado_estado3",
+      "start": 0,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "armor_break": {
+      "sheet": "flagelado_estado3",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_a": {
+      "sheet": "flagelado_estado3",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_b": {
+      "sheet": "flagelado_estado3",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "thrust": {
+      "sheet": "flagelado_estado3",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "slam": {
+      "sheet": "flagelado_estado3",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "charge": {
+      "sheet": "flagelado_estado3",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "release": {
+      "sheet": "flagelado_estado3",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "dead": {
+      "sheet": "flagelado_estado3",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel_down": {
+      "sheet": "flagelado_estado3",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "flagelado_4": {
+    "idle": {
+      "sheet": "flagelado_estados",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "flagelado_estado4",
+      "start": 6,
+      "count": 6,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel": {
+      "sheet": "flagelado_estado4",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "pray": {
+      "sheet": "flagelado_estado4",
+      "start": 21,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "flagelado_estado4",
+      "start": 0,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "armor_break": {
+      "sheet": "flagelado_estado4",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_a": {
+      "sheet": "flagelado_estado4",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack_b": {
+      "sheet": "flagelado_estado4",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "thrust": {
+      "sheet": "flagelado_estado4",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "slam": {
+      "sheet": "flagelado_estado4",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "charge": {
+      "sheet": "flagelado_estado4",
+      "start": 12,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "release": {
+      "sheet": "flagelado_estado4",
+      "start": 15,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "dead": {
+      "sheet": "flagelado_estado4",
+      "start": 18,
+      "count": 6,
+      "fps": 6,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "kneel_down": {
+      "sheet": "flagelado_estado4",
+      "start": 18,
+      "count": 3,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "flagelado_transformacao": {
+    "idle": {
+      "sheet": "flagelado_transformacao",
+      "start": 0,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "melt": {
+      "sheet": "flagelado_transformacao",
+      "start": 0,
+      "count": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "gota_culpa": {
+    "idle": {
+      "sheet": "gota_culpa",
+      "start": 2,
+      "count": 3,
+      "fps": 8,
+      "loop": true,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        64,
+        112
+      ]
+    },
+    "fall": {
+      "sheet": "gota_culpa",
+      "start": 0,
+      "count": 3,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        64,
+        112
+      ]
+    },
+    "collect": {
+      "sheet": "gota_culpa",
+      "start": 3,
+      "count": 3,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        64,
+        112
+      ]
+    }
   }
 }

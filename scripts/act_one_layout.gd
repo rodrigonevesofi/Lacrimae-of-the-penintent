@@ -12,6 +12,7 @@ static func rooms() -> Dictionary:
 		"nave": {"name":"NAVE DO SILÊNCIO", "bounds":Rect2(21400,-450,2600,1400), "floor":600.0, "art":"nave_silencio", "ground":0.86, "art_h":880.0, "map":Vector2(20,230)},
 		"terrace": {"name":"TERRAÇO DOS SINOS", "bounds":Rect2(24400,-350,2600,1300), "floor":600.0, "art":"terraco_sinos", "ground":0.86, "art_h":880.0, "map":Vector2(1000,380)},
 		"court": {"name":"PÁTIO DOS PORTÕES SELADOS", "bounds":Rect2(27400,-350,2000,1300), "floor":600.0, "art":"patio_portoes", "ground":0.86, "art_h":800.0, "map":Vector2(1000,560)},
+		"vale": {"name":"VALE DOS FLAGELADOS", "bounds":Rect2(30200,-500,3400,1400), "floor":600.0, "art":"gates", "ground":0.80, "art_h":1250.0, "outdoor":true, "procedural":true, "map":Vector2(1180,560)},
 	}
 
 static func platforms() -> Array[Rect2]:

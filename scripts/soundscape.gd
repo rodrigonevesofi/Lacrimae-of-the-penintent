@@ -31,17 +31,17 @@ const CREATURE_SFX := ["devorador_rugido", "devorador_bote", "flagelante_chicote
 const PENDING_HOOKS := ["golpe_carregado_carga", "golpe_carregado_solta", "mergulho_impacto", "arremate", "empalar", "sangue_compartilhado", "caido", "levanta"]
 ## O Argon entrega estes WAV separadamente; a ausência deles preserva os sons atuais.
 const GORE_HOOKS := ["lamina_sai", "corpo_cai_carne", "corpo_cai_armadura", "esquiva_perfeita", "aviso_aparavel", "aviso_perigo", "execucao_impacto"]
+## A luta final e a revelação no Vale dos Flagelados. Mudos até os arquivos chegarem (ver prompts-sons-vale-argon.md).
+const VALE_HOOKS := ["chefe_transforma", "reflexo_devolve", "gota_culpa", "gota_recolhe", "chefe_reza", "placa_cai", "chefe_ajoelha", "capacete_sai", "beatriz_chega"]
+## Músicas opcionais: a luta no Vale e a revelação. Sem os arquivos, tocam a do chefe e a de história.
+const OPTIONAL_MUSIC := ["vale", "revelacao"]
 const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "dor", "aterrissagem", "coleta", "porta", "projetil", "projetil_impacto", "espinho", "aparo", "execucao", "portao_fecha", "portao_abre", "ui_mover", "ui_confirmar"]
 ## Os sons narrativos são sempre reproduzidos da mesma forma; os demais variam um pouco em altura e volume.
 const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
 ## Reverberação de cada lugar (quanto da cauda acústica da sala os efeitos carregam).
-const SPACE := {"city": 0.10, "ossuary": 0.28, "cistern": 0.36, "cloister": 0.30, "belfry": 0.32, "archive": 0.22, "refuge": 0.18, "nave": 0.40, "terrace": 0.16, "court": 0.14}
+const SPACE := {"vale": 0.20, "city": 0.10, "ossuary": 0.28, "cistern": 0.36, "cloister": 0.30, "belfry": 0.32, "archive": 0.22, "refuge": 0.18, "nave": 0.40, "terrace": 0.16, "court": 0.14}
 ## Famílias de variações: uma solicitação por nome escolhe aleatoriamente uma de suas gravações.
 const FAMILIES := {
-	"sangue_jato": ["sangue_jato_01", "sangue_jato_02", "sangue_jato_03"],
-	"carne_rasga": ["carne_rasga_01", "carne_rasga_02", "carne_rasga_03"],
-	"osso_quebra": ["osso_quebra_01", "osso_quebra_02", "osso_quebra_03"],
-	"respingo_chao": ["respingo_chao_01", "respingo_chao_02", "respingo_chao_03", "respingo_chao_04"],
 	"jump": ["jump_01", "jump_02", "jump_03"],
 	"lanca_estocada": ["lanca_estocada_01", "lanca_estocada_02", "lanca_estocada_03"],
 	"hit_carne": ["hit_carne_01", "hit_carne_02", "hit_carne_03"],
@@ -49,13 +49,17 @@ const FAMILIES := {
 	"dor": ["dor", "dor_01", "dor_02", "dor_03"],
 	"morte": ["morte", "morte_01", "morte_02", "morte_03"],
 	"swing": ["swing", "swing_01", "swing_02", "swing_03"],
+	"sangue_jato": ["sangue_jato_01", "sangue_jato_02", "sangue_jato_03"],
+	"carne_rasga": ["carne_rasga_01", "carne_rasga_02", "carne_rasga_03"],
+	"osso_quebra": ["osso_quebra_01", "osso_quebra_02", "osso_quebra_03"],
+	"respingo_chao": ["respingo_chao_01", "respingo_chao_02", "respingo_chao_03", "respingo_chao_04"],
 	"step_pedra": ["step_pedra_01", "step_pedra_02", "step_pedra_03", "step_pedra_04"],
 	"step_madeira": ["step_madeira_01", "step_madeira_02", "step_madeira_03"],
 	"step_agua": ["step_agua_01", "step_agua_02", "step_agua_03"],
 	"step_osso": ["step_osso_01", "step_osso_02", "step_osso_03"],
 }
 ## Superfície em que o penitente caminha em cada lugar.
-const SURFACE := {"city": "step_pedra", "ossuary": "step_osso", "cistern": "step_agua", "cloister": "step_pedra", "belfry": "step_madeira", "archive": "step_madeira", "refuge": "step_pedra", "nave": "step_pedra", "terrace": "step_pedra", "court": "step_pedra"}
+const SURFACE := {"vale": "step_pedra", "city": "step_pedra", "ossuary": "step_osso", "cistern": "step_agua", "cloister": "step_pedra", "belfry": "step_madeira", "archive": "step_madeira", "refuge": "step_pedra", "nave": "step_pedra", "terrace": "step_pedra", "court": "step_pedra"}
 var beds: Array = []
 var bed_streams := {}
 var bed_room := "-"
@@ -102,6 +106,12 @@ func _ready() -> void:
 		track.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		track.loop_end = track.data.size() / 4
 		music_streams[context] = track
+	for context in OPTIONAL_MUSIC:
+		if ResourceLoader.exists("res://assets/audio/ost_%s.wav" % context):
+			var extra: AudioStreamWAV = load("res://assets/audio/ost_%s.wav" % context)
+			extra.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			extra.loop_end = extra.data.size() / 4
+			music_streams[context] = extra
 	var music: AudioStreamWAV = music_streams["menu"]
 	music.loop_mode = AudioStreamWAV.LOOP_FORWARD
 	music.loop_begin = 0
@@ -138,7 +148,7 @@ func _ready() -> void:
 		add_child(layer)
 		beds.append(layer)
 	var every_effect: Array = EFFECT_NAMES.duplicate()
-	for hook in HOOK_NAMES + PENDING_HOOKS + GORE_HOOKS:
+	for hook in HOOK_NAMES + PENDING_HOOKS + GORE_HOOKS + VALE_HOOKS:
 		if ResourceLoader.exists("res://assets/audio/%s.wav" % hook): every_effect.append(hook)
 	for family in FAMILIES.values():
 		for variant in family:
@@ -250,6 +260,13 @@ func desired_context() -> String:
 	if game.narrative != null and game.narrative.mode != "":
 		return "temple" if game.narrative.mode == "prayer" else "story"
 	if game.state == "ending": return "ending"
+	if game.exploration != null and game.exploration.room == "vale":
+		# No Vale: a revelação e a luta final têm músicas próprias, quando existem.
+		if game.get("finale") != null and is_instance_valid(game.finale):
+			return "revelacao" if music_streams.has("revelacao") else "story"
+		var fb = game.get("final_boss")
+		if fb != null and is_instance_valid(fb) and fb.awake and not fb.fallen:
+			return "vale" if music_streams.has("vale") else "boss"
 	if game.state == "dead" or game.message_text != "": return "story"
 	if game.boss != null and is_instance_valid(game.boss) and game.boss.awake and not game.boss.dead and (game.exploration == null or game.exploration.room == "city"):
 		return "boss"

@@ -114,7 +114,7 @@ func run() -> void:
 	for i in range(3): await close_message()
 	quiet_enemies()
 	game.player.has_weapon=true
-	expect(game.exploration.rooms.size()==10,"ten distinct connected places")
+	expect(game.exploration.rooms.size()==11,"eleven distinct places: the ten of the vigil and the Valley of the Flagellated beyond the gates")
 	expect(game.exploration.passages.size()==15,"fifteen passages include secrets and four unlockable shortcuts")
 	expect(game.altars.size()==9,"nine themed checkpoints across the act")
 	expect(game.exploration.gate!=null,"boss access physically sealed before exploration")

@@ -2,6 +2,8 @@
 
 Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3)** para pular deslocamentos.
 
+Versão atual: **38**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v38-integracao.md), [testes](v38-testes.json) e [prompts da arte desta rodada](v38-prompts-arte.md). As nove fichas de criaturas são propostas para aprovação e não devem ser apresentadas como inimigos já jogáveis. A ambiência do Vale veio no pacote; nove efeitos e duas músicas opcionais ainda aguardam os arquivos do Argon.
+
 1. **Abertura (1 min):** comece um jogo novo; deixe a primeira cena e a Cripta do Despertar falarem. Mostre o HUD: vida, culpa, lágrimas.
 2. **Combate (2 min)** — na Cidade, contra os primeiros inimigos:
    - combo de três golpes (**J J J**) e o arremate;
@@ -33,3 +35,11 @@ No **F3**, **↑/↓** selecionam a sala e **Enter** transporta; **G** alterna i
 Projeto de Rodrigo, desenvolvido no Godot com assistência de Claude e Codex para código, integração, documentação e testes. Há arte produzida com a ferramenta integrada de geração de imagens e referências enviadas pelo autor a partir do Argon; ver `v32-integracao.md`, `v33-integracao.md` e `v36-prompts-arte.md`. Os sons entregues pelo autor foram integrados; os 20 novos WAVs de gore e combate foram enviados em `sons-gore-v32-pacote.zip` e integrados na v36; o gerador de síntese recebido está em `tools/make_sfx_gore_v32.py`. Esta declaração descreve o uso conhecido no projeto; deve acompanhar as regras da disciplina.
 
 As capturas e rotas automatizadas não substituem o ensaio humano com dois jogadores. A v36 executa a lista de arte e combate de `prompts-codex-v35.md`; detalhes, capturas e limites estão em `v36-integracao.md`. A esquiva perfeita e os avisos usam os WAVs enviados no novo pacote, sem escuta humana nesta rodada. Reserve uma partida com dois jogadores para avaliar resposta dos comandos, dificuldade e volume antes da apresentação.
+
+## O final: o Vale dos Flagelados (2 a 3 minutos)
+8. **F3**, escolha **VALE DOS FLAGELADOS** e **ENTER**. Mostre o cenário vivo: enforcados e gaiolas balançando, névoa, corvos. Beatriz fica na beira ("Ninguém atravessa a culpa de outro").
+9. Ande até o vulto entre as forcas, **o Flagelado**. Ele ergue a cabeça e copia a sua forma: **bata uma vez** para mostrar que o dano volta para você e que cai uma gota de culpa.
+10. **Apare** um golpe dele (**L**, no anel dourado) para arrancar a forma verdadeira; ou espere ele recolher as gotas e **rezar**. Com **G** (invencível) ligado, bata até cair a segunda placa: **Beatriz atravessa o vale**.
+11. Leve a vida dele ao fim: ele cai de joelhos e vem **a revelação**. Deixe a cena rodar; é o fecho da história.
+
+Explique em uma frase: *o chefe final é a culpa que o protagonista pediu para esquecer; só o vence quem para de fugir do próprio rosto.*

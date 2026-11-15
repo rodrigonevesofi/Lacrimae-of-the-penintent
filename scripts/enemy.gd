@@ -19,6 +19,7 @@ const TYPES := {
 	5: {"name":"Bruxa do Aquelarre","family":"flyer","actor":"bruxa","scale":0.36,"tint":Color.WHITE,"hp":60.0,"reward":55,"body":Vector2(36,48),"col":1},
 	6: {"name":"Asmodeia","family":"flyer","actor":"asmodeia","scale":0.42,"tint":Color.WHITE,"hp":80.0,"reward":60,"body":Vector2(44,56),"col":1},
 	7: {"name":"Duelista","family":"walker","actor":"duelista","scale":0.36,"tint":Color.WHITE,"hp":90.0,"reward":40,"body":Vector2(34,56),"col":0},
+	9: {"name":"O Flagelado","family":"mirror","actor":"hero","scale":0.44,"tint":Color.WHITE,"hp":2200.0,"reward":0,"body":Vector2(34,60),"col":0},
 }
 const BESTIARY := {
 	8: "CARREGADOR DE CAIXÃO — Carrega a própria sepultura. A pedra protege a frente: faça-o errar a investida e golpeie pelas costas.",
@@ -133,6 +134,9 @@ func humanoid() -> bool:
 
 
 func _ready() -> void:
+	var visuals = load("res://scripts/combat_visuals.gd").new()
+	visuals.name = "CombatVisuals"
+	add_child(visuals)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var t: Dictionary = TYPES[kind]
 	if kind == 2:
@@ -317,7 +321,7 @@ func _aggro_duel() -> void:
 
 func _die() -> void:
 	if dead: return
-	_sfx("corpo_cai_armadura" if kind in [2, 7] else "corpo_cai_carne")
+	_sfx("corpo_cai_armadura" if kind in [2, 3, 7, 8] else "corpo_cai_carne")
 	dead = true
 	death_material = "faiscas" if kind in [2, 7] else ("pedra" if kind == 8 and not exposed else "sangue")
 	if kind != 2 and not executing:
