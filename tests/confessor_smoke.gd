@@ -54,10 +54,43 @@ func run() -> void:
 	check(c.classify("quais são os controles") == "controles", "classifica controles")
 	check(c.classify("bom dia") == "outro", "pergunta solta vira outro")
 
-	# Abrir no altar pausa o jogo; pergunta offline responde
-	game.player.global_position = game.altars[0]
-	game.open_confession(0)
+	# Acesso: qualquer lugar, desde que fora de combate
+	var foe = null
+	for e in get_nodes_in_group("enemies"):
+		if not e.dead and e.room_id == game.exploration.room and e != game.boss: foe = e
+	check(foe != null, "há um inimigo comum na cidade para o teste")
+	for e in get_nodes_in_group("enemies"):
+		if e != game.boss: e.state = "patrol"
+	var far_spot := Vector2(1500, 600)
+	for e in get_nodes_in_group("enemies"):
+		e.global_position = Vector2(-5000, -5000)
+	game.player.global_position = far_spot
+	game.player.state = "idle"
+	game.calm_t = 0.0
+	check(game.combat_reason() == "", "sem inimigos por perto não há combate")
+	check(not game.try_open_confession() and not paused, "precisa de um instante de calma depois do combate")
+	game.calm_t = 5.0
+	foe.global_position = far_spot + Vector2(200, 0)
+	foe.state = "chase"
+	check(game.combat_reason() != "" and not game.try_open_confession(), "inimigo perseguindo perto bloqueia o Confessionário")
+	check(game.toast_text.contains("inimigos"), "jogador recebe o motivo do bloqueio")
+	foe.global_position = far_spot + Vector2(900, 0)
+	check(game.combat_reason() == "", "inimigo distante não conta como combate")
+	foe.global_position = far_spot + Vector2(150, 0)
+	foe.state = "patrol"
+	check(game.combat_reason() == "", "inimigo que não notou o peregrino não conta como combate")
+	game.player.state = "attack"
+	check(game.combat_reason() != "", "no meio de um golpe não dá para se confessar")
+	game.player.state = "idle"
+	if game.boss != null:
+		game.boss.awake = true
+		check(game.combat_reason().contains("Guardião"), "Guardião desperto bloqueia o Confessionário")
+		game.boss.awake = false
+	foe.global_position = Vector2(-5000, -5000)
+	check(game.try_open_confession(), "abre longe de qualquer altar, fora de combate")
 	check(paused and game.confession_open and game.confession_panel.visible, "abrir o Confessionário pausa o jogo")
+	check(game.confession_panel.altar_name == str(game.exploration.rooms["city"].name), "fora do altar o painel mostra o nome do lugar")
+	check(not game.try_open_confession(), "não abre duas vezes")
 	game.toggle_pause()
 	check(not game.paused, "ESC não abre a pausa por cima do Confessionário")
 	var answers: Array = []
@@ -73,6 +106,10 @@ func run() -> void:
 	check(c.voice_label().contains("sem chave"), "painel avisa que está sem chave")
 	game.confession_panel.close()
 	check(not paused and not game.confession_open, "fechar devolve o jogo")
+	game.player.global_position = game.altars[0]
+	game.calm_t = 5.0
+	check(game.try_open_confession() and game.confession_panel.altar_name == game.altar_names[0], "no altar o painel mostra o nome do altar")
+	game.confession_panel.close()
 
 	# Telemetria
 	var before: int = int(game.telemetry.data.questions)

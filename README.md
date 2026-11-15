@@ -26,7 +26,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **TAB:** abrir o mapa
 - **H:** compartilhar sangue; perto do parceiro caído, segurar para levantá-lo
 - **P:** reduzir pulsos e tremores (no título ou na pausa)
-- **C (no altar):** abrir o Confessionário, um chat com IA (Gemini) que tira dúvidas e dá pistas; veja [docs/confessionario.md](docs/confessionario.md)
+- **C:** abrir o Confessionário em qualquer lugar, fora de combate: um chat com IA (Gemini) que tira dúvidas e dá pistas; veja [docs/confessionario.md](docs/confessionario.md)
 - **F3:** modo dev; ↑/↓ selecionam sala, Enter transporta, G alterna invencibilidade, N alterna voo e B vai ao chefe
 - **F4:** alternar Beatriz entre IA e jogadora 2
 - **Enter:** iniciar; **C:** continuar salvamento no título

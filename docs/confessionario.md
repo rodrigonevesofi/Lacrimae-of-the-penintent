@@ -1,6 +1,6 @@
-# Confessionário: chat com IA nos altares
+# Confessionário: chat com IA
 
-Em qualquer altar, **C** abre o Confessionário. O peregrino escreve uma pergunta ou confissão e o **Confessor**, uma voz sem rosto atrás da grade, responde no tom do jogo. O mundo fica pausado durante a conversa. **ENTER** envia e **ESC** fecha.
+Em qualquer lugar e em qualquer fase, **C** abre o Confessionário, desde que o peregrino não esteja em combate. O peregrino escreve uma pergunta ou confissão e o **Confessor**, uma voz sem rosto atrás da grade, responde no tom do jogo. O mundo fica pausado durante a conversa. **ENTER** envia e **ESC** fecha.
 
 O Confessor serve para:
 
@@ -17,11 +17,21 @@ O Confessor serve para:
    ```
    godot --headless --path . --script res://tests/confessor_live_check.gd
    ```
-4. Jogue normalmente (F5) e aperte **C** num altar.
+4. Jogue normalmente (F5) e aperte **C** fora de combate.
 
 `ia_local.cfg` está no `.gitignore`, então **a chave não vai para o GitHub**. Também dá para usar a variável de ambiente `GEMINI_API_KEY` ou, num jogo exportado, o arquivo `user://ia.cfg` com o mesmo formato. No Windows, esse arquivo fica em `%APPDATA%\Godot\app_userdata\Lacrimae of the Penitent\`.
 
 **Sem chave, sem internet ou com o limite gratuito esgotado**, o Confessor continua respondendo com falas prontas por assunto, usando o objetivo atual do jogador. O rodapé do painel mostra quem respondeu: `voz: Gemini` ou `voz: memória do altar`, junto com o motivo.
+
+## Quando dá para abrir
+
+**C** funciona em qualquer sala, no chão ou no ar, desde que o jogo esteja em andamento e o peregrino **não esteja em combate**. Conta como combate (`combat_reason()` em `main.gd`, o mesmo critério da música de combate):
+
+- o Guardião dos Sinos desperto ou uma arena ainda fechada;
+- um inimigo perseguindo, atacando, ferido ou atordoado a menos de 420 px do Penitente ou de Beatriz;
+- o próprio Penitente no meio de um golpe, esquiva, aparo, cura ou ferimento.
+
+Ao sair do combate, é preciso esperar 1,5 s de calma (`CALM_BEFORE_CONFESSION`). Se o jogador apertar C antes disso, uma mensagem explica o motivo. No HUD, ao lado de "TAB · CARTOGRAFIA", a dica **C · CONFESSAR** fica apagada enquanto não for possível. Cenas, mensagens, mapa e menu de penitências também bloqueiam a tecla, porque já pausam o jogador. O painel mostra o nome do altar quando o peregrino está num altar e, fora dele, o nome do lugar.
 
 ## Como funciona
 
@@ -42,7 +52,7 @@ O Confessor serve para:
   O pedido é assíncrono (`HTTPRequest`), com tempo limite de 15 s e resposta de até 400 tokens. Se o modelo recusar `thinkingConfig`, o Confessor tenta de novo uma vez sem ele.
 - **`scripts/confession_panel.gd`**: o painel do Confessionário, no estilo do HUD.
 - **`scripts/telemetry.gd`**: registra localmente as mortes e o tempo por lugar e as dúvidas por assunto.
-- **`scripts/main.gd`**: liga tudo. Cuida da tecla C no altar, de `open_confession` e `close_confession` (pausa e retomada), e registra mortes e tempo.
+- **`scripts/main.gd`**: liga tudo. Cuida da tecla C (`try_open_confession` e `combat_reason`), de `open_confession` e `close_confession` (pausa e retomada), e registra mortes e tempo.
 
 **Peso no jogo:** não há plugin nem modelo local. A IA só faz uma requisição curta por pergunta, nunca durante o combate.
 

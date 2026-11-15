@@ -22,6 +22,8 @@ var exploration
 var confessor
 var confession_panel
 var confession_open := false
+var calm_t := 0.0
+const CALM_BEFORE_CONFESSION := 1.5
 var telemetry
 var pending_altar := -1
 var prayer_cooldown := 0.0
@@ -931,6 +933,11 @@ func _play_update(delta: float) -> void:
 		if message_t <= 0.0 and (Input.is_action_just_pressed("interact") or Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("confirm") or Input.is_action_just_pressed("attack")):
 			advance_message()
 		return
+	# Confessionário: C em qualquer lugar, desde que fora de combate há um instante.
+	calm_t = 0.0 if combat_reason() != "" else calm_t + delta
+	if Input.is_action_just_pressed("confess") and not exploration.map_open:
+		try_open_confession()
+		return
 
 	if boss_defeated and ending_countdown > 0.0:
 		ending_countdown -= delta
@@ -1019,12 +1026,10 @@ func _play_update(delta: float) -> void:
 
 	if near_altar >= 0:
 		var cost: int = 100 * (player.upgrades + 1)
-		prompt = "[E] Orar  ·  [R] Oferecer %d lágrimas (+15 de vida base)  ·  [V] Penitências  ·  [C] Confessar" % cost
+		prompt = "[E] Orar  ·  [R] Oferecer %d lágrimas (+15 de vida base)  ·  [V] Penitências" % cost
 		if player.state == "idle":
 			if Input.is_action_just_pressed("interact"):
 				_pray(near_altar)
-			elif Input.is_action_just_pressed("confess") and player.is_on_floor():
-				open_confession(near_altar)
 			elif Input.is_action_just_pressed("offer"):
 				offer_health()
 	elif near_lore >= 0:
@@ -1072,13 +1077,50 @@ func complete_prayer() -> void:
 	toast("%s — descanso concluído. Os inimigos comuns retornaram." % altar_names[respawn_index])
 
 
+## Motivo pelo qual o peregrino está em combate agora, ou "" se estiver livre.
+## Usa o mesmo critério da música de combate: chefe desperto, arena fechada,
+## inimigo perseguindo ou atacando perto de um dos penitentes, ou o próprio
+## penitente no meio de um golpe, esquiva, cura ou ferimento.
+func combat_reason() -> String:
+	if boss != null and is_instance_valid(boss) and boss.awake and not boss.dead and exploration.room == "city":
+		return "O Guardião está desperto. O Confessor não ouve sob os sinos."
+	if exploration.arena_active != "":
+		return "A arena ainda não foi vencida."
+	if player.state not in ["idle", "pray"]:
+		return "Termine o que começou antes de se confessar."
+	var penitents: Array = [player]
+	if partner != null and is_instance_valid(partner): penitents.append(partner)
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy.dead or enemy.room_id != exploration.room: continue
+		if enemy.state not in ["chase", "windup", "strike", "recover", "cast", "hurt", "stagger"]: continue
+		for who in penitents:
+			if enemy.global_position.distance_to(who.global_position) < 420.0:
+				return "Há inimigos à sua procura. Afaste-se antes de se confessar."
+	return ""
+
+
+## Abre o Confessionário se o peregrino estiver fora de combate; senão, explica por quê.
+func try_open_confession() -> bool:
+	if confession_open or state != "play": return false
+	var reason := combat_reason()
+	if reason == "" and calm_t < CALM_BEFORE_CONFESSION:
+		reason = "Recupere o fôlego por um instante antes de se confessar."
+	if reason != "":
+		toast(reason)
+		return false
+	var where: String = str(exploration.rooms[exploration.room].name)
+	for i in range(altars.size()):
+		if player.global_position.distance_to(altars[i]) < 80.0: where = altar_names[i]
+	open_confession(where)
+	return true
+
+
 ## O Confessionário pausa o mundo: nenhum inimigo age enquanto o peregrino conversa.
-func open_confession(i: int) -> void:
-	if confession_open or i < 0 or i >= altars.size(): return
+func open_confession(where: String) -> void:
+	if confession_open: return
 	confession_open = true
-	player.velocity = Vector2.ZERO
 	get_tree().paused = true
-	confession_panel.open(altar_names[i])
+	confession_panel.open(where)
 
 
 func close_confession() -> void:

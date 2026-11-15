@@ -1,5 +1,5 @@
 extends Control
-## Confessionário: painel de conversa aberto em um altar com C.
+## Confessionário: painel de conversa aberto com C em qualquer lugar, fora de combate.
 ## O jogo fica pausado enquanto o painel está aberto; ENTER envia, ESC fecha.
 
 const GOLD := Color(0.86, 0.7, 0.38)
@@ -52,8 +52,8 @@ func _ready() -> void:
 	if confessor != null: confessor.answered.connect(_on_answered)
 
 
-func open(name_of_altar: String) -> void:
-	altar_name = name_of_altar
+func open(where: String) -> void:
+	altar_name = where
 	visible = true
 	if entries.is_empty():
 		entries.append({"who": "confessor", "text": "Ajoelhe-se, peregrino. Aqui a culpa pode falar sem ser julgada. Diga o que pesa, ou pergunte o que o caminho esconde."})

@@ -108,7 +108,7 @@ func _draw_title(vs: Vector2) -> void:
 	if game.has_save:
 		_heading(Vector2(360, 513), "C  ·  Continuar jornada", 19, Color("b6b2a8"), 560)
 	_text(Vector2(0, 613), "A / D  mover     ESPAÇO  saltar     J  atacar     K  esquivar     E  interagir", 15, Color("aaa69a"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	_text(Vector2(0, 642), "F  curar     Q  penitência     C  confessar no altar     ESC  pausa     M  som", 14, Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 642), "F  curar     Q  penitência     C  confessar     ESC  pausa     M  som", 14, Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_text(Vector2(0, 672), "P  ·  Reduzir pulsos e tremores nas cenas: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 14, Color("c2bba8") if game.reduced_pulses else Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 
 
@@ -181,6 +181,9 @@ func _draw_play(vs: Vector2) -> void:
 	for i in range(_wrap(objective,320,14).size()):
 		_text(Vector2(objective_x,111+i*20),_wrap(objective,320,14)[i],14,Color("ded1b9"))
 	_text(Vector2(vs.x-176,170),"TAB · CARTOGRAFIA",11,Color("c6af8b"))
+	# O Confessionário abre em qualquer lugar; a dica se apaga enquanto houver combate.
+	var can_confess: bool = game.calm_t >= game.CALM_BEFORE_CONFESSION
+	_text(Vector2(vs.x-300,170),"C · CONFESSAR",11,Color("c6af8b") if can_confess else Color(0.45,0.4,0.36,0.6))
 	if game.area_t > 0:
 		var opacity := minf(game.area_t,1)
 		_heading(Vector2(200,205),game.area_name,23,Color(0.86,0.8,0.68,opacity),vs.x-400)
