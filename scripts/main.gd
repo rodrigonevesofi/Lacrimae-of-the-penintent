@@ -24,6 +24,11 @@ var confession_panel
 var confession_open := false
 var calm_t := 0.0
 const CALM_BEFORE_CONFESSION := 1.5
+## Controle: segurar Y (interagir) abre o Confessionário. O toque continua sendo
+## "interagir"; o atalho só completa quando o toque não iniciou nenhuma ação.
+const CONFESS_HOLD := 0.6
+var confess_hold_t := 0.0
+var _confess_hold_used := false
 var telemetry
 var pending_altar := -1
 var prayer_cooldown := 0.0
@@ -1066,6 +1071,17 @@ func _play_update(delta: float) -> void:
 	if Input.is_action_just_pressed("confess") and not exploration.map_open:
 		try_open_confession()
 		return
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_Y) and not exploration.map_open and player.state == "idle":
+		if not _confess_hold_used:
+			confess_hold_t += delta
+			if confess_hold_t >= CONFESS_HOLD:
+				_confess_hold_used = true
+				confess_hold_t = 0.0
+				try_open_confession()
+				return
+	else:
+		confess_hold_t = 0.0
+		_confess_hold_used = false
 
 	if boss_defeated and ending_countdown > 0.0:
 		ending_countdown -= delta

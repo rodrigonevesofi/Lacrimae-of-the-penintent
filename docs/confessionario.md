@@ -41,7 +41,7 @@ Com controle não dá para digitar, então o painel mostra até **5 perguntas pr
 - conforme o progresso: "Como atravesso o abismo?" (antes da relíquia), "Onde estão as correntes que faltam?", "Como venço o Guardião?" e, depois do chefe, "O que significa a Lágrima que vi?";
 - conforme a situação: "Como recupero o fragmento de culpa?" (há um fragmento perdido), "Por que morro tanto?" (3 mortes ou mais), "O que faço com tanta culpa?" (culpa acima de 50%).
 
-**Abrir:** Start (pausa) e depois **Y**. Em combate, a pausa continua e mostra o motivo, sem devolver o jogador à luta. **No painel:** ↑/↓ (direcional ou analógico) escolhe, **A** pergunta, **B** fecha. No teclado também dá para usar as perguntas prontas: com o campo vazio, ↑/↓ escolhe e ENTER envia; ou clique numa delas. A pergunta pronta vai ao Gemini como qualquer outra, com o contexto da partida, e cada uma cai num assunto das respostas offline.
+**Abrir:** **segurar Y** por meio segundo durante o jogo (uma barrinha sob "Y (segurar) · CONFESSAR" mostra o progresso), ou Start (pausa) e depois **Y**. Um toque em Y continua sendo "interagir": perto de altar, porta ou item, ele faz a ação normal e o atalho não completa. Em combate, o atalho mostra o motivo; pela pausa, a pausa continua e mostra o motivo, sem devolver o jogador à luta. **No painel:** ↑/↓ (direcional ou analógico) escolhe, **A** pergunta, **B** fecha. No teclado também dá para usar as perguntas prontas: com o campo vazio, ↑/↓ escolhe e ENTER envia; ou clique numa delas. A pergunta pronta vai ao Gemini como qualquer outra, com o contexto da partida, e cada uma cai num assunto das respostas offline.
 
 ## Como funciona
 

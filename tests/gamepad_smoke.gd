@@ -154,6 +154,32 @@ func run() -> void:
 	check(game.player.state == "idle" and game.player.is_on_floor(), "A no painel não faz o Penitente pular")
 	await tap(0, JOY_BUTTON_B)
 	check(not game.confession_open and not paused, "B fecha o Confessionário e devolve o jogo")
+	# Segurar Y durante o jogo também abre; um toque rápido não.
+	game.player.revive(Vector2(900, 600))
+	await frames(10)
+	game.calm_t = 5.0
+	await tap(0, JOY_BUTTON_Y)
+	check(not game.confession_open, "toque rápido em Y não abre o Confessionário")
+	button(0, JOY_BUTTON_Y, true)
+	await frames(50)
+	check(game.confession_open, "segurar Y por meio segundo abre o Confessionário")
+	button(0, JOY_BUTTON_Y, false)
+	await frames(2)
+	await tap(0, JOY_BUTTON_B)
+	check(not game.confession_open, "B fecha depois de abrir segurando Y")
+	# Perto do altar, Y continua sendo orar.
+	game.player.revive(game.altars[0])
+	await frames(15)
+	game.calm_t = 5.0
+	button(0, JOY_BUTTON_Y, true)
+	await frames(50)
+	check(game.narrative.mode == "prayer" and not game.confession_open, "no altar, Y ora em vez de confessar")
+	button(0, JOY_BUTTON_Y, false)
+	game.narrative.finish()
+	game.message_text = ""
+	game.player.revive(Vector2(900, 600))
+	await frames(10)
+
 	# Em combate, Y na pausa não abre: a pausa continua e mostra o motivo.
 	var foe = null
 	for e in get_nodes_in_group("enemies"):

@@ -46,7 +46,7 @@ O **1º controle** conectado é o Penitente; o **2º controle** é Beatriz (mesm
 | Doar sangue / levantar parceiro | ↑ | Mapa | Back / View |
 | Pausa | Start / Menu | Penitências no altar | L3 (escolher com X / Y / B) |
 | Oferecer lágrimas no altar | R3 | Título: iniciar / continuar | A / Y |
-| Confessionário | Start, depois Y | Perguntas prontas | ↑ / ↓ escolhe, A pergunta, B fecha |
+| Confessionário | segurar Y (ou Start, depois Y) | Perguntas prontas | ↑ / ↓ escolhe, A pergunta, B fecha |
 
 No controle, o Confessionário oferece perguntas prontas que mudam conforme a jornada; digitar perguntas livres continua no teclado (C). F3, F4, F11, M e P também ficam no teclado.
 
