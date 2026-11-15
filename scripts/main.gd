@@ -425,17 +425,6 @@ func _setup_input() -> void:
 	_add_action("p2_share_blood", [KEY_KP_0])
 	_add_action("p2_interact", [KEY_KP_ENTER])
 	_add_action("p2_swap", [])
-	for pair in [["p2_jump", JOY_BUTTON_A], ["p2_attack", JOY_BUTTON_X], ["p2_roll", JOY_BUTTON_B], ["p2_heavy", JOY_BUTTON_Y], ["p2_parry", JOY_BUTTON_RIGHT_SHOULDER], ["p2_heal", JOY_BUTTON_LEFT_SHOULDER], ["p2_share_blood", JOY_BUTTON_BACK], ["p2_left", JOY_BUTTON_DPAD_LEFT], ["p2_right", JOY_BUTTON_DPAD_RIGHT], ["p2_down", JOY_BUTTON_DPAD_DOWN]]:
-		var pad := InputEventJoypadButton.new()
-		pad.device = 1
-		pad.button_index = pair[1]
-		InputMap.action_add_event(pair[0], pad)
-	for pair in [["p2_left", -1.0], ["p2_right", 1.0]]:
-		var stick := InputEventJoypadMotion.new()
-		stick.device = 1
-		stick.axis = JOY_AXIS_LEFT_X
-		stick.axis_value = pair[1]
-		InputMap.action_add_event(pair[0], stick)
 	_add_action("left", [KEY_A])
 	_add_action("right", [KEY_D])
 	_add_action("jump", [KEY_SPACE, KEY_W])
@@ -449,6 +438,68 @@ func _setup_input() -> void:
 	_add_action("continue_game", [KEY_C])
 	_add_action("confess", [KEY_C])
 	_add_action("toggle_fullscreen", [KEY_F11])
+	_add_action("pause_confess", [KEY_C])
+	_setup_gamepads()
+
+
+# ---------------------------------------------------------------- controles
+## O 1º controle conectado (device 0) é o Penitente; o 2º (device 1) é Beatriz.
+## Botões na posição do controle de Xbox; no de PlayStation: A=✕, B=○, X=□, Y=△.
+const PAD_BUTTONS := {
+	"jump": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "roll": JOY_BUTTON_B, "interact": JOY_BUTTON_Y,
+	"parry": JOY_BUTTON_RIGHT_SHOULDER, "heal": JOY_BUTTON_LEFT_SHOULDER, "share_blood": JOY_BUTTON_DPAD_UP,
+	"left": JOY_BUTTON_DPAD_LEFT, "right": JOY_BUTTON_DPAD_RIGHT, "down": JOY_BUTTON_DPAD_DOWN,
+}
+const PAD_TRIGGERS := {"heavy": JOY_AXIS_TRIGGER_RIGHT, "penance": JOY_AXIS_TRIGGER_LEFT}
+## Só o Penitente: menus e altar. Start e Back valem para qualquer controle.
+const PAD_P1_ONLY := {
+	"penitence_menu": JOY_BUTTON_LEFT_STICK, "offer": JOY_BUTTON_RIGHT_STICK,
+	"confirm": JOY_BUTTON_A, "continue_game": JOY_BUTTON_Y,
+	"penitence_none": JOY_BUTTON_X, "penitence_nails": JOY_BUTTON_Y, "penitence_chains": JOY_BUTTON_B,
+}
+const PAD_ANY := {"pause": JOY_BUTTON_START, "map": JOY_BUTTON_BACK, "pause_confess": JOY_BUTTON_Y}
+
+## Ao jogar com controle, as dicas na tela mostram os botões em vez das teclas.
+var using_pad := false
+const PAD_LABELS := [
+	["[J / X]", "[X]"], ["[K / SHIFT]", "[B]"], ["[E]", "[Y]"], ["[R]", "[R3]"], ["[V]", "[L3]"],
+	["segure H", "segure ↑"], ["H · ", "↑ · "], ["Pressione PULO", "Pressione A"],
+]
+
+func pad_text(text: String) -> String:
+	if not using_pad: return text
+	for pair in PAD_LABELS: text = text.replace(pair[0], pair[1])
+	return text
+
+func _pad_button(action: String, device: int, button: int) -> void:
+	var ev := InputEventJoypadButton.new()
+	ev.device = device
+	ev.button_index = button
+	InputMap.action_add_event(action, ev)
+
+func _pad_axis(action: String, device: int, axis: int, value: float) -> void:
+	var ev := InputEventJoypadMotion.new()
+	ev.device = device
+	ev.axis = axis
+	ev.axis_value = value
+	InputMap.action_add_event(action, ev)
+
+func _setup_gamepads() -> void:
+	for device in [0, 1]:
+		var prefix := "" if device == 0 else "p2_"
+		for action in PAD_BUTTONS:
+			if InputMap.has_action(prefix + action): _pad_button(prefix + action, device, PAD_BUTTONS[action])
+		for action in PAD_TRIGGERS:
+			if InputMap.has_action(prefix + action): _pad_axis(prefix + action, device, PAD_TRIGGERS[action], 1.0)
+		_pad_axis(prefix + "left", device, JOY_AXIS_LEFT_X, -1.0)
+		_pad_axis(prefix + "right", device, JOY_AXIS_LEFT_X, 1.0)
+		_pad_axis(prefix + "down", device, JOY_AXIS_LEFT_Y, 1.0)
+		# Analógico: movimento responde cedo; "baixo" só com o analógico bem inclinado,
+		# para uma diagonal não virar descida de galeria por engano.
+		for action in ["left", "right"]: InputMap.action_set_deadzone(prefix + action, 0.25)
+		InputMap.action_set_deadzone(prefix + "down", 0.6)
+	for action in PAD_P1_ONLY: _pad_button(action, 0, PAD_P1_ONLY[action])
+	for action in PAD_ANY: _pad_button(action, -1, PAD_ANY[action])
 
 
 # ---------------------------------------------------------------- construção
@@ -1000,6 +1051,8 @@ func _play_update(delta: float) -> void:
 			if Input.is_action_just_pressed("penitence_" + choice):
 				player.apply_penitence(choice)
 				penitence_menu = false
+				# X/Y/B escolhem a penitência; não podem virar ataque ou esquiva ao fechar.
+				player._clear_combat_input()
 				_save()
 		return
 	if player.state == "execution": return
@@ -1175,11 +1228,18 @@ func combat_reason() -> String:
 
 
 ## Abre o Confessionário se o peregrino estiver fora de combate; senão, explica por quê.
-func try_open_confession() -> bool:
-	if confession_open or state != "play": return false
+## Por que o Confessionário não pode abrir agora, ou "" se pode.
+func confession_block_reason() -> String:
+	if state != "play": return "O Confessor só ouve durante a peregrinação."
 	var reason := combat_reason()
 	if reason == "" and calm_t < CALM_BEFORE_CONFESSION:
 		reason = "Recupere o fôlego por um instante antes de se confessar."
+	return reason
+
+
+func try_open_confession() -> bool:
+	if confession_open or state != "play": return false
+	var reason := confession_block_reason()
 	if reason != "":
 		toast(reason)
 		return false
@@ -1188,6 +1248,16 @@ func try_open_confession() -> bool:
 		if player.global_position.distance_to(altars[i]) < 80.0: where = altar_names[i]
 	open_confession(where)
 	return true
+
+
+## Pelo menu de pausa (Y no controle, C no teclado). Se não puder, a pausa continua
+## e o motivo volta para ser mostrado ali, sem devolver o jogador ao combate.
+func confess_from_pause() -> String:
+	var reason := confession_block_reason()
+	if reason != "": return reason
+	toggle_pause()
+	try_open_confession()
+	return ""
 
 
 ## O Confessionário pausa o mundo: nenhum inimigo age enquanto o peregrino conversa.

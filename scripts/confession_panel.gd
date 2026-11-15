@@ -1,11 +1,16 @@
 extends Control
-## Confessionário: painel de conversa aberto com C em qualquer lugar, fora de combate.
-## O jogo fica pausado enquanto o painel está aberto; ENTER envia, ESC fecha.
+## Confessionário: painel de conversa aberto com C (ou Y na pausa) fora de combate.
+## O jogo fica pausado enquanto o painel está aberto. Teclado: digitar e ENTER, ou
+## ↑/↓ + ENTER nas perguntas prontas; ESC fecha. Controle: ↑/↓ escolhe, A pergunta, B fecha.
 
 const GOLD := Color(0.86, 0.7, 0.38)
 const PANEL := Rect2(170, 60, 940, 600)
 const LOG_TOP := 168.0
-const LOG_BOTTOM := 548.0
+const LOG_BOTTOM := 400.0
+const SUG_TOP := 410.0
+const SUG_H := 24.0
+const SUG_X := 220.0
+const SUG_W := 840.0
 const LINE_H := 24.0
 const TEXT_SIZE := 18
 
@@ -18,6 +23,9 @@ var panel_art: AtlasTexture
 var entries: Array[Dictionary] = []
 var altar_name := ""
 var listen_t := 0.0
+var suggestions: Array[String] = []
+var selected := 0
+var _stick_dir := 0
 
 
 func _ready() -> void:
@@ -35,7 +43,7 @@ func _ready() -> void:
 	input.position = Vector2(PANEL.position.x + 50, 562)
 	input.size = Vector2(PANEL.size.x - 100, 40)
 	input.max_length = confessor.MAX_QUESTION if confessor != null else 240
-	input.placeholder_text = "Escreva sua confissão ou sua dúvida…"
+	input.placeholder_text = "Escreva sua dúvida, ou escolha uma pergunta acima…"
 	input.add_theme_font_size_override("font_size", 18)
 	input.add_theme_color_override("font_color", Color("eadcc4"))
 	input.add_theme_color_override("font_placeholder_color", Color(0.75, 0.68, 0.58, 0.55))
@@ -57,9 +65,28 @@ func open(where: String) -> void:
 	visible = true
 	if entries.is_empty():
 		entries.append({"who": "confessor", "text": "Ajoelhe-se, peregrino. Aqui a culpa pode falar sem ser julgada. Diga o que pesa, ou pergunte o que o caminho esconde."})
+	_refresh_suggestions()
 	input.text = ""
 	input.editable = true
 	input.grab_focus()
+
+
+func _refresh_suggestions() -> void:
+	suggestions = confessor.suggestions() if confessor != null else []
+	selected = clampi(selected, 0, maxi(0, suggestions.size() - 1))
+
+
+func _move(step: int) -> void:
+	if suggestions.is_empty(): return
+	selected = (selected + step + suggestions.size()) % suggestions.size()
+
+
+func _ask_selected() -> void:
+	if selected >= 0 and selected < suggestions.size(): _send(suggestions[selected])
+
+
+func _suggestion_rect(i: int) -> Rect2:
+	return Rect2(SUG_X, SUG_TOP + 20 + i * SUG_H, SUG_W, SUG_H - 2)
 
 
 func close() -> void:
@@ -71,13 +98,43 @@ func close() -> void:
 
 func _input(event: InputEvent) -> void:
 	if not visible: return
-	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+	var handled := true
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and not event.echo:
 		close()
-		get_viewport().set_input_as_handled()
+	elif event is InputEventKey and event.pressed and event.keycode in [KEY_UP, KEY_DOWN] and input.text.is_empty():
+		_move(-1 if event.keycode == KEY_UP else 1)
+	elif event is InputEventJoypadButton and event.pressed:
+		match event.button_index:
+			JOY_BUTTON_B, JOY_BUTTON_START: close()
+			JOY_BUTTON_A: _ask_selected()
+			JOY_BUTTON_DPAD_UP: _move(-1)
+			JOY_BUTTON_DPAD_DOWN: _move(1)
+			_: handled = false
+	elif event is InputEventJoypadMotion and event.axis == JOY_AXIS_LEFT_Y:
+		# O analógico anda uma linha por inclinação, não uma por quadro.
+		var dir := 0 if absf(event.axis_value) < 0.6 else (1 if event.axis_value > 0.0 else -1)
+		if dir != 0 and dir != _stick_dir: _move(dir)
+		_stick_dir = dir
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		handled = false
+		for i in range(suggestions.size()):
+			if _suggestion_rect(i).has_point(event.position):
+				selected = i
+				_ask_selected()
+				handled = true
+	else:
+		handled = false
+	if handled: get_viewport().set_input_as_handled()
 
 
 func _on_submitted(text: String) -> void:
 	text = text.strip_edges()
+	# ENTER com o campo vazio envia a pergunta pronta selecionada.
+	if text.is_empty(): _ask_selected()
+	else: _send(text)
+
+
+func _send(text: String) -> void:
 	if text.is_empty() or confessor == null or confessor.busy: return
 	entries.append({"who": "you", "text": text})
 	input.text = ""
@@ -88,6 +145,7 @@ func _on_submitted(text: String) -> void:
 func _on_answered(text: String, _source: String) -> void:
 	entries.append({"who": "confessor", "text": text})
 	while entries.size() > 24: entries.pop_front()
+	_refresh_suggestions()
 
 
 func _process(delta: float) -> void:
@@ -149,6 +207,20 @@ func _draw() -> void:
 		var row: Array = rows[i]
 		var x := PANEL.position.x + (85.0 if row[2] else 65.0)
 		_text(Vector2(x, LOG_TOP + 14 + (i - first) * LINE_H), row[0], TEXT_SIZE, row[1])
+	# Perguntas prontas: para quem joga com controle, ou para quem não sabe o que perguntar.
+	var busy: bool = confessor != null and confessor.busy
+	_text(Vector2(SUG_X, SUG_TOP + 10), "PERGUNTAS PRONTAS", 12, Color("a8977b"))
+	for i in range(suggestions.size()):
+		var r := _suggestion_rect(i)
+		var on := i == selected
+		if on:
+			draw_rect(r, Color(0.42, 0.32, 0.17, 0.35))
+			draw_rect(r, Color(GOLD, 0.7), false, 1)
+		var tone := Color("f0dfbd") if on else Color("b9ad98")
+		if busy: tone = Color(tone, 0.45)
+		_text(r.position + Vector2(12, 18), ("▶  " if on else "    ") + suggestions[i], 16, tone)
 	var voice: String = confessor.voice_label() if confessor != null else ""
+	var pad: bool = game != null and game.using_pad
+	var hint := "↑↓ escolher     A · perguntar     B · levantar-se" if pad else "ENTER · confessar     ↑↓ perguntas prontas     ESC · levantar-se"
 	_text(Vector2(PANEL.position.x + 50, PANEL.end.y - 14), voice, 12, Color("8c8170"))
-	_text(Vector2(PANEL.position.x, PANEL.end.y - 14), "ENTER · confessar     ESC · levantar-se", 13, Color("bba27c"), HORIZONTAL_ALIGNMENT_RIGHT, PANEL.size.x - 50)
+	_text(Vector2(PANEL.position.x, PANEL.end.y - 14), hint, 13, Color("bba27c"), HORIZONTAL_ALIGNMENT_RIGHT, PANEL.size.x - 50)

@@ -259,6 +259,27 @@ func _missing_bells(bells: Array) -> String:
 	return "" if missing.is_empty() else " (faltam: %s)" % ", ".join(missing)
 
 
+# ---------------------------------------------------------------- perguntas prontas
+
+## Até 5 perguntas para quem joga com controle (sem teclado), conforme o momento da jornada.
+## Cada uma cai num assunto do modo offline, então também funcionam sem internet.
+func suggestions() -> Array[String]:
+	var list: Array[String] = ["Para onde devo ir agora?"]
+	if game == null or game.player == null:
+		list.append_array(["Como enfrento os inimigos?", "Como funciona a culpa?", "Quem sou eu?"])
+		return list
+	if not game.relic_taken: list.append("Como atravesso o abismo?")
+	elif game.exploration != null and game.exploration.bells.size() < 2: list.append("Onde estão as correntes que faltam?")
+	elif not game.boss_defeated: list.append("Como venço o Guardião?")
+	else: list.append("O que significa a Lágrima que vi?")
+	if game.stain_active: list.append("Como recupero o fragmento de culpa?")
+	elif game.death_count >= 3: list.append("Por que morro tanto?")
+	else: list.append("Como enfrento os inimigos?")
+	list.append("O que faço com tanta culpa?" if game.player.culpa >= 50 else "Como funciona a culpa?")
+	list.append("Quem sou eu?")
+	return list
+
+
 # ---------------------------------------------------------------- modo offline
 
 const TOPICS := {

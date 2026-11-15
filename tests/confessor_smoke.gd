@@ -54,6 +54,22 @@ func run() -> void:
 	check(c.classify("quais são os controles") == "controles", "classifica controles")
 	check(c.classify("bom dia") == "outro", "pergunta solta vira outro")
 
+	# Perguntas prontas: em cada fase da jornada, todas têm resposta offline sobre o assunto certo.
+	var phases := [[false, 0, false], [true, 0, false], [true, 2, false], [true, 2, true]]
+	var all_ok := true
+	for ph in phases:
+		game.relic_taken = ph[0]
+		game.exploration.bells = ["water", "vigil"].slice(0, ph[1])
+		game.boss_defeated = ph[2]
+		for q in c.suggestions():
+			if c.classify(q) == "outro": all_ok = false; print("  sem assunto: ", q)
+	check(all_ok, "perguntas prontas sempre caem num assunto conhecido")
+	game.relic_taken = false; game.exploration.bells = []; game.boss_defeated = false
+	check(c.suggestions().has("Como atravesso o abismo?"), "antes da relíquia, sugere como atravessar o abismo")
+	game.relic_taken = true; game.exploration.bells = ["water", "vigil"]
+	check(c.suggestions().has("Como venço o Guardião?"), "com as correntes soltas, sugere como vencer o Guardião")
+	game.relic_taken = false; game.exploration.bells = []
+
 	# Acesso: qualquer lugar, desde que fora de combate
 	var foe = null
 	for e in get_nodes_in_group("enemies"):

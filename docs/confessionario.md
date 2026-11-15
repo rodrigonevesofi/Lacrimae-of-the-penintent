@@ -33,6 +33,16 @@ O Confessor serve para:
 
 Ao sair do combate, é preciso esperar 1,5 s de calma (`CALM_BEFORE_CONFESSION`). Se o jogador apertar C antes disso, uma mensagem explica o motivo. No HUD, ao lado de "TAB · CARTOGRAFIA", a dica **C · CONFESSAR** fica apagada enquanto não for possível. Cenas, mensagens, mapa e menu de penitências também bloqueiam a tecla, porque já pausam o jogador. O painel mostra o nome do altar quando o peregrino está num altar e, fora dele, o nome do lugar.
 
+## Pelo controle: perguntas prontas
+
+Com controle não dá para digitar, então o painel mostra até **5 perguntas prontas** que mudam conforme a jornada (`suggestions()` em `confessor.gd`):
+
+- sempre: "Para onde devo ir agora?" e "Quem sou eu?";
+- conforme o progresso: "Como atravesso o abismo?" (antes da relíquia), "Onde estão as correntes que faltam?", "Como venço o Guardião?" e, depois do chefe, "O que significa a Lágrima que vi?";
+- conforme a situação: "Como recupero o fragmento de culpa?" (há um fragmento perdido), "Por que morro tanto?" (3 mortes ou mais), "O que faço com tanta culpa?" (culpa acima de 50%).
+
+**Abrir:** Start (pausa) e depois **Y**. Em combate, a pausa continua e mostra o motivo, sem devolver o jogador à luta. **No painel:** ↑/↓ (direcional ou analógico) escolhe, **A** pergunta, **B** fecha. No teclado também dá para usar as perguntas prontas: com o campo vazio, ↑/↓ escolhe e ENTER envia; ou clique numa delas. A pergunta pronta vai ao Gemini como qualquer outra, com o contexto da partida, e cada uma cai num assunto das respostas offline.
+
 ## Como funciona
 
 ```

@@ -410,7 +410,7 @@ func _process(delta: float) -> void:
 	panel.queue_redraw()
 
 func text_at(pos: Vector2, text: String, size: int, color: Color, width: float) -> void:
-	panel.draw_multiline_string(font, pos, text, HORIZONTAL_ALIGNMENT_CENTER, width, size, -1, color)
+	panel.draw_multiline_string(font, pos, game.pad_text(text) if game != null else text, HORIZONTAL_ALIGNMENT_CENTER, width, size, -1, color)
 
 ## Envoltória suave de 0 a 1 para algo visível entre a e b.
 func beat(a: float, b: float, fade: float = 0.6) -> float:
