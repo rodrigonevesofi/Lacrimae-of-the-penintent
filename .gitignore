@@ -8,3 +8,6 @@ godot-inicializacao.log
 *.avi
 
 *.log
+
+# Chave do Gemini (Confessionário)
+ia_local.cfg

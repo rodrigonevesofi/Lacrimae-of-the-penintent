@@ -1,6 +1,11 @@
 [gd_scene format=3 uid="uid://ehirqr3jld36"]
 
 [ext_resource type="Script" uid="uid://cbpurixeqyov" path="res://scripts/main.gd" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://c4tew4gy3wh0u" path="res://scripts/editor_preview.gd" id="2_preview"]
 
 [node name="Main" type="Node2D" unique_id=2021083514]
 script = ExtResource("1_o5qli")
+
+[node name="EditorPreview" type="Node2D" parent="." unique_id=1730452291]
+z_index = -100
+script = ExtResource("2_preview")
