@@ -49,6 +49,8 @@ var state_t := 0.0
 var cd := 1.0
 var dead := false
 var flash := 0.0
+## Ferido de verdade, ele sangra: pinga no chão enquanto anda.
+var bleed_t := 0.0
 var fade := 1.0
 var anim_t := 0.0
 var struck := false
@@ -295,6 +297,7 @@ func _aggro_duel() -> void:
 
 func _die() -> void:
 	if dead: return
+	_sfx("corpo_cai_armadura" if kind in [2, 7] else "corpo_cai_carne")
 	dead = true
 	_sfx("chefe_morte" if kind == 2 else ("morte_grande" if kind == 3 else "morte"))
 	collision_layer = 0
@@ -340,6 +343,11 @@ func _physics_process(delta: float) -> void:
 			state = "chase" if family == "walker" else "patrol"
 			cd = 0.8
 		return
+	if not dead and not executing and kind not in [2, 3] and hp < max_hp * 0.5:
+		bleed_t -= delta
+		if bleed_t <= 0.0:
+			bleed_t = 0.28 + randf() * 0.3
+			get_tree().call_group("game", "blood_splats", global_position, facing, 1, 0.15)
 	if hit_pause > 0:
 		hit_pause -= delta
 		return

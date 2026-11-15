@@ -1,0 +1,273 @@
+{
+  "engine": "Godot 4.6.3.stable.official.7d41c59c4",
+  "suites": 38,
+  "verificacoes_e_recursos": 1398,
+  "resultados": [
+    {
+      "suite": "accessibility_pulses_check",
+      "verificacoes": 35,
+      "resultado": "aprovada",
+      "resumo": "ACCESSIBILITY_PULSES: 35 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "accessibility_scenes_check",
+      "verificacoes": 22,
+      "resultado": "aprovada",
+      "resumo": "ACCESSIBILITY_SCENES: 22 checks, 0 findings",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "animation_smoke",
+      "verificacoes": 345,
+      "resultado": "aprovada",
+      "resumo": "ANIMATION_SMOKE: 345 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "art_v21_resources",
+      "verificacoes": 12,
+      "resultado": "aprovada",
+      "resumo": "ART_V21_RESOURCES: 12 resources, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "art_v22_resources",
+      "verificacoes": 3,
+      "resultado": "aprovada",
+      "resumo": "ART_V22_RESOURCES: 3 resources, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "audio_smoke",
+      "verificacoes": 18,
+      "resultado": "aprovada",
+      "resumo": "AUDIO_SMOKE: 18 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "audio_v20_smoke",
+      "verificacoes": 17,
+      "resultado": "aprovada",
+      "resumo": "AUDIO_V20: 17 hook resources, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "bestiary_smoke",
+      "verificacoes": 44,
+      "resultado": "aprovada",
+      "resumo": "BESTIARY_SMOKE: 44 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "chapter_smoke",
+      "verificacoes": 44,
+      "resultado": "aprovada",
+      "resumo": "CHAPTER_SMOKE: 44 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "checkpoints_smoke",
+      "verificacoes": 21,
+      "resultado": "aprovada",
+      "resumo": "CHECKPOINTS_SMOKE: 21 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "combat_flow_smoke",
+      "verificacoes": 23,
+      "resultado": "aprovada",
+      "resumo": "COMBAT_FLOW: 23 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "combat_rich_smoke",
+      "verificacoes": 10,
+      "resultado": "aprovada",
+      "resumo": "COMBAT_RICH: 10 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "combat_smoke",
+      "verificacoes": 44,
+      "resultado": "aprovada",
+      "resumo": "COMBAT_SMOKE: 44 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "dev_mode_smoke",
+      "verificacoes": 5,
+      "resultado": "aprovada",
+      "resumo": "DEV_MODE: 5 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "duo_coop_smoke",
+      "verificacoes": 18,
+      "resultado": "aprovada",
+      "resumo": "DUO_COOP: 18 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "duo_smoke",
+      "verificacoes": 13,
+      "resultado": "aprovada",
+      "resumo": "DUO: 13 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "effect_rows_smoke",
+      "verificacoes": 110,
+      "resultado": "aprovada",
+      "resumo": "EFFECT_ROWS: 110 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "encounter_smoke",
+      "verificacoes": 16,
+      "resultado": "aprovada",
+      "resumo": "ENCOUNTER_SMOKE: 16 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "entrances_smoke",
+      "verificacoes": 81,
+      "resultado": "aprovada",
+      "resumo": "ENTRANCES_SMOKE: 81 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "execution_gore_smoke",
+      "verificacoes": 9,
+      "resultado": "aprovada",
+      "resumo": "EXECUTION_GORE: 9 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "expansion_smoke",
+      "verificacoes": 45,
+      "resultado": "aprovada",
+      "resumo": "EXPANSION_SMOKE: 45 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "exploration_smoke",
+      "verificacoes": 52,
+      "resultado": "aprovada",
+      "resumo": "EXPLORATION_SMOKE: 52 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "guilt_smoke",
+      "verificacoes": 38,
+      "resultado": "aprovada",
+      "resumo": "GUILT_SMOKE: 38 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "hero_presentation_smoke",
+      "verificacoes": 31,
+      "resultado": "aprovada",
+      "resumo": "HERO_PRESENTATION_SMOKE: 31 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "immersion_smoke",
+      "verificacoes": 13,
+      "resultado": "aprovada",
+      "resumo": "IMMERSION_SMOKE: 13 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "impact_material_smoke",
+      "verificacoes": 6,
+      "resultado": "aprovada",
+      "resumo": "IMPACT_MATERIAL: 6 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "penitence_smoke",
+      "verificacoes": 56,
+      "resultado": "aprovada",
+      "resumo": "PENITENCE_SMOKE: 56 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "reduced_pulses_spec",
+      "verificacoes": 59,
+      "resultado": "aprovada",
+      "resumo": "REDUCED_PULSES_SPEC: 59 checks, 0 failures; exit=0",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "reduced_pulses_ui_smoke",
+      "verificacoes": 8,
+      "resultado": "aprovada",
+      "resumo": "REDUCED_PULSES_UI: 8 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "ritual_smoke",
+      "verificacoes": 20,
+      "resultado": "aprovada",
+      "resumo": "RITUAL_SMOKE: 20 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "save_robustness_smoke",
+      "verificacoes": 13,
+      "resultado": "aprovada",
+      "resumo": "SAVE_ROBUSTNESS: 13 cases, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "story_decisions_check",
+      "verificacoes": 4,
+      "resultado": "aprovada",
+      "resumo": "STORY_DECISIONS: 4 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "story_review_smoke",
+      "verificacoes": 13,
+      "resultado": "aprovada",
+      "resumo": "STORY_REVIEW_SMOKE: 13 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "story_smoke",
+      "verificacoes": 29,
+      "resultado": "aprovada",
+      "resumo": "STORY_SMOKE: 29 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "sword_sync_smoke",
+      "verificacoes": 3,
+      "resultado": "aprovada",
+      "resumo": "SWORD_SYNC: 3 checks, 0 failures",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "traversal_smoke",
+      "verificacoes": 1,
+      "resultado": "aprovada",
+      "resumo": "TRAVERSAL_SMOKE: PASS — x=2580.49389648438 hp=100.0 state=idle",
+      "aviso_encerramento": true
+    },
+    {
+      "suite": "v32_resources_smoke",
+      "verificacoes": 62,
+      "resultado": "aprovada",
+      "resumo": "V32_RESOURCES: 62 checks, 0 failures",
+      "aviso_encerramento": false
+    },
+    {
+      "suite": "v33_art_smoke",
+      "verificacoes": 55,
+      "resultado": "aprovada",
+      "resumo": "V33_ART: 55 checks, 0 failures",
+      "aviso_encerramento": true
+    }
+  ]
+}

@@ -239,6 +239,96 @@
         128,
         250
       ]
+    },
+    "execute_devorador": {
+      "sheet": "hero_executa_devorador",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "rows": 2,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "duration": 1.0,
+      "wound_frame": 8,
+      "kill_frame": 8
+    },
+    "execute_flagelante": {
+      "sheet": "hero_executa_flagelante",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "rows": 2,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "duration": 1.0,
+      "wound_frame": 8,
+      "kill_frame": 8
+    },
+    "execute_bruxa": {
+      "sheet": "hero_executa_bruxa",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "rows": 2,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "duration": 1.0,
+      "wound_frame": 8,
+      "kill_frame": 8
+    },
+    "execute_asmodeia": {
+      "sheet": "hero_executa_asmodeia",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "rows": 2,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "duration": 1.0,
+      "wound_frame": 8,
+      "kill_frame": 8
+    },
+    "execute_duelista": {
+      "sheet": "hero_executa_duelista",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "rows": 2,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "duration": 1.0,
+      "wound_frame": 8,
+      "kill_frame": 8
+    },
+    "execute_carregador": {
+      "sheet": "hero_executa_carregador",
+      "start": 0,
+      "count": 12,
+      "fps": 12,
+      "rows": 2,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "duration": 1.0,
+      "wound_frame": 8,
+      "kill_frame": 8
     }
   },
   "devotee": {
@@ -1326,6 +1416,21 @@
       "count": 6,
       "fps": 6,
       "loop": false
+    },
+    "idle_weight": {
+      "sheet": "beatriz_peso",
+      "start": 0,
+      "count": 3,
+      "fps": 1,
+      "loop": false,
+      "grid": [
+        3,
+        1
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     }
   },
   "onda_golpe": {
@@ -1363,6 +1468,63 @@
       "anchor": [
         128,
         236
+      ]
+    }
+  },
+  "impactos": {
+    "idle": {
+      "sheet": "impactos",
+      "start": 0,
+      "count": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "faiscas": {
+      "sheet": "impactos",
+      "start": 0,
+      "count": 6,
+      "fps": 20,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "sangue": {
+      "sheet": "impactos",
+      "start": 6,
+      "count": 6,
+      "fps": 16,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "pedra": {
+      "sheet": "impactos",
+      "start": 12,
+      "count": 6,
+      "fps": 16,
+      "loop": false,
+      "anchor": [
+        128,
+        128
+      ]
+    },
+    "osso": {
+      "sheet": "impactos",
+      "start": 18,
+      "count": 6,
+      "fps": 16,
+      "loop": false,
+      "anchor": [
+        128,
+        128
       ]
     }
   }
