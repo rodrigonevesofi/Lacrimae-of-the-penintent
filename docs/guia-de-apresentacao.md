@@ -6,7 +6,11 @@ Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3
 2. **Combate (2 min)** — na Cidade, contra os primeiros inimigos:
    - combo de três golpes (**J J J**) e o arremate;
    - **aparo** (**L**) quando aparecer o anel dourado, seguido do contra-ataque forte;
+   - cancele um golpe em **K** assim que a lâmina ficar ativa;
+   - esquive imediatamente antes do contato: a **esquiva perfeita** deixa um rastro e abre 0,8 s de contra-ataque;
+   - espere os **dois padrões** da mesma criatura: dourado permite aparo, vermelho pede esquiva; a chicotada baixa também pode ser saltada;
    - **golpe carregado** (segure **I**);
+   - depois do arremate, pule e corte o alvo no ar: há até três suspensões;
    - **golpe descendente** (**S + J** no ar);
    - inimigo aberto → **execução** (**E**), com sangue e câmera lenta.
 3. **Exploração (1 min):** mostre um **portão marcado** (arco dourado) e um trancado (vermelho); abra o mapa (**TAB**).
@@ -26,6 +30,6 @@ No **F3**, **↑/↓** selecionam a sala e **Enter** transporta; **G** alterna i
 
 ## Autoria e ferramentas
 
-Projeto de Rodrigo, desenvolvido no Godot com assistência de Claude e Codex para código, integração, documentação e testes. Há arte produzida com a ferramenta integrada de geração de imagens e referências enviadas pelo autor a partir do Argon; ver `v32-integracao.md`, `v33-integracao.md` e `v33-prompts-arte.md`. Os sons entregues pelo autor foram integrados; os novos pedidos de áudio estão em `prompts-sons-gore-argon.md` e ainda aguardam WAVs. Esta declaração descreve o uso conhecido no projeto; deve acompanhar as regras da disciplina.
+Projeto de Rodrigo, desenvolvido no Godot com assistência de Claude e Codex para código, integração, documentação e testes. Há arte produzida com a ferramenta integrada de geração de imagens e referências enviadas pelo autor a partir do Argon; ver `v32-integracao.md`, `v33-integracao.md` e `v36-prompts-arte.md`. Os sons entregues pelo autor foram integrados; os 20 novos WAVs de gore e combate foram enviados em `sons-gore-v32-pacote.zip` e integrados na v36; o gerador de síntese recebido está em `tools/make_sfx_gore_v32.py`. Esta declaração descreve o uso conhecido no projeto; deve acompanhar as regras da disciplina.
 
-As capturas e rotas automatizadas não substituem o ensaio humano com dois jogadores. Na v35 foram validados código e recursos atuais; a lista nova de artes e mecânicas de `prompts-codex-v35.md` permanece separada da integração.
+As capturas e rotas automatizadas não substituem o ensaio humano com dois jogadores. A v36 executa a lista de arte e combate de `prompts-codex-v35.md`; detalhes, capturas e limites estão em `v36-integracao.md`. A esquiva perfeita e os avisos usam os WAVs enviados no novo pacote, sem escuta humana nesta rodada. Reserve uma partida com dois jogadores para avaliar resposta dos comandos, dificuldade e volume antes da apresentação.

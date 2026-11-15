@@ -69,7 +69,7 @@ func run() -> void:
 	var h0: float = heavy_target.hp
 	p._heavy_hits()
 	expect(h0 - heavy_target.hp >= 48.0,"the heavy blow, fully charged, deals at least 48 (%.0f)" % (h0 - heavy_target.hp))
-	expect(heavy_target.dead or (heavy_target.state == "hurt" and heavy_target.velocity.y < 0.0),"and throws the creature off its feet")
+	expect(heavy_target.dead or (heavy_target.state == "launched" and heavy_target.velocity.y < 0.0),"and throws the creature off its feet")
 	await frames(30)
 	var carrier = spawn(8,Vector2(990,600))
 	carrier.facing = -1

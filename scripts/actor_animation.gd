@@ -40,7 +40,8 @@ func configure(actor_name: String, scale_factor: float) -> void:
 		sprite_frames.set_animation_loop(clip, data.get("loop", true))
 		sprite_frames.set_animation_speed(clip, float(data.get("fps", 12)))
 		for i in range(int(data["count"])):
-			var index := int(data["start"]) + i
+			var indices: Array = data.get("frames", [])
+			var index := int(indices[i]) if not indices.is_empty() else int(data["start"]) + i
 			var row := floori(float(index) / columns)
 			var start := Vector2(roundf((index % columns) * cell.x), roundf(row * cell.y))
 			var end := Vector2(roundf((index % columns + 1) * cell.x), roundf((row + 1) * cell.y))

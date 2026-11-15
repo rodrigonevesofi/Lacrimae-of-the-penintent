@@ -354,11 +354,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "devotee",
-      "start": 18,
+      "sheet": "reacoes_devoto",
+      "start": 0,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "death": {
       "sheet": "devotee",
@@ -373,6 +381,66 @@
       "count": 12,
       "fps": 12,
       "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_devoto",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_devoto",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_devoto",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_devoto",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
       "anchor": [
         128,
         250
@@ -402,11 +470,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "mourner",
-      "start": 18,
+      "sheet": "reacoes_choro",
+      "start": 0,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "death": {
       "sheet": "mourner",
@@ -421,6 +497,66 @@
       "count": 12,
       "fps": 12,
       "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_choro",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_choro",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_choro",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_choro",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
       "anchor": [
         128,
         250
@@ -581,11 +717,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "devorador",
-      "start": 18,
+      "sheet": "reacoes_devorador",
+      "start": 0,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "death": {
       "sheet": "devorador",
@@ -602,7 +746,75 @@
       "loop": false,
       "anchor": [
         128,
-        242
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_devorador",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_devorador",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ],
+      "frames": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        11
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_devorador",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_devorador",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
       ]
     }
   },
@@ -629,11 +841,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "flagelante",
-      "start": 18,
+      "sheet": "reacoes_flagelante",
+      "start": 0,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "death": {
       "sheet": "flagelante",
@@ -650,7 +870,67 @@
       "loop": false,
       "anchor": [
         128,
-        240
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_flagelante",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_flagelante",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_flagelante",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_flagelante",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
       ]
     }
   },
@@ -677,11 +957,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "duelista",
-      "start": 18,
+      "sheet": "reacoes_duelista",
+      "start": 0,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "death": {
       "sheet": "duelista",
@@ -696,6 +984,74 @@
       "count": 12,
       "fps": 12,
       "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_duelista",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_duelista",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ],
+      "frames": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        11
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_duelista",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_duelista",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
       "anchor": [
         128,
         250
@@ -725,11 +1081,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "bruxa",
-      "start": 18,
+      "sheet": "reacoes_bruxa",
+      "start": 0,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "death": {
       "sheet": "bruxa",
@@ -744,6 +1108,66 @@
       "count": 12,
       "fps": 12,
       "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_bruxa",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_bruxa",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_bruxa",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_bruxa",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
       "anchor": [
         128,
         250
@@ -773,11 +1197,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "asmodeia",
-      "start": 18,
+      "sheet": "reacoes_asmodeia",
+      "start": 0,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "death": {
       "sheet": "asmodeia",
@@ -794,7 +1226,75 @@
       "loop": false,
       "anchor": [
         128,
-        237
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_asmodeia",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_asmodeia",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ],
+      "frames": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        11
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_asmodeia",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_asmodeia",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
       ]
     }
   },
@@ -1115,11 +1615,19 @@
       "loop": false
     },
     "hurt": {
-      "sheet": "carregador",
-      "start": 12,
+      "sheet": "reacoes_carregador",
+      "start": 0,
       "count": 3,
-      "fps": 10,
-      "loop": false
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
     },
     "break": {
       "sheet": "carregador",
@@ -1164,11 +1672,79 @@
       "loop": false
     },
     "executed": {
-      "sheet": "carregador_exposto",
+      "sheet": "carregador_executado",
       "start": 12,
       "count": 12,
       "fps": 10,
       "loop": false,
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "reacoes_carregador",
+      "start": 3,
+      "count": 4,
+      "fps": 14,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "reacoes_carregador",
+      "start": 7,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ],
+      "frames": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        11
+      ]
+    },
+    "stagger": {
+      "sheet": "reacoes_carregador",
+      "start": 13,
+      "count": 5,
+      "fps": 9,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "reacoes_carregador",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
       "anchor": [
         128,
         250
@@ -1525,6 +2101,38 @@
       "anchor": [
         128,
         128
+      ]
+    }
+  },
+  "jato_arterial": {
+    "idle": {
+      "sheet": "jato_arterial",
+      "start": 0,
+      "count": 6,
+      "fps": 24,
+      "loop": false,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        35,
+        160
+      ]
+    },
+    "pulse": {
+      "sheet": "jato_arterial",
+      "start": 0,
+      "count": 6,
+      "fps": 24,
+      "loop": false,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        35,
+        160
       ]
     }
   }

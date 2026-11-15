@@ -11,6 +11,16 @@ var dmg := 14.0
 var life := 4.0
 var radius := 9.0
 var wave := false
+var parryable := false
+var source = null
+
+func imminent_hit(who, window: float) -> bool:
+	if player != who: return false
+	var body: Rect2 = who.body_rect().grow(radius)
+	for i in range(7):
+		var dt := float(i) * window / 6.0
+		if body.has_point(global_position + vel * dt + Vector2(0, grav * dt * dt * 0.5)): return true
+	return false
 var ground_y := 100000.0
 var t := 0.0
 
@@ -44,13 +54,13 @@ func _process(delta: float) -> void:
 	if life <= 0.0 or position.y > ground_y:
 		queue_free()
 		return
-	if player != null and is_instance_valid(player) and player.state != "dead" and player.invuln <= 0.0:
+	if player != null and is_instance_valid(player) and player.state != "dead":
 		var r: Rect2 = player.body_rect()
 		var closest := Vector2(
 			clampf(global_position.x, r.position.x, r.end.x),
 			clampf(global_position.y, r.position.y, r.end.y))
 		if global_position.distance_to(closest) < radius:
-			player.take_hit(dmg, global_position.x)
+			player.take_hit(dmg, global_position.x, source if is_instance_valid(source) else self, parryable)
 			get_tree().call_group("game", "play_sfx", "projetil_impacto")
 			queue_free()
 			return

@@ -9,6 +9,10 @@ var width := 40.0
 var hit := false
 var t := 0.0
 
+func imminent_hit(who, window: float) -> bool:
+	if player != who or hit or delay - t < 0.0 or delay - t > window: return false
+	return Rect2(global_position + Vector2(-width/2,-90),Vector2(width,90)).intersects(who.body_rect())
+
 
 func _ready() -> void:
 	add_to_group("hazards")
@@ -24,7 +28,7 @@ func _process(delta: float) -> void:
 	if t >= delay and not hit and player != null and is_instance_valid(player):
 		var r := Rect2(global_position + Vector2(-width / 2.0, -90.0), Vector2(width, 90.0))
 		if r.intersects(player.body_rect()):
-			player.take_hit(dmg, global_position.x)
+			player.take_hit(dmg, global_position.x, self, false)
 			get_tree().call_group("game", "play_sfx", "espinho")
 			hit = true
 	queue_redraw()

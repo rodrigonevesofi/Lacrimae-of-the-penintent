@@ -4,7 +4,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 
 ## Como jogar
 
-1. Abra o Godot Standard 4.6.3, usado na validação da versão 35.
+1. Abra o Godot Standard 4.6.3, usado na validação da versão 36.
 2. Importe o arquivo `project.godot`.
 3. Aguarde a importação dos arquivos e pressione **F5**.
 
@@ -51,6 +51,6 @@ Acessibilidade: a tecla **P**, no título e na pausa, reduz pulsos de luz e trem
 Combate: **J** golpe, **K** esquiva, **L** aparo (aperte quando o golpe chegar; golpes marcados com anel dourado podem ser aparados, os demais só se esquivam), **F** curar, **E** executar um inimigo aberto.
 
 
-A [integração da versão 35](docs/v35-integracao.md) inclui o código de sangue das execuções, correções do modo dev e dos controles da dupla, a nova pausa e os pontos de integração dos sons de gore. Os WAVs novos ainda não foram entregues; os sons existentes foram preservados. A lista adicional de arte e mecânicas está registrada como pendente, sem ser apresentada como pronta.
+A [integração da versão 35](docs/v35-integracao.md) inclui o código de sangue das execuções, correções do modo dev e dos controles da dupla, a nova pausa e os pontos de integração dos sons de gore. Os sons existentes foram preservados. A lista adicional foi executada na [versão 36](docs/v36-integracao.md): 24 atlas novos ou repintados, cancelamento em esquiva no primeiro quadro ativo, comandos de combo preservados, esquiva perfeita com contra-ataque, dois padrões por criatura, suspensão aérea limitada e mortes com queda física. As execuções usam sangue estilizado e manchas persistentes. Os 20 WAVs de gore e combate enviados pelo autor também foram integrados, incluindo os avisos e a esquiva perfeita. [Validação dos sons](docs/v36-audio.json).
 
-Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md) e [resultados dos testes](docs/v35-testes.json). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
+Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md) e [resultados dos testes](docs/v36-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
