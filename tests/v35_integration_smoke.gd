@@ -26,6 +26,12 @@ func run() -> void:
 	for family in ["sangue_jato", "carne_rasga", "osso_quebra", "respingo_chao"]:
 		var options: Array = sound.FAMILIES[family]
 		expect(options.size() == (4 if family == "respingo_chao" else 3), family + ": variações registradas")
+		# Isola a família: o mesmo contrato precisa funcionar antes e depois da entrega dos WAVs.
+		var original := {}
+		for option in options:
+			if sound.effects.has(option):
+				original[option] = sound.effects[option]
+				sound.effects.erase(option)
 		var variant: String = options.back()
 		var voice := AudioStreamPlayer.new()
 		voice.stream = AudioStreamWAV.new()
@@ -35,6 +41,7 @@ func run() -> void:
 		sound.effects.erase(variant)
 		voice.queue_free()
 		expect(sound.resolve(family) == family, family + ": arquivo ausente não quebra o carregamento")
+		for option in original: sound.effects[option] = original[option]
 	var p = game.player
 	p.revive(Vector2(900, 600))
 	p.state = "execution"

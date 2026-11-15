@@ -90,6 +90,22 @@ var coffin := 60.0
 var exposed := false
 var contact_cd := 0.0
 var family := "walker"
+## Reações físicas compartilhadas por todas as criaturas comuns.
+var launch_elapsed := 0.0
+var suspend_t := 0.0
+var juggle_hits := 0
+var impaled_t := 0.0
+var hurt_heavy := false
+var death_age := 0.0
+var corpse_landed := false
+var death_material := "sangue"
+var attack_sequence := 0
+var attack_variant := 0
+var attack_parryable := false
+var attack_warning := ""
+var attack_target := Vector2.ZERO
+var secondary_velocity := Vector2.ZERO
+const SECONDARY_WINDUPS := {0: 0.65, 1: 0.65, 3: 0.85, 4: 0.60, 5: 0.70, 6: 0.75, 7: 0.85, 8: 0.80}
 
 
 func setup(k: int, pos: Vector2, rng: float, p) -> void:
@@ -199,6 +215,8 @@ func take_hit(dmg: float, from_x: float) -> void:
 	if dead or executing:
 		return
 	poise_recovery = 1.4
+	var airborne := state == "launched"
+	hurt_heavy = dmg >= 30.0
 	if state == "stagger":
 		dmg *= 1.6
 	if kind == 8 and not exposed and state != "recover" and (from_x - global_position.x) * float(facing) > 0.0:
@@ -227,7 +245,9 @@ func take_hit(dmg: float, from_x: float) -> void:
 		_aggro_duel()
 	# O Devorador e o flagelante em investida resistem aos golpes durante o ataque; a abertura ocorre na recuperação.
 	var armored: bool = (kind == 3 and state in ["windup", "strike"]) or (kind == 4 and state in ["windup", "charge"])
-	if family == "walker":
+	if airborne:
+		pass
+	elif family == "walker":
 		if not armored:
 			poise -= dmg
 			if poise <= 0.0 or kind == 3:
@@ -250,7 +270,7 @@ func take_hit(dmg: float, from_x: float) -> void:
 		awaken()
 	if hp <= 0.0:
 		_die()
-	elif kind != 2 and not stagger_used and (was_open or hp <= max_hp * 0.35):
+	elif not airborne and kind != 2 and not stagger_used and (was_open or hp <= max_hp * 0.35):
 		stagger_used = true
 		state = "stagger"
 		state_t = 2.0
@@ -299,6 +319,19 @@ func _die() -> void:
 	if dead: return
 	_sfx("corpo_cai_armadura" if kind in [2, 7] else "corpo_cai_carne")
 	dead = true
+	death_material = "faiscas" if kind in [2, 7] else ("pedra" if kind == 8 and not exposed else "sangue")
+	if kind != 2 and not executing:
+		var director = get_tree().get_first_node_in_group("game")
+		if director != null:
+			director.spawn_effect(death_material, global_position - Vector2(0, body_size.y * 0.5), facing, 0.5, "impactos")
+			if death_material == "sangue": director.blood_splats(global_position, facing, 8, 1.2)
+			var ex = director.exploration
+			if ex.arena_active != "" and self in ex.arena_enemies:
+				var last := true
+				for member in ex.arena_enemies:
+					if is_instance_valid(member) and not member.dead: last = false
+				var arena: Dictionary = ex.arena_by_id(ex.arena_active)
+				if last and ex.arena_wave == arena.waves.size() - 1: director.player._slow_motion(0.3, 0.18)
 	_sfx("chefe_morte" if kind == 2 else ("morte_grande" if kind == 3 else "morte"))
 	collision_layer = 0
 	if player != null and is_instance_valid(player):
@@ -316,6 +349,7 @@ func _die() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	impaled_t = maxf(impaled_t - delta, 0.0)
 	retarget_t -= delta
 	if retarget_t <= 0.0:
 		retarget_t = 0.3
@@ -358,10 +392,16 @@ func _physics_process(delta: float) -> void:
 	state_t -= delta
 	cd -= delta * (1.35 if fed_by_guilt else 1.0)
 	if dead:
-		fade -= delta * (0.5 if kind == 2 else 1.4)
+		death_age += delta
+		if kind == 2 or corpse_landed or death_age > 2.0: fade -= delta * (0.5 if kind == 2 else 1.4)
 		velocity.x = move_toward(velocity.x, 0.0, 800.0 * delta)
 		velocity.y = minf(velocity.y + 1200.0 * delta, 700.0)
 		move_and_slide()
+		if kind != 2 and is_on_floor() and not corpse_landed:
+			corpse_landed = true
+			if not executing and death_material == "sangue":
+				var director = get_tree().get_first_node_in_group("game")
+				if director != null: director.player._blood_decal(global_position)
 		if light:
 			light.energy = maxf(fade, 0.0) * 0.5
 		if fade <= 0.0:
@@ -374,6 +414,25 @@ func _physics_process(delta: float) -> void:
 	if poise_recovery <= 0.0 and state not in ["hurt", "stagger"]:
 		poise = move_toward(poise, float(POISE.get(kind, 40.0)), 18.0 * delta)
 	_state_sounds()
+	if state == "launched":
+		launch_elapsed += delta
+		suspend_t = maxf(suspend_t - delta, 0.0)
+		velocity.y = -30.0 if suspend_t > 0.0 else minf(velocity.y + 1800.0 * delta, 900.0)
+		move_and_slide()
+		if launch_elapsed > 0.1 and is_on_floor() and velocity.y >= 0.0:
+			state = "knockdown"
+			state_t = 0.22
+			juggle_hits = 0
+		return
+	if state == "knockdown":
+		velocity.x = move_toward(velocity.x, 0.0, 1800.0 * delta)
+		move_and_slide()
+		if state_t <= 0.0: state = "chase" if family == "walker" else "patrol"
+		return
+	if state in ["alt_windup", "alt_strike", "alt_recover"]:
+		_secondary_update(delta)
+		return
+	var before := state
 	match kind:
 		0, 7:
 			if state == "duel": _duel(delta)
@@ -390,6 +449,88 @@ func _physics_process(delta: float) -> void:
 			_bomber(delta)
 		8:
 			_carrier(delta)
+	if kind != 2 and state in ["windup", "strike_wind"] and state != before:
+		_begin_pattern()
+	queue_redraw()
+
+## Alterna dois padrões sem sorteio: o jogador pode aprender a sequência e sua antecipação.
+func _begin_pattern() -> void:
+	attack_variant = attack_sequence % 2
+	attack_sequence += 1
+	attack_target = player.global_position
+	attack_parryable = kind in [0, 7] or (kind == 4 and absf(player.global_position.x - global_position.x) < 130.0) or (kind == 8 and exposed)
+	if attack_variant == 1:
+		state = "alt_windup"
+		state_t = float(SECONDARY_WINDUPS[kind])
+		attack_parryable = kind in [1, 5, 6]
+	windup_len = state_t
+	attack_warning = "gold" if attack_parryable else "red"
+	_sfx("aviso_aparavel" if attack_parryable else "aviso_perigo")
+	struck = false
+	velocity = Vector2.ZERO
+
+func attack_bounds() -> Rect2:
+	var reach := 100.0 if kind in [0, 7] else (165.0 if kind in [4, 6] else 130.0)
+	var height := 24.0 if kind == 4 and attack_variant == 1 else body_size.y
+	return Rect2(global_position + Vector2(0 if facing > 0 else -reach, -height), Vector2(reach, height))
+
+func imminent_hit(who, window: float) -> bool:
+	if dead or executing or player != who or room_id != who.get_tree().get_first_node_in_group("game").exploration.room: return false
+	if kind == 2:
+		if state_t < 0.0 or state_t > window: return false
+		if state == "slam_wind": return absf(who.position.x-position.x)<170 and absf(who.position.y-position.y)<70
+		if state == "sweep_wind": return Rect2(global_position+Vector2(0 if facing>0 else -300,-110),Vector2(300,110)).intersects(who.body_rect())
+		return false
+	if kind in [1, 5] or (kind == 6 and attack_variant == 0): return false
+	var wind := state in ["windup", "strike_wind", "alt_windup"] and state_t >= 0.0 and state_t <= window
+	var active := state in ["strike", "charge", "alt_strike"] and not struck
+	return (wind or active) and attack_bounds().intersects(who.body_rect())
+
+func _secondary_update(delta: float) -> void:
+	if family == "walker": velocity.y = minf(velocity.y + 1800.0 * delta, 900.0)
+	match state:
+		"alt_windup":
+			velocity.x = 0.0
+			if state_t <= 0.0:
+				state = "alt_strike"
+				state_t = 0.30 if kind in [0, 6] else 0.18
+				secondary_velocity = (attack_target - global_position).normalized() * 360.0
+				if kind in [1, 5]:
+					for angle in ([-0.22, 0.0, 0.22] if kind == 1 else [0.0]):
+						var tear = Tear.new()
+						tear.player = player
+						tear.source = self
+						tear.parryable = true
+						tear.vel = (attack_target - global_position - Vector2(0, 30)).normalized().rotated(angle) * (360.0 if kind == 1 else 500.0)
+						get_parent().add_child(tear)
+						tear.global_position = global_position - Vector2(0, 25)
+				elif kind in [3, 8]:
+					get_tree().call_group("game", "spawn_effect", "poeira", global_position, facing, 0.7, "onda_golpe")
+					for direction in [-1.0, 1.0]:
+						var wave = Tear.new()
+						wave.player = player
+						wave.source = self
+						wave.wave = true
+						wave.vel = Vector2(direction * 240.0, 0)
+						wave.radius = 15.0
+						wave.life = 0.8
+						get_parent().add_child(wave)
+						wave.global_position = global_position - Vector2(0, 12)
+		"alt_strike":
+			if kind == 0: velocity.x = facing * 310.0 if _ledge_ok() else 0.0
+			elif kind == 6: velocity = secondary_velocity
+			else: velocity.x = 0.0
+			if kind not in [1, 3, 5, 8] and not struck and attack_bounds().intersects(player.body_rect()):
+				struck = true
+				player.take_hit(18.0, global_position.x, self, attack_parryable)
+			if state_t <= 0.0:
+				state = "alt_recover"
+				state_t = 0.75
+				cd = 1.3
+		"alt_recover":
+			velocity.x = move_toward(velocity.x, 0.0, 1800.0 * delta)
+			if state_t <= 0.0: state = "chase" if family == "walker" else "patrol"
+	move_and_slide()
 	queue_redraw()
 
 
@@ -554,10 +695,12 @@ func _brute(delta: float) -> void:
 			velocity.x = facing * (330.0 if _ledge_ok() else 0.0)
 			if not struck:
 				var r := Rect2(global_position + Vector2(0.0 if facing > 0 else -100.0, -84.0), Vector2(100.0, 84.0))
-				if r.intersects(player.body_rect()) and player.invuln <= 0.0:
-					player.take_hit(30.0, global_position.x)
-					player.add_culpa(10)
-					hp = minf(hp + 18.0, max_hp)
+				if r.intersects(player.body_rect()):
+					var previous_hp: float = player.hp
+					player.take_hit(30.0, global_position.x, self, false)
+					if player.hp < previous_hp:
+						player.add_culpa(10)
+						hp = minf(hp + 18.0, max_hp)
 					get_tree().call_group("game", "spawn_fx", player.global_position + Vector2(0, -40), Color(0.7, 0.1, 0.12))
 					get_tree().call_group("game", "shake_cam", 6.0)
 					struck = true
@@ -639,7 +782,7 @@ func _carrier(delta: float) -> void:
 		"charge":
 			velocity.x = facing * 300.0
 			var ram := Rect2(global_position + Vector2(0.0 if facing > 0 else -72.0, -66.0), Vector2(72.0, 66.0))
-			if not charge_hit and ram.intersects(player.body_rect()) and player.invuln <= 0.0:
+			if not charge_hit and ram.intersects(player.body_rect()):
 				player.take_hit(18.0, global_position.x, self, false)
 				charge_hit = true
 			if is_on_wall() or not _ledge_ok():
@@ -725,7 +868,7 @@ func _charger(delta: float) -> void:
 			velocity.x = 0.0
 			if state_t <= 0.0:
 				# De perto ele golpeia; de longe, investe.
-				if dist < 130.0:
+				if attack_parryable:
 					state = "strike"
 					state_t = 0.18
 					struck = false
@@ -737,7 +880,7 @@ func _charger(delta: float) -> void:
 			velocity.x = 0.0
 			if not struck:
 				var lash := Rect2(global_position + Vector2(0.0 if facing > 0 else -84.0, -60.0), Vector2(84.0, 60.0))
-				if lash.intersects(player.body_rect()) and player.invuln <= 0.0:
+				if lash.intersects(player.body_rect()):
 					player.take_hit(12.0, global_position.x, self, true)
 					struck = true
 			if state_t <= 0.0:
@@ -748,8 +891,8 @@ func _charger(delta: float) -> void:
 			velocity.x = facing * 430.0
 			if not charge_hit:
 				var r := Rect2(global_position + Vector2(0.0 if facing > 0 else -64.0, -60.0), Vector2(64.0, 60.0))
-				if r.intersects(player.body_rect()) and player.invuln <= 0.0:
-					player.take_hit(18.0, global_position.x)
+				if r.intersects(player.body_rect()):
+					player.take_hit(18.0, global_position.x, self, false)
 					charge_hit = true
 			if is_on_wall() or not _ledge_ok():
 				# Uma investida errada termina contra a pedra: o penitente cai e o jogador ganha uma abertura.
@@ -1090,7 +1233,7 @@ func _slam() -> void:
 	_sfx("chefe_pancada")
 	get_tree().call_group("game", "shake_cam", 10.0)
 	if absf(player.global_position.x - global_position.x) < 170.0 and absf(player.global_position.y - global_position.y) < 70.0:
-		player.take_hit(26.0, global_position.x)
+		player.take_hit(26.0, global_position.x, self, false)
 	for s in [-1.0, 1.0]:
 		var t = Tear.new()
 		t.player = player
@@ -1162,11 +1305,17 @@ func _process(delta: float) -> void:
 	if executing:
 		animator.select("executed", facing, execution_progress)
 	elif state == "stagger" and not dead:
-		animator.pose("hurt", facing, 2)
+		animator.select("impaled" if impaled_t > 0.0 else "stagger", facing, 1.0 - state_t / 1.2 if impaled_t > 0.0 else -1.0)
 	elif dead:
-		animator.select("death", facing, 1 - fade)
+		animator.select("death", facing, clampf(death_age / 0.65, 0.0, 0.999) if kind != 2 else 1 - fade)
+	elif state == "launched":
+		animator.select("launched", facing, clampf(launch_elapsed / 0.60, 0.0, 0.999))
+	elif state == "knockdown":
+		animator.pose("launched", facing, 5)
 	elif state == "hurt":
-		animator.select("hurt", facing, 1 - state_t / 0.3)
+		animator.select("hurt_heavy" if hurt_heavy else "hurt", facing, 1 - state_t / 0.3)
+	elif state in ["alt_windup", "alt_strike", "alt_recover"]:
+		animator.select("attack", facing, (1.0 - state_t / windup_len) * 0.6 if state == "alt_windup" else (0.8 if state == "alt_strike" else 0.99))
 	elif kind == 8:
 		match state:
 			"windup": animator.select("attack", facing, clampf(1 - state_t / 0.4, 0, 1) * 2.0 / 6)
@@ -1234,8 +1383,12 @@ func _draw() -> void:
 	# Sinais de antecipação: cada novo ataque se anuncia com uma cor própria antes de atingir.
 	if kind == 2 and state == "sweep_wind" and state_t < 0.22:
 		draw_arc(Vector2(facing * 150.0, -60.0), 46.0, 0, TAU, 32, Color(1.0, 0.84, 0.32, 0.95), 4.0)
-	if state == "windup" and kind in [0, 7, 4, 8] and state_t < 0.2 and (kind != 4 or absf(player.global_position.x - global_position.x) < 140.0):
-		draw_arc(Vector2(facing * 34.0, -44.0), 24.0, 0, TAU, 24, Color(1.0, 0.84, 0.32, 0.95), 3.0)
+	if kind != 2 and state in ["windup", "strike_wind", "alt_windup"]:
+		var cue := Color("f1c85c") if attack_parryable else Color("df293f")
+		var mark := Vector2(facing * 34.0, -body_size.y * 0.7)
+		draw_arc(mark, 22.0, 0, TAU, 28, cue, 3.0)
+		draw_line(mark + Vector2(0, -30), mark + Vector2(0, -23), cue, 3.0)
+		if not attack_parryable: draw_line(mark + Vector2(-6, -30), mark + Vector2(6, -30), cue, 3.0)
 	match kind:
 		3:
 			if state == "windup":

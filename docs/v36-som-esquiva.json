@@ -1,0 +1,17 @@
+{
+  "arquivo": "assets/audio/esquiva_perfeita.wav",
+  "origem": "sons-gore-v32-pacote.zip",
+  "gerador_fornecido": "tools/make_sfx_gore_v32.py",
+  "substitui": "Montagem provisória de breath.wav e roll.wav, não publicada.",
+  "medidas": {
+    "arquivo": "assets/audio/esquiva_perfeita.wav",
+    "duracao_s": 0.5,
+    "pico_dbfs": -2.101,
+    "inicio_ms": 2.993,
+    "planura_espectral": 0.097,
+    "subida_monotona_detectada": false,
+    "sha256": "4667411d605eaff9eef9b8a82d4668503a4257ad837283ee6823a82b994acd5a",
+    "identico_ao_zip": true
+  },
+  "limite": "Sem escuta humana."
+}

@@ -1,5 +1,7 @@
 # Integração da versão 35
 
+Registro histórico. A lista adicional de arte e combate abaixo foi executada depois, na [versão 36](v36-integracao.md).
+
 Base: `261ccf7e15495c3df53598736baa1f72b62206a8` (versão 33). Foram integrados os documentos da v34 e o patch cumulativo da v35 fornecido pelo autor, preservando os atlas e sons já publicados.
 
 ## Código entregue e correções

@@ -674,28 +674,51 @@ func _place_splat(at: Vector2, size: float) -> void:
 	splat.position = at + Vector2(0.0, -1.0)
 	splat.z_index = 5
 	splat.add_to_group("blood_splats")
-	var points := PackedVector2Array()
-	var n := 9
-	for i in range(n):
-		var a := TAU * float(i) / float(n)
-		var r := size * (0.6 + randf() * 0.6)
-		points.append(Vector2(cos(a) * r * 1.6, sin(a) * r * 0.32))
-	var stain := Polygon2D.new()
-	stain.polygon = points
-	stain.color = Color(0.36, 0.01, 0.03, 0.92)
+	var stain := Sprite2D.new()
+	var paint := AtlasTexture.new()
+	paint.atlas = load("res://assets/efeitos/sangue_chao.png")
+	paint.region = Rect2(randi_range(0, 7) * 128, 0, 128, 64)
+	stain.texture = paint
+	stain.scale = Vector2(size * 3.2 / 128.0, size * 0.8 / 64.0)
+	stain.flip_h = randf() < 0.5
 	splat.add_child(stain)
-	var core := Polygon2D.new()
-	var inner := PackedVector2Array()
-	for v in points: inner.append(v * 0.55)
-	core.polygon = inner
-	core.color = Color(0.22, 0.0, 0.02, 0.95)
-	splat.add_child(core)
 	add_child(splat)
 	soundscape.play_sfx_at("respingo_chao", at)
 	var fade := splat.create_tween()
 	fade.tween_interval(40.0)
 	fade.tween_property(splat, "modulate:a", 0.0, 5.0)
 	fade.tween_callback(splat.queue_free)
+
+## Respingos verticais só aparecem quando uma parede real está a até 60 pixels do ferimento.
+func wall_splat(at: Vector2) -> void:
+	var wall := {}
+	for direction in [-1.0, 1.0]:
+		var query := PhysicsRayQueryParameters2D.create(at, at + Vector2(direction * 60, 0), 1)
+		var hit := get_world_2d().direct_space_state.intersect_ray(query)
+		if not hit.is_empty() and absf(hit.normal.x) > 0.7:
+			wall = hit
+			break
+	if wall.is_empty(): return
+	var old := get_tree().get_nodes_in_group("blood_walls")
+	while old.size() >= 45:
+		var first = old.pop_front()
+		first.remove_from_group("blood_walls")
+		first.queue_free()
+	var stain := Sprite2D.new()
+	var paint := AtlasTexture.new()
+	paint.atlas = load("res://assets/efeitos/sangue_parede.png")
+	paint.region = Rect2(randi_range(0, 3) * 256, 0, 256, 256)
+	stain.texture = paint
+	stain.position = wall.position
+	stain.scale = Vector2(0.30, 0.55)
+	stain.flip_h = wall.normal.x < 0
+	stain.z_index = 4
+	stain.add_to_group("blood_walls")
+	add_child(stain)
+	var fade := stain.create_tween()
+	fade.tween_interval(40.0)
+	fade.tween_property(stain, "modulate:a", 0.0, 5.0)
+	fade.tween_callback(stain.queue_free)
 
 func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55, actor: String = "efeitos", tint: Color = Color.WHITE) -> void:
 	var anchor := Node2D.new()

@@ -43,6 +43,10 @@ var prev_vy := 0.0
 var parry_hit := false
 var counter_t := 0.0
 var counter_attack := false
+const PERFECT_DODGE_WINDOW := 0.15
+var perfect_dodge_used := false
+var perfect_dodges := 0
+var air_chain := 0
 var execution_wound := false
 ## Combate: sequência de três golpes com arremate no terceiro, golpe pesado carregado e ataque descendente.
 const HEAVY_STRIKE_TIME := 0.32
@@ -371,6 +375,7 @@ func _physics_process(delta: float) -> void:
 	was_grounded = on_floor
 	if on_floor:
 		air_attack_used = false
+		air_chain = 0
 		if just_landed and aerial_after_cut and state == "idle":
 			state = "air_recover"
 			state_t = AIR_RECOVERY_TIME
@@ -443,8 +448,10 @@ func _physics_process(delta: float) -> void:
 			if contact_frame in [2, 3]:
 				_swing_trail()
 				_attack_hits()
-			# Há compromisso até o contato; a recuperação permite defesa antes do próximo golpe.
-			if p >= 0.60 and _buffered_defense(on_floor):
+			# Esquiva desde o primeiro quadro ativo; aparo ainda exige recuperação.
+			if p >= 2.0 / 6.0 and _buffered_roll():
+				pass
+			elif p >= 0.60 and _buffered_defense(on_floor):
 				pass
 			elif p >= 0.70 and _jump_from_recovery(on_floor):
 				pass
@@ -474,14 +481,18 @@ func _physics_process(delta: float) -> void:
 			if not heavy_done and state_t <= heavy_len * 0.7:
 				heavy_done = true
 				_heavy_hits()
-			if state_t <= heavy_len * 0.32 and _buffered_defense(on_floor):
+			if state_t <= heavy_len * 0.7 and _buffered_roll():
+				pass
+			elif state_t <= heavy_len * 0.32 and _buffered_defense(on_floor):
 				pass
 			elif state_t <= 0.0:
 				state = "idle"
 		"plunge":
 			velocity.x = 0.0
 			velocity.y = 950.0
-			if on_floor and not plunge_landed:
+			if _buffered_roll():
+				pass
+			elif on_floor and not plunge_landed:
 				plunge_landed = true
 				_plunge_impact()
 				state = "air_recover"
@@ -495,7 +506,9 @@ func _physics_process(delta: float) -> void:
 			elif clampi(int(progress * 12),0,11) in [5,6,7]:
 				_swing_trail()
 				_attack_hits(true)
-			if state == "air_attack" and state_t <= 0:
+			if state == "air_attack" and progress >= 5.0 / 12.0 and _buffered_roll():
+				pass
+			elif state == "air_attack" and state_t <= 0:
 				state = "idle"
 		"air_recover":
 			velocity.x = move_toward(velocity.x,0,2100.0*delta)
@@ -641,9 +654,17 @@ func _attack_hits(aerial: bool = false) -> void:
 			# Bronze e armadura ressoam; a carne cede.
 			get_tree().call_group("game", "play_sfx", "hit_carne" if impact_kind == "sangue" else "hit_metal")
 			hit_list.append(e)
-			var dmg := (22.0 if aerial else (38.0 if counter_attack else (34.0 if finisher else (20.0 if combo == 1 else 26.0)))) * sword_multiplier()
+			var dmg := (38.0 if counter_attack else (22.0 if aerial else (34.0 if finisher else (20.0 if combo == 1 else 26.0)))) * sword_multiplier()
 			e.last_hitter = self
+			var airborne: bool = e.state == "launched"
 			e.take_hit(dmg, global_position.x)
+			if aerial and airborne and not e.dead and e.juggle_hits < 3:
+				e.juggle_hits += 1
+				e.suspend_t = 0.10
+				e.velocity.y = -110.0
+				e.state = "launched"
+				air_chain += 1
+				if air_chain < 3: air_attack_used = false
 			if finisher and not aerial:
 				get_tree().call_group("game", "play_sfx", "arremate")
 				_launch(e, 360.0, -220.0)
@@ -678,8 +699,27 @@ func _start_roll() -> void:
 	combo_window = 0.0
 	state = "roll"
 	state_t = ROLL_TIME
+	perfect_dodge_used = false
 	invuln = ROLL_TIME
 	roll_cd = ROLL_TIME + (0.65 if penitence == "chains" else 0.0)
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy.has_method("imminent_hit") and enemy.imminent_hit(self, PERFECT_DODGE_WINDOW):
+			_perfect_dodge()
+			break
+	if not perfect_dodge_used:
+		for hazard in get_tree().get_nodes_in_group("hazards"):
+			if hazard.has_method("imminent_hit") and hazard.imminent_hit(self, PERFECT_DODGE_WINDOW):
+				_perfect_dodge()
+				break
+
+func _perfect_dodge() -> void:
+	if perfect_dodge_used: return
+	perfect_dodge_used = true
+	perfect_dodges += 1
+	counter_t = 0.8
+	_slow_motion(0.35, 0.3)
+	get_tree().call_group("game", "play_sfx", "esquiva_perfeita")
+	get_tree().call_group("game", "spawn_effect", "silhueta", global_position + Vector2(-facing * 34, -45), facing, 0.5, "golpe", Color(0.72,0.76,0.85,0.28))
 
 
 func _start_heal() -> void:
@@ -754,6 +794,8 @@ func _parry_success(attacker, from_x: float) -> void:
 func take_hit(dmg: float, from_x: float, attacker = null, parryable: bool = false) -> void:
 	if dev_god:
 		return
+	if state == "roll" and ROLL_TIME - state_t <= PERFECT_DODGE_WINDOW and attacker != null:
+		_perfect_dodge()
 	if state == "parry" and parryable and state_t > PARRY_TIME - PARRY_WINDOW and (from_x - global_position.x) * float(facing) >= -10.0:
 		_parry_success(attacker, from_x)
 		return
@@ -834,6 +876,8 @@ func revive(pos: Vector2) -> void:
 	combo_window = 0.0
 	finisher = false
 	counter_attack = false
+	perfect_dodge_used = false
+	air_chain = 0
 	counter_t = 0.0
 	parry_cd = 0.0
 	roll_cd = 0.0
@@ -998,12 +1042,17 @@ func begin_execution(target) -> bool:
 func _start_charge() -> void:
 	_clear_combat_input()
 	combo_window = 0.0
+	# Reserva o bônus ao começar a carga; completar os 0,9 s não deve perdê-lo.
+	counter_attack = counter_t > 0.0
+	counter_t = 0.0
 	get_tree().call_group("game", "play_sfx", "golpe_carregado_carga")
 	state = "charge"
 	heavy_t = 0.0
 	velocity.x = 0.0
 
 func _start_heavy() -> void:
+	counter_attack = (state == "charge" and counter_attack) or counter_t > 0.0
+	counter_t = 0.0
 	state = "heavy"
 	heavy_len = HEAVY_STRIKE_TIME * attack_scale()
 	state_t = heavy_len
@@ -1014,6 +1063,8 @@ func _start_heavy() -> void:
 	get_tree().call_group("game", "play_sfx", "golpe_carregado_solta")
 
 func _start_plunge() -> void:
+	counter_attack = counter_t > 0.0
+	counter_t = 0.0
 	state = "plunge"
 	plunge_landed = false
 	hit_list.clear()
@@ -1046,12 +1097,15 @@ func _launch(e, push: float, lift: float) -> void:
 		get_tree().call_group("game", "play_sfx", "empalar")
 		e.state = "stagger"
 		e.state_t = 1.2
+		e.impaled_t = 1.2
 		e.velocity = Vector2.ZERO
 		return
 	if e.kind == 8 and not e.exposed:
 		return
-	e.state = "hurt"
-	e.state_t = 0.45
+	e.state = "launched"
+	e.launch_elapsed = 0.0
+	e.juggle_hits = 0
+	e.suspend_t = 0.0
 	e.poise = e.POISE.get(e.kind, 40.0)
 	e.velocity = Vector2(float(facing) * push, lift if e.family == "walker" else lift * 0.5)
 
@@ -1077,7 +1131,7 @@ func _heavy_hits() -> void:
 		hit_list.append(e)
 		landed = true
 		var impact_kind := _impact_kind(e)
-		var dmg := lerpf(28.0, 62.4, clampf(heavy_t / HEAVY_FULL, 0.0, 1.0)) * sword_multiplier()
+		var dmg := lerpf(28.0, 62.4, clampf(heavy_t / HEAVY_FULL, 0.0, 1.0)) * sword_multiplier() * (1.5 if counter_attack else 1.0)
 		e.last_hitter = self
 		e.take_hit(dmg, global_position.x)
 		if full and e.kind == 8 and not e.exposed: e._break_coffin()
@@ -1107,7 +1161,8 @@ func _plunge_impact() -> void:
 		if e.dead: continue
 		var d: Vector2 = e.global_position - global_position
 		if absf(d.x) < 130.0 and absf(d.y) < 70.0 and _clear_strike(e):
-			e.take_hit(30.0 * sword_multiplier(), global_position.x)
+			e.last_hitter = self
+			e.take_hit((45.0 if counter_attack else 30.0) * sword_multiplier(), global_position.x)
 			var away := 1 if d.x >= 0.0 else -1
 			var keep := facing
 			facing = away
@@ -1160,8 +1215,11 @@ func _ai_think(delta: float) -> void:
 			ai_axis = signf(dx)
 		else:
 			facing = 1 if dx > 0.0 else -1
-			if foe.state == "windup" and foe.state_t < 0.22 and parry_cd <= 0.0 and randf() < 0.5:
-				ai_tap["parry"] = true
+			if foe.state in ["windup", "strike_wind", "alt_windup"] and foe.state_t < 0.22:
+				if foe.attack_parryable and parry_cd <= 0.0: ai_tap["parry"] = true
+				elif roll_cd <= 0.0:
+					ai_tap["roll"] = true
+					ai_axis = -signf(dx)
 			elif foe.state == "stagger" and is_on_floor():
 				ai_tap["interact"] = true
 				ai_tap["attack"] = true
@@ -1195,6 +1253,7 @@ func _execution_torso() -> Vector2:
 
 func _blood_burst(at: Vector2, size: float, drops: int) -> void:
 	get_tree().call_group("game", "play_sfx", "sangue_jato")
+	get_tree().call_group("game", "wall_splat", at)
 	var game = get_tree().get_first_node_in_group("game")
 	if game == null: return
 	game.spawn_effect("blood", at, facing, size)
@@ -1248,10 +1307,21 @@ func _blood_burst(at: Vector2, size: float, drops: int) -> void:
 		chunks.gravity = Vector2(0, 1700)
 		chunks.angular_velocity_min = -540.0
 		chunks.angular_velocity_max = 540.0
-		chunks.texture = drop_texture
-		chunks.scale_amount_min = 1.6
-		chunks.scale_amount_max = 2.8
-		chunks.color = Color(0.3, 0.0, 0.02)
+		var debris := AtlasTexture.new()
+		debris.atlas = load("res://assets/animation/pedacos.png")
+		debris.region = Rect2(0, 0, 384, 256)
+		chunks.texture = debris
+		var flipbook := CanvasItemMaterial.new()
+		flipbook.particles_animation = true
+		flipbook.particles_anim_h_frames = 3
+		flipbook.particles_anim_v_frames = 2
+		flipbook.particles_anim_loop = false
+		chunks.material = flipbook
+		chunks.anim_offset_min = 0.0
+		chunks.anim_offset_max = 0.999
+		chunks.scale_amount_min = 0.12
+		chunks.scale_amount_max = 0.24
+		chunks.color = Color.WHITE
 		chunks.z_index = 7
 		chunks.position = at
 		chunks.add_to_group("blood_spray")
@@ -1290,13 +1360,14 @@ func _arterial_spray(at: Vector2, pulses: int) -> void:
 		var strength := 1.0 - 0.18 * k
 		get_tree().create_timer(delay, true, false, true).timeout.connect(func():
 			if not is_inside_tree(): return
+			get_tree().call_group("game", "spawn_effect", "pulse", at, facing, 0.9 * strength, "jato_arterial")
 			_blood_burst(at + Vector2(0.0, -4.0 * k), 0.9 * strength, int(34 * strength))
 			get_tree().call_group("game", "blood_splats", Vector2(at.x, global_position.y), facing, 3, 1.0)
 		)
 
 func _blood_decal(ground: Vector2) -> void:
 	var game = get_tree().get_first_node_in_group("game")
-	if game == null or not ResourceLoader.exists("res://assets/animation/efeitos_golpe.png"): return
+	if game == null: return
 	var old := get_tree().get_nodes_in_group("blood_decals")
 	while old.size() >= BLOOD_DECALS_MAX:
 		# Retira da contagem imediatamente; o nó é removido no fim do quadro.
@@ -1305,14 +1376,16 @@ func _blood_decal(ground: Vector2) -> void:
 		oldest.queue_free()
 	var pool := Sprite2D.new()
 	var art := AtlasTexture.new()
-	art.atlas = load("res://assets/animation/efeitos_golpe.png")
-	art.region = Rect2(5 * 256, 3 * 256, 256, 256)
+	art.atlas = load("res://assets/efeitos/sangue_chao.png")
+	art.region = Rect2(randi_range(4, 7) * 128, 0, 128, 64)
 	pool.texture = art
-	pool.scale = Vector2(0.9, 0.75)
-	pool.modulate = Color(0.72, 0.62, 0.62)
+	pool.scale = Vector2(2.1, 0.75)
 	pool.flip_h = facing < 0
 	pool.z_index = 5
-	pool.position = ground - Vector2(0.0, (215.0 - 128.0) * 0.75)
+	var query := PhysicsRayQueryParameters2D.create(ground - Vector2(0, 4), ground + Vector2(0, 1200), 1)
+	var floor_hit := get_world_2d().direct_space_state.intersect_ray(query)
+	if not floor_hit.is_empty(): ground = floor_hit.position
+	pool.position = ground - Vector2(0, 3)
 	pool.add_to_group("blood_decals")
 	game.add_child(pool)
 	var fade := pool.create_tween()
@@ -1360,6 +1433,8 @@ func _update_sword() -> void:
 
 func _start_air_attack() -> void:
 	if not has_weapon or air_attack_used: return
+	counter_attack = counter_t > 0.0
+	counter_t = 0.0
 	var direction := axis()
 	if direction != 0: facing = 1 if direction > 0 else -1
 	state = "air_attack"
@@ -1379,6 +1454,8 @@ func _capture_combat_input() -> void:
 		input_release_gate = false
 	if pressed("attack") and has_weapon:
 		attack_buffer = minf(INPUT_BUFFER * attack_scale(), 0.36)
+		# Um comando por golpe fica reservado até a próxima janela, mesmo em Beatriz com lança pesada.
+		if state == "attack": attack_buffer = maxf(attack_buffer, maxf(state_t - attack_len * 0.24, 0.0) + 0.06)
 	if pressed("heavy") and has_weapon:
 		heavy_buffer = INPUT_BUFFER
 	if pressed("parry") and has_weapon:
@@ -1400,14 +1477,17 @@ func _clear_combat_input() -> void:
 	parry_direction = 0.0
 
 func _buffered_defense(on_floor: bool) -> bool:
+	if _buffered_roll(): return true
 	if not on_floor: return false
-	if roll_buffer > 0.0 and roll_cd <= 0.0:
-		_start_roll()
-		return true
 	if parry_buffer > 0.0 and has_weapon and parry_cd <= 0.0:
 		_start_parry()
 		return true
 	return false
+
+func _buffered_roll() -> bool:
+	if roll_buffer <= 0.0 or roll_cd > 0.0: return false
+	_start_roll()
+	return true
 
 func _jump_from_recovery(on_floor: bool) -> bool:
 	if not on_floor or jump_buffer <= 0.0: return false

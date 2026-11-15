@@ -1,0 +1,211 @@
+{
+  "pacote": "sons-gore-v32-pacote.zip",
+  "sha256_pacote": "ca2a6ea366d7fe14b0f008f67b4b355819488a29e5de0a9a202b19267a01379b",
+  "quantidade": 20,
+  "formato": "PCM16 mono 44100 Hz",
+  "sons_v32_anteriores_preservados": 11,
+  "origem": "WAVs e gerador de síntese enviados pelo autor; integrados sem regeneração e sem normalização. Substituem a montagem provisória de esquiva perfeita.",
+  "limites": "Verificação técnica sem escuta humana. A planura e o teste de subida tonal são indicadores, não prova de ausência perceptiva de zumbido nem de realismo físico.",
+  "arquivos": [
+    {
+      "arquivo": "assets/audio/aviso_aparavel.wav",
+      "duracao_s": 0.25,
+      "pico_dbfs": -2.001,
+      "inicio_ms": 1.995,
+      "planura_espectral": 0.4985,
+      "subida_monotona_detectada": false,
+      "sha256": "6e097c2397c4b67bc91444ffa2ce3b3fa595f90736ed561499f831afd872c71d",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/aviso_perigo.wav",
+      "duracao_s": 0.34997732426303857,
+      "pico_dbfs": -2.001,
+      "inicio_ms": 2.653,
+      "planura_espectral": 0.1868,
+      "subida_monotona_detectada": false,
+      "sha256": "e318364d953054ca530ecef43a5806a8a768d77b97250aa6e69c5c7829917978",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/carne_rasga_01.wav",
+      "duracao_s": 0.34997732426303857,
+      "pico_dbfs": -1.9,
+      "inicio_ms": 3.946,
+      "planura_espectral": 0.2527,
+      "subida_monotona_detectada": false,
+      "sha256": "2177b10d5c9333be4447965364fe3a1c5d94ed0be20b4cd8a3146f52b7731665",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/carne_rasga_02.wav",
+      "duracao_s": 0.34997732426303857,
+      "pico_dbfs": -1.9,
+      "inicio_ms": 3.469,
+      "planura_espectral": 0.2159,
+      "subida_monotona_detectada": false,
+      "sha256": "9807e98f3a1bc65f8e2eab7b10303a5fffb357825c2fae107c87252d6cf8d37d",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/carne_rasga_03.wav",
+      "duracao_s": 0.34997732426303857,
+      "pico_dbfs": -1.9,
+      "inicio_ms": 3.333,
+      "planura_espectral": 0.2177,
+      "subida_monotona_detectada": false,
+      "sha256": "6ea9ef99d2ba42ca695d1a27ab745fdfe7833494c5d8a5de5db40736cdb94ea2",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/corpo_cai_armadura.wav",
+      "duracao_s": 0.9,
+      "pico_dbfs": -1.8,
+      "inicio_ms": 2.993,
+      "planura_espectral": 0.1783,
+      "subida_monotona_detectada": false,
+      "sha256": "ded5b3d03d6575e151b201229573cf3ed2cef7f7e43b89d5beacc1fd50e44ccf",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/corpo_cai_carne.wav",
+      "duracao_s": 0.6999773242630386,
+      "pico_dbfs": -1.8,
+      "inicio_ms": 2.993,
+      "planura_espectral": 0.1489,
+      "subida_monotona_detectada": false,
+      "sha256": "9fb0e50bfd36d9ebef94b4b839f98aa8658d0f225e44f0370fda2426d0af1173",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/esquiva_perfeita.wav",
+      "duracao_s": 0.5,
+      "pico_dbfs": -2.101,
+      "inicio_ms": 2.993,
+      "planura_espectral": 0.097,
+      "subida_monotona_detectada": false,
+      "sha256": "4667411d605eaff9eef9b8a82d4668503a4257ad837283ee6823a82b994acd5a",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/execucao_impacto.wav",
+      "duracao_s": 0.9,
+      "pico_dbfs": -1.8,
+      "inicio_ms": 2.018,
+      "planura_espectral": 0.1427,
+      "subida_monotona_detectada": false,
+      "sha256": "a83d4d9334290c7f5fe5f823913149aab112267832e6b28760b7d7431c159ae7",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/lamina_sai.wav",
+      "duracao_s": 0.4,
+      "pico_dbfs": -2.001,
+      "inicio_ms": 2.948,
+      "planura_espectral": 0.2634,
+      "subida_monotona_detectada": false,
+      "sha256": "ab3a4b8e2cf4e65b049896aa31a0a11604d5d9fd0d516f715df3893327353517",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/osso_quebra_01.wav",
+      "duracao_s": 0.3,
+      "pico_dbfs": -1.8,
+      "inicio_ms": 1.995,
+      "planura_espectral": 0.2355,
+      "subida_monotona_detectada": false,
+      "sha256": "9db7e6b346e61603bf5cefd6fe05f513f3827919adcec5559fb3b4915dcc6459",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/osso_quebra_02.wav",
+      "duracao_s": 0.3,
+      "pico_dbfs": -1.8,
+      "inicio_ms": 1.995,
+      "planura_espectral": 0.2452,
+      "subida_monotona_detectada": false,
+      "sha256": "7403754fd76aa89c8d883373c17d62de3ccc63ba507b1f323e527266bfac367a",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/osso_quebra_03.wav",
+      "duracao_s": 0.3,
+      "pico_dbfs": -1.8,
+      "inicio_ms": 1.995,
+      "planura_espectral": 0.2234,
+      "subida_monotona_detectada": false,
+      "sha256": "2a228119e96068beb3da2df4e6c8c81b222718a8fc0e090aed09200480715e55",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/respingo_chao_01.wav",
+      "duracao_s": 0.2,
+      "pico_dbfs": -2.2,
+      "inicio_ms": 2.018,
+      "planura_espectral": 0.2086,
+      "subida_monotona_detectada": false,
+      "sha256": "79916845551f6a5d011467905a0cb66768600fbe0f29882f5637ac713a743997",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/respingo_chao_02.wav",
+      "duracao_s": 0.2,
+      "pico_dbfs": -2.2,
+      "inicio_ms": 1.995,
+      "planura_espectral": 0.2144,
+      "subida_monotona_detectada": false,
+      "sha256": "baede45c86da6b9ca86ee446390d0034b0784d8d9503abde966d112d89621628",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/respingo_chao_03.wav",
+      "duracao_s": 0.2,
+      "pico_dbfs": -2.2,
+      "inicio_ms": 1.995,
+      "planura_espectral": 0.2122,
+      "subida_monotona_detectada": false,
+      "sha256": "53350d9371764157ef1bfa830a6bfeae1502f420365af2b61022e07faf1b9c2e",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/respingo_chao_04.wav",
+      "duracao_s": 0.2,
+      "pico_dbfs": -2.2,
+      "inicio_ms": 1.995,
+      "planura_espectral": 0.1988,
+      "subida_monotona_detectada": false,
+      "sha256": "07720030b9a2dbba66c87b5b794f93795b91c5531beb47781c588234e1b65fdd",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/sangue_jato_01.wav",
+      "duracao_s": 0.4,
+      "pico_dbfs": -2.001,
+      "inicio_ms": 2.993,
+      "planura_espectral": 0.2777,
+      "subida_monotona_detectada": false,
+      "sha256": "1f91bc0d5077350a70108009bd4012e7ea2ac4c5281ed6bf15a94dbcacb6fbbe",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/sangue_jato_02.wav",
+      "duracao_s": 0.4,
+      "pico_dbfs": -2.001,
+      "inicio_ms": 2.88,
+      "planura_espectral": 0.2649,
+      "subida_monotona_detectada": false,
+      "sha256": "8686ebe104dfb16e7bbfecb650a84a07ee2818ad133559197aaf027a9444078b",
+      "identico_ao_zip": true
+    },
+    {
+      "arquivo": "assets/audio/sangue_jato_03.wav",
+      "duracao_s": 0.4,
+      "pico_dbfs": -2.001,
+      "inicio_ms": 2.63,
+      "planura_espectral": 0.3046,
+      "subida_monotona_detectada": false,
+      "sha256": "b7bdce371799b788a519c40e3cf722f2f833949f3239748d88550479795bdcdc",
+      "identico_ao_zip": true
+    }
+  ]
+}
