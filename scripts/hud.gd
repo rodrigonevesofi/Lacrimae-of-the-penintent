@@ -74,6 +74,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if (game.state == "title" or game.paused) and event.is_action_pressed("reduce_pulses"):
 		game.set_reduced_pulses(not game.reduced_pulses)
 		get_viewport().set_input_as_handled()
+	if event.is_action_pressed("toggle_fullscreen"):
+		game.toggle_fullscreen()
+		get_viewport().set_input_as_handled()
+		return
 	if game.paused and event.is_action_pressed("mute"):
 		game.soundscape.toggle_mute()
 	if game.paused and event.is_action_pressed("pause"):
@@ -108,7 +112,7 @@ func _draw_title(vs: Vector2) -> void:
 	if game.has_save:
 		_heading(Vector2(360, 513), "C  ·  Continuar jornada", 19, Color("b6b2a8"), 560)
 	_text(Vector2(0, 613), "A / D  mover     ESPAÇO  saltar     J  atacar     K  esquivar     E  interagir", 15, Color("aaa69a"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	_text(Vector2(0, 642), "F  curar     Q  penitência     C  confessar     ESC  pausa     M  som", 14, Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 642), "F  curar     Q  penitência     C  confessar     ESC  pausa     M  som     F11  tela cheia", 14, Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_text(Vector2(0, 672), "P  ·  Reduzir pulsos e tremores nas cenas: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 14, Color("c2bba8") if game.reduced_pulses else Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 
 

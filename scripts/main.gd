@@ -134,6 +134,7 @@ var altar_names: Array[String] = ["Altar das Primeiras Lágrimas", "Altar do Lim
 
 func _ready() -> void:
 	add_to_group("game")
+	_crisp_fonts()
 	has_save = FileAccess.file_exists(SAVE_PATH)
 	_load_settings()
 	_setup_input()
@@ -175,8 +176,81 @@ func _build_art() -> void:
 ## e persiste em novos jogos; fica separada do arquivo de salvamento.
 func _load_settings() -> void:
 	var cfg := ConfigFile.new()
-	if cfg.load(SETTINGS_PATH) == OK:
+	var loaded := cfg.load(SETTINGS_PATH) == OK
+	if loaded:
 		reduced_pulses = bool(cfg.get_value("accessibility", "reduced_pulses", false))
+	if loaded and cfg.has_section_key("display", "fullscreen"):
+		set_fullscreen(bool(cfg.get_value("display", "fullscreen")), false)
+	elif not is_fullscreen():
+		# Primeira vez: se a janela 1280×720 não cabe (notebook 1366×768), abre em tela
+		# cheia, onde o jogo é ampliado e o texto fica regular; reduzir o jogo para caber
+		# numa janela menor deixaria letras irregulares.
+		if _window_fits(): _fit_window()
+		else: set_fullscreen(true, false)
+
+
+## Texto nítido em qualquer resolução. O jogo é desenhado em 1280×720 e ampliado
+## (ex.: 1,067× num notebook 1366×768). Com posicionamento subpixel, cada letra caía
+## numa fração de pixel e o filtro "nearest" arredondava umas para um lado e outras
+## para o outro: "DES LIGADO", "s om". Sem subpixel, cada letra começa num pixel
+## inteiro da tela e o espaçamento fica regular. Só as fontes mudam; as imagens não.
+## Os recursos ficam guardados aqui para que todo load() receba a mesma instância.
+var ui_fonts: Array[Font] = []
+
+func _crisp_fonts() -> void:
+	ui_fonts = [ThemeDB.fallback_font, load("res://assets/title_font.ttf")]
+	if ResourceLoader.exists("res://assets/fonts/UnifrakturMaguntia-Book.ttf"):
+		ui_fonts.append(load("res://assets/fonts/UnifrakturMaguntia-Book.ttf"))
+	for f in ui_fonts:
+		if f is FontFile:
+			f.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
+
+
+## Tela: F11 alterna entre tela cheia e janela; a escolha fica em settings.cfg.
+## O jogo é desenhado em 1280×720 e ampliado com filtragem suave para qualquer
+## resolução (stretch canvas_items, proporção mantida com faixas pretas se preciso).
+func _can_control_window() -> bool:
+	if DisplayServer.get_name() == "headless": return false
+	if Engine.has_method("is_embedded_in_editor") and Engine.call("is_embedded_in_editor"): return false
+	return true
+
+func is_fullscreen() -> bool:
+	var mode := DisplayServer.window_get_mode()
+	return mode == DisplayServer.WINDOW_MODE_FULLSCREEN or mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+
+func set_fullscreen(enabled: bool, remember: bool = true) -> void:
+	if _can_control_window():
+		if enabled:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		else:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			_fit_window()
+	if remember:
+		var cfg := ConfigFile.new()
+		cfg.load(SETTINGS_PATH)
+		cfg.set_value("display", "fullscreen", enabled)
+		cfg.save(SETTINGS_PATH)
+
+func toggle_fullscreen() -> void:
+	set_fullscreen(not is_fullscreen())
+
+func _window_fits() -> bool:
+	if not _can_control_window(): return true
+	var area := DisplayServer.screen_get_usable_rect(DisplayServer.window_get_current_screen())
+	return area.size.x >= 1280 + 16 and area.size.y >= 720 + 48
+
+## Em janela, abre no maior 16:9 que caiba na área útil do monitor (sem passar de
+## 1280×720), centralizado. Só reduz se o jogador escolher janela numa tela pequena.
+func _fit_window() -> void:
+	if not _can_control_window(): return
+	var screen := DisplayServer.window_get_current_screen()
+	var area := DisplayServer.screen_get_usable_rect(screen)
+	var base := Vector2(1280, 720)
+	var room := Vector2(area.size) - Vector2(16, 48)
+	var k := minf(1.0, minf(room.x / base.x, room.y / base.y))
+	var fitted := Vector2i(base * k)
+	DisplayServer.window_set_size(fitted)
+	DisplayServer.window_set_position(area.position + (area.size - fitted) / 2)
 
 func set_reduced_pulses(enabled: bool) -> void:
 	reduced_pulses = enabled
@@ -374,6 +448,7 @@ func _setup_input() -> void:
 	_add_action("confirm", [KEY_ENTER, KEY_KP_ENTER])
 	_add_action("continue_game", [KEY_C])
 	_add_action("confess", [KEY_C])
+	_add_action("toggle_fullscreen", [KEY_F11])
 
 
 # ---------------------------------------------------------------- construção

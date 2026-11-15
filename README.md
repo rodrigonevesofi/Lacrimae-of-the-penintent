@@ -23,6 +23,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **V:** trocar penitências no altar; **1 / 2 / 3:** escolher
 - **Esc:** pausar
 - **M:** ativar ou silenciar o som
+- **F11:** alternar tela cheia (a escolha fica salva). Em telas menores que 1280×720 em janela (ex.: notebook 1366×768), o jogo abre em tela cheia na primeira vez
 - **TAB:** abrir o mapa
 - **H:** compartilhar sangue; perto do parceiro caído, segurar para levantá-lo
 - **P:** reduzir pulsos e tremores (no título ou na pausa)
