@@ -11,3 +11,6 @@ godot-inicializacao.log
 
 # Metadados locais de importação das imagens de documentação.
 docs/**/*.import
+
+# Chave do Gemini (Confessionário)
+ia_local.cfg

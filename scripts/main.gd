@@ -16,6 +16,9 @@ const PinturaViva = preload("res://scripts/pintura_viva.gd")
 const Bichos = preload("res://scripts/bichos.gd")
 const PrimeiroPlano = preload("res://scripts/primeiro_plano.gd")
 const Story = preload("res://scripts/story_text.gd")
+const ConfessorScript = preload("res://scripts/confessor.gd")
+const ConfessionPanel = preload("res://scripts/confession_panel.gd")
+const Telemetry = preload("res://scripts/telemetry.gd")
 
 const GROUND_Y := 600.0
 const WORLD_W := 30000.0
@@ -23,6 +26,18 @@ const SAVE_PATH := "user://lacrimae_save.json"
 
 var narrative
 var exploration
+## Confessionário (IA) e telemetria local; veja docs/confessionario.md.
+var confessor
+var confession_panel
+var confession_open := false
+var calm_t := 0.0
+const CALM_BEFORE_CONFESSION := 1.5
+## Controle: segurar Y (interagir) abre o Confessionário. O toque continua sendo
+## "interagir"; o atalho só completa quando o toque não iniciou nenhuma ação.
+const CONFESS_HOLD := 0.6
+var confess_hold_t := 0.0
+var _confess_hold_used := false
+var telemetry
 var pending_altar := -1
 var prayer_cooldown := 0.0
 var memory_seen := false
@@ -132,9 +147,16 @@ var altar_names: Array[String] = ["Altar das Primeiras Lágrimas", "Altar do Lim
 
 func _ready() -> void:
 	add_to_group("game")
+	_crisp_fonts()
 	has_save = FileAccess.file_exists(SAVE_PATH)
 	_load_settings()
 	_setup_input()
+	telemetry = Telemetry.new()
+	telemetry.load_data()
+	telemetry.start_session()
+	confessor = ConfessorScript.new()
+	confessor.game = self
+	add_child(confessor)
 	soundscape = preload("res://scripts/soundscape.gd").new()
 	add_child(soundscape)
 	_build_art()
@@ -193,8 +215,81 @@ func _build_art() -> void:
 ## e persiste em novos jogos; fica separada do arquivo de salvamento.
 func _load_settings() -> void:
 	var cfg := ConfigFile.new()
-	if cfg.load(SETTINGS_PATH) == OK:
+	var loaded := cfg.load(SETTINGS_PATH) == OK
+	if loaded:
 		reduced_pulses = bool(cfg.get_value("accessibility", "reduced_pulses", false))
+	if loaded and cfg.has_section_key("display", "fullscreen"):
+		set_fullscreen(bool(cfg.get_value("display", "fullscreen")), false)
+	elif not is_fullscreen():
+		# Primeira vez: se a janela 1280×720 não cabe (notebook 1366×768), abre em tela
+		# cheia, onde o jogo é ampliado e o texto fica regular; reduzir o jogo para caber
+		# numa janela menor deixaria letras irregulares.
+		if _window_fits(): _fit_window()
+		else: set_fullscreen(true, false)
+
+
+## Texto nítido em qualquer resolução. O jogo é desenhado em 1280×720 e ampliado
+## (ex.: 1,067× num notebook 1366×768). Com posicionamento subpixel, cada letra caía
+## numa fração de pixel e o filtro "nearest" arredondava umas para um lado e outras
+## para o outro: "DES LIGADO", "s om". Sem subpixel, cada letra começa num pixel
+## inteiro da tela e o espaçamento fica regular. Só as fontes mudam; as imagens não.
+## Os recursos ficam guardados aqui para que todo load() receba a mesma instância.
+var ui_fonts: Array[Font] = []
+
+func _crisp_fonts() -> void:
+	ui_fonts = [ThemeDB.fallback_font, load("res://assets/title_font.ttf")]
+	if ResourceLoader.exists("res://assets/fonts/UnifrakturMaguntia-Book.ttf"):
+		ui_fonts.append(load("res://assets/fonts/UnifrakturMaguntia-Book.ttf"))
+	for f in ui_fonts:
+		if f is FontFile:
+			f.subpixel_positioning = TextServer.SUBPIXEL_POSITIONING_DISABLED
+
+
+## Tela: F11 alterna entre tela cheia e janela; a escolha fica em settings.cfg.
+## O jogo é desenhado em 1280×720 e ampliado com filtragem suave para qualquer
+## resolução (stretch canvas_items, proporção mantida com faixas pretas se preciso).
+func _can_control_window() -> bool:
+	if DisplayServer.get_name() == "headless": return false
+	if Engine.has_method("is_embedded_in_editor") and Engine.call("is_embedded_in_editor"): return false
+	return true
+
+func is_fullscreen() -> bool:
+	var mode := DisplayServer.window_get_mode()
+	return mode == DisplayServer.WINDOW_MODE_FULLSCREEN or mode == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+
+func set_fullscreen(enabled: bool, remember: bool = true) -> void:
+	if _can_control_window():
+		if enabled:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+		else:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			_fit_window()
+	if remember:
+		var cfg := ConfigFile.new()
+		cfg.load(SETTINGS_PATH)
+		cfg.set_value("display", "fullscreen", enabled)
+		cfg.save(SETTINGS_PATH)
+
+func toggle_fullscreen() -> void:
+	set_fullscreen(not is_fullscreen())
+
+func _window_fits() -> bool:
+	if not _can_control_window(): return true
+	var area := DisplayServer.screen_get_usable_rect(DisplayServer.window_get_current_screen())
+	return area.size.x >= 1280 + 16 and area.size.y >= 720 + 48
+
+## Em janela, abre no maior 16:9 que caiba na área útil do monitor (sem passar de
+## 1280×720), centralizado. Só reduz se o jogador escolher janela numa tela pequena.
+func _fit_window() -> void:
+	if not _can_control_window(): return
+	var screen := DisplayServer.window_get_current_screen()
+	var area := DisplayServer.screen_get_usable_rect(screen)
+	var base := Vector2(1280, 720)
+	var room := Vector2(area.size) - Vector2(16, 48)
+	var k := minf(1.0, minf(room.x / base.x, room.y / base.y))
+	var fitted := Vector2i(base * k)
+	DisplayServer.window_set_size(fitted)
+	DisplayServer.window_set_position(area.position + (area.size - fitted) / 2)
 
 func set_reduced_pulses(enabled: bool) -> void:
 	reduced_pulses = enabled
@@ -295,6 +390,7 @@ func _leave_dev_fly() -> void:
 			break
 
 func toggle_pause() -> void:
+	if confession_open: return
 	if state == "title" or state == "ending" or (narrative != null and narrative.mode != ""):
 		return
 	paused = not paused
@@ -378,17 +474,6 @@ func _setup_input() -> void:
 	_add_action("p2_share_blood", [KEY_KP_0, KEY_BRACKETRIGHT])
 	_add_action("p2_interact", [KEY_KP_ENTER, KEY_BRACKETLEFT])
 	_add_action("p2_swap", [])
-	for pair in [["p2_jump", JOY_BUTTON_A], ["p2_attack", JOY_BUTTON_X], ["p2_roll", JOY_BUTTON_B], ["p2_heavy", JOY_BUTTON_Y], ["p2_parry", JOY_BUTTON_RIGHT_SHOULDER], ["p2_heal", JOY_BUTTON_LEFT_SHOULDER], ["p2_share_blood", JOY_BUTTON_BACK], ["p2_left", JOY_BUTTON_DPAD_LEFT], ["p2_right", JOY_BUTTON_DPAD_RIGHT], ["p2_down", JOY_BUTTON_DPAD_DOWN]]:
-		var pad := InputEventJoypadButton.new()
-		pad.device = 1
-		pad.button_index = pair[1]
-		InputMap.action_add_event(pair[0], pad)
-	for pair in [["p2_left", -1.0], ["p2_right", 1.0]]:
-		var stick := InputEventJoypadMotion.new()
-		stick.device = 1
-		stick.axis = JOY_AXIS_LEFT_X
-		stick.axis_value = pair[1]
-		InputMap.action_add_event(pair[0], stick)
 	_add_action("left", [KEY_A])
 	_add_action("right", [KEY_D])
 	_add_action("jump", [KEY_SPACE, KEY_W])
@@ -400,6 +485,70 @@ func _setup_input() -> void:
 	_add_action("offer", [KEY_R])
 	_add_action("confirm", [KEY_ENTER, KEY_KP_ENTER])
 	_add_action("continue_game", [KEY_C])
+	_add_action("confess", [KEY_C])
+	_add_action("toggle_fullscreen", [KEY_F11])
+	_add_action("pause_confess", [KEY_C])
+	_setup_gamepads()
+
+
+# ---------------------------------------------------------------- controles
+## O 1º controle conectado (device 0) é o Penitente; o 2º (device 1) é Beatriz.
+## Botões na posição do controle de Xbox; no de PlayStation: A=✕, B=○, X=□, Y=△.
+const PAD_BUTTONS := {
+	"jump": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "roll": JOY_BUTTON_B, "interact": JOY_BUTTON_Y,
+	"parry": JOY_BUTTON_RIGHT_SHOULDER, "heal": JOY_BUTTON_LEFT_SHOULDER, "share_blood": JOY_BUTTON_DPAD_UP,
+	"left": JOY_BUTTON_DPAD_LEFT, "right": JOY_BUTTON_DPAD_RIGHT, "down": JOY_BUTTON_DPAD_DOWN,
+}
+const PAD_TRIGGERS := {"heavy": JOY_AXIS_TRIGGER_RIGHT, "penance": JOY_AXIS_TRIGGER_LEFT}
+## Só o Penitente: menus e altar. Start e Back valem para qualquer controle.
+const PAD_P1_ONLY := {
+	"penitence_menu": JOY_BUTTON_LEFT_STICK, "offer": JOY_BUTTON_RIGHT_STICK,
+	"confirm": JOY_BUTTON_A, "continue_game": JOY_BUTTON_Y,
+	"penitence_none": JOY_BUTTON_X, "penitence_nails": JOY_BUTTON_Y, "penitence_chains": JOY_BUTTON_B,
+}
+const PAD_ANY := {"pause": JOY_BUTTON_START, "map": JOY_BUTTON_BACK, "pause_confess": JOY_BUTTON_Y}
+
+## Ao jogar com controle, as dicas na tela mostram os botões em vez das teclas.
+var using_pad := false
+const PAD_LABELS := [
+	["[J / X]", "[X]"], ["[K / SHIFT]", "[B]"], ["[E]", "[Y]"], ["[R]", "[R3]"], ["[V]", "[L3]"],
+	["segure H", "segure ↑"], ["H · ", "↑ · "], ["Pressione PULO", "Pressione A"],
+]
+
+func pad_text(text: String) -> String:
+	if not using_pad: return text
+	for pair in PAD_LABELS: text = text.replace(pair[0], pair[1])
+	return text
+
+func _pad_button(action: String, device: int, button: int) -> void:
+	var ev := InputEventJoypadButton.new()
+	ev.device = device
+	ev.button_index = button
+	InputMap.action_add_event(action, ev)
+
+func _pad_axis(action: String, device: int, axis: int, value: float) -> void:
+	var ev := InputEventJoypadMotion.new()
+	ev.device = device
+	ev.axis = axis
+	ev.axis_value = value
+	InputMap.action_add_event(action, ev)
+
+func _setup_gamepads() -> void:
+	for device in [0, 1]:
+		var prefix := "" if device == 0 else "p2_"
+		for action in PAD_BUTTONS:
+			if InputMap.has_action(prefix + action): _pad_button(prefix + action, device, PAD_BUTTONS[action])
+		for action in PAD_TRIGGERS:
+			if InputMap.has_action(prefix + action): _pad_axis(prefix + action, device, PAD_TRIGGERS[action], 1.0)
+		_pad_axis(prefix + "left", device, JOY_AXIS_LEFT_X, -1.0)
+		_pad_axis(prefix + "right", device, JOY_AXIS_LEFT_X, 1.0)
+		_pad_axis(prefix + "down", device, JOY_AXIS_LEFT_Y, 1.0)
+		# Analógico: movimento responde cedo; "baixo" só com o analógico bem inclinado,
+		# para uma diagonal não virar descida de galeria por engano.
+		for action in ["left", "right"]: InputMap.action_set_deadzone(prefix + action, 0.25)
+		InputMap.action_set_deadzone(prefix + "down", 0.6)
+	for action in PAD_P1_ONLY: _pad_button(action, 0, PAD_P1_ONLY[action])
+	for action in PAD_ANY: _pad_button(action, -1, PAD_ANY[action])
 
 
 # ---------------------------------------------------------------- construção
@@ -639,6 +788,10 @@ func _build_hud() -> void:
 	hud = HudScript.new()
 	hud.game = self
 	cl.add_child(hud)
+	confession_panel = ConfessionPanel.new()
+	confession_panel.game = self
+	confession_panel.confessor = confessor
+	cl.add_child(confession_panel)
 
 
 func _add_flicker_light(pos: Vector2, col: Color, energy: float, sc: float) -> PointLight2D:
@@ -789,6 +942,7 @@ func _on_player_died() -> void:
 	penitence_menu = false
 	state = "dead"
 	death_count += 1
+	telemetry.record_death(exploration.room)
 	death_t = 3.0
 
 
@@ -1132,6 +1286,7 @@ func _play_update(delta: float) -> void:
 	_update_duo(delta)
 	_update_vale(delta)
 	play_time += delta
+	telemetry.tick(delta, exploration.room)
 	prompt = ""
 	if exploration.has_method("is_transitioning") and exploration.is_transitioning(): return
 	if narrative.mode != "":
@@ -1141,6 +1296,8 @@ func _play_update(delta: float) -> void:
 			if Input.is_action_just_pressed("penitence_" + choice):
 				player.apply_penitence(choice)
 				penitence_menu = false
+				# X/Y/B escolhem a penitência; não podem virar ataque ou esquiva ao fechar.
+				player._clear_combat_input()
 				_save()
 		return
 	if player.state == "execution": return
@@ -1149,6 +1306,22 @@ func _play_update(delta: float) -> void:
 		if message_t <= 0.0 and (Input.is_action_just_pressed("interact") or Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("confirm") or Input.is_action_just_pressed("attack")):
 			advance_message()
 		return
+	# Confessionário: C em qualquer lugar, desde que fora de combate há um instante.
+	calm_t = 0.0 if combat_reason() != "" else calm_t + delta
+	if Input.is_action_just_pressed("confess") and not exploration.map_open:
+		try_open_confession()
+		return
+	if Input.is_joy_button_pressed(0, JOY_BUTTON_Y) and not exploration.map_open and player.state == "idle":
+		if not _confess_hold_used:
+			confess_hold_t += delta
+			if confess_hold_t >= CONFESS_HOLD:
+				_confess_hold_used = true
+				confess_hold_t = 0.0
+				try_open_confession()
+				return
+	else:
+		confess_hold_t = 0.0
+		_confess_hold_used = false
 
 	if boss_defeated and ending_countdown > 0.0:
 		ending_countdown -= delta
@@ -1295,6 +1468,82 @@ func complete_prayer() -> void:
 	_save()
 	spawn_fx(player.global_position + Vector2(0, -50), Color(1.0, 0.85, 0.5))
 	toast("%s — descanso concluído. Os inimigos comuns retornaram." % altar_names[respawn_index])
+
+
+## Motivo pelo qual o peregrino está em combate agora, ou "" se estiver livre.
+## Usa o mesmo critério da música de combate: chefe desperto, arena fechada,
+## inimigo perseguindo ou atacando perto de um dos penitentes, ou o próprio
+## penitente no meio de um golpe, esquiva, cura ou ferimento.
+func combat_reason() -> String:
+	if boss != null and is_instance_valid(boss) and boss.awake and not boss.dead and exploration.room == "city":
+		return "O Guardião está desperto. O Confessor não ouve sob os sinos."
+	if finale != null and is_instance_valid(finale):
+		return "Agora não há grade nem voz. Só o que você vê."
+	if exploration.room == "vale" and not final_defeated:
+		return "No Vale o Confessor se cala. Ninguém atravessa a culpa de outro."
+	if exploration.arena_active != "":
+		return "A arena ainda não foi vencida."
+	if player.state not in ["idle", "pray"]:
+		return "Termine o que começou antes de se confessar."
+	var penitents: Array = [player]
+	if partner != null and is_instance_valid(partner): penitents.append(partner)
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if enemy.dead or enemy.room_id != exploration.room: continue
+		if enemy.state not in ["chase", "windup", "strike", "recover", "cast", "hurt", "stagger"]: continue
+		for who in penitents:
+			if enemy.global_position.distance_to(who.global_position) < 420.0:
+				return "Há inimigos à sua procura. Afaste-se antes de se confessar."
+	return ""
+
+
+## Abre o Confessionário se o peregrino estiver fora de combate; senão, explica por quê.
+## Por que o Confessionário não pode abrir agora, ou "" se pode.
+func confession_block_reason() -> String:
+	if state != "play": return "O Confessor só ouve durante a peregrinação."
+	var reason := combat_reason()
+	if reason == "" and calm_t < CALM_BEFORE_CONFESSION:
+		reason = "Recupere o fôlego por um instante antes de se confessar."
+	return reason
+
+
+func try_open_confession() -> bool:
+	if confession_open or state != "play": return false
+	var reason := confession_block_reason()
+	if reason != "":
+		toast(reason)
+		return false
+	var where: String = str(exploration.rooms[exploration.room].name)
+	for i in range(altars.size()):
+		if player.global_position.distance_to(altars[i]) < 80.0: where = altar_names[i]
+	open_confession(where)
+	return true
+
+
+## Pelo menu de pausa (Y no controle, C no teclado). Se não puder, a pausa continua
+## e o motivo volta para ser mostrado ali, sem devolver o jogador ao combate.
+func confess_from_pause() -> String:
+	var reason := confession_block_reason()
+	if reason != "": return reason
+	toggle_pause()
+	try_open_confession()
+	return ""
+
+
+## O Confessionário pausa o mundo: nenhum inimigo age enquanto o peregrino conversa.
+func open_confession(where: String) -> void:
+	if confession_open: return
+	confession_open = true
+	get_tree().paused = true
+	confession_panel.open(where)
+
+
+func close_confession() -> void:
+	if not confession_open: return
+	confession_open = false
+	get_tree().paused = false
+	player._clear_combat_input()
+	player.input_release_gate = true
+	telemetry.save()
 
 
 func _take_relic() -> void:

@@ -1,8 +1,8 @@
-# Guia de apresentação — Lacrimae of the Penitent (Ato I)
+# Guia de apresentação — Lacrimae of the Penitent
 
 Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3)** para pular deslocamentos.
 
-Versão atual: **41**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v41-integracao.md), [testes](v41-testes.json) e [prompts da arte desta rodada](v39-prompts-arte.md). As nove criaturas aprovadas já têm encontros e animações no mapa. Os nove efeitos do Vale agora tocam e a revelação tem música própria. A luta do Vale e a revelação usam agora as faixas próprias do Lyria; os WAVs antigos continuam como reserva.
+Versão atual: **42**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 3 minutos. Documentos para entregar: [documentação do jogo e roteiro](documentacao/) e [pranchas de conceito](pranchas/).
 
 1. **Abertura (1 min):** comece um jogo novo; deixe a primeira cena e a Cripta do Despertar falarem. Mostre o HUD: vida, culpa, lágrimas.
 2. **Combate (2 min)** — na Cidade, contra os primeiros inimigos:
@@ -20,6 +20,20 @@ Versão atual: **41**, validada no Godot 4.6.3. Se incluir a sequência final ab
 5. **Criaturas (1 min):** Nave ou Terraço: o **Carregador de Caixão** (a pedra protege a frente; golpe carregado quebra o caixão).
 6. **História (2 min):** a **Memória dos portões** e o **memorial** (a boneca), e o tema de culpa e fé.
 7. **Chefe (2 min):** **B** no modo dev (arena do chefe), **G** para não morrer durante a demonstração: o **encontro dentro do jogo** com o Guardião dos Sinos (escala, rosto, lembrança em fogo, grito) e a luta.
+
+## O Confessionário (o requisito de IA) — 1 a 2 minutos
+
+Faça **antes** do Vale, em qualquer sala e fora de combate.
+
+1. Aperte **C**. O jogo pausa e o painel abre com o nome do lugar.
+2. Escolha uma pergunta pronta (↑/↓ e ENTER), por exemplo **"Para onde devo ir agora?"**: a resposta usa o objetivo real da partida.
+3. Digite uma pergunta sua: **"morri muito, o que faço?"** e depois **"quem sou eu?"**. Mostre que ele ajuda, mas não entrega o segredo.
+4. Aponte o rodapé: **voz: Gemini** (com chave e internet) ou **voz: memória do altar** (sem rede). Vale desligar a internet e repetir uma pergunta para mostrar que o jogo não depende da rede.
+5. Tente abrir no meio de uma luta: o jogo explica por que não pode.
+
+O que dizer: é um modelo de linguagem integrado como personagem, com instruções de persona e regras de spoiler, e que recebe o estado real da partida a cada pergunta. Explicação completa em [confessionario.md](confessionario.md).
+
+**Antes da apresentação:** crie a chave, copie `ia_local.cfg.exemplo` como `ia_local.cfg`, cole a chave e teste com `Testar-IA-Windows.cmd`. Sem isso, o Confessor responde só com as falas prontas.
 
 Dicas: **P** reduz pulsos e tremores; **M** silencia; **ESC** pausa e mostra os controles.
 
@@ -40,7 +54,7 @@ As capturas e rotas automatizadas não substituem o ensaio humano com dois jogad
 8. **F3**, escolha **VALE DOS FLAGELADOS** e **ENTER**. Mostre o cenário vivo: enforcados e gaiolas balançando, névoa, corvos. Beatriz fica na beira ("Ninguém atravessa a culpa de outro").
 9. Ande até o vulto entre as forcas, **o Flagelado**. Ele ergue a cabeça e copia a sua forma: **bata uma vez** para mostrar que o dano volta para você e que cai uma gota de culpa.
 10. **Apare** um golpe dele (**L**, no anel dourado) para arrancar a forma verdadeira; ou espere ele recolher as gotas e **rezar**. Com **G** (invencível) ligado, bata até cair a segunda placa: **Beatriz atravessa o vale**.
-11. Leve a vida dele ao fim: ele cai de joelhos e vem **a revelação**. Deixe a cena rodar; é o fecho da história.
+11. Leve a vida dele ao fim: ele cai de joelhos e vem **a revelação**, uma cutscene em vídeo de 52 segundos. Deixe rodar inteira; é o fecho da história.
 
 Explique em uma frase: *o chefe final é a culpa que o protagonista pediu para esquecer; só o vence quem para de fugir do próprio rosto.*
 
@@ -64,7 +78,3 @@ A arquitetura dessas salas conserva a camada de pintura recebida; céu e constru
 Sem teclado numérico, Beatriz usa (ABNT2) **.** atacar, **,** esquivar, **;** aparar, **Ç** carregar, **~** curar, **´** interagir e **[** doar sangue. F4 alterna IA/jogadora 2. O sangue e as execuções continuam disponíveis.
 
 Na demonstração, mostre o apoio no piso do Claustro e do Campanário, as soleiras das portas altas e o cabo da espada sob a mão. Os efeitos do Vale e a trilha da revelação foram integrados; confira o volume numa partida antes de apresentar. A espada/lança ainda têm alguns quadros com pontas incompletas, conforme [limites da entrega](v40-integracao.md).
-
-## Atualização da v41
-
-As nove faixas recebidas do Lyria substituem a reprodução das músicas sintetizadas. Mostre a troca de exploração para combate e depois a música própria da luta no Vale. Nave usa o templo; Terraço/Pátio usam a exploração sem reiniciar a faixa. A revelação ainda é apresentada com os closes de 44 segundos: o suporte ao filme está pronto, mas os seis clipes finais não vieram. Não apresente a amostra técnica de teste como uma cutscene final.
