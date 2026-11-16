@@ -181,7 +181,7 @@ func impulse(at_x: float, strength: float) -> void:
 	rajada_x = clampf((at_x - pintura.position.x) / (pintura.texture.get_size().x * pintura.scale.x), 0.0, 1.0)
 
 func tem_chuva() -> bool:
-	return not desligada and pintura.visible and float(SALAS[sala].get("chuva", 0.0)) > 0.0
+	return not desligada and pintura.visible and SALAS.has(sala) and float(SALAS[sala].get("chuva", 0.0)) > 0.0
 
 func _process(delta: float) -> void:
 	var id := _sala_atual()

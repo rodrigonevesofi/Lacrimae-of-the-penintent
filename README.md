@@ -4,7 +4,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 
 ## Como jogar
 
-1. Abra o Godot Standard 4.6.3, usado na validação da versão 40.
+1. Abra o Godot Standard 4.6.3, usado na validação da versão 41.
 2. Importe o arquivo `project.godot`.
 3. Aguarde a importação dos arquivos e pressione **F5**.
 
@@ -56,8 +56,12 @@ A [integração da versão 35](docs/v35-integracao.md) inclui o código de sangu
 
 Na [versão 38](docs/v38-integracao.md), o Vale recebe camadas pintadas com paralaxe, forcas e gaiolas em pêndulos; O Flagelado tem elmo-gaiola e quatro etapas de armadura. Três monumentos animados dão vida às salas. Dissolução em cinzas, rastros de espada e lança, luz de aparo e respiração das criaturas foram integrados. As [nove fichas novas](docs/fichas/fichas-goya.md) foram aprovadas e integradas na versão 39, com animação e combate próprios. A documentação da integração contém detalhes do final da história.
 
-Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md), [resultados dos testes da v40](docs/v40-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
+Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md), [resultados dos testes da v41](docs/v41-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
 
 Na [versão 39](docs/v39-integracao.md), nove criaturas aprovadas entram no mapa com regras próprias, cenários vivos, bichos pintados e rosto barbado na revelação. [Contato das criaturas](docs/v39-criaturas-contato.jpg).
 
 Na [versão 40](docs/v40-integracao.md), o polimento do Claude (personagens no piso pintado, pedra da cor de cada sala, espada na mão, folhas limpas) foi unido à versão 39 do Codex, e entraram 99 sons do Argon: os nove efeitos do Vale, as ambiências e a música da revelação. [Relatório dos sons](docs/sons-argon-v40.md).
+
+Na [versão 41](docs/v41-integracao.md), a trilha passa a ser a gerada pelo autor no Lyria 3.5 (nove faixas com coro, em OGG), e a revelação do Vale aceita uma cutscene em vídeo: [prompts e quadros iniciais](docs/prompts-cutscene-veo-v41.md).
+
+Os clipes finais ainda não estão incluídos: a revelação usa os closes atuais até receber os vídeos. [Validação e limites da v41](docs/v41-integracao.md).

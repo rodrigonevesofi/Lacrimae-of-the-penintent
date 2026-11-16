@@ -1,0 +1,95 @@
+{
+ "origem": "Lyria 3.5 (Google Flow Music), gerado pelo autor",
+ "faixas": {
+  "ost_menu": {
+   "segundos_recebidos": 119.2,
+   "segundos_em_laco": 114.3,
+   "volume_recebido_db": -16.7,
+   "volume_final_db": -23.0,
+   "pico_final_db": -6.6,
+   "degrau_na_emenda": 0.0015,
+   "bytes": 2018868,
+   "sha256": "fe56d4f6fa42a3339260eb4161826d7badf4c303d5b4163aa73c1b125d4aba5d"
+  },
+  "ost_exploration": {
+   "segundos_recebidos": 145.7,
+   "segundos_em_laco": 141.4,
+   "volume_recebido_db": -17.7,
+   "volume_final_db": -24.5,
+   "pico_final_db": -7.4,
+   "degrau_na_emenda": 0.0004,
+   "bytes": 2493978,
+   "sha256": "8859bd5a615a1e8283703e35bf68046352c721134defc43a9fcc7783689e462f"
+  },
+  "ost_combat": {
+   "segundos_recebidos": 124.6,
+   "segundos_em_laco": 118.4,
+   "volume_recebido_db": -16.3,
+   "volume_final_db": -20.0,
+   "pico_final_db": -4.2,
+   "degrau_na_emenda": 0.0003,
+   "bytes": 2399076,
+   "sha256": "d494d32a1f7899876745fdda23003a51ab848412a5a926ea88023df8f123ec02"
+  },
+  "ost_boss": {
+   "segundos_recebidos": 152.3,
+   "segundos_em_laco": 146.5,
+   "volume_recebido_db": -17.0,
+   "volume_final_db": -19.0,
+   "pico_final_db": -2.5,
+   "degrau_na_emenda": 0.0118,
+   "bytes": 2970893,
+   "sha256": "2a6446741d98f89824c086c2e79dc99efa89e811a6136771abc79620dc36c5cd"
+  },
+  "ost_story": {
+   "segundos_recebidos": 119.4,
+   "segundos_em_laco": 113.8,
+   "volume_recebido_db": -20.3,
+   "volume_final_db": -23.5,
+   "pico_final_db": -5.6,
+   "degrau_na_emenda": 0.0002,
+   "bytes": 2130917,
+   "sha256": "aa9a7b99000f77ad7094a4cc6d5a7dc380c02281d534000f374f78eb2efd0eac"
+  },
+  "ost_temple": {
+   "segundos_recebidos": 119.8,
+   "segundos_em_laco": 114.2,
+   "volume_recebido_db": -19.5,
+   "volume_final_db": -24.5,
+   "pico_final_db": -5.7,
+   "degrau_na_emenda": 0.0014,
+   "bytes": 2040378,
+   "sha256": "52a66d00024e79280078d58ff502f37c3028d1f820585b79b0e9a4b27f6fa0cb"
+  },
+  "ost_ending": {
+   "segundos_recebidos": 118.7,
+   "segundos_em_laco": 112.3,
+   "volume_recebido_db": -19.9,
+   "volume_final_db": -23.0,
+   "pico_final_db": -5.6,
+   "degrau_na_emenda": 0.0009,
+   "bytes": 2209892,
+   "sha256": "9049bc4840aa679a8d0a976fe1ed42555731cfde93b50f69afd89a2555f81a95"
+  },
+  "ost_vale": {
+   "segundos_recebidos": 180.7,
+   "segundos_em_laco": 174.9,
+   "volume_recebido_db": -18.0,
+   "volume_final_db": -19.0,
+   "pico_final_db": -1.7,
+   "degrau_na_emenda": 0.0285,
+   "bytes": 3335315,
+   "sha256": "3c4cd22e4d86ae8d67daadda5cd65971f7ca55ba0e64f19d6366340fbcb4a5bf"
+  },
+  "ost_revelacao": {
+   "segundos_recebidos": 89.5,
+   "segundos_em_laco": 84.4,
+   "volume_recebido_db": -16.8,
+   "volume_final_db": -21.5,
+   "pico_final_db": -5.6,
+   "degrau_na_emenda": 0.0008,
+   "bytes": 1479687,
+   "sha256": "e25f9490c3248bd9bb6327f782fb24cfcf2293f7514f4fdc351753cc4c3530ad"
+  }
+ }
+}

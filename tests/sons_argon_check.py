@@ -18,6 +18,8 @@ def ler(p):
     return w.getframerate(), w.getsampwidth(), x
 for nome, info in rel["aceitos"].items():
     p = os.path.join(RAIZ, "assets", "audio", nome + ".wav")
+    # A trilha OGG tem preferência, mas os WAVs anteriores continuam como reserva.
+    # A integridade dessa reserva é verificada aqui; a seleção do OGG tem sua suíte própria.
     confere(os.path.exists(p), nome + ": presente")
     if not os.path.exists(p): continue
     confere(hashlib.sha256(open(p, "rb").read()).hexdigest() == info["sha256"], nome + ": é o arquivo registrado")
@@ -31,7 +33,7 @@ for nome in rel["recusados"]:
         # as músicas recusadas não podem ter substituído as antigas: as antigas têm 16 s
         antiga = wave.open(os.path.join(RAIZ, "assets", "audio", nome + ".wav"))
         confere(abs(antiga.getnframes() / antiga.getframerate() - 16.0) < 0.01, nome + ": a música anterior foi mantida")
-confere(not os.path.exists(os.path.join(RAIZ, "assets", "audio", "ost_vale.wav")), "ost_vale não integrada")
+confere(not os.path.exists(os.path.join(RAIZ, "assets", "audio", "ost_vale.wav")), "ost_vale do Argon não integrada")
 musicas = {os.path.basename(p)[:-4]: ler(p)[2].mean(1) for p in glob.glob(os.path.join(RAIZ, "assets", "audio", "ost_*.wav"))}
 for a, b in itertools.combinations(sorted(musicas), 2):
     n = min(len(musicas[a]), len(musicas[b]))

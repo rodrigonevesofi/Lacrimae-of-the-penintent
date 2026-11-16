@@ -54,7 +54,7 @@ func run() -> void:
 	await frames(3)
 	expect(game.state == "title" and not game.player.controllable, "title locks player input")
 	expect(game.player.appearance != null and game.player.appearance.atlas != null, "player uses illustrated character atlas")
-	expect(game.soundscape.ambience.playing and game.soundscape.ambience.stream.stereo, "stereo score starts automatically")
+	expect(game.soundscape.ambience.playing and not game.soundscape.ambience.stream.is_monophonic(), "stereo score starts automatically")
 	expect(game.soundscape.effects.size() >= 26, "the action, cinematic and creature effects are loaded (%d)" % game.soundscape.effects.size())
 	game.player.culpa = 100
 	game.state = "play"

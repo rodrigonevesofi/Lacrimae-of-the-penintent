@@ -169,7 +169,7 @@ func run() -> void:
 	expect(str(f.LINES[3][2]).find("É o seu") != -1,"the face is his own")
 	f.t = 3.5
 	expect(f.can_skip(),"the scene can be skipped after three seconds")
-	f.t = 43.9
+	f.t = f.duracao() - 0.1
 	await frames(8)
 	expect(game.final_defeated and game.state == "ending","after the revelation, the vigil ends")
 	expect(not p.cinematic_focus and p.camera.zoom.is_equal_approx(f.saved_zoom) if is_instance_valid(f) else true,"the camera is given back")

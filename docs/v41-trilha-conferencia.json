@@ -1,0 +1,179 @@
+{
+  "metodo": "Decodificação independente com libsndfile; duração, PCM estéreo, hash, pico e RMS do OGG recebido. Não certifica fraseado musical, emenda perceptiva, true peak nem mixagem em partida.",
+  "faixas": 9,
+  "verificacoes": 63,
+  "falhas": [],
+  "resultados": [
+    {
+      "arquivo": "assets/audio/ost_menu.ogg",
+      "sha256": "fe56d4f6fa42a3339260eb4161826d7badf4c303d5b4163aa73c1b125d4aba5d",
+      "segundos": 114.318,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -6.691,
+      "rms_dbfs": -23.01,
+      "emenda_amplitude_max": 0.000643,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_exploration.ogg",
+      "sha256": "8859bd5a615a1e8283703e35bf68046352c721134defc43a9fcc7783689e462f",
+      "segundos": 141.391,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -7.385,
+      "rms_dbfs": -24.487,
+      "emenda_amplitude_max": 0.000707,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_combat.ogg",
+      "sha256": "d494d32a1f7899876745fdda23003a51ab848412a5a926ea88023df8f123ec02",
+      "segundos": 118.35,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -4.149,
+      "rms_dbfs": -20.024,
+      "emenda_amplitude_max": 0.000482,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_boss.ogg",
+      "sha256": "2a6446741d98f89824c086c2e79dc99efa89e811a6136771abc79620dc36c5cd",
+      "segundos": 146.53,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -2.259,
+      "rms_dbfs": -19.045,
+      "emenda_amplitude_max": 0.014008,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_story.ogg",
+      "sha256": "aa9a7b99000f77ad7094a4cc6d5a7dc380c02281d534000f374f78eb2efd0eac",
+      "segundos": 113.842,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -5.56,
+      "rms_dbfs": -23.484,
+      "emenda_amplitude_max": 0.000187,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_temple.ogg",
+      "sha256": "52a66d00024e79280078d58ff502f37c3028d1f820585b79b0e9a4b27f6fa0cb",
+      "segundos": 114.245,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -5.83,
+      "rms_dbfs": -24.492,
+      "emenda_amplitude_max": 0.002904,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_ending.ogg",
+      "sha256": "9049bc4840aa679a8d0a976fe1ed42555731cfde93b50f69afd89a2555f81a95",
+      "segundos": 112.349,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -5.552,
+      "rms_dbfs": -22.979,
+      "emenda_amplitude_max": 0.001091,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_vale.ogg",
+      "sha256": "3c4cd22e4d86ae8d67daadda5cd65971f7ca55ba0e64f19d6366340fbcb4a5bf",
+      "segundos": 174.947,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -1.868,
+      "rms_dbfs": -19.007,
+      "emenda_amplitude_max": 0.030947,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    },
+    {
+      "arquivo": "assets/audio/ost_revelacao.ogg",
+      "sha256": "e25f9490c3248bd9bb6327f782fb24cfcf2293f7514f4fdc351753cc4c3530ad",
+      "segundos": 84.36,
+      "hz": 44100,
+      "canais": 2,
+      "pico_dbfs": -5.533,
+      "rms_dbfs": -21.473,
+      "emenda_amplitude_max": 0.000899,
+      "verificacoes": {
+        "sha256": true,
+        "bytes": true,
+        "formato": true,
+        "duracao": true,
+        "pico_sem_ceifamento": true,
+        "volume": true,
+        "distinta": true
+      }
+    }
+  ]
+}
