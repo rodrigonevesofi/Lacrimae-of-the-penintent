@@ -1,0 +1,39 @@
+{
+  "base_publicada": "14b2d7b28d2e0ef3301b1642b43e0b6bd0dc9a1f",
+  "pacotes": [
+    {
+      "arquivo": "Lacrimae-of-the-penintent-v41-jogo.zip",
+      "sha256": "3541ff48b28498b2b4fdccc6221724d515e5945b6659a729c38be11f62d56677"
+    },
+    {
+      "arquivo": "Lacrimae-of-the-penintent-v41-audio.zip",
+      "sha256": "e9aed530c44c7f5aafc585f90f959bb43dd02e528415680b3f1fcc5ae0c06515"
+    },
+    {
+      "arquivo": "Lacrimae-of-the-penintent-v41-documentacao.zip",
+      "sha256": "d11f9250101adbea1f2657a32a540f1e241f9135ef1f6b2e28e9fc6e8ea52d67"
+    },
+    {
+      "arquivo": "v41-somente-o-que-mudou.zip",
+      "sha256": "3514bef31ca156e429541e7a75ca06f9f87cb7df085fd0cd2a0155a8b9c0a339",
+      "confere_com_pacote_completo": true
+    }
+  ],
+  "midias_anteriores_preservadas": 679,
+  "midias_anteriores_removidas": [],
+  "midias_anteriores_alteradas": [],
+  "novas_faixas": [
+    "ost_menu",
+    "ost_exploration",
+    "ost_combat",
+    "ost_boss",
+    "ost_story",
+    "ost_temple",
+    "ost_ending",
+    "ost_vale",
+    "ost_revelacao"
+  ],
+  "wav_revelacao_restaurado_como_reserva": true,
+  "clipes_finais_recebidos": 0,
+  "amostra_de_teste": "tests/dados/revelacao_01.ogv"
+}

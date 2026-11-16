@@ -23,17 +23,8 @@ func run() -> void:
 		expect(absf(onda.get_length() - float(duracoes[nome])) < 0.01, nome + ": duração pedida")
 		sound.play_sfx(nome)
 		expect(voz.playing and sound.played.get(nome, 0) > 0, nome + ": o evento toca")
-	# ---- música: a revelação tem a sua; a luta no Vale continua com a do chefe (a música do Vale não foi integrada)
-	expect(sound.music_streams.has("revelacao"), "música da revelação carregada")
-	expect(not sound.music_streams.has("vale"), "sem música própria do Vale: a luta usa a do chefe")
-	var rev: AudioStreamWAV = sound.music_streams["revelacao"]
-	expect(rev.stereo and rev.loop_mode == AudioStreamWAV.LOOP_FORWARD and absf(rev.get_length() - 60.0) < 0.01, "revelação: estéreo, em laço, 60 s")
-	# ---- as músicas antigas, com notas, continuam sendo sete e diferentes entre si
-	var tamanhos := {}
-	for contexto in ["menu", "exploration", "combat", "boss", "story", "temple", "ending"]:
-		expect(sound.music_streams.has(contexto), "música " + contexto)
-		tamanhos[sound.music_streams[contexto].data.hex_encode().substr(0, 4000)] = true
-	expect(tamanhos.size() == 7, "sete músicas diferentes entre si")
+	# ---- música (v41): a trilha do Lyria substituiu a sintetizada; ver tests/v41_trilha_smoke.gd
+	expect(sound.music_streams.has("revelacao") and sound.music_streams.has("vale"), "revelação e Vale têm música própria")
 	# ---- ambiências: dez salas e o Vale, em laço
 	for sala in ["city", "ossuary", "cistern", "cloister", "belfry", "archive", "refuge", "nave", "terrace", "court", "vale"]:
 		expect(ResourceLoader.exists("res://assets/audio/amb_%s.wav" % sala), "ambiência " + sala)

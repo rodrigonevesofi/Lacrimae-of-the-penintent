@@ -102,20 +102,18 @@ func _ready() -> void:
 	ambience = AudioStreamPlayer.new()
 	ambience.bus = "Music"
 	for context in ["menu", "exploration", "temple", "combat", "boss", "story", "ending", "nave", "terraco", "patio"]:
-		var track: AudioStreamWAV = load("res://assets/audio/ost_%s.wav" % context)
-		track.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		track.loop_end = track.data.size() / 4
-		music_streams[context] = track
+		music_streams[context] = _carregar_musica(context)
 	for context in OPTIONAL_MUSIC:
-		if ResourceLoader.exists("res://assets/audio/ost_%s.wav" % context):
-			var extra: AudioStreamWAV = load("res://assets/audio/ost_%s.wav" % context)
-			extra.loop_mode = AudioStreamWAV.LOOP_FORWARD
-			extra.loop_end = extra.data.size() / 4
-			music_streams[context] = extra
-	var music: AudioStreamWAV = music_streams["menu"]
-	music.loop_mode = AudioStreamWAV.LOOP_FORWARD
-	music.loop_begin = 0
-	music.loop_end = music.data.size() / 4
+		var extra := _carregar_musica(context)
+		if extra != null: music_streams[context] = extra
+	# Com a trilha nova, as três salas que tinham tema próprio passam a usar a mesma família de música:
+	# a Nave do Silêncio fica com o canto do templo; o Terraço e o Pátio, com a exploração.
+	if music_streams["exploration"] is AudioStreamOggVorbis:
+		music_streams["terraco"] = music_streams["exploration"]
+		music_streams["patio"] = music_streams["exploration"]
+	if music_streams["temple"] is AudioStreamOggVorbis:
+		music_streams["nave"] = music_streams["temple"]
+	var music: AudioStream = music_streams["menu"]
 	ambience.stream = music
 	ambience.volume_db = -3
 	add_child(ambience)
@@ -254,6 +252,21 @@ func toggle_mute() -> void:
 		for voice in effects.values():
 			voice.stop()
 
+## Carrega a música de um contexto. A trilha nova (v41) vem em OGG, em laço; se não houver, vale o WAV antigo.
+func _carregar_musica(context: String) -> AudioStream:
+	var ogg := "res://assets/audio/ost_%s.ogg" % context
+	if ResourceLoader.exists(ogg):
+		var faixa: AudioStreamOggVorbis = load(ogg)
+		faixa.loop = true
+		return faixa
+	var wav := "res://assets/audio/ost_%s.wav" % context
+	if not ResourceLoader.exists(wav): return null
+	var track: AudioStreamWAV = load(wav)
+	track.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	track.loop_begin = 0
+	track.loop_end = track.data.size() / 4
+	return track
+
 func desired_context() -> String:
 	var game = get_parent()
 	if game.state == "title": return "menu"
@@ -280,6 +293,10 @@ func desired_context() -> String:
 
 func change_context(context: String) -> void:
 	if context == music_context or switching or not music_streams.has(context): return
+	# Dois contextos com a mesma faixa (por exemplo exploração e Terraço): a música segue sem recomeçar.
+	if music_streams.has(music_context) and music_streams[context] == music_streams[music_context]:
+		music_context = context
+		return
 	transition_context = context
 	incoming.stream = music_streams[context]
 	incoming.volume_db = -80

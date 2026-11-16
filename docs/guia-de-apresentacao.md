@@ -2,7 +2,7 @@
 
 Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3)** para pular deslocamentos.
 
-Versão atual: **40**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v40-integracao.md), [testes](v40-testes.json) e [prompts da arte desta rodada](v39-prompts-arte.md). As nove criaturas aprovadas já têm encontros e animações no mapa. Os nove efeitos do Vale agora tocam e a revelação tem música própria. A luta final mantém a trilha do chefe; as demais músicas anteriores foram preservadas.
+Versão atual: **41**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v41-integracao.md), [testes](v41-testes.json) e [prompts da arte desta rodada](v39-prompts-arte.md). As nove criaturas aprovadas já têm encontros e animações no mapa. Os nove efeitos do Vale agora tocam e a revelação tem música própria. A luta do Vale e a revelação usam agora as faixas próprias do Lyria; os WAVs antigos continuam como reserva.
 
 1. **Abertura (1 min):** comece um jogo novo; deixe a primeira cena e a Cripta do Despertar falarem. Mostre o HUD: vida, culpa, lágrimas.
 2. **Combate (2 min)** — na Cidade, contra os primeiros inimigos:
@@ -64,3 +64,7 @@ A arquitetura dessas salas conserva a camada de pintura recebida; céu e constru
 Sem teclado numérico, Beatriz usa (ABNT2) **.** atacar, **,** esquivar, **;** aparar, **Ç** carregar, **~** curar, **´** interagir e **[** doar sangue. F4 alterna IA/jogadora 2. O sangue e as execuções continuam disponíveis.
 
 Na demonstração, mostre o apoio no piso do Claustro e do Campanário, as soleiras das portas altas e o cabo da espada sob a mão. Os efeitos do Vale e a trilha da revelação foram integrados; confira o volume numa partida antes de apresentar. A espada/lança ainda têm alguns quadros com pontas incompletas, conforme [limites da entrega](v40-integracao.md).
+
+## Atualização da v41
+
+As nove faixas recebidas do Lyria substituem a reprodução das músicas sintetizadas. Mostre a troca de exploração para combate e depois a música própria da luta no Vale. Nave usa o templo; Terraço/Pátio usam a exploração sem reiniciar a faixa. A revelação ainda é apresentada com os closes de 44 segundos: o suporte ao filme está pronto, mas os seis clipes finais não vieram. Não apresente a amostra técnica de teste como uma cutscene final.

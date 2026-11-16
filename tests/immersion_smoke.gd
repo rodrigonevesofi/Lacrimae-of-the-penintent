@@ -16,7 +16,7 @@ func frames(count: int) -> void:
 func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
-	expect(game.soundscape.music_streams.size() == 11 and game.soundscape.music_streams.has("revelacao"),"ten contextual scores plus the revelation score (v40) load")
+	expect(game.soundscape.music_streams.size() == 12 and game.soundscape.music_streams.has("revelacao") and game.soundscape.music_streams.has("vale"),"ten contextual scores plus the Vale and revelation scores (v41) load")
 	var trims_zero := true
 	for group in game.soundscape.MIX_TRIM_DB: if game.soundscape.MIX_TRIM_DB[group] != 0.0: trims_zero = false
 	expect(trims_zero and game.soundscape.trim_for("knock") == 0.0 and game.soundscape.trim_for("devorador_rugido") == 0.0,"the mix trims start at zero until the author has listened")
