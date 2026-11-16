@@ -47,7 +47,7 @@ func data_checks() -> void:
 		for clip in clips[t.actor]:
 			if not ResourceLoader.exists("res://assets/animation/"+clips[t.actor][clip].sheet+".png"): data_ok = false
 	expect(data_ok,"every creature has a complete animation entry with existing art")
-	expect(Enemy.TYPES.size() == 10,"ten creature types: devotee, weeper, the Guardian, five from Goya, the coffin carrier and the other Penitent")
+	expect(Enemy.TYPES.size() == 19,"dezenove tipos: os dez anteriores e as nove criaturas aprovadas")
 	var kinds: Dictionary = {}
 	var groups: Dictionary = {}
 	for d in Layout.enemies():

@@ -110,6 +110,8 @@ var roll_buffer := 0.0
 var damage_flash := 0.0
 var has_weapon := false
 var max_hp := 100.0
+var maldicao_parcas := 0.0
+var maldicao_parceira := 0.0
 var hp := 100.0
 var culpa := 0.0
 var lagrimas := 0
@@ -757,6 +759,7 @@ func _do_penance() -> void:
 
 func pray(restore: bool = true, duration: float = 1.0) -> void:
 	if restore:
+		remover_maldicao()
 		hp = max_hp
 		flasks = max_flasks
 	state = "pray"
@@ -1010,7 +1013,7 @@ func apply_character() -> void:
 
 func apply_penitence(id: String) -> void:
 	penitence = id if id in ["none", "nails", "chains"] else "none"
-	max_hp = (100.0 + upgrades * 15.0) * (0.7 if penitence == "nails" else 1.0)
+	max_hp = maxf(30.0,(100.0 + upgrades * 15.0) * (0.7 if penitence == "nails" else 1.0)-maldicao_parcas)
 	hp = minf(hp, max_hp)
 
 func begin_execution(target) -> bool:
@@ -1547,3 +1550,14 @@ func _swing_trail() -> void:
 	if swing_effect: return
 	swing_effect = true
 	get_tree().call_group("game", "spawn_effect", "arc", global_position + Vector2(float(facing) * 58.0, -52.0), facing, 0.62, "golpe")
+
+## O fio das Parcas só reduz a capacidade; nunca causa uma morte fora da janela de dano.
+func receber_maldicao(valor:float) -> void:
+	if dev_god or invuln>0 or not standing() or state in ["roll","execution"]:return
+	maldicao_parcas=minf(maldicao_parcas+valor,36.0)
+	apply_penitence(penitence)
+	get_tree().call_group("game","toast","As Parcas cortaram o fio: vida máxima reduzida até a próxima oração.")
+
+func remover_maldicao() -> void:
+	maldicao_parcas=0
+	apply_penitence(penitence)

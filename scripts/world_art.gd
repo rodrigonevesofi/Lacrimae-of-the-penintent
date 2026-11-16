@@ -54,6 +54,10 @@ func _process(delta: float) -> void:
 		redraw_clock = 0.0
 		queue_redraw()
 
+## A pintura desta sala está sendo desenhada, animada, por pintura_viva.gd?
+func _pintura_viva(id: String) -> bool:
+	return game.get("pintura") != null and game.pintura.ativa(id)
+
 func polygon(points: Array, color: Color) -> void:
 	draw_colored_polygon(PackedVector2Array(points), color)
 
@@ -84,7 +88,8 @@ func _draw() -> void:
 		return
 	# Toda a fase de 4800 unidades compartilha um panorama fixo no espaço do mundo.
 	# Sem imagem seguindo a câmera, repetição de textura, troca por sala ou dissolução temporal.
-	draw_texture_rect(panorama, PANORAMA_RECT, false)
+	# Com a pintura viva ligada, quem desenha o panorama é pintura_viva.gd, com o shader.
+	if not _pintura_viva("city"): draw_texture_rect(panorama, PANORAMA_RECT, false)
 	if game.exploration != null: draw_passages("city")
 	# A ponte quebrada é um buraco real no plano de caminhada em primeiro plano.
 	if abyss_art != null:
@@ -297,8 +302,9 @@ func draw_branch() -> void:
 	var height: float = ex.art_height(ex.room)
 	# Uma sala alta recebe outra composição, em vez de esticar uma parede horizontal.
 	var art_rect := Rect2(b.position.x,floor_y-height*ex.ground_line(ex.room),b.size.x,height)
-	draw_rect(b,Color("17181d"))
-	draw_texture_rect(texture,art_rect,false)
+	if not _pintura_viva(ex.room):
+		draw_rect(b,Color("17181d"))
+		draw_texture_rect(texture,art_rect,false)
 	if data.get("outdoor",false): draw_foundation(b,floor_y)
 	draw_passages(ex.room)
 	for block in ex.blocks:

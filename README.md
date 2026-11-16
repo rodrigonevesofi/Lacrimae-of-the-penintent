@@ -4,7 +4,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 
 ## Como jogar
 
-1. Abra o Godot Standard 4.6.3, usado na validação da versão 38.
+1. Abra o Godot Standard 4.6.3, usado na validação da versão 39.
 2. Importe o arquivo `project.godot`.
 3. Aguarde a importação dos arquivos e pressione **F5**.
 
@@ -28,6 +28,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **P:** reduzir pulsos e tremores (no título ou na pausa)
 - **F3:** modo dev; ↑/↓ selecionam sala, Enter transporta, G alterna invencibilidade, N alterna voo e B vai ao chefe
 - **F4:** alternar Beatriz entre IA e jogadora 2
+- **F6:** liga ou desliga a pintura viva dos cenários (use se o jogo ficar lento)
 - **Enter:** iniciar; **C:** continuar salvamento no título
 
 Beatriz acompanha o Penitente e luta por conta própria. Para assumir o segundo personagem, use **setas** para mover, **↑ / Num8** para pular, **↓ / Num2** para baixo, teclado numérico **1** para atacar, **3** para esquivar, **4** para aparar, **5** para carregar golpe, **6** para curar, **0** para doar sangue e **Enter numérico** para interagir. Também é possível usar um segundo controle.
@@ -53,6 +54,8 @@ Combate: **J** golpe, **K** esquiva, **L** aparo (aperte quando o golpe chegar; 
 
 A [integração da versão 35](docs/v35-integracao.md) inclui o código de sangue das execuções, correções do modo dev e dos controles da dupla, a nova pausa e os pontos de integração dos sons de gore. Os sons existentes foram preservados. A lista adicional foi executada na [versão 36](docs/v36-integracao.md): 24 atlas novos ou repintados, cancelamento em esquiva no primeiro quadro ativo, comandos de combo preservados, esquiva perfeita com contra-ataque, dois padrões por criatura, suspensão aérea limitada e mortes com queda física. As execuções usam sangue estilizado e manchas persistentes. Os 20 WAVs de gore e combate enviados pelo autor também foram integrados, incluindo os avisos e a esquiva perfeita. [Validação dos sons](docs/v36-audio.json).
 
-Na [versão 38](docs/v38-integracao.md), o Vale recebe camadas pintadas com paralaxe, forcas e gaiolas em pêndulos; O Flagelado tem elmo-gaiola e quatro etapas de armadura. Três monumentos animados dão vida às salas. Dissolução em cinzas, rastros de espada e lança, luz de aparo e respiração das criaturas foram integrados. As [nove fichas novas](docs/fichas/fichas-goya.md) aguardam aprovação antes de virar inimigos animados. A documentação da integração contém detalhes do final da história.
+Na [versão 38](docs/v38-integracao.md), o Vale recebe camadas pintadas com paralaxe, forcas e gaiolas em pêndulos; O Flagelado tem elmo-gaiola e quatro etapas de armadura. Três monumentos animados dão vida às salas. Dissolução em cinzas, rastros de espada e lança, luz de aparo e respiração das criaturas foram integrados. As [nove fichas novas](docs/fichas/fichas-goya.md) foram aprovadas e integradas na versão 39, com animação e combate próprios. A documentação da integração contém detalhes do final da história.
 
-Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md), [resultados dos testes da v38](docs/v38-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
+Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md), [resultados dos testes da v39](docs/v39-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
+
+Na [versão 39](docs/v39-integracao.md), nove criaturas aprovadas entram no mapa com regras próprias, cenários vivos, bichos pintados e rosto barbado na revelação. [Contato das criaturas](docs/v39-criaturas-contato.jpg).

@@ -54,7 +54,7 @@ func run() -> void:
 	expect(game.player.camera.zoom == zoom and not game.player.cinematic_focus, "prayer restores camera")
 	# Dois chefes existem no mundo: o Guardião dos Sinos e o Penitente do Vale. Nenhum é recriado pela oração.
 	var foes: int = get_nodes_in_group("enemies").size()
-	expect(foes == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + 2, "common foes respawn once without duplicating either boss (%d foes)" % foes)
+	expect(foes == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + game.exploration.Layout.criaturas_aprovadas().size() + 2, "todos os encontros retornam uma vez sem duplicar chefes (%d criaturas)" % foes)
 	game.memory_seen = false
 	game.narrative.begin("memory")
 	expect(not game.memory_seen, "memory is not marked seen before scene finishes")

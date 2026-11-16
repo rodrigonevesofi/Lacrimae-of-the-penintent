@@ -28,21 +28,33 @@ O jogador não pode reconhecer o protagonista no chefe ao vê-lo pela primeira v
 ### Prompt de imagem (inglês, para gerador de imagem)
 *"Original 2D side-view pixel-art boss for a dark gothic action game: a tall hunched armoured figure, about 1.25 times the height of a knight, wearing a closed iron helmet shaped like a hanging bell-cage with a confessional grille instead of a visor and a padlock at the chin, blood seeping through the grille. Mismatched black iron and tarnished bronze plates tied with penitential ropes, strips of parchment nailed to the armour and fluttering, melted candle wax on the shoulders, chains across the chest with keys. He wields a heavy iron gate-bar with both hands. Cold iron greys, dirty bone parchment, wax yellow; no visible face, no pointed hood. Sombre painterly pixel art, transparent background, facing right."*
 
-## 4. O rosto do Penitente
-**Ideia central: um homem comum.** Não um santo, não um herói, não um monstro. O horror do final é que quem fechou os portões tem um rosto em que ninguém repararia (a banalidade de quem "só obedecia"). Evitar a figura de Cristo: **nada de cabelo longo, barba cheia e coroa de espinhos na cabeça**. A coroa de espinhos fica **no capacete**, que é tirado.
+## 4. O rosto do Penitente (segunda versão: com barba, gasto pelo capacete)
+**O que mudou:** a primeira versão (cabeça raspada, barba de poucos dias) ficou **limpa demais**: parecia um homem que acabou de sair do barbeiro, não alguém que passou anos dentro de um capacete de ferro. Esta versão troca o "homem comum barbeado" por **um homem comum que se abandonou**.
 
-- **Idade e traços:** uns 45 anos. Magro, olheiras fundas, maçãs do rosto marcadas. Cabelo **raspado**, crescendo irregular, grisalho nas têmporas. Barba de poucos dias, falhada.
-- **As marcas do capacete:** um **sulco vermelho na testa e nas têmporas**, onde o ferro apertou por anos; a pele mais pálida do que o resto, porque nunca viu sol.
-- **O sangue:** **dois trilhos secos e escuros** descendo dos olhos até o queixo, com uma lágrima fresca por cima. O branco dos olhos avermelhado.
+**Ideia central: ninguém cuidou desse rosto, nem ele.** Continua sendo um homem em quem ninguém repararia, não um santo nem um herói. O que o rosto mostra agora é o tempo: barba, cabelo, sujeira e feridas cresceram no escuro, sob o ferro.
+
+- **Idade e traços:** entre 35 e 45 anos. Magro, olheiras fundas, maçãs do rosto marcadas, nariz e sobrancelhas fortes.
+- **Barba:** **cheia, escura e malcuidada**, de vários meses. Irregular, mais rala nas bochechas e densa no queixo e no bigode, com **alguns fios grisalhos**. Há **sangue seco e cera de vela endurecidos** nos fios, e a barba está **amassada para um lado**, do jeito que o capacete a deixou.
+- **Cabelo:** curto a médio, escuro, **empastado de suor e achatado pelo capacete**, com mechas coladas na testa. Não é cabelo longo e solto.
+- **As marcas do capacete:** um **sulco vermelho e fundo na testa e nas têmporas**, com pele em carne viva em alguns pontos; **pequenas cicatrizes em fila na testa**, onde os espinhos da coroa do capacete furavam por dentro. A pele do rosto é **pálida e encardida**, com fuligem nas dobras.
+- **O sangue:** **dois trilhos secos e escuros** descem dos olhos e **somem dentro da barba**, com uma lágrima fresca por cima. O branco dos olhos está avermelhado.
+- **A boca:** lábios rachados, um corte antigo no lábio inferior.
 - **Os olhos:** castanhos, cansados. **Fechados** quando o capacete sai; ele os abre no último quadro e **olha direto para quem joga**.
 - **Um detalhe que conta a história:** na palma da mão direita, erguida perto do rosto, **a marca em queimadura do ferro da tranca**.
 - **Expressão:** nem dor nem raiva. **Alívio e vergonha** ao mesmo tempo, de quem finalmente foi visto.
-- **O rosto do chefe é o mesmo**, traço por traço. A única diferença: no chefe os olhos já estão abertos e as lágrimas de sangue são frescas.
+- **O rosto do chefe é o mesmo**, traço por traço, com a mesma barba. A única diferença: no chefe os olhos já estão abertos e as lágrimas de sangue são frescas.
+
+**O que continua proibido, para não virar imagem de Cristo:** cabelo longo e ondulado até os ombros, barba longa e bem desenhada, coroa de espinhos **na cabeça** (ela fica no capacete), auréola, expressão serena. A barba aqui é de abandono, não de santidade.
+
+### Se o rosto for inspirado no autor
+É possível, e combina com o jogo: quem fecha os portões pode ter o rosto de quem o criou. O caminho é **anexar duas ou três fotos no próprio Codex** (de frente, de três quartos e de perfil, com luz simples), junto com o pedido do `prompts-codex-v39.md`. As fotos servem de referência para **o formato do rosto, as sobrancelhas, o nariz e o desenho da barba**; o restante vem desta ficha: o homem das fotos **envelhecido, emagrecido e gasto**, com as marcas do capacete, o sangue e a sujeira. Não deve sair um retrato fiel e limpo, e sim alguém reconhecível só por quem olhar duas vezes.
 
 ### Os três closes da revelação (512 × 512, no estilo pontilhado dos closes atuais)
-1. `close_flagelado_elmo.png`: o elmo-gaiola de perto, a grade, o cadeado, o sangue escorrendo.
-2. `close_revelacao_maos.png`: as mãos enfaixadas de Beatriz **erguendo o capirote** do Penitente; por baixo começa a aparecer a testa com o sulco vermelho.
-3. `close_dois_rostos.png`: **os dois de perfil, frente a frente**, o chefe sem elmo e o Penitente sem capacete. **O mesmo rosto**, um de olhos abertos, o outro abrindo os olhos. É a imagem que faz o jogador entender sem precisar de texto.
+1. `close_flagelado_elmo.png`: o elmo-gaiola de perto, a grade, o cadeado, o sangue escorrendo. **Não muda.**
+2. `close_revelacao_maos.png`: as mãos enfaixadas de Beatriz **erguendo o capirote** do Penitente; por baixo aparecem **as mechas coladas na testa e o sulco vermelho**. Refazer só se o cabelo novo não casar com a imagem atual.
+3. `close_dois_rostos.png`: **os dois de perfil, frente a frente**, o chefe sem elmo e o Penitente sem capacete. **O mesmo rosto barbado**, um de olhos abertos, o outro abrindo os olhos. **Refazer.**
+
+E o retrato `close_01.png` (o rosto de frente, com a mão erguida): **refazer.**
 
 ### Prompt de imagem (inglês)
-*"Original close-up portrait, dark gothic stippled pixel-art style: an ordinary gaunt man in his mid-forties, shaved head with uneven grey stubble, a few days of patchy beard, deep-set tired brown eyes, a red groove pressed into his forehead and temples from years under an iron helmet, pale skin, two dark dried tracks of blood running from his eyes to his chin with one fresh tear of blood. Expression of relief and shame. Not a saint, not a hero, no long hair, no crown of thorns. Dark background, warm candle light from one side."*
+*"Original close-up portrait, dark gothic stippled pixel-art style: an ordinary gaunt man around forty who has lived for years inside an iron helmet. Full, dark, unkempt beard of several months, uneven, thin on the cheeks and thick on the chin, a few grey hairs, matted with dried blood and hardened candle wax and flattened to one side by the helmet. Short dark hair plastered with sweat, strands stuck to the forehead. A deep raw red groove pressed into the forehead and temples, a row of small puncture scars across the brow, pale grimy skin with soot in the creases, cracked lips. Deep-set tired brown eyes with reddened whites, two dark dried tracks of blood running from the eyes down into the beard with one fresh tear of blood. His right palm raised near the face shows a burn mark in the shape of an iron bar. Expression of relief and shame. Not a saint, not a hero: no long flowing hair, no long groomed beard, no crown of thorns on the head, no halo. Dark background, warm candle light from one side."*
