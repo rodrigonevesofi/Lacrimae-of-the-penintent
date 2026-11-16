@@ -128,3 +128,17 @@ static func passage_face(link: Dictionary, from_a: bool) -> Dictionary:
 	return {"room":room, "foot":link.pa if from_a else link.pb,
 		"arrival_dir":arrival, "facing":-arrival, "width":width,
 		"theme":themes[room], "spawn_offset":90.0}
+
+## Encontros das fichas aprovadas, longe das chegadas e dos altares.
+static func criaturas_aprovadas() -> Array:
+	return [
+		["refuge",10,20190,600,70],
+		["vale",11,31340,600,80,700],["vale",11,31420,600,80,700],["vale",11,31500,600,80,700],
+		["cistern",12,8870,600,0],
+		["nave",13,23700,550,90],
+		["archive",14,17030,550,0],
+		["court",15,28070,600,45],
+		["terrace",16,25740,600,70],
+		["cloister",17,11870,600,0],
+		["ossuary",18,7520,600,70],
+	]

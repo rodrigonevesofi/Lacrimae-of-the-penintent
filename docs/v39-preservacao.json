@@ -1,0 +1,41 @@
+{
+  "base_publicada": "db1536dfc91463a6f2e2f362518c50644f90a22f",
+  "imagens_ou_audios_removidos": [],
+  "anteriores_substituidos": [
+    "assets/close/close_01.png",
+    "assets/close/close_dois_rostos.png",
+    "assets/close/close_revelacao_maos.png"
+  ],
+  "wavs_anteriores": 128,
+  "wavs_anteriores_alterados": [],
+  "wavs_novos_recebidos": [
+    {
+      "arquivo": "assets/audio/amb_chuva.wav",
+      "canais": 2,
+      "hz": 44100,
+      "segundos": 12.0,
+      "sha256": "0b046e3d6122e5f80950cf0b5918c7aafb10faaca808b6d6bcb33f865cb791d2"
+    },
+    {
+      "arquivo": "assets/audio/trovao_01.wav",
+      "canais": 2,
+      "hz": 44100,
+      "segundos": 4.2,
+      "sha256": "6b3b12e33949d52725f2708f8bd7640260ead1fe58e72e07b3617780e4aaad96"
+    },
+    {
+      "arquivo": "assets/audio/trovao_02.wav",
+      "canais": 2,
+      "hz": 44100,
+      "segundos": 5.0,
+      "sha256": "68ddd8e95ce0711a3f651380ac0110d58e4187e0d5fd64cc546776cc12eea93f"
+    },
+    {
+      "arquivo": "assets/audio/trovao_03.wav",
+      "canais": 2,
+      "hz": 44100,
+      "segundos": 3.6,
+      "sha256": "28e67311ca34a826fe0480d89df26b3ad0725ae37481d708fd79731ceb6661e4"
+    }
+  ]
+}

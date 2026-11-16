@@ -2,7 +2,7 @@
 
 Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3)** para pular deslocamentos.
 
-Versão atual: **38**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v38-integracao.md), [testes](v38-testes.json) e [prompts da arte desta rodada](v38-prompts-arte.md). As nove fichas de criaturas são propostas para aprovação e não devem ser apresentadas como inimigos já jogáveis. A ambiência do Vale veio no pacote; nove efeitos e duas músicas opcionais ainda aguardam os arquivos do Argon.
+Versão atual: **39**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v39-integracao.md), [testes](v39-testes.json) e [prompts da arte desta rodada](v39-prompts-arte.md). As nove criaturas aprovadas já têm encontros e animações no mapa. A ambiência do Vale veio no pacote; nove efeitos e duas músicas opcionais ainda aguardam os arquivos do Argon.
 
 1. **Abertura (1 min):** comece um jogo novo; deixe a primeira cena e a Cripta do Despertar falarem. Mostre o HUD: vida, culpa, lágrimas.
 2. **Combate (2 min)** — na Cidade, contra os primeiros inimigos:
@@ -43,3 +43,18 @@ As capturas e rotas automatizadas não substituem o ensaio humano com dois jogad
 11. Leve a vida dele ao fim: ele cai de joelhos e vem **a revelação**. Deixe a cena rodar; é o fecho da história.
 
 Explique em uma frase: *o chefe final é a culpa que o protagonista pediu para esquecer; só o vence quem para de fugir do próprio rosto.*
+
+## Cenários vivos (v39)
+12. Em qualquer sala, **pare e deixe a tela quieta por alguns segundos**: os estandartes pintados balançam, as velas tremem, a água corre. Na Cisterna, mostre os jorros das fontes; no Claustro, a hera e as folhas caindo.
+13. **Ande em direção a um corvo** (Terraço, Pátio, Cidade): ele levanta voo. No Campanário ou no Ossuário, **passe por baixo de uma galeria**: os morcegos saem em revoada.
+14. No **Terraço dos Sinos**, espere um relâmpago (a cada 10 a 20 segundos) e mostre a chuva do lado de fora dos arcos.
+15. Vale dizer na apresentação: nada disso é vídeo nem imagem trocada; é **shader, AnimationPlayer, AnimatedSprite2D, Tween, Parallax2D e partículas do Godot** sobre as mesmas pinturas.
+
+## Criaturas aprovadas (v39, demonstração opcional de 2 minutos)
+
+16. **F3 → Abrigo**: avance até o Glutão (x=20190). Mostre as colheres e avance na tosse. **F3 → Cisterna**: Meio-Enterrado em x=8870; a terra anuncia o bote.
+17. **Nave** (x=23700): deixe o fio das Parcas marcar a posição; esquive ou interrompa. O corte reduz a vida máxima até rezar. **Arquivo** (x=17030): acorde o Sono com um golpe para desfazer as aves.
+18. **Terraço** (x=25740): golpe baixo derruba as pernas do Espantalho. **Pátio** (x=28070): golpes dispersam a Romaria. **Claustro** (x=11870): mude de posição depois que o velho apontar.
+19. **Ossuário** (x=7520): mostre a lanterna da Viúva e o aparo da estocada. **Vale** (x=31340): apare o primeiro Disciplinante para abrir a formação.
+
+A arquitetura dessas salas conserva a camada de pintura recebida; céu e construção ainda não são camadas independentes. Não apresente os testes como avaliação humana da sensação do combate.

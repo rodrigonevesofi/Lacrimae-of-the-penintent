@@ -1,0 +1,262 @@
+[
+  {
+    "arquivo": "assets/animation/glutao_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-fd29bb80-693d-4457-9665-f2116b925cbf.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "0757565d4345a2ad63200da53f242fce980cd799692505493d5f7108ca0ac52c",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/disciplinantes_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-02f88ca7-7813-4ba3-b9c1-3e2df5a10abc.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "214f22b33c0ffc0c9f9061a214bd683037981e16b7cd65e3a0304a26e4ff10de",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/meio_enterrado_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-115d9735-b909-4d36-851c-78de2ef7553a.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "3c7ae02cc9a4281907f0889e42a066c87210987223b78ae3c9954637a2522a55",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/parcas_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-eaf46aea-9ff2-4b65-9056-2080ab3b6b32.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "fb1651ee24e1ecfebd08f8706367aca07a515ee6b8de8947389e1c1280353650",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/sono_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-089386ec-a967-4a14-86d8-99d99df2aed8.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "fd63220644c7a797326a3e571ffec6c422ccd69beaed483f9cf818754982c966",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/romaria_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-6bd0149e-3d49-4f8a-a55f-5cf04b903928.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "6e752108541571f57ca8a9c419ca28bf1e720a8c7082fb75e285d977638a5180",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/espantalho_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-5016aca1-6bd0-43f3-bd6f-32678d4c7bd5.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "9a822e1f24c889aaea23d69ea73e1d8bc22b6ff70ee98c20d8b816ca5ca81049",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/dois_velhos_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-d7571bf5-779a-49dc-a44d-0e8612e33406.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "36ba671debd677fed37e529bf6027e350619ab01bf63156322d8ef01586d5f0b",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/viuva_movimento.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-94a913f5-ed0d-4c37-848d-be2549a88ff9.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "9fce00bfa87e1d8ef3ff59ce718a7437fc8b246ebe0296e507cda21d456b35b2",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/glutao_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-5ba9ff9a-9b9b-497a-b0c5-4506a784a502.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "f181aa2bddac4b46211f035836e476d89f622ddd35083345b1a2bd47c3d196c0",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/disciplinantes_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-1d89ad6b-7643-4754-84c1-748aa2881ee7.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "0e968935b22bc90a492d12358a6fca6437a12bfe2dd163e3c4091b45a6877196",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/meio_enterrado_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-c664e460-a1b7-496f-9110-6b728fdf5339.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "75bf86c18193609517b2b0f167e91307394c4321668fb6d2c0ccad8a96018e27",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/parcas_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-d5849681-9faf-491c-9c96-2ecea638f412.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "46a60094fb179804e9cf88f96e9b047198722b72a083b5aad9f6fb65f928157e",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/sono_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-60cba971-57aa-4922-81cc-a3fe2e50488b.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "b9aec68d2966822022e45e297ae2b24e8c4735883c7381c542289ea4ecd186e3",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/romaria_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-877e45c1-378b-44ee-a661-e97c5deb7899.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "5e8c4ac6bb089ec2c7907d6e973404cd77cf122ef662ca4650b44e293be59941",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/espantalho_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-e928fd5a-5172-4181-abd3-24f54e82d353.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "5f74e24df8abf78e48761b4224552a738796baf1ef8bf05f00a28a9a64d2a5f0",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/dois_velhos_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-defca2f0-1577-4af3-8504-2a8eb7a2e11b.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "e37e87fde8fc1879e95d2707ef3dba50c7e1f7bf2741bd048ca68c42a8366ef0",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/viuva_reacoes.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-9080189b-a2bf-45c8-a6cc-3a384cd26a27.png",
+    "dimensoes": [
+      1536,
+      1024
+    ],
+    "sha256": "0f0546ed2b43589e87df7fb22e2804f2ec1d9346724bdbb4389c71f8d271492e",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/close/close_01.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-18063c50-78c6-4966-afc1-c1a05a507e6f.png",
+    "dimensoes": [
+      512,
+      512
+    ],
+    "sha256": "cd348f8bf4a1c43ee707934998609f22ad3e2b62e7577611eb745f90ae4ab8fa",
+    "transparente": false
+  },
+  {
+    "arquivo": "assets/animation/corvo_pousado.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-c003b519-aaaf-4d02-96b0-29398ac3a974.png",
+    "dimensoes": [
+      768,
+      128
+    ],
+    "sha256": "17f997d149195eea751796188272d5867d7e756d0ccea190cea076e11e34d25d",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/morcego.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-35720855-8945-47dc-8a2e-74fe432b5aac.png",
+    "dimensoes": [
+      384,
+      64
+    ],
+    "sha256": "72f3a9eacc5bc168b72057ddc2ca1ecc4a0a24faeab398698cd41b2b6f832bca",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/rato.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-868bc125-9f0c-4ee8-9f96-0dcdea6a78ba.png",
+    "dimensoes": [
+      384,
+      32
+    ],
+    "sha256": "f12adbf97bb91fa0ec56a36319a78e122d4d4398061de86593f4317f380795a9",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/peregrino_soltado.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-12856507-606d-47e8-a720-94318d323fa5.png",
+    "dimensoes": [
+      1536,
+      256
+    ],
+    "sha256": "3cde65b60c245f692b7899bc51086d0888648f3e17fc57f87fe77c7ac59a2803",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/animation/goya_projeteis.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-fad755d9-6c1c-4b68-bf30-ae62feb45bf2.png",
+    "dimensoes": [
+      768,
+      128
+    ],
+    "sha256": "0a43f7b2ae34036706399868d80e997426dd7e59ffc01c768216832af2fa158b",
+    "transparente": true
+  },
+  {
+    "arquivo": "assets/close/close_dois_rostos.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-49434ee5-864b-492b-b813-4349cd4e1099.png",
+    "dimensoes": [
+      512,
+      512
+    ],
+    "sha256": "5f77ca93f50845d0d75c30b467d93342c605bbc01f9dd057cdb65abc5b68b89a",
+    "transparente": false
+  },
+  {
+    "arquivo": "assets/close/close_revelacao_maos.png",
+    "origem": "C:\\Users\\rodri\\.codex\\generated_images\\01a1c2b7-1e87-7920-861b-1b30db4b9d01\\exec-93aa3af7-7725-4c06-8b22-84600f7b3ac4.png",
+    "dimensoes": [
+      512,
+      512
+    ],
+    "sha256": "66501b3c9a7309fe0b110485c867dccd34ac8c0801991db55224eddc446740eb",
+    "transparente": false
+  }
+]

@@ -3486,5 +3486,1675 @@
         112
       ]
     }
+  },
+  "glutao": {
+    "idle": {
+      "sheet": "glutao_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "glutao_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "glutao_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "glutao_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "glutao_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "glutao_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "glutao_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "glutao_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "glutao_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "glutao_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "glutao_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "glutao_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "disciplinantes": {
+    "idle": {
+      "sheet": "disciplinantes_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "disciplinantes_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "disciplinantes_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "disciplinantes_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "disciplinantes_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "disciplinantes_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "disciplinantes_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "disciplinantes_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "disciplinantes_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "disciplinantes_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "disciplinantes_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "disciplinantes_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "meio_enterrado": {
+    "idle": {
+      "sheet": "meio_enterrado_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "meio_enterrado_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "meio_enterrado_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "meio_enterrado_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "meio_enterrado_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "meio_enterrado_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "meio_enterrado_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "meio_enterrado_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "meio_enterrado_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "meio_enterrado_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "meio_enterrado_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "meio_enterrado_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "parcas": {
+    "idle": {
+      "sheet": "parcas_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "parcas_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "parcas_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "parcas_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "parcas_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "parcas_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "parcas_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "parcas_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "parcas_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "parcas_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "parcas_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "parcas_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "sono": {
+    "idle": {
+      "sheet": "sono_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "sono_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "sono_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "sono_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "sono_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "sono_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "sono_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "sono_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "sono_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "sono_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "sono_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "sono_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "romaria": {
+    "idle": {
+      "sheet": "romaria_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "romaria_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "romaria_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "romaria_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "romaria_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "romaria_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "romaria_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "romaria_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "romaria_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "romaria_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "romaria_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "romaria_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "espantalho": {
+    "idle": {
+      "sheet": "espantalho_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "espantalho_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "espantalho_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "espantalho_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "espantalho_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "espantalho_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "espantalho_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "espantalho_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "espantalho_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "espantalho_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "espantalho_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "espantalho_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "dois_velhos": {
+    "idle": {
+      "sheet": "dois_velhos_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "dois_velhos_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "dois_velhos_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "dois_velhos_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "dois_velhos_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "dois_velhos_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "dois_velhos_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "dois_velhos_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "dois_velhos_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "dois_velhos_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "dois_velhos_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "dois_velhos_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "viuva": {
+    "idle": {
+      "sheet": "viuva_movimento",
+      "start": 0,
+      "count": 6,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "walk": {
+      "sheet": "viuva_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "attack": {
+      "sheet": "viuva_movimento",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "recover": {
+      "sheet": "viuva_movimento",
+      "start": 18,
+      "count": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "emergir": {
+      "sheet": "viuva_movimento",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt": {
+      "sheet": "viuva_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "hurt_heavy": {
+      "sheet": "viuva_reacoes",
+      "start": 0,
+      "count": 3,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "stagger": {
+      "sheet": "viuva_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "launched": {
+      "sheet": "viuva_reacoes",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "death": {
+      "sheet": "viuva_reacoes",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "executed": {
+      "sheet": "viuva_reacoes",
+      "start": 18,
+      "count": 6,
+      "fps": 12,
+      "loop": false,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "impaled": {
+      "sheet": "viuva_reacoes",
+      "start": 3,
+      "count": 3,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        6,
+        4
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
+  },
+  "peregrino_soltado": {
+    "idle": {
+      "sheet": "peregrino_soltado",
+      "start": 0,
+      "count": 6,
+      "fps": 12,
+      "loop": true,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    },
+    "run": {
+      "sheet": "peregrino_soltado",
+      "start": 0,
+      "count": 6,
+      "fps": 12,
+      "loop": true,
+      "grid": [
+        6,
+        1
+      ],
+      "anchor": [
+        128,
+        250
+      ]
+    }
   }
 }

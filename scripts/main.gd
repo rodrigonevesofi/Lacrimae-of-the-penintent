@@ -5,12 +5,16 @@ const Util = preload("res://scripts/util.gd")
 const GuiltText = preload("res://scripts/guilt_text.gd")
 const PlayerScript = preload("res://scripts/player.gd")
 const EnemyScript = preload("res://scripts/enemy.gd")
+const CriaturaGoyaScript = preload("res://scripts/criatura_goya.gd")
 const FinalBossScript = preload("res://scripts/penitent_boss.gd")
 const ValeScene = preload("res://scripts/vale_scene.gd")
 const AmbientLife = preload("res://scripts/ambient_life.gd")
 const ValeFinale = preload("res://scripts/vale_finale.gd")
 const HudScript = preload("res://scripts/hud.gd")
 const WorldArt = preload("res://scripts/world_art.gd")
+const PinturaViva = preload("res://scripts/pintura_viva.gd")
+const Bichos = preload("res://scripts/bichos.gd")
+const PrimeiroPlano = preload("res://scripts/primeiro_plano.gd")
 const Story = preload("res://scripts/story_text.gd")
 
 const GROUND_Y := 600.0
@@ -153,6 +157,10 @@ func _ready() -> void:
 
 
 func _build_art() -> void:
+	# A pintura de cada sala, animada por shader, fica atrás de tudo.
+	pintura = PinturaViva.new()
+	pintura.game = self
+	add_child(pintura)
 	art = WorldArt.new()
 	art.game = self
 	add_child(art)
@@ -171,6 +179,13 @@ func _build_art() -> void:
 	life_front.game = self
 	life_front.front = true
 	add_child(life_front)
+	# Bichos que reagem ao Penitente e silhuetas de primeiro plano, mais rápidas que a câmera.
+	bichos = Bichos.new()
+	bichos.game = self
+	add_child(bichos)
+	primeiro_plano = PrimeiroPlano.new()
+	primeiro_plano.game = self
+	add_child(primeiro_plano)
 
 
 ## Acessibilidade: remove clarões, oscilação de luz e tremor de câmera das cenas de culpa e do Guardião.
@@ -240,6 +255,11 @@ func dev_input(event: InputEvent) -> bool:
 		return true
 	if event.keycode == KEY_F3 and state == "play":
 		toggle_dev()
+		return true
+	# F6 desliga ou religa a pintura viva (para computadores em que o shader pesar).
+	if event.keycode == KEY_F6 and state == "play" and pintura != null:
+		pintura.desligada = not pintura.desligada
+		toast("Pintura viva: " + ("desligada" if pintura.desligada else "ligada"))
 		return true
 	if not dev_mode or state != "play":
 		return false
@@ -447,6 +467,9 @@ var vale_back = null
 var vale_front = null
 var life_back = null
 var life_front = null
+var pintura = null
+var bichos = null
+var primeiro_plano = null
 var vale_stage_seen := 0
 var vale_told := {}
 var beatriz_held := false
@@ -563,11 +586,14 @@ func enable_duo(on: bool) -> void:
 		partner.position = player.global_position + Vector2(-70.0, 0.0)
 		add_child(partner)
 		partner.apply_character()
+		partner.maldicao_parcas=player.maldicao_parceira
+		partner.apply_penitence(partner.penitence)
 		partner.has_weapon = player.has_weapon
 		partner.hp = clampf(player.partner_hp, 1.0, partner.max_hp)
 		partner.lance_weight = player.lance_weight
 		partner.died.connect(_on_player_died)
 	elif not on and partner != null and is_instance_valid(partner):
+		player.maldicao_parceira=partner.maldicao_parcas
 		partner.remove_from_group("players")
 		partner.queue_free()
 		partner = null
@@ -658,6 +684,8 @@ func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	player.has_weapon = false
 	penitence_menu = false
 	player.penitence = "none"
+	player.maldicao_parcas = 0
+	player.maldicao_parceira = 0
 	player.max_hp = 100.0
 	player.upgrades = 0
 	player.culpa = 0.0
@@ -716,6 +744,7 @@ func _spawn_enemies() -> void:
 		e.killed.connect(_on_enemy_killed)
 		add_child(e)
 	exploration.spawn_enemies()
+	_criar_criaturas_aprovadas()
 	if not boss_defeated:
 		var b = EnemyScript.new()
 		b.setup(2, Vector2(4380.0, GROUND_Y), 0.0, player)
@@ -920,6 +949,9 @@ func shake_cam(amount: float) -> void:
 	# Uma pancada forte faz balançar o que está pendurado no cenário.
 	if amount >= 5.0 and life_back != null and player != null:
 		life_back.impulse(player.global_position.x, amount / 6.0)
+		if pintura != null: pintura.impulse(player.global_position.x, amount / 6.0)
+		if bichos != null: bichos.susto(player.global_position, 420.0)
+		if primeiro_plano != null: primeiro_plano.impulse(amount / 6.0)
 		vale_impulse(player.global_position.x, amount / 8.0)
 	if player:
 		player.shake = maxf(player.shake, amount)
@@ -951,6 +983,8 @@ func _save() -> void:
 		"relic": relic_taken,
 		"boss": boss_defeated,
 		"final": final_defeated,
+		"maldicao_parcas": player.maldicao_parcas,
+		"maldicao_parceira": partner.maldicao_parcas if partner!=null and is_instance_valid(partner) else player.maldicao_parceira,
 		"upgrades": player.upgrades,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -1012,6 +1046,8 @@ func _load() -> void:
 	boss_defeated = _clean_bool(parsed.get("boss", false), false)
 	final_defeated = _clean_bool(parsed.get("final", false), false)
 	player.upgrades = _clean_int(parsed.get("upgrades", 0), 0, 0, 50)
+	player.maldicao_parcas=_clean_float(parsed.get("maldicao_parcas",0),0,0,36)
+	player.maldicao_parceira=_clean_float(parsed.get("maldicao_parceira",0),0,0,36)
 	var saved_penitence = parsed.get("penitence", "none")
 	player.apply_penitence(saved_penitence if saved_penitence is String and saved_penitence in ["none", "nails", "chains"] else "none")
 	stain_active = _clean_bool(parsed.get("stain_active", false), false)
@@ -1027,6 +1063,8 @@ func _load() -> void:
 	if partner != null and is_instance_valid(partner):
 		player.character = "penitente"
 		player.apply_character()
+		partner.maldicao_parcas=player.maldicao_parceira
+		partner.apply_penitence(partner.penitence)
 		partner.hp = clampf(player.partner_hp, 1.0, partner.max_hp)
 		partner.lance_weight = player.lance_weight
 	player.add_culpa(0)
@@ -1238,12 +1276,15 @@ func complete_prayer() -> void:
 	respawn_index = pending_altar
 	exploration.room = exploration.room_at(altars[respawn_index])
 	pending_altar = -1
+	player.remover_maldicao()
+	player.maldicao_parceira=0
 	player.hp = player.max_hp
 	player.flasks = player.max_flasks
 	# A oração restaura os dois penitentes e alivia o peso da lança.
 	player.partner_hp = player.max_hp
 	player.lance_weight = 0.0
 	if partner != null and is_instance_valid(partner):
+		partner.remover_maldicao()
 		partner.hp = partner.max_hp
 		partner.flasks = partner.max_flasks
 		partner.lance_weight = 0.0
@@ -1341,3 +1382,13 @@ func story_chain_released(id: String) -> void:
 
 func knows_alba() -> bool:
 	return exploration.collected.has("register") and doll_found
+
+## As criaturas aprovadas usam o mesmo ciclo de descanso e reaparecimento do restante do ato.
+func _criar_criaturas_aprovadas() -> void:
+	for dados in preload("res://scripts/act_one_layout.gd").criaturas_aprovadas():
+		var criatura=CriaturaGoyaScript.new()
+		criatura.setup(dados[1],Vector2(dados[2],dados[3]),dados[4],player)
+		criatura.room_id=dados[0]
+		if dados.size()>5:criatura.group=int(dados[5])
+		criatura.killed.connect(_on_enemy_killed)
+		add_child(criatura)

@@ -83,7 +83,7 @@ func run() -> void:
 	await close_dialogue()
 	await close_dialogue()
 	expect(game.message_text == "" and game.player.controllable, "closing prologue enables exploration")
-	expect(get_nodes_in_group("enemies").size() == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + 2, "all room encounters and the two bosses exist (the Guardian and the other Penitent)")
+	expect(get_nodes_in_group("enemies").size() == game.enemy_defs.size() + game.exploration.Layout.enemies().size() + game.exploration.Layout.criaturas_aprovadas().size() + 2, "encontros originais, criaturas aprovadas e dois chefes existem uma vez")
 	game.player.invuln = 0
 	await screenshot("03-crypt")
 	var initial_x: float = game.player.position.x

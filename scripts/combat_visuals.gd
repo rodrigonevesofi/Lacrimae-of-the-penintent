@@ -96,11 +96,13 @@ func _process(delta:float) -> void:
  if idle!=was_idle:
   was_idle=idle
   if breathing!=null and breathing.is_valid():breathing.kill()
-  subject.animator.scale=Vector2.ONE*subject.animator.unit_scale
+  var escala:Vector2=Vector2.ONE*subject.animator.unit_scale
+  if subject.has_method("escala_visual"):escala=subject.escala_visual()
+  subject.animator.scale=escala
   if idle:
    breathing=create_tween().set_loops()
-   breathing.tween_property(subject.animator,"scale",Vector2(0.995,1.012)*subject.animator.unit_scale,1.5)
-   breathing.tween_property(subject.animator,"scale",Vector2.ONE*subject.animator.unit_scale,1.5)
+   breathing.tween_property(subject.animator,"scale",Vector2(0.995,1.012)*escala,1.5)
+   breathing.tween_property(subject.animator,"scale",escala,1.5)
  if not is_player and subject.dead and not subject.executing:
   if death_material==null:death_material=material_for()
   subject.animator.material=death_material
