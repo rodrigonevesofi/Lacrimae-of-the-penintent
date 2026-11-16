@@ -1,0 +1,1260 @@
+{
+  "base_publicada": "14082a3a60b0b167f7bc8ac846a2e13ddc52766b",
+  "pacotes": [
+    {
+      "arquivo": "Lacrimae-of-the-penintent-v40-jogo.zip",
+      "sha256": "b862d1a088ad3a4249d55a39f8eb68f4557bbb9b5ac04900445d5d0571e1f45e"
+    },
+    {
+      "arquivo": "Lacrimae-of-the-penintent-v40-documentacao-midia.zip",
+      "sha256": "2c642af9652e49279ee6249f6c83f3fd1727d8a5970bd27deb3155a08b17dffe"
+    }
+  ],
+  "midias_removidas": [],
+  "midias_substituidas": [
+    {
+      "arquivo": "assets/animation/beatriz_combate.png",
+      "sha256_anterior": "456d3f433bf9e18fcd407462de90a6de98592508b8c7db1a7171ca6d21d7fe45",
+      "sha256_atual": "6c4f0243c3188d20ce985ef6a63ec1fa931c847aab83749553b09916e4acb549"
+    },
+    {
+      "arquivo": "assets/animation/beatriz_movimento.png",
+      "sha256_anterior": "dbc62f16b49e7f0c602e37ea310d2d473ca9e4856550b2a0a424139aab3f5e83",
+      "sha256_atual": "d680111103c4b526feaea512b42f491e95ea729323b65f16d29330e3abd80058"
+    },
+    {
+      "arquivo": "assets/animation/beatriz_peso.png",
+      "sha256_anterior": "2fbf748e5a1c0d3dfd604df1a3aebea0033058856a20639cdc810b5a42599e98",
+      "sha256_atual": "85dfec24adf50f34d7b94dab87835b08d1b5d90d5dec6225d1db3d35d2759d8d"
+    },
+    {
+      "arquivo": "assets/animation/beatriz_reacoes.png",
+      "sha256_anterior": "3ad76d3e5eb95d55651c54b874e9997fb9bcace5fed5f83e775d18f0a59ee102",
+      "sha256_atual": "4af4aa9481371c245f25db2b7bc75f3a0b66cca34d5a7dbdd30335cd59bfe317"
+    },
+    {
+      "arquivo": "assets/animation/beatriz_rituais.png",
+      "sha256_anterior": "14266cfaaaf3fb6b7c6f34156976a070d92924d4d11ec3527681f2e2daa3b179",
+      "sha256_atual": "bf563530962f40be8bec76a08e9d3fe79053d97f22ba0146df9869eddba221ee"
+    },
+    {
+      "arquivo": "assets/animation/execute_devotee.png",
+      "sha256_anterior": "4202817cb8ae1134768fb531816d01539330743b2fb89fc70017877d84da6eca",
+      "sha256_atual": "2b4cc432df897e4a541463cba8956cc2e98cdecc76cb1d0491d180a3a13f8123"
+    },
+    {
+      "arquivo": "assets/animation/execute_mourner.png",
+      "sha256_anterior": "5749dd77749cfa0027cde8ffd7926b3267d3bddff86f455090f43a163b211efd",
+      "sha256_atual": "258d7e3c467e292a912e61563e52bad941bc792359cff9eca6041cd05f4e5681"
+    },
+    {
+      "arquivo": "assets/animation/hero_aerial.png",
+      "sha256_anterior": "308776d33cdf2ba232ebc594f9e7a8d10249c337872db2250369747f304880fc",
+      "sha256_atual": "4f692c9019558cfa2989362df236f94a7ade463a035c9ae101edfebd2621ffd2"
+    },
+    {
+      "arquivo": "assets/animation/hero_combat.png",
+      "sha256_anterior": "e4a8ed50a6005979a38e50fe0a38449408edc64a7b96a36d35300bb3214176f7",
+      "sha256_atual": "8b521659f4bd273b58de728b41198c3a47abfed4a60f5dfcda608e584ddace35"
+    },
+    {
+      "arquivo": "assets/animation/hero_combate.png",
+      "sha256_anterior": "7e3c95b43da58155fe9d775b43722b72596c8a70cb05532a4e31cce602f7062d",
+      "sha256_atual": "5ba95ab95250b463f5d0afc738f28363c24956e616bcf31d08f635d378d5337f"
+    },
+    {
+      "arquivo": "assets/animation/hero_executa_asmodeia.png",
+      "sha256_anterior": "0d46936817bc1aa2c07ba513f6f93b361c13c9dabf1883f9407e219310654dbd",
+      "sha256_atual": "f1fdcde517537a093d9821fa77466af129ba255eb7dd0cfea3e05254c596957c"
+    },
+    {
+      "arquivo": "assets/animation/hero_executa_bruxa.png",
+      "sha256_anterior": "e9d512dadf6de9616efdb6aeb9174fbde41a61277c71136e763f157b33a556da",
+      "sha256_atual": "65215960b9a1c802e54cfcee0eb138892f602b36111b1d1968c7c1a25d85a7a6"
+    },
+    {
+      "arquivo": "assets/animation/hero_executa_carregador.png",
+      "sha256_anterior": "9db326745ccfc406acacd4fd95e2802baed8dcfa7497f8d9f0f01df39b2e3c4f",
+      "sha256_atual": "eb309a4046e311908341d487150e58bd1ecb79505c85d91622a4c5a3a2c16f77"
+    },
+    {
+      "arquivo": "assets/animation/hero_executa_devorador.png",
+      "sha256_anterior": "a0b5dd8059429089610f155afc4e092f8c5161a869ad88ce45acd97296e829e5",
+      "sha256_atual": "d30f4cac9cc36f8e66b83aaf3afd19022066c9a23924869eb7f87c6fd67870c0"
+    },
+    {
+      "arquivo": "assets/animation/hero_executa_duelista.png",
+      "sha256_anterior": "8d1cf757c0cca9d3309dfb0264477f065fae6bf46a7ca3699aa1b32c48ad63be",
+      "sha256_atual": "d87c203623ea9a7fd06bbac629833ff317fa0d9e3040347d291639942e8afeb8"
+    },
+    {
+      "arquivo": "assets/animation/hero_executa_flagelante.png",
+      "sha256_anterior": "041d314f069dcd2fee0ce634ec98eedc3581f658b5f0a9f51ad5193e66a6c464",
+      "sha256_atual": "b450062943dd5a5e7d244247d4ce4f790a18b77521edd75f6c20f01664de9fdb"
+    },
+    {
+      "arquivo": "assets/animation/hero_grief.png",
+      "sha256_anterior": "eefb4cd46bcf3547346c9719858c65ceafa5e44e79d8e7c5db25ce24c96bef05",
+      "sha256_atual": "46c6a3a77b5e2904798c57670b8bd7e7df8ad7e160e3d1219e0629dc49b1c02c"
+    },
+    {
+      "arquivo": "assets/animation/hero_memorial.png",
+      "sha256_anterior": "0dd45b25065c164e7ea4fa41160393aee75df7fa3ce69ab28110a9b9ebb6e09b",
+      "sha256_atual": "76992624345eaef044e9fa77fad7ff3dfd9e80251a5a5fc520c4058104649bcd"
+    },
+    {
+      "arquivo": "assets/animation/hero_motion.png",
+      "sha256_anterior": "bbdf7e791ca9f5853f98d29d967421931c5d065327e92bc22a37802ca3b45217",
+      "sha256_atual": "cce16cb90af5b82b536d5eb0b4041c12645faa067d820a1452c1f2d961e9cd9d"
+    },
+    {
+      "arquivo": "assets/animation/hero_reactions.png",
+      "sha256_anterior": "ab59aa8586cc4e60035b50386dd76a55bc142e1a6ee1ef366687ed5994821633",
+      "sha256_atual": "1d193e9db929c84e40b9b6fecf149fe757bfcce53ad3200ad67618c06f9fcbd6"
+    },
+    {
+      "arquivo": "assets/audio/altar.wav",
+      "sha256_anterior": "8618ce6722d59aeca357286360aeb57a3e6d88fdd7059f06a3cb8a539d3be967",
+      "sha256_atual": "b1e7381ca3fa0d9a554a7cc9fb0b3af9421609177eded087ad8c9b01a580c80e"
+    },
+    {
+      "arquivo": "assets/audio/amb_archive.wav",
+      "sha256_anterior": "7307cad5c3caed37feb0a26347092d5f7bee1cc4a365cc259c68ac0bfdbb9ae5",
+      "sha256_atual": "e20906d797e7631b32b580c91ee96c085900ef22e3c30bafaa8268b3afaf27f2"
+    },
+    {
+      "arquivo": "assets/audio/amb_belfry.wav",
+      "sha256_anterior": "2e408cf2b2253fc0984a6d6d8289c12d7aa3c0bc0e9fc86f332da18386f80311",
+      "sha256_atual": "06da898c2168bac88c524e0d631ee2ebd411e9d0f5a9c6fe6f33eabbd68047c6"
+    },
+    {
+      "arquivo": "assets/audio/amb_cistern.wav",
+      "sha256_anterior": "5f5a22945681407d89bdfa55ab1afa3276592d03b3bce51184c84a3a168df115",
+      "sha256_atual": "88e83775143d0c7b4613a1c88500e88ad1d3fae280efd268df34d7ca0a3d6503"
+    },
+    {
+      "arquivo": "assets/audio/amb_city.wav",
+      "sha256_anterior": "83b9fb3adff513362e2a5b897896e3e379abc55e0307bdce6751846b1a857678",
+      "sha256_atual": "ce90006a632b18219b41c5c6c41b6ef398fc3a4792d9fcb6f72d5f44ff18f850"
+    },
+    {
+      "arquivo": "assets/audio/amb_cloister.wav",
+      "sha256_anterior": "8104405c71b932a5fd17a92395d76728a972ff39a955d947c4f1e43358a959dd",
+      "sha256_atual": "14b10e720226cb0e0a95d9d04b98c1cbcddfea364b60e038df2ac2e8af3d393f"
+    },
+    {
+      "arquivo": "assets/audio/amb_court.wav",
+      "sha256_anterior": "92a1b02d4de9948fd975aa0c255de22899ad01322f793729809a9932e710fe3c",
+      "sha256_atual": "c2a44fa9e3e9e1578ecd4e39af7cabd339593abd8983dd7b4a7287671f67fbc1"
+    },
+    {
+      "arquivo": "assets/audio/amb_nave.wav",
+      "sha256_anterior": "a9eb673e5fe131e6e302e3e09644575abbb647bb2ffec2bead7f9f2399192a5b",
+      "sha256_atual": "080756fc65b4451de219e7fbb38dd8aafe5c221c53f3e0665c3c97806fb0a9b3"
+    },
+    {
+      "arquivo": "assets/audio/amb_ossuary.wav",
+      "sha256_anterior": "908ecd69245eb594abe746df91135ecb87cc45e436d49c67af963550deda5097",
+      "sha256_atual": "371d8cfd8566e5374b92f2a8710de8959b5ce976c4507c844d37fa12341c646a"
+    },
+    {
+      "arquivo": "assets/audio/amb_refuge.wav",
+      "sha256_anterior": "b1eaf51b81e996bdae199026b608b4bb9ef581cbe53fa09c8adbe8d9c27c9b0e",
+      "sha256_atual": "ef03b03fa93ddf295a5e3a8ae0ddb544cc5c1ec53a1e2a07f8516e174db2922f"
+    },
+    {
+      "arquivo": "assets/audio/amb_terrace.wav",
+      "sha256_anterior": "a4589f8d9db11b689ddad40bf49b1994eefe07849fb499f7fb75d5bc8a1a9898",
+      "sha256_atual": "c78ff9992d8e9a10ea2718402eaf9b8a87217c31fc6cf172c3b51df6c805a08c"
+    },
+    {
+      "arquivo": "assets/audio/amb_vale.wav",
+      "sha256_anterior": "73c86c48dc66f6ee19bbd1f3d984bb7b6a61efe7cd59250ae5a76bd3ac2b09c3",
+      "sha256_atual": "6d4c4915caec8545c9e00a198a13523eac9c4b2e10cd741203bceaec85133f2c"
+    },
+    {
+      "arquivo": "assets/audio/aparo.wav",
+      "sha256_anterior": "4fab540745b4ad064fcaaa4ced19df30c8282193169b16e7bff4b1e991baf455",
+      "sha256_atual": "5742ad6dc56ebd58503fda2d8f61bdac164aa9a59b61cb6d70571473b250206f"
+    },
+    {
+      "arquivo": "assets/audio/arremate.wav",
+      "sha256_anterior": "c14b0f3582d4359a6581b169708417a0ba55b3d8096097db007f823e5df46015",
+      "sha256_atual": "6ae1cf1bddd2e8cb87e6a8338674870b2af7c1156c60fad3cebb7172ec162034"
+    },
+    {
+      "arquivo": "assets/audio/asmodeia_aviso.wav",
+      "sha256_anterior": "76b457908038c0e7b4d78e51777078a6ef93911c35f458535e534f828cdbfc24",
+      "sha256_atual": "a6a60161b11342db6fa25ce47230aa8b118ed791379a52b1a935e0295a83359b"
+    },
+    {
+      "arquivo": "assets/audio/asmodeia_estilhaco.wav",
+      "sha256_anterior": "a11228e1a654e4e62067a67b6993d115c7fb9ce56f71bbe3629203ec6148d1f6",
+      "sha256_atual": "e58af99b40d93df5c63ca9a7bad77e21da9daa9d63415cb4d98b8c35694575dd"
+    },
+    {
+      "arquivo": "assets/audio/aterrissagem.wav",
+      "sha256_anterior": "88be8ca2342cb64b52b39d82d82aca1f1361b4b9ef9e7529d3fb950d722eef0d",
+      "sha256_atual": "979b31aad256c932e718a2c3db1c7577aef5f08b738cf858792b6d2e55a7ed57"
+    },
+    {
+      "arquivo": "assets/audio/bell.wav",
+      "sha256_anterior": "b0966afbcf6c195389d9fcffd015873c5caf5c46b1432aaa6932d25248c7f47a",
+      "sha256_atual": "7946a9db47d7e0ae1333bf298fa2f774021b053790a9835b3b7676fa2b274e3c"
+    },
+    {
+      "arquivo": "assets/audio/bruxa_leque.wav",
+      "sha256_anterior": "4a38b6575522d207a99a82d46095fd0a6c5b31fbc69776027a7ed11391ccccf6",
+      "sha256_atual": "47ac33d16f3e3bb4b6bd876077246375e94e09489a25115152d34475a37341c9"
+    },
+    {
+      "arquivo": "assets/audio/bruxa_sussurro.wav",
+      "sha256_anterior": "f027f3107e33500c377a1cd58b046320841d8f983c41ccc13d72e59d7d505443",
+      "sha256_atual": "97d438dafd79c706859fdf9c2eeccf80b03d7da6a846fbe4bef7353d67527786"
+    },
+    {
+      "arquivo": "assets/audio/caido.wav",
+      "sha256_anterior": "e84c063318f264afb7935136003f2d2323695b530f24fa66de5582635c594241",
+      "sha256_atual": "66a3a30c7d757c60f6baea9370b23cdadc889ed25ef461deb4a30fb88fdf33d2"
+    },
+    {
+      "arquivo": "assets/audio/chefe_morte.wav",
+      "sha256_anterior": "ed231dac753abdbb1303b4d24d556cd51e8d96d8dd34923e92984a6421563062",
+      "sha256_atual": "dd4ec8484210bcbc155e0dddd4487dcb209cf8e3476bce84e35c6f0ebee039f3"
+    },
+    {
+      "arquivo": "assets/audio/chefe_pancada.wav",
+      "sha256_anterior": "f40541a060df2f11f57732eeebbc46715990318ee2f31f9f1cddc97d9228432a",
+      "sha256_atual": "7cafc15a2503131fb7744fc929b3ace710dda4641f26d3269f84da51e623dc2f"
+    },
+    {
+      "arquivo": "assets/audio/coleta.wav",
+      "sha256_anterior": "750baeeb237630f7d869a09a648803231dd3670fcbb739f0b0b953ff43cf6bad",
+      "sha256_atual": "7b1a78d04d67bbc5ebb3add4cdad173bf69e2a702c881faa97e8a5e52defc1a5"
+    },
+    {
+      "arquivo": "assets/audio/corrente_cede.wav",
+      "sha256_anterior": "93f5bc3f0752544b19e05483f5a90591a15a3f6c38fa93080b89d103e8b0d139",
+      "sha256_atual": "c9e74b1e92db98b985885e8346b3d23eb7faa343a21a104be0b45d9392abdfc0"
+    },
+    {
+      "arquivo": "assets/audio/death.wav",
+      "sha256_anterior": "d545ba83718fddc4a23a2a56170c9ca1d5ca2f0d47f30ffab3f9395f842979ef",
+      "sha256_atual": "3ad7211b3ec782506c9cc8cd5a447d36e3796c3b60fafa8e8ce50aeb012c77a0"
+    },
+    {
+      "arquivo": "assets/audio/devorador_bote.wav",
+      "sha256_anterior": "c62b2ac24e92a0b6a3500567f7a4c1cb2f7c399bf1f0e97e014869c30c1d17ef",
+      "sha256_atual": "d52446fb635a39cac1f46af147b0515cb947b1041d1e1d883853c72c83ee0cf2"
+    },
+    {
+      "arquivo": "assets/audio/devorador_rugido.wav",
+      "sha256_anterior": "ce29a7ce2d03cfb972aab503fcbc7f5da5184d31e239070c70c272aaccc4c701",
+      "sha256_atual": "9510a2e6da59c07fdd490427441466a235b3e97b2170f6db5b75911903dbac42"
+    },
+    {
+      "arquivo": "assets/audio/dor.wav",
+      "sha256_anterior": "082a2a79984fd0c3a2203fa01cf59bf09aec446b4d46339bc36accad5c70a3b2",
+      "sha256_atual": "496538976204cd71973d8f225057f63978c1e2bdc3cdc947bb8a4567aeea0fac"
+    },
+    {
+      "arquivo": "assets/audio/dor_01.wav",
+      "sha256_anterior": "89a26ce5c8a3e0e9907a69f9772e8d9ecf314f5df10f48cc0fa8ea42ebe50729",
+      "sha256_atual": "786898fc482e8dc2f84f81caf5156d5aad8a075d1b7a4d52b66c964f37fc10b9"
+    },
+    {
+      "arquivo": "assets/audio/dor_02.wav",
+      "sha256_anterior": "be5906e2a81eadb3a2f646e9c94df895330a984e377d2d6cad2b9608d000953b",
+      "sha256_atual": "f6b6baa9c48d437769b913aeee3dceaabdea57849ea0e57a4619e0bc5e71209a"
+    },
+    {
+      "arquivo": "assets/audio/dor_03.wav",
+      "sha256_anterior": "9ee2084c58789c29f0f1d0a8a6cd72677e0422a4ab5a055cfed4b9ca363a8418",
+      "sha256_atual": "1bc5bfaf4b143edb73c4ddec310a5c498faeb82efb278ea3ba9e00daa05ecd20"
+    },
+    {
+      "arquivo": "assets/audio/duelista_cacete.wav",
+      "sha256_anterior": "f00e57ae26f5adf835e4b57e3409d5af04ca4c2cce673df7cb9e2491ad35fcae",
+      "sha256_atual": "4c87f828565573f30c50fcc55b027109129a266aa002df708fb4b85b30ee8965"
+    },
+    {
+      "arquivo": "assets/audio/empalar.wav",
+      "sha256_anterior": "6ff5710cf34f59b4db58e07cb4fcc474de668e63d10abf1710cbe2271bbfd895",
+      "sha256_atual": "7b36f71505e90cb86502e88d9ceac65a5dc546b8ff206b21d31ff6b8deed01ab"
+    },
+    {
+      "arquivo": "assets/audio/espinho.wav",
+      "sha256_anterior": "c5842b6fd4ce5f02ba469db85d9464ff70db17718271b884526f2bae66d2e993",
+      "sha256_atual": "e3e964b1a73fedcde66649e2a0cc3b7b001e34c842cd02d750f8975fed0074f5"
+    },
+    {
+      "arquivo": "assets/audio/execucao.wav",
+      "sha256_anterior": "51c5878a03ad9e94d60620abde2012675c4bac8276fb99476804709ae2974da9",
+      "sha256_atual": "4ccef20dbea6524069fe5ee07d8e666da2d4f8c46a3ce71199f47334d04c99d6"
+    },
+    {
+      "arquivo": "assets/audio/flagelante_chicote.wav",
+      "sha256_anterior": "a42cf9f7c282e73370673b36207ea526bba74babede6e6f7f6e2f98b72923662",
+      "sha256_atual": "5a42769c8eb815f9c10a566ed274a773d45c148ffea664e0b5fceae895cd65a2"
+    },
+    {
+      "arquivo": "assets/audio/flagelante_investida.wav",
+      "sha256_anterior": "85569482c0137b411173a432d3bcee1880add00dbe97839620e900756bb74311",
+      "sha256_atual": "d21b3b66e14a93f05a0fb3b38014ae6bab1c97db22d7a180085552b9231b63e2"
+    },
+    {
+      "arquivo": "assets/audio/golpe_carregado_carga.wav",
+      "sha256_anterior": "19bbe36b4911fe4362558f9ba0db6f9a4755720eb210c3f714312a8ab946803d",
+      "sha256_atual": "4ee1e8c2e5a2de91db14080729b80c8313f138cb66cfad7b9b265c9e8f58cea8"
+    },
+    {
+      "arquivo": "assets/audio/golpe_carregado_solta.wav",
+      "sha256_anterior": "294401c53d245a6277c3185fc42cfc34769dfce8bac82a7e6ef6a7bf68a5e7ab",
+      "sha256_atual": "368318df967cd077791a9d1896bc1ed585fec5e3adc0a06e71751d5c1a28621d"
+    },
+    {
+      "arquivo": "assets/audio/heal.wav",
+      "sha256_anterior": "c9c6d2632016d7b1b6b0702a3e57a133b25742641701a68b744facaf9366de20",
+      "sha256_atual": "885f155452fb2ce0dfc07263df667b2254d8593c9f6a171ebbf4745b04236c5d"
+    },
+    {
+      "arquivo": "assets/audio/hit_carne_01.wav",
+      "sha256_anterior": "c7bc575c59eb141c21e479bace55734de1234c4c153100647eea68a168bf92b9",
+      "sha256_atual": "532bc48f903b9aa6a405832d865743e90fb1f6db4be51bc90d7f1b7d5c24777d"
+    },
+    {
+      "arquivo": "assets/audio/hit_carne_02.wav",
+      "sha256_anterior": "f9fbc2e14b93dcaef86dbd061487c271388a95993ce11ecffd8f1a5575e407aa",
+      "sha256_atual": "f9867756c00c0741ded230b23caf895ea46c888efa47aa439fcbae81b05132ea"
+    },
+    {
+      "arquivo": "assets/audio/hit_carne_03.wav",
+      "sha256_anterior": "c36517aa904447c456ac6045d44bccdb7fb041a72ddd16149cb9a1368ca7de18",
+      "sha256_atual": "26d6c461fd2979dc9b68692d4fafa09ad3b9aeedfc3df40c500104004e610829"
+    },
+    {
+      "arquivo": "assets/audio/hit_metal_01.wav",
+      "sha256_anterior": "880e3b1654515a9df0c7f0e20c52273e4a59ab99b3dfc73353d2cc3ead94ab14",
+      "sha256_atual": "5d3e367e9955663887099bddac7f02b3bcedb14c271b12be6ef16c022b7d077f"
+    },
+    {
+      "arquivo": "assets/audio/hit_metal_02.wav",
+      "sha256_anterior": "319afe454e8b01086486e66514114d66ca201dbbee27f844fbcfa41905bfc3c6",
+      "sha256_atual": "b3e000bbb16a82226111ee7750a34fee025083e431d273877907f9adc927208e"
+    },
+    {
+      "arquivo": "assets/audio/hit_metal_03.wav",
+      "sha256_anterior": "a3c6de4016f22d97f990c840f21b10d787e22ac6b0887a0769f995edcd0e86f4",
+      "sha256_atual": "98f097b6bcaef508d25f28ed519cafb89bd0eaed3f858de62aa061db1d7d8141"
+    },
+    {
+      "arquivo": "assets/audio/hurt.wav",
+      "sha256_anterior": "14e61ecf4824a8c161696d560df6aa6a16616425ee814f95ca08a500fc0d6be6",
+      "sha256_atual": "eda1514814ed388456d23e17c3e9084540da619d97d07f1c7dfb8d69a94c7098"
+    },
+    {
+      "arquivo": "assets/audio/jump_01.wav",
+      "sha256_anterior": "ded7c0acc5845a8ad6545e1e8820eeac9730ac5af9926866159cbf19b491af78",
+      "sha256_atual": "6cbabb764aa5edba8732e8dbe758020a426ec765d6a9feaf54c225131b4e7ead"
+    },
+    {
+      "arquivo": "assets/audio/jump_02.wav",
+      "sha256_anterior": "566f6179dfcf112fb4eb5bc47cc653b5e6763abedbf5ea003fe97a74c9fbd442",
+      "sha256_atual": "25661bb5c199bec774d1381b04b8c539f834ff8106854a15a37c7972cc7fea2c"
+    },
+    {
+      "arquivo": "assets/audio/jump_03.wav",
+      "sha256_anterior": "8ef787a1e4b90a5c95fa30909ea488b3d14c8290b7558c701c1a162caa845b65",
+      "sha256_atual": "e390efd6828eeb42c62cd77b9e473694b616f87753ccf233f53844bfc3cb3879"
+    },
+    {
+      "arquivo": "assets/audio/knock.wav",
+      "sha256_anterior": "2006853f6722da7dd6ab06367a66f1bb00f7b53b242d72882d018bc8948ccbfc",
+      "sha256_atual": "2176286d951caedfe8339862a52f5e9e9b55842b7655cd116c851124c7e3ec11"
+    },
+    {
+      "arquivo": "assets/audio/lanca_estocada_01.wav",
+      "sha256_anterior": "ff690215b2ef49d08277000b1b6a14878d20c1f7ee386f33e29f534043799fcd",
+      "sha256_atual": "d602c4242a80f445790a67d42516d1fba9947d24dd1739cdfc72e7d6119b38e0"
+    },
+    {
+      "arquivo": "assets/audio/lanca_estocada_02.wav",
+      "sha256_anterior": "1276ee654f16a2c970c43704004abbf834c5f014ec7b472027be82db45ead6c5",
+      "sha256_atual": "2e77464a3fd16408856139e3f80419aef58dfccbc1138a7a0773f9d7f41d48ec"
+    },
+    {
+      "arquivo": "assets/audio/lanca_estocada_03.wav",
+      "sha256_anterior": "d150f157c616ebc923e1ff507192e10af523e757b255dfa9cea5e074bf71a951",
+      "sha256_atual": "74c8b5625319159f201ab6ffa19c8a1c2611bbcd11d1c2631817fb6be661b019"
+    },
+    {
+      "arquivo": "assets/audio/levanta.wav",
+      "sha256_anterior": "a60f81eae2a03d710e0b0ecd9c2fde83196ca707dca4aebedb7726097c5c62f4",
+      "sha256_atual": "6439e44100e8278b0f4eb51c6e377c1664c5a7711d3192ae5fbbb6c7e105614a"
+    },
+    {
+      "arquivo": "assets/audio/mergulho_impacto.wav",
+      "sha256_anterior": "dd8eae246c790207b0a1ed2a2b84d426ff657dc69ff33370f34ff32dc1525502",
+      "sha256_atual": "0ac0a6d949fc3b1e032d7475db938c1f7a1182015bed1f099e95f0077b0d011a"
+    },
+    {
+      "arquivo": "assets/audio/morte.wav",
+      "sha256_anterior": "b07d5af5defb2ed51ecd9b8180f003105306b3cbd11d2c687718e37a3965a4db",
+      "sha256_atual": "48307ce0b02e92c6a9f5aa8155212fddcb0e0928abe2e51b5b4ddf87072e1de2"
+    },
+    {
+      "arquivo": "assets/audio/morte_grande.wav",
+      "sha256_anterior": "87d56e4b4f782d5b08a914a4242634515a9bcaa4fc9fdd60338cf7564e12b379",
+      "sha256_atual": "a7f5ad4c1a6ce5dbeeb564011d2a1f84c71a5372640c8a0709dca30a4818719b"
+    },
+    {
+      "arquivo": "assets/audio/murmurio_01.wav",
+      "sha256_anterior": "2321db3124dd88216cc5e341794a4d18ccec8c906e061829f9f7c18700503894",
+      "sha256_atual": "f7ab2efbc5129d7c5ba790aabe608c35250534e1b46b6d559e32c82003497686"
+    },
+    {
+      "arquivo": "assets/audio/murmurio_02.wav",
+      "sha256_anterior": "018775ff35380008acfc5e20e551a2f78b2779e97f7b0117ee443cfb43749f09",
+      "sha256_atual": "32ea2a5688a1ab3efffdbfa027025b507cebc853e4a2db5d88f9203973ceea9c"
+    },
+    {
+      "arquivo": "assets/audio/murmurio_03.wav",
+      "sha256_anterior": "73ed5d40ece23dbbfad580cfc242038a22ed5f195cf5a577de7662beb6224498",
+      "sha256_atual": "f23a8510f2933f305f7125e8eca218ec85d9e6b36aeb6917e8620654c43be683"
+    },
+    {
+      "arquivo": "assets/audio/porta.wav",
+      "sha256_anterior": "3f948305c96a919b8ecb13c3c7e33b38f5876067bf594075d4c1a5d2a1611fc3",
+      "sha256_atual": "5f214b3a0649f33875b1d7adc771fc06e5326db89321ed1cce6cef6dadf98451"
+    },
+    {
+      "arquivo": "assets/audio/portao_abre.wav",
+      "sha256_anterior": "27b9bb178f253217e670a9ee2f34f8d8329650157fb2a8e104ee96eba934da68",
+      "sha256_atual": "4195a276508715443eacc7fd7370c65b96e7cf91c454baee090dc3ec997494ca"
+    },
+    {
+      "arquivo": "assets/audio/portao_fecha.wav",
+      "sha256_anterior": "265ab67d22c9c155c469d52723c838af017d93459b16a70f693d584cfd5cba0c",
+      "sha256_atual": "c8aac2aedfb91ad4d9e66d30f090a67a1168816bc3ca1c27759310040c8f7f60"
+    },
+    {
+      "arquivo": "assets/audio/projetil.wav",
+      "sha256_anterior": "aca55f8cad2d9fef9b9c1725b99a01a1371811012258f926e72cd86d3749c54b",
+      "sha256_atual": "f06be329ce96ce39c5b4b1795fe77c4eaf87437ebb48f691e646c608af396646"
+    },
+    {
+      "arquivo": "assets/audio/projetil_impacto.wav",
+      "sha256_anterior": "2c50a43bcf4e48a8ca75b10280ac46fdaa648165d80e4fa99dff2f9b32c32d00",
+      "sha256_atual": "b8d44c11541fcea3ecd2501b410d2fd87911312b5ee4016eee9af39672548054"
+    },
+    {
+      "arquivo": "assets/audio/roll.wav",
+      "sha256_anterior": "e96b83c34332a54ec720d36b94572a55ed5e2ff4ff690992f859f1333f44de70",
+      "sha256_atual": "6a8c0f70c0ffd1d079d5e6ef3c2b4d367ec4ca3d5004924c1011765a26471c1f"
+    },
+    {
+      "arquivo": "assets/audio/sangue_compartilhado.wav",
+      "sha256_anterior": "d1304fc590512307d294eec2294b026418fd52e59438daa9be78cec2b6395ae7",
+      "sha256_atual": "eee59de691987609d23e73c50d584f5452bc6c4188d4c231039deed5867896a3"
+    },
+    {
+      "arquivo": "assets/audio/sino_surdo.wav",
+      "sha256_anterior": "6f941001f1f77526eb1737b322ca685c8657b8d999e7eb86fa621a46831846f1",
+      "sha256_atual": "19eceb80de59a7b420fe74de5f5b2180339b9b55142d90d069ba22adce2faf58"
+    },
+    {
+      "arquivo": "assets/audio/step_agua_01.wav",
+      "sha256_anterior": "84960e36ec961053054cecee7a50e5e46a9d7482f00793cf843d1341da56261d",
+      "sha256_atual": "166776ba1c4a88924a080e23263619cc5efe58ab9b2f2f093c513a96011c2d60"
+    },
+    {
+      "arquivo": "assets/audio/step_agua_02.wav",
+      "sha256_anterior": "204f842d2ad9db6c9bc0e6b6fc5dee5ee56e4954b99198cc18546aa33632c61f",
+      "sha256_atual": "3286d3d868bb6eab6ee9853e405dc04d708e5fa9a3b401d2202ea27361d7be1b"
+    },
+    {
+      "arquivo": "assets/audio/step_agua_03.wav",
+      "sha256_anterior": "48142d9d3cd42368cd990ce9a04806866969bc37adc8b370a567337dcdeebf1e",
+      "sha256_atual": "ef3371455b64c41214321c1a51a91d6244daa09fc96c22101b78e88b0380ea1c"
+    },
+    {
+      "arquivo": "assets/audio/step_madeira_01.wav",
+      "sha256_anterior": "0fc54eeabfcc350f101def33e7663438052c916a69c1f3cfd5cc3172832b4a7f",
+      "sha256_atual": "3ad5f33d156a1c2edd2c304ac2c5ee27d152d8a16c337d9ff53c4b3bd405114b"
+    },
+    {
+      "arquivo": "assets/audio/step_madeira_02.wav",
+      "sha256_anterior": "4ccbabc16b3a0dca92290e4d7fc20bb0e3290484a43e3576116c39cd783096cd",
+      "sha256_atual": "8c9eebccfb524d7bbb882ed86491f971f4adba93a2d0b210a3ed2b30d539d317"
+    },
+    {
+      "arquivo": "assets/audio/step_madeira_03.wav",
+      "sha256_anterior": "63081a0cf8dab52d5988daf070bde2f947c79e7c25185bf2ab192d4ab1830525",
+      "sha256_atual": "04af7a479695d1c7769728e94db5908aa41a37bcf3a0ad92887ed506b71023b3"
+    },
+    {
+      "arquivo": "assets/audio/step_osso_01.wav",
+      "sha256_anterior": "2569c95c40393f497bd4e3a1df4e0bff3126fb69d18ffd17b1c3cf5fca27ceef",
+      "sha256_atual": "e929b34440c01e043591f37115e00108705925fe0ae108346953431bfe2ce30f"
+    },
+    {
+      "arquivo": "assets/audio/step_osso_02.wav",
+      "sha256_anterior": "9759e6b5df4f11c1492be47169b17cedf77e69111e08538c90e9834927ac3a1d",
+      "sha256_atual": "df3e9ddbb28402e6b2122248b1c9abf076d3c31f04046bf0c2c6a7f6f498cae4"
+    },
+    {
+      "arquivo": "assets/audio/step_osso_03.wav",
+      "sha256_anterior": "188de59e104eb2506c20e50c02ce8fcb5d38559166c1646e07aa744965bcce04",
+      "sha256_atual": "0262770afaa848b48bef3c6967537773f9a5e80c8d995c742df6f37540ec2113"
+    },
+    {
+      "arquivo": "assets/audio/step_pedra_01.wav",
+      "sha256_anterior": "55ea8fc69a9bac5772e8ef234385e812d8f245d15a073e29cdf8955d056c5348",
+      "sha256_atual": "38a88e23f340c19ec8544dd562a455c4e54f1bac66f56080cdccfc06d0a9751e"
+    },
+    {
+      "arquivo": "assets/audio/step_pedra_02.wav",
+      "sha256_anterior": "7908729655050d4e9093e323f97f3e3368439351b679e34179aa3ed6108f5fe4",
+      "sha256_atual": "518d64d3b0f47f33b22fc5623a2320831b8c5fbd213a46aaeb4e50af872aa03e"
+    },
+    {
+      "arquivo": "assets/audio/step_pedra_03.wav",
+      "sha256_anterior": "fc74e65afa00652379d1ad6b3e8d95218b34f9fd90165edab393d71ff2cedee7",
+      "sha256_atual": "787f9643176f941984b714b03940e5efa665e3b234e6fabeb828fa629a7f15b0"
+    },
+    {
+      "arquivo": "assets/audio/step_pedra_04.wav",
+      "sha256_anterior": "9788fd9c162a8d8d7f74312b835a5a40a776d1720687e28a71cef8f17832882a",
+      "sha256_atual": "74044e821d8cc8ee46158ae7e1b6b678b40d358d9cc5f9eeb3b5175ce7c1e72e"
+    },
+    {
+      "arquivo": "assets/audio/swing.wav",
+      "sha256_anterior": "04981c04e5b5c5da228b370ed421da43ad998602e1053f55b714925dae8c98fd",
+      "sha256_atual": "3e851a244bf2d00a56e2c9d3f35322f75b7092b58af85fcf1cef693ee3f2dff9"
+    },
+    {
+      "arquivo": "assets/audio/swing_01.wav",
+      "sha256_anterior": "9e3376da174c4ed4f0642239dd194139efcbf068b196bf2c8ca9754864848883",
+      "sha256_atual": "680fceed61a1287252b880a5c92085d791de0f944229fe5764706dd7d188e07c"
+    },
+    {
+      "arquivo": "assets/audio/swing_02.wav",
+      "sha256_anterior": "dba281f121393a0c882051442efc06db01f15d06936cbc6d63e656da04523051",
+      "sha256_atual": "a8ad68e0efaee02782d085f34b732ebb41e1feb1ad06c9e46fa82bd3aa631a0e"
+    },
+    {
+      "arquivo": "assets/audio/swing_03.wav",
+      "sha256_anterior": "33aaa3cd9bb5552c5dd552850b660edbee7ca5f2736454a3bc436be3ce3559ca",
+      "sha256_atual": "48db6ceac49ba05df5e072f3ff4081fd17ae4bc89e29b6b67ab7a5dbb5b8fbc2"
+    },
+    {
+      "arquivo": "assets/audio/ui_confirmar.wav",
+      "sha256_anterior": "85c5460cf434436fdd95c022826cb1354e952ae7654db6f291e78dc6001990fb",
+      "sha256_atual": "fa4c8a6c521186d1ea10d488cecbd218031e4c90b4469a99fb14823663d7136a"
+    },
+    {
+      "arquivo": "assets/audio/ui_mover.wav",
+      "sha256_anterior": "7770dcb275756052435b16e7ba9c264d81e83dffc69c0c455e17508f836100c8",
+      "sha256_atual": "e125df76bf944f801c43f5dce04a3122a482625cd317cb09f83a1ca932955a64"
+    }
+  ],
+  "midias_novas": [
+    {
+      "arquivo": "docs/imagens/v39-campanario-dupla.png",
+      "bytes": 1157116,
+      "sha256": "7271cbcb5a114ae4214fe8e4c61f1e7eb528416c630c6e005b77203ecf412707"
+    },
+    {
+      "arquivo": "docs/imagens/v39-claustro-pes-no-chao.png",
+      "bytes": 1523513,
+      "sha256": "cfaa5648fb6789087b1d009aa4b1fc89f6523f5812423cf31f25960958490513"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-10-aviso.png",
+      "bytes": 1463904,
+      "sha256": "1ab4af2173957760c0251a15e24d0427e7e6ab58408467c402b64f3fd07fb011"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-10-parada.png",
+      "bytes": 1460758,
+      "sha256": "1e7bbe4d0959e466c418086acded8b52fe5fef4a8856e2755cccf114f211c91a"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-11-aviso.png",
+      "bytes": 1582722,
+      "sha256": "902933afee51f92a2f71babc23337bead4b49188880f63f1d24e49be45111ee0"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-11-parada.png",
+      "bytes": 1580630,
+      "sha256": "d72bf506cdbb95fe4d937dcdadae2bc92de65a5b75052623689bb11888e904d8"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-12-aviso.png",
+      "bytes": 1603163,
+      "sha256": "b2227d5baece2505847955ad2afcfe585ec5ae8165138090989ed3071095e50b"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-12-parada.png",
+      "bytes": 1599775,
+      "sha256": "5c0b919c47effa5cb88cfbb227ed65a6dd00a90f5905fe6bae99dfd24867c0a1"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-13-aviso.png",
+      "bytes": 1546013,
+      "sha256": "f66f435347e9feceffd0cd1e632a7e4485f49ef1e5a358b1cc688f0857cd69fd"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-13-parada.png",
+      "bytes": 1545573,
+      "sha256": "a98dcb8ae5bffdff890736caadb068643a610e2cfe2b2dddd6d83af9feb22d78"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-14-aviso.png",
+      "bytes": 1445217,
+      "sha256": "514c357c8dfebe0234c6638937e31ebcc9d7fcd4ced49718d333b6480c56e8fc"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-14-parada.png",
+      "bytes": 1444491,
+      "sha256": "8d8ed11c2eb1069fcf45376a5fecac28ade66088ac546321de3b6dd17f142ef7"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-15-aviso.png",
+      "bytes": 1828222,
+      "sha256": "4998733df4100ce89ff31e1cdb375c33625cf37248c6a2a69e9159080f9df23b"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-15-parada.png",
+      "bytes": 1826623,
+      "sha256": "37b4436ce415371b3b77cd63a86d4e59f233c6917edef369f55f491c473507d0"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-16-aviso.png",
+      "bytes": 1721807,
+      "sha256": "b1862c42dc228e129c7d16d190bac7de35fc2537ebd3e9aab59b00f7b69eed4b"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-16-parada.png",
+      "bytes": 1721273,
+      "sha256": "21a02cb8c63fc74bd41f17f628de754b94a973286323b1a9c61a1ac20923500c"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-17-aviso.png",
+      "bytes": 1397311,
+      "sha256": "8f3783869a41dcebe5b5d7d8b515dd781d78e150fd70f996021bf4ffbb103ecc"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-17-parada.png",
+      "bytes": 1396974,
+      "sha256": "fa9693039b3680a26da382dffcefed48f7eb7c6f0a6ded6c1162d62c764474a1"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-18-aviso.png",
+      "bytes": 1506175,
+      "sha256": "4746a40968dc013e677b4eea68c7a43a36b25eb0d876b9ccd443ebfc02f99ea7"
+    },
+    {
+      "arquivo": "docs/v40-capturas/criatura-18-parada.png",
+      "bytes": 1496833,
+      "sha256": "b680c4c7ef0b09982998d00b8a4fd1aac48963f9e8b121777422a5ecb4b3543d"
+    },
+    {
+      "arquivo": "docs/v40-capturas/espada-contato.jpg",
+      "bytes": 416747,
+      "sha256": "4cfb4bd91f74fedc7d855f658151ed38b529ff74dc75cbfb291c7af56257f7df"
+    },
+    {
+      "arquivo": "docs/v40-capturas/pisos-contato.jpg",
+      "bytes": 322925,
+      "sha256": "c63481b627eeba9c9c222213659d241ad893a4eec94ec95d4fa3d4e79752728b"
+    },
+    {
+      "arquivo": "docs/v40-capturas/revelacao-07.png",
+      "bytes": 963643,
+      "sha256": "76db716666b6989226604170bdc8d29225014ca3114b17ae92c921f1d1cddd65"
+    },
+    {
+      "arquivo": "docs/v40-capturas/revelacao-14.png",
+      "bytes": 933824,
+      "sha256": "1e70e6ff75598a2c86600249c9a4baf266f36e0cdd49f927dfd0030f838cfaa7"
+    },
+    {
+      "arquivo": "docs/v40-capturas/revelacao-18.png",
+      "bytes": 977847,
+      "sha256": "2ee119131e0d1c475e62f28f76002b8e8d2d2c5dfddbd1c243f134441c968de8"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-00.png",
+      "bytes": 16018,
+      "sha256": "5205347c2c6ac4c1d53ea4ba51950bef26b653d1e7f5f26925fa1b660cd870c0"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-01.png",
+      "bytes": 15831,
+      "sha256": "3837468052ce76501e8cb67af9989aa4bacd97c479f958742bd96b98a5de19ca"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-02.png",
+      "bytes": 15227,
+      "sha256": "b657dda40fc4416453d53ef722444bfcb7ccd1d1228bf665644c6ba552a0f04e"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-03.png",
+      "bytes": 15995,
+      "sha256": "a02144652192641a25cc884f3417ee717f6c9dcbf52638762c396c5881d71cd1"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-04.png",
+      "bytes": 15649,
+      "sha256": "d151b20d6bf16eb66bdc220ba1463a3e8ca5c9b6f72ff782f1c2dc015a776794"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-05.png",
+      "bytes": 17684,
+      "sha256": "ed510db93476af4805500c0c0c9dd346f5388b45fa25380b14ac7ee748cac08f"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-06.png",
+      "bytes": 16695,
+      "sha256": "7f378b5affcb469718f4611ba8cfac07a31a02d5a46cd6b5fe2b75e734a3acb3"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-07.png",
+      "bytes": 15277,
+      "sha256": "14ae1a36ad2910f104cdfacde70b2d9c491d4e6d460e4973851c531bb9243db4"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-08.png",
+      "bytes": 14692,
+      "sha256": "306787902dd6efa53b518c89f7eba01ecf1c145db05b5032a459524749659c9e"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-09.png",
+      "bytes": 15256,
+      "sha256": "40c09691f88902619f9ff020bbc68f6bbc85b8b8868181562cb16ff6e4a2e8bd"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-10.png",
+      "bytes": 14990,
+      "sha256": "bb0099f691405e01e45eedfde10fdd69aec758034559305b7e4d2caf67c9e113"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-air_attack-d-11.png",
+      "bytes": 15270,
+      "sha256": "1664a4922da79c0e758f4ff0832253d5e6ba5ccc2352dacf61e978fc6cf20ba6"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_a-d-00.png",
+      "bytes": 14887,
+      "sha256": "888fc0c2275887c29c6cf7a594f755404077b9de0b2de3d38aff660926a56f4c"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_a-d-01.png",
+      "bytes": 16461,
+      "sha256": "7f08ac03e334adfcd86e094349fbadff0efddc95a9ff236eda96c388053f7496"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_a-d-02.png",
+      "bytes": 17283,
+      "sha256": "d3eb7f82648d5fdcf951e4607c5afd7a7c3727a69a99e459c252162073e09255"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_a-d-03.png",
+      "bytes": 17409,
+      "sha256": "3881e0210d22d2e6a54e43ce00bdb589b87fe26b01019a5c3d3ac37c1d559c0e"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_a-d-04.png",
+      "bytes": 18908,
+      "sha256": "c66d237cfa266c3c46656cd445ac49cddc4fdb77cce0dec1286f671eef73815a"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_a-d-05.png",
+      "bytes": 15137,
+      "sha256": "998b37d2594771f90cd3162fbce3f5be859a1c758f24174db2e5d06874385e5a"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_b-d-00.png",
+      "bytes": 15306,
+      "sha256": "f592d09b64a0d715cb8c43a4bbb7f4e9718b738d092ecd6a72fa54133ea59617"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_b-d-01.png",
+      "bytes": 16048,
+      "sha256": "ea06d488e24e756c2764cce57b11df3eb7eca6b340b68d9a98c8617500902098"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_b-d-02.png",
+      "bytes": 16621,
+      "sha256": "b35b0514c8fcfa3b4f8526b90fd698f99190f2ee85fc88d8f6ab8933748902b1"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_b-d-03.png",
+      "bytes": 19740,
+      "sha256": "bf571fc2602d0042946f314147620b523d470c0d19563fd45fc1f6363e95585f"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_b-d-04.png",
+      "bytes": 17652,
+      "sha256": "64292728d2119b64561496d40e62b0695ad3f7dbe4ca6cd5047d586f32740637"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-attack_b-d-05.png",
+      "bytes": 14889,
+      "sha256": "0dd92ac74e623cf69444edcefb821e4bd032ea03ead882440faf0093a8a4225a"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-charged_heavy-d-00.png",
+      "bytes": 18063,
+      "sha256": "47998bb8e7ce696de3c42b8a6d81c755f93aef3b3d96b72e6a21ca7f71ad049e"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-charged_heavy-d-01.png",
+      "bytes": 18756,
+      "sha256": "f12449077f6c02e366cdfbd9a25f33ae0cca3b30e6fa157f8a7ec376624be660"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-charged_heavy-d-02.png",
+      "bytes": 20102,
+      "sha256": "46cab191109dbc29e980e5b0f6ccbb97ed14f31b12217f612608975a66a5ab2e"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-charged_heavy-d-03.png",
+      "bytes": 20941,
+      "sha256": "229fec51d02370c119654d0e42dbd7b9f00d8558cf03b1945673124de6b04526"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-charged_heavy-d-04.png",
+      "bytes": 20456,
+      "sha256": "32f7beee503d156b81b8206eaab1c53184497755d51aa16413571cff9201ab29"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-charged_heavy-d-05.png",
+      "bytes": 19175,
+      "sha256": "36935fff099398050d5c17afad331cbf86a2b1f396746b03808f74f339d93198"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-heal-d-00.png",
+      "bytes": 15123,
+      "sha256": "b8bd0f1f3f59dedc00bd11f29660004dedf6262f1c651941ee154163cad8cfc6"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-heal-d-01.png",
+      "bytes": 15815,
+      "sha256": "f6cec073e846b0d92e43acefdeb8ebd35fb7c54fc32e373abeb28fda13df7357"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-heal-d-02.png",
+      "bytes": 15607,
+      "sha256": "2c7989b09e011738fe4078a1b88ffa9e190670f6e046bdc76ff1c8b1b0f664d4"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-heal-d-03.png",
+      "bytes": 15805,
+      "sha256": "5854ba33bf5ff1f485484b6dab25e7d87316f7bf08bbb61e27ced3f9d9b985d6"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-heal-d-04.png",
+      "bytes": 15628,
+      "sha256": "073dbfb2a439e4bc224381f6db7618b36bd45190bae3f6d6e232790ab281c951"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-heal-d-05.png",
+      "bytes": 15138,
+      "sha256": "d7fe98df2b3dcdfa60483d340cd639a8233d23b4c8ddb83600788a990572f5be"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-hurt-d-00.png",
+      "bytes": 15186,
+      "sha256": "481ee6b6eed6f1c040f0ccccbf7634369ec6b9b5ceb93700332695972c864a98"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-hurt-d-01.png",
+      "bytes": 16355,
+      "sha256": "30ae1b655aa1110eed166e21bc05d64ef70d2310a9e4f901871ea4f63a8747d4"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-hurt-d-02.png",
+      "bytes": 15792,
+      "sha256": "e47823a4e3ca4cc71268d84a578cf4e5761edd7abd1b47b2cb39f60797964b81"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-hurt-d-03.png",
+      "bytes": 14396,
+      "sha256": "6451ae9a325f8532bf02f095a43851fa501231f715f34e46ce3bd27b569164bd"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-hurt-d-04.png",
+      "bytes": 14282,
+      "sha256": "de284ee4b59e033f0f12b384c432eaa092ea283ac418853112e6daef8a428966"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-hurt-d-05.png",
+      "bytes": 12800,
+      "sha256": "0b03c94ff62a35bb523ced67afd030c6eb4920e18cbd0e015f8cf0b101ffe59c"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-d-00.png",
+      "bytes": 14367,
+      "sha256": "b4a6ee36e1aa9bb6053f9bed34b30bc384e07996d57415c6f245fcac34e6e2e9"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-d-01.png",
+      "bytes": 14850,
+      "sha256": "1314187c153534c86cc52b53e3c95ceb6c3290234ebb6eb33a6f2bfebfddc59f"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-d-02.png",
+      "bytes": 15305,
+      "sha256": "df532a50dca5f454553f538928c90d2d1546168e10f712542b6b2d8850c20b28"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-d-03.png",
+      "bytes": 15427,
+      "sha256": "0122f36dd791c38b28170d33ed3ed6f1810398b6dab22e695844d97e90cfd49c"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-d-04.png",
+      "bytes": 14824,
+      "sha256": "7f91464f3dc62b541d8f64ce5c9d4e7f5ac312c1ef884e6f913018294a9b2726"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-d-05.png",
+      "bytes": 14149,
+      "sha256": "791573f8d940801e61a2953677ffa0049eaac73a6d2fa25806b535bf578b9738"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-e-00.png",
+      "bytes": 14353,
+      "sha256": "84dbc3c4609de7aadd2e914e3043e43500f9936c03aff60fa8398c4701b02091"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-e-01.png",
+      "bytes": 14892,
+      "sha256": "0466b2d0ff1b6b29509bba17bec780786244413d897a03e9cad2ab7682a02adf"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-e-02.png",
+      "bytes": 15310,
+      "sha256": "6524e2e385b6eddf210dc3a224d44ac50de71e4f04d7b7c35d3b882182f17f9e"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-e-03.png",
+      "bytes": 15504,
+      "sha256": "7d59fbe09f310564756ea3a82634066f20101e2a65199d4b95ffb358ed640d4c"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-e-04.png",
+      "bytes": 14738,
+      "sha256": "4b41c66bc4317bd95a24d9baf37322a34c461f121636075b803dd297ddd89fca"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-idle-e-05.png",
+      "bytes": 14228,
+      "sha256": "4ac8d099b7a92a38ac6def7e33b1192cc2c5d27cc4476b534f2e23fe80e5f762"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-jump-d-00.png",
+      "bytes": 14708,
+      "sha256": "60b408c9acaf6cd9515e71c0fbe88ab8970544c4fd9e4b4fd91068c378dfb902"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-jump-d-01.png",
+      "bytes": 14538,
+      "sha256": "529f7d4f59818843b8e24e066d4957022a5a9240b2699ace9a4431bdcd93cfee"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-jump-d-02.png",
+      "bytes": 14902,
+      "sha256": "28b8a6216e8d84dff6d8e3472d3c549dc7e48f43cafccbd79911cf96153a69a2"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-jump-d-03.png",
+      "bytes": 14584,
+      "sha256": "2446f6d38f7cc66d798e53e39ca0d71bf89dd28c87f81f6fd51b3aad39c864db"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-jump-d-04.png",
+      "bytes": 14269,
+      "sha256": "cb99f0434138befd451d7012615dcf3db4442d20c68d965f4ab3ed26bf555522"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-jump-d-05.png",
+      "bytes": 12675,
+      "sha256": "41cdcda7a32325775afcfbb73ac6896fd612c7e4a855879eaafff600a51cadca"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-parry-d-00.png",
+      "bytes": 16591,
+      "sha256": "b472263957e35dc19a608b9a005b7989ee87402f3f1a08ecf62bbc8d2128bafc"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-parry-d-01.png",
+      "bytes": 16918,
+      "sha256": "5373dc887f5f3f1f573fc4a51c0397fd831e7bfee0cec8688c24e07be720e1cf"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-parry-d-02.png",
+      "bytes": 17795,
+      "sha256": "cf641acdff30460a01379928d8acdc0d2848b1924b97d1fec29519199383416f"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-parry-d-03.png",
+      "bytes": 18668,
+      "sha256": "d7dbd1f146a206670f84cbee83d315f16e0d393f34b9bd30be4b4a1bb7019f14"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-parry-d-04.png",
+      "bytes": 18210,
+      "sha256": "a3bdee2533f29118a7cba27499518942c84414c73a103325bbaa8ebbdb5a6a41"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-parry-d-05.png",
+      "bytes": 17403,
+      "sha256": "277ccba4173bafb133979634071a4fd4a1c46501ee663a6c40205406a71f5aa7"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-roll-d-00.png",
+      "bytes": 14855,
+      "sha256": "489d98d1e3d5211babe4a98ce971f598fcb2022e07cbc7c9411033fec9cbbabb"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-roll-d-01.png",
+      "bytes": 15701,
+      "sha256": "75b28109fe2020628d756fff01701208e2de2dd5fac60bef12da17037944dd8f"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-roll-d-02.png",
+      "bytes": 15963,
+      "sha256": "9f5f881658ec74782e8f6d87a62a79999e40f3658fee7af6fd140fe539478933"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-roll-d-03.png",
+      "bytes": 14449,
+      "sha256": "52ab0aa759537b9527955ba2d39bf1b5bc7f3878099c80999c253864e7d986ad"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-roll-d-04.png",
+      "bytes": 16820,
+      "sha256": "99494a660a85e0948b5154dd66a8b9aafc6492cea5d16266f3b3af8106217f35"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-roll-d-05.png",
+      "bytes": 15882,
+      "sha256": "2d01860f25907678aae24cfcee2414e0c95ee7106e683c0d2a1d6e04a843a5d8"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-d-00.png",
+      "bytes": 17921,
+      "sha256": "7cc39f729dd9e7f387427128920c2ca0c68993a9b2895fa44ecd7160f13f3ada"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-d-01.png",
+      "bytes": 16852,
+      "sha256": "f1902feda4d8f85bc4389cf9049c9c47876ca22cd4a17c81ffccbbd6df6b068f"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-d-02.png",
+      "bytes": 16862,
+      "sha256": "b41ac6f5cb3d5ea3bcc3820b1d0bdb1fb795184b02103085ab973c1429ae7ac2"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-d-03.png",
+      "bytes": 17236,
+      "sha256": "51bcb8199c5398e66336f206a2f46e7317657bb67d7b0ccf84d6c1e6b70eef40"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-d-04.png",
+      "bytes": 16958,
+      "sha256": "6dc495cf820ae7eb8cda0e55ef08f49ebe29f8c7fd3f565edb65013b04902703"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-d-05.png",
+      "bytes": 16291,
+      "sha256": "7ec48a68b383e1c2b2c275b3481e266128e96e24b5e5a1c2075a9862623e72ff"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-e-00.png",
+      "bytes": 17662,
+      "sha256": "8c565132e8525ed95d0def58c804e4f596c9499c5e55ec6abde7118508a9bc5b"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-e-01.png",
+      "bytes": 16585,
+      "sha256": "db93fef585ababb1a2164ebfc3349fe65a1d88e79d21bee1c9842f9570791531"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-e-02.png",
+      "bytes": 16540,
+      "sha256": "151386d114865064c35860fcb5d1c89631e4db64b90e0e2ac1e4bc2c73b85cb5"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-e-03.png",
+      "bytes": 16962,
+      "sha256": "8250362fb27ccc84daa74e12f5d7f42873ae9c68190840d29b63ccd368ef65a8"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-e-04.png",
+      "bytes": 16762,
+      "sha256": "bf775520c8538e50c0fe2c62036c64ce230c7ba2046dd22ae2f74c735138c9ee"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/espada-run-e-05.png",
+      "bytes": 16257,
+      "sha256": "2c2d8e40ca1f000d7d8f1dd3ffdc3ee142d2b3594ebd8c763f515a5a52559305"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-archive.png",
+      "bytes": 109238,
+      "sha256": "da01c79ade7fc7efbd3cfafcecc78eaf41b5b247ceca8657e68648d1b762b540"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-belfry.png",
+      "bytes": 104312,
+      "sha256": "bfc24028f52b75877231a8acfaddd976ed2d0644640df2d7676791b84a922022"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-cistern.png",
+      "bytes": 144533,
+      "sha256": "a1880e5031f334c98380f0bf4dd57fd6365b88a3b3b55604e94e32b1920b4cbe"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-city.png",
+      "bytes": 124871,
+      "sha256": "52a3dac2c066c90d9ff9ac714cd096af5bbc377c113657272570dc22ac0b00de"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-cloister.png",
+      "bytes": 130627,
+      "sha256": "a3bd82bd6a9bf149b7f540611db426d8cbf1289f9cb822360cee58c1d898bcc8"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-court.png",
+      "bytes": 152422,
+      "sha256": "4da4982efa3bdf8dd60a0df07c075a0fb8e02285fd48f0bd0d7799e72d131f75"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-nave.png",
+      "bytes": 139382,
+      "sha256": "bc5ea28428b69d07efbc1c441c605934c78017b4c6f751bb6bed5230188bd464"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-ossuary.png",
+      "bytes": 109054,
+      "sha256": "438c08ba108c94a564fb23dff04b030cddb65eae67de775a0fe4d891ac745882"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-refuge.png",
+      "bytes": 105151,
+      "sha256": "e6a130d87893ac39160ff914270b179cf7c28961b0bf13e5173cc9864a8e9c82"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/pes-terrace.png",
+      "bytes": 140808,
+      "sha256": "5d040e876a27a7e9a97fb153478fc955df98add355713a439ea8323da2e533b3"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-archive.png",
+      "bytes": 1445286,
+      "sha256": "49c6c741ef46035ee70a07cbdb1427dc86161fdd7d7f8e652ae74b1f7454cf02"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-belfry.png",
+      "bytes": 1176154,
+      "sha256": "c7410093c746eb9ab77497ffc73552d9505dd43f68b7f4e218f7931f7b8d4cce"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-cistern.png",
+      "bytes": 1662251,
+      "sha256": "201b34d53fa5414df946ee7dc0df400b679da8049db0422ea25670c9a288faf1"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-city.png",
+      "bytes": 1104712,
+      "sha256": "0b6401cc12b4bbc1dda4822489d0b6399c42c237183e720b9115b9187d2962c3"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-cloister.png",
+      "bytes": 1500493,
+      "sha256": "323c2a07e1414be1bc7d2cd450606596416a8326bfb67b8edd9cf670b8019a22"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-court.png",
+      "bytes": 1871719,
+      "sha256": "6e92e8c9905a90073c84b0190dd64e6b616444ca08a7b3781b86f2bf117378b2"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-nave.png",
+      "bytes": 1485717,
+      "sha256": "f0ed61ee90047944c825fbef1757460a794c2fe555a2ae7720d39b89b12b31c4"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-ossuary.png",
+      "bytes": 1432756,
+      "sha256": "6f0b0df0c8480c9bbc1ce0df8702a80ea94610799747de14e931bf0f84e14a38"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-refuge.png",
+      "bytes": 1482550,
+      "sha256": "b73ca937e22c106ec864be777f112d86c47f4a24133486a7224a1e5ebf268c6a"
+    },
+    {
+      "arquivo": "docs/v40-capturas/polimento/sala-terrace.png",
+      "bytes": 1671689,
+      "sha256": "67e76f35c7ca7f58c910d597f68f14ac3eeb8af0d8cbb943b4827b6f240e2ba5"
+    },
+    {
+      "arquivo": "assets/audio/beatriz_chega.wav",
+      "bytes": 105884,
+      "sha256": "a4bd9d837395eeb92f557a30688402a61aa5fa340827e95666fd197ff355e780"
+    },
+    {
+      "arquivo": "assets/audio/capacete_sai.wav",
+      "bytes": 141164,
+      "sha256": "86cceaf5f4144ee70ad36f4a8b82e66db24d4c2ed7b2d4a8afb6cde046d426e3"
+    },
+    {
+      "arquivo": "assets/audio/chefe_ajoelha.wav",
+      "bytes": 123522,
+      "sha256": "7084917ec9e2ca55e7adcff68c21b095e71b48ef05b6a12b2ba5d6bb3ff15f9d"
+    },
+    {
+      "arquivo": "assets/audio/chefe_reza.wav",
+      "bytes": 176444,
+      "sha256": "f59e5732a75b1b6902dd49ceb689fc72d8e8a4a3cd877a90d5de18e6fb8b7a1d"
+    },
+    {
+      "arquivo": "assets/audio/chefe_transforma.wav",
+      "bytes": 105884,
+      "sha256": "8f76ca51d9ecc39444344827b14cae5edaedb140f7b8cac99f459397b7b35c9e"
+    },
+    {
+      "arquivo": "assets/audio/gota_culpa.wav",
+      "bytes": 44144,
+      "sha256": "ddf766a5b2f3312363a0da2909aaa878a822b83ac1af13144927c59788a24c30"
+    },
+    {
+      "arquivo": "assets/audio/gota_recolhe.wav",
+      "bytes": 44144,
+      "sha256": "03bbc345f221f10fba736a74f5da9ecb39de6b5954c3bbceaa9c7298ec3fa744"
+    },
+    {
+      "arquivo": "assets/audio/ost_revelacao.wav",
+      "bytes": 10584044,
+      "sha256": "2d3d98d021692efc9bba4c5db423b807afb17f493db2fd211366639f234bf10d"
+    },
+    {
+      "arquivo": "assets/audio/placa_cai.wav",
+      "bytes": 79424,
+      "sha256": "74db17217dfd45701575431841de4779558206b5204ece671c4edeb377cde5ff"
+    },
+    {
+      "arquivo": "assets/audio/reflexo_devolve.wav",
+      "bytes": 39734,
+      "sha256": "5113358d5768dbda9c0be31a7f74b78e318ea5586e106b6770fe7a3feee1a7da"
+    }
+  ],
+  "arte_v39_intacta": 26,
+  "observacao": "20 folhas antigas de Penitente/Beatriz e 89 WAVs foram substituídos pelo polimento e mixagem recebidos. Nenhum PNG ou WAV anterior foi removido."
+}

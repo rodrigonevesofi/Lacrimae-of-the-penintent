@@ -34,7 +34,7 @@ O Vale dos Flagelados não entra aqui: ele já tem cenário próprio, em camadas
 
 **Os bichos.** Corvos ficam pousados no chão e nas galerias, bicam o chão de vez em quando, **levantam voo quando o Penitente (ou Beatriz) chega perto** ou quando um golpe forte estala, e voltam a pousar longe depois de uns 15 a 25 segundos. Morcegos pendem sob as galerias e **saem em revoada quando se passa por baixo**. Ratos farejam o chão e **fogem correndo**. Nenhum tem colisão nem causa dano.
 
-**O primeiro plano.** Correntes, sinos, gaiolas e ganchos grandes e escuros ficam entre a câmera e a cena, só no alto da tela, e passam mais depressa que a sala. É o que dá a sensação de profundidade.
+**O primeiro plano.** Sinos, gaiolas e ganchos escuros pendem de cima da tela, entre a câmera e a cena, só no terço de cima, e passam mais depressa que a sala. É o que dá a sensação de profundidade.
 
 **O temporal.** No Terraço dos Sinos chove **do lado de fora dos arcos** (a chuva só aparece onde a pintura tem céu), com som de chuva, e relampeja a cada 9 a 19 segundos, com trovão.
 
@@ -52,7 +52,7 @@ python3 tools/gerar_mascaras_vivas.py --revisar  # grava também imagens de conf
 Uma sala nova entra em três lugares: `SALAS` no script das máscaras, `SALAS` em `pintura_viva.gd` e `SALAS` em `bichos.gd` e `primeiro_plano.gd`.
 
 ## O que foi verificado e o que falta
-- `tests/v39_cenario_smoke.gd`: 147 verificações (máscaras, pintura ligada em toda sala no mesmo lugar e tamanho de antes, sopro, relâmpago e reduzir pulsos, fuga de corvos, morcegos e ratos, primeiro plano, Vale de fora).
+- `tests/v39_cenario_smoke.gd`: 149 verificações (máscaras, pintura ligada em toda sala no mesmo lugar e tamanho de antes, sopro, relâmpago e reduzir pulsos, fuga de corvos, morcegos e ratos, primeiro plano, Vale de fora).
 - `tests/v39_cenario_review.gd` grava quadros de cada sala com o renderizador real; a diferença entre quadros confirma movimento em todas.
 - **Não verificado:** como o movimento é percebido por uma pessoa jogando, o desempenho (não foi medido; se pesar em algum computador, **F6** desliga a pintura viva e volta à pintura parada) e se o primeiro plano atrapalha em alguma luta. As máscaras foram geradas por cor: pode haver um detalhe vermelho que balança sem ser pano, ou um pano escuro que ficou parado.
 - O que **continua parado**: a arquitetura em si. Para a pintura ter camadas de verdade (céu, fundo distante e construção se movendo em velocidades diferentes, como no Vale), é preciso arte separada por camada; o pedido está em `prompts-codex-v39.md`.

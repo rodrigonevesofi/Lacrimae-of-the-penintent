@@ -1,0 +1,22 @@
+[
+  {
+    "teste": "sons_argon_check.py",
+    "exit": 0,
+    "resumo": "SONS_ARGON: 558 checks, 0 failures\n"
+  },
+  {
+    "teste": "folhas_limpas_check.py",
+    "exit": 0,
+    "resumo": "FOLHAS_LIMPAS: 29 checks, 0 failures\n"
+  },
+  {
+    "teste": "audio_assets_check.py",
+    "exit": 0,
+    "resumo": "{\n  \"files\": 55,\n  \"errors\": []\n}\n"
+  },
+  {
+    "teste": "memory_assets_check.py",
+    "exit": 0,
+    "resumo": "PASS opaque1920x1080 01_maos_na_roda\nPASS opaque1920x1080 02_mao_pequena\nPASS opaque1920x1080 02_mao_pequena_sem_sol\nPASS opaque1920x1080 03_figura_atras\nPASS opaque1920x1080 04_portao_fechado\nPASS fragment: dimensions, exact clear corners,18 distinct poses, padding; unused row alpha<=1/255\n"
+  }
+]

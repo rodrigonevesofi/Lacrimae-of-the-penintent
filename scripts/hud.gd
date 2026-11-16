@@ -338,7 +338,7 @@ func _draw_pause(vs: Vector2) -> void:
 	_text(Vector2(215, 182), "PENITENTE · JOGADOR 1", 17, GOLD)
 	_text(Vector2(665, 182), "BEATRIZ · JOGADORA 2", 17, GOLD)
 	var first := ["A / D  ·  mover     ESPAÇO / W  ·  saltar", "J / X  ·  atacar     S + J no ar  ·  mergulho", "I  ·  segurar e soltar golpe carregado", "K / SHIFT  ·  esquivar     L  ·  aparar", "F  ·  curar     Q  ·  penitência", "E  ·  examinar, orar ou executar", "R  ·  oferecer lágrimas no altar", "V  ·  penitências     1 / 2 / 3  ·  escolher", "S + ESPAÇO  ·  descer de uma galeria", "H  ·  doar sangue / segurar para levantar"]
-	var second := ["← / →  ·  mover     ↑ / Num8  ·  saltar", "↓ / Num2  ·  baixo     Num1  ·  atacar", "Num5  ·  segurar e soltar golpe carregado", "Num3  ·  esquivar     Num4  ·  aparar", "Num6  ·  curar", "ENTER numérico  ·  interagir", "Num0  ·  doar sangue / levantar parceiro", "F4  ·  alternar entre IA e jogadora 2", "O primeiro comando de J2 assume Beatriz", "Também aceita o segundo controle"]
+	var second := ["← / →  ·  mover     ↑ / Num8  ·  saltar", "↓ / Num2  ·  baixo     Num1 ou .  ·  atacar", "Num5 ou Ç  ·  segurar e soltar golpe carregado", "Num3 ou ,  ·  esquivar     Num4 ou ;  ·  aparar", "Num6 ou ~  ·  curar", "ENTER numérico ou ´  ·  interagir", "Num0 ou [  ·  doar sangue / levantar parceiro", "F4  ·  alternar entre IA e jogadora 2", "O primeiro comando de J2 assume Beatriz", "Também aceita o segundo controle"]
 	for i in range(first.size()):
 		_text(Vector2(215, 217 + i * 27), first[i], 16, Color("c5c0b3"))
 		_text(Vector2(665, 217 + i * 27), second[i], 16, Color("c5c0b3"))

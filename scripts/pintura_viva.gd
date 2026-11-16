@@ -30,6 +30,7 @@ const SALAS := {
 var game
 var sala := ""
 var pintura: Sprite2D
+var rodape: Sprite2D
 var material_vivo: ShaderMaterial
 var fundo := Rect2()
 var rajada := 0.0
@@ -52,6 +53,17 @@ func _ready() -> void:
 	pintura.centered = false
 	pintura.material = material_vivo
 	add_child(pintura)
+	# Rodapé: a última faixa da pintura, espelhada e escurecida, continua a pedra para baixo quando a
+	# pintura termina antes da borda da tela (acontece nas salas em que o piso pintado fica bem embaixo).
+	rodape = Sprite2D.new()
+	rodape.centered = false
+	rodape.region_enabled = true
+	rodape.modulate = Color(0.42, 0.40, 0.43)
+	var liso := CanvasItemMaterial.new()
+	liso.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	rodape.material = liso
+	rodape.visible = false
+	add_child(rodape)
 	_montar_relampago()
 	_montar_sons()
 
@@ -114,6 +126,7 @@ func _arte(id: String) -> String:
 func _montar(id: String) -> void:
 	sala = id
 	pintura.visible = false
+	rodape.visible = false
 	rajada = 0.0
 	if relampago.is_playing(): relampago.stop()
 	clarao = 0.0
@@ -141,6 +154,15 @@ func _montar(id: String) -> void:
 	pintura.texture = textura
 	pintura.position = ret.position
 	pintura.scale = ret.size / textura.get_size()
+	# Quanto falta de pintura abaixo do chão para cobrir o que a câmera mostra (220 unidades).
+	var falta: float = float(data.floor) + 226.0 - ret.end.y if id != "city" else 0.0
+	rodape.visible = falta > 2.0
+	if rodape.visible:
+		var faixa: float = minf(falta / pintura.scale.y, textura.get_size().y * 0.12)
+		rodape.texture = textura
+		rodape.region_rect = Rect2(0, textura.get_size().y - faixa, textura.get_size().x, faixa)
+		rodape.scale = Vector2(pintura.scale.x, -falta / faixa)
+		rodape.position = Vector2(ret.position.x, ret.end.y + falta)
 	var cfg: Dictionary = SALAS[id]
 	material_vivo.set_shader_parameter("marcas_a", load(marcas_a))
 	material_vivo.set_shader_parameter("marcas_b", load(marcas_b))

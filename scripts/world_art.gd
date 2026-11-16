@@ -15,6 +15,21 @@ var memorial_doll: Sprite2D
 var gate_memory: AtlasTexture
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
 var iria_animation
+## A cor da pedra de cada sala, medida na própria pintura: [piso, parede].
+## Galerias e alvenaria tomam a cor do piso; portas, altares e monumentos, a da parede.
+## Antes tudo usava o mesmo cinza da cidade e parecia colado por cima da pintura.
+const PEDRA := {
+	"city": [Color(1.11, 1.11, 1.09), Color(1.0, 0.90, 0.85)],
+	"ossuary": [Color(1.21, 1.27, 1.22), Color(1.0, 0.89, 0.77)],
+	"cistern": [Color(1.34, 1.45, 1.23), Color(0.98, 0.92, 0.76)],
+	"cloister": [Color(1.34, 1.12, 0.98), Color(1.0, 0.82, 0.74)],
+	"belfry": [Color(1.37, 1.14, 0.92), Color(1.0, 0.80, 0.73)],
+	"archive": [Color(0.87, 1.04, 1.21), Color(0.93, 0.91, 0.94)],
+	"refuge": [Color(1.03, 0.93, 0.99), Color(1.0, 0.86, 0.85)],
+	"nave": [Color(1.5, 1.42, 1.26), Color(1.0, 0.88, 0.80)],
+	"terrace": [Color(1.25, 1.35, 1.34), Color(0.97, 0.95, 0.93)],
+	"court": [Color(1.5, 1.30, 1.05), Color(1.0, 0.80, 0.68)],
+}
 const GROUND_Y := 600.0
 const INK := Color("17191e")
 const STONE := Color("34383d")
@@ -57,6 +72,11 @@ func _process(delta: float) -> void:
 ## A pintura desta sala está sendo desenhada, animada, por pintura_viva.gd?
 func _pintura_viva(id: String) -> bool:
 	return game.get("pintura") != null and game.pintura.ativa(id)
+
+## Cor da pedra da sala atual: 0 = piso, 1 = parede.
+func pedra(qual: int, id: String = "") -> Color:
+	if id == "": id = game.exploration.room if game.exploration != null else "city"
+	return PEDRA[id][qual] if PEDRA.has(id) else Color.WHITE
 
 func polygon(points: Array, color: Color) -> void:
 	draw_colored_polygon(PackedVector2Array(points), color)
@@ -178,7 +198,7 @@ func prop(index: int, foot: Vector2, width: float, tint: Color = Color.WHITE, fa
 	draw_set_transform(foot + Vector2(0,-1),0,Vector2(1,0.13))
 	draw_circle(Vector2.ZERO,width*0.4,Color(0,0,0,0.26))
 	draw_set_transform(foot,0,Vector2(float(facing),1))
-	draw_texture_rect_region(sacred_props,Rect2(-width/2,-width*floor_anchor/cell.y,width,width),source,tint)
+	draw_texture_rect_region(sacred_props,Rect2(-width/2,-width*floor_anchor/cell.y,width,width),source,tint*pedra(1))
 	draw_set_transform(Vector2.ZERO)
 
 func draw_passages(room: String) -> void:
@@ -200,7 +220,7 @@ func draw_doorway(face: Dictionary, locked: bool) -> void:
 	draw_set_transform(foot+Vector2(0,-1),0,Vector2(1,0.13))
 	draw_circle(Vector2.ZERO,width*0.43,Color(0,0,0,0.28))
 	draw_set_transform(foot,0,Vector2(float(face.facing),1))
-	draw_texture_rect_region(doorway_art,Rect2(-width/2,-width*floor_anchor/512,width,width),source)
+	draw_texture_rect_region(doorway_art,Rect2(-width/2,-width*floor_anchor/512,width,width),source,pedra(1,face.room)*Color(0.86,0.86,0.86))
 	draw_set_transform(Vector2.ZERO)
 	# Toda passagem precisa ser reconhecível: arco iluminado sobre a abertura, luz na
 	# soleira e símbolo acima dela. Dourado quando aberta, vermelho quando bloqueada.
@@ -241,23 +261,38 @@ func art_texture(art: String) -> Texture2D:
 	if not room_textures.has(art): room_textures[art] = load("res://assets/"+art+".png")
 	return room_textures[art]
 
-## Piso de galeria de pedra: sombra, mísulas nas duas pontas e borda superior desgastada, substituindo as antigas lajes pontiagudas.
+## Galeria de pedra presa à parede: sombra projetada na pintura, mísulas em degraus e a laje na cor
+## do piso da sala. Substitui as lajes cinzentas com triângulos chapados, que pareciam flutuar.
 func draw_ledge(ledge: Rect2) -> void:
-	for i in range(3):
-		draw_rect(Rect2(ledge.position.x+8,ledge.end.y+i*6,ledge.size.x-16,6),Color(0,0,0,0.17-i*0.05))
-	draw_texture_rect_region(panorama,ledge,Rect2(1120,615,140,22))
-	draw_rect(Rect2(ledge.position.x,ledge.end.y-5,ledge.size.x,5),Color(0,0,0,0.38))
-	draw_line(ledge.position,Vector2(ledge.end.x,ledge.position.y),Color("c3ae8e"),2)
+	var cor := pedra(0)
+	var base := ledge.end.y
+	# A sombra que a laje e as mísulas lançam na parede atrás.
+	draw_polygon(PackedVector2Array([Vector2(ledge.position.x + 4, base), Vector2(ledge.end.x - 4, base), Vector2(ledge.end.x - 22, base + 46), Vector2(ledge.position.x + 22, base + 46)]),
+		PackedColorArray([Color(0, 0, 0, 0.46), Color(0, 0, 0, 0.46), Color(0, 0, 0, 0), Color(0, 0, 0, 0)]))
+	# Mísulas: três fiadas de pedra, cada uma mais estreita, como se saíssem da parede.
+	var lados: Array = [ledge.position.x + 26.0, ledge.end.x - 26.0] if ledge.size.x >= 110.0 else [ledge.get_center().x]
+	for cx in lados:
+		for i in range(3):
+			var meia := 20.0 - i * 6.0
+			var fiada := Rect2(cx - meia, base + i * 10.0 - 1.0, meia * 2.0, 11.0)
+			draw_texture_rect_region(panorama, fiada, Rect2(1130 + i * 30, 617, meia * 2.0, 11), Color(cor.r * (0.62 - i * 0.11), cor.g * (0.60 - i * 0.11), cor.b * (0.60 - i * 0.10)))
+			draw_line(fiada.position, Vector2(fiada.end.x, fiada.position.y), Color(0, 0, 0, 0.45), 1)
+			draw_line(Vector2(fiada.position.x, fiada.position.y + 1), Vector2(fiada.position.x, fiada.end.y), Color(1, 0.9, 0.75, 0.10), 1)
+	draw_texture_rect_region(panorama,ledge,Rect2(1120,615,140,22),cor)
+	draw_rect(Rect2(ledge.position.x,ledge.end.y-5,ledge.size.x,5),Color(0,0,0,0.40))
+	draw_line(ledge.position,Vector2(ledge.end.x,ledge.position.y),Color(minf(cor.r * 0.80, 1.0), minf(cor.g * 0.72, 1.0), minf(cor.b * 0.62, 1.0)),2)
 	draw_line(Vector2(ledge.position.x,ledge.position.y+3),Vector2(ledge.end.x,ledge.position.y+3),Color(0,0,0,0.25),1)
-	for side in [-1,1]:
-		var x: float = ledge.position.x+14 if side == -1 else ledge.end.x-14
-		var d: float = -side
-		polygon([Vector2(x,ledge.end.y),Vector2(x+d*34,ledge.end.y),Vector2(x+d*4,ledge.end.y+36)],Color("2a2623"))
-		draw_line(Vector2(x+d*4,ledge.end.y+36),Vector2(x+d*34,ledge.end.y),Color("75695a"),2)
-		draw_line(Vector2(x,ledge.end.y),Vector2(x+d*4,ledge.end.y+36),Color("4d443c"),2)
+	# As pontas da laje, em sombra, para não terminar num corte reto.
+	draw_rect(Rect2(ledge.position.x, ledge.position.y, 3, ledge.size.y), Color(0, 0, 0, 0.30))
+	draw_rect(Rect2(ledge.end.x - 3, ledge.position.y, 3, ledge.size.y), Color(0, 0, 0, 0.30))
 
 ## Monte ou estrado de alvenaria que molda o plano de caminhada; fiadas alternadas como em uma construção real.
 func draw_block(r: Rect2) -> void:
+	var cor := pedra(0)
+	# Sombra de contato no chão, para a alvenaria pesar sobre o piso pintado.
+	draw_set_transform(Vector2(r.get_center().x, r.end.y - 1), 0, Vector2(1, 0.10))
+	draw_circle(Vector2.ZERO, r.size.x * 0.58, Color(0, 0, 0, 0.30))
+	draw_set_transform(Vector2.ZERO)
 	var row := 0
 	var y := r.position.y
 	while y < r.end.y:
@@ -268,13 +303,13 @@ func draw_block(r: Rect2) -> void:
 			var x1 := minf(x+140.0,r.end.x)
 			if x1 > x0:
 				var src := Rect2(1120+(x0-x)*140.0/140.0,615,x1-x0,22*h/22.0)
-				draw_texture_rect_region(panorama,Rect2(x0,y,x1-x0,h),src,Color(0.62,0.6,0.6))
+				draw_texture_rect_region(panorama,Rect2(x0,y,x1-x0,h),src,Color(0.66*cor.r,0.64*cor.g,0.64*cor.b))
 				draw_line(Vector2(x0,y+h),Vector2(x1,y+h),Color(0,0,0,0.42),1)
 				if x > r.position.x - 1.0: draw_line(Vector2(x0,y),Vector2(x0,y+h),Color(0,0,0,0.35),1)
 			x += 140.0
 		y += 22.0
 		row += 1
-	draw_line(r.position+Vector2(-2,0),Vector2(r.end.x+2,r.position.y),Color("c3ae8e"),3)
+	draw_line(r.position+Vector2(-2,0),Vector2(r.end.x+2,r.position.y),Color(minf(cor.r*0.80,1.0),minf(cor.g*0.72,1.0),minf(cor.b*0.62,1.0)),3)
 	draw_rect(Rect2(r.position.x-2,r.position.y,r.size.x+4,r.size.y),Color(0,0,0,0.5),false,2)
 	draw_rect(Rect2(r.position.x-6,r.position.y-6,r.size.x+12,6),Color(0,0,0,0.12))
 
@@ -314,7 +349,8 @@ func draw_branch() -> void:
 		if wall.position.x < b.position.x or wall.end.x > b.end.x: continue
 		if gate_closed != null:
 			# O portão desceu: barras de ferro e correntes da abóbada ao chão.
-			draw_texture_rect(gate_closed, Rect2(wall.position.x - 24.0, wall.position.y - 20.0, wall.size.x + 48.0, wall.size.y + 20.0), false)
+			# A parede de colisão desce 60 abaixo do chão; o portão pintado termina no piso, com o pé apoiado nele.
+			draw_texture_rect(gate_closed, Rect2(wall.position.x - 24.0, wall.position.y - 20.0, wall.size.x + 48.0, wall.size.y - 40.0), false)
 		else:
 			draw_block(wall)
 		draw_rect(Rect2(wall.position.x - 8.0, wall.position.y, wall.size.x + 16.0, wall.size.y), Color(0.55, 0.05, 0.08, 0.10))

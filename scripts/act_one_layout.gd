@@ -1,17 +1,20 @@
 extends RefCounted
 ## As coordenadas descrevem salas físicas; as passagens formam circuitos, não uma sequência de telas.
+## "ground" é a fração da altura da pintura em que fica o piso pintado. O chão de colisão é posto
+## exatamente ali: antes várias salas usavam 0,86 por padrão e os personagens andavam acima ou na beira
+## do piso desenhado (no Claustro e no Campanário, quase um palmo acima dos bancos e da escada).
 static func rooms() -> Dictionary:
 	return {
 		"city": {"name":"CIDADE DA PENITÊNCIA", "bounds":Rect2(0,-300,4800,1250), "floor":600.0, "art":"vespera_panorama", "map":Vector2(450,330)},
-		"ossuary": {"name":"OSSUÁRIO DOS SEM NOME", "bounds":Rect2(5200,-350,2600,1300), "floor":600.0, "art":"ossuary", "map":Vector2(210,430)},
-		"cistern": {"name":"CISTERNA DOS NOMES", "bounds":Rect2(8200,-350,2400,1300), "floor":600.0, "art":"cistern", "map":Vector2(450,540)},
-		"cloister": {"name":"CLAUSTRO DOS VOTOS", "bounds":Rect2(11000,-450,2800,1400), "floor":600.0, "art":"cloister", "map":Vector2(700,330)},
-		"belfry": {"name":"CAMPANÁRIO DA VIGÍLIA", "bounds":Rect2(14200,-650,2000,2050), "floor":1100.0, "art":"tower", "map":Vector2(920,190)},
-		"archive": {"name":"ARQUIVO DAS CONFISSÕES", "bounds":Rect2(16600,-350,2000,1300), "floor":600.0, "art":"gallery", "ground":0.756, "art_h":1250.0, "map":Vector2(700,110)},
-		"refuge": {"name":"ABRIGO DAS CINZAS", "bounds":Rect2(19000,-350,2000,1300), "floor":600.0, "art":"gates", "ground":0.80, "art_h":1250.0, "outdoor":true, "map":Vector2(210,650)},
-		"nave": {"name":"NAVE DO SILÊNCIO", "bounds":Rect2(21400,-450,2600,1400), "floor":600.0, "art":"nave_silencio", "ground":0.86, "art_h":880.0, "map":Vector2(20,230)},
-		"terrace": {"name":"TERRAÇO DOS SINOS", "bounds":Rect2(24400,-350,2600,1300), "floor":600.0, "art":"terraco_sinos", "ground":0.86, "art_h":880.0, "map":Vector2(1000,380)},
-		"court": {"name":"PÁTIO DOS PORTÕES SELADOS", "bounds":Rect2(27400,-350,2000,1300), "floor":600.0, "art":"patio_portoes", "ground":0.86, "art_h":800.0, "map":Vector2(1000,560)},
+		"ossuary": {"name":"OSSUÁRIO DOS SEM NOME", "bounds":Rect2(5200,-350,2600,1300), "floor":600.0, "art":"ossuary", "ground":0.88, "map":Vector2(210,430)},
+		"cistern": {"name":"CISTERNA DOS NOMES", "bounds":Rect2(8200,-350,2400,1300), "floor":600.0, "art":"cistern", "ground":0.845, "map":Vector2(450,540)},
+		"cloister": {"name":"CLAUSTRO DOS VOTOS", "bounds":Rect2(11000,-450,2800,1400), "floor":600.0, "art":"cloister", "ground":0.94, "map":Vector2(700,330)},
+		"belfry": {"name":"CAMPANÁRIO DA VIGÍLIA", "bounds":Rect2(14200,-650,2000,2050), "floor":1100.0, "art":"tower", "ground":0.957, "map":Vector2(920,190)},
+		"archive": {"name":"ARQUIVO DAS CONFISSÕES", "bounds":Rect2(16600,-350,2000,1300), "floor":600.0, "art":"gallery", "ground":0.735, "art_h":1250.0, "map":Vector2(700,110)},
+		"refuge": {"name":"ABRIGO DAS CINZAS", "bounds":Rect2(19000,-350,2000,1300), "floor":600.0, "art":"gates", "ground":0.795, "art_h":1250.0, "outdoor":true, "map":Vector2(210,650)},
+		"nave": {"name":"NAVE DO SILÊNCIO", "bounds":Rect2(21400,-450,2600,1400), "floor":600.0, "art":"nave_silencio", "ground":0.848, "art_h":880.0, "map":Vector2(20,230)},
+		"terrace": {"name":"TERRAÇO DOS SINOS", "bounds":Rect2(24400,-350,2600,1300), "floor":600.0, "art":"terraco_sinos", "ground":0.835, "art_h":880.0, "map":Vector2(1000,380)},
+		"court": {"name":"PÁTIO DOS PORTÕES SELADOS", "bounds":Rect2(27400,-350,2000,1300), "floor":600.0, "art":"patio_portoes", "ground":0.852, "art_h":800.0, "map":Vector2(1000,560)},
 		"vale": {"name":"VALE DOS FLAGELADOS", "bounds":Rect2(30200,-500,3400,1400), "floor":600.0, "art":"gates", "ground":0.80, "art_h":1250.0, "outdoor":true, "procedural":true, "map":Vector2(1180,560)},
 	}
 
@@ -48,6 +51,12 @@ static func platforms() -> Array[Rect2]:
 	result.append(Rect2(25820,200,640,28))
 	# Pátio dos Portões Selados: balaustrada sobre as portas seladas.
 	result.append(Rect2(28100,520,200,24)); result.append(Rect2(28300,440,200,24)); result.append(Rect2(28500,360,440,26))
+	# Soleiras: toda porta no alto tem piso em toda a sua largura (antes metade da porta ficava no ar).
+	result.append(Rect2(8695,360,145,24))    # cisterna: escadaria do abrigo
+	result.append(Rect2(15840,540,45,28))    # campanário: passadiço dos copistas
+	result.append(Rect2(20320,280,95,26))    # abrigo: passagem do coro
+	result.append(Rect2(14262,-100,88,28))   # campanário: porta do terraço
+	result.append(Rect2(17246,280,54,26))    # arquivo: porta da nave
 	return result
 
 # Alvenaria sólida que molda o chão: montes baixos e estrados escalonados, nunca mais altos que um salto.

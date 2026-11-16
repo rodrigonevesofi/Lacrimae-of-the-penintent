@@ -69,7 +69,11 @@ func select(clip: String, direction: int, progress: float = -1.0) -> void:
 	# Toda a arte usa uma âncora comum nos pés. As células da grade não são aparadas.
 	var cell := sprite_frames.get_frame_texture(clip, frame).get_size()
 	var anchor: Array = data.get("anchor", [128, 250])
-	position = Vector2((cell.x / 2 - float(anchor[0])) * direction, cell.y / 2 - float(anchor[1])) * unit_scale
+	# Quadros reencaixados (tools/polir_folhas.py): o desenho foi deslocado dentro da célula para a
+	# lâmina caber inteira; aqui ele volta para o lugar, e a ponta que antes era cortada aparece.
+	var deslocamentos: Array = data.get("deslocamentos", [])
+	var desvio := float(deslocamentos[frame]) if frame < deslocamentos.size() else 0.0
+	position = Vector2((cell.x / 2 - float(anchor[0]) + desvio) * direction, cell.y / 2 - float(anchor[1])) * unit_scale
 	if material is ShaderMaterial:
 		var image: AtlasTexture = sprite_frames.get_frame_texture(clip, frame)
 		var sheet_size := image.atlas.get_size()

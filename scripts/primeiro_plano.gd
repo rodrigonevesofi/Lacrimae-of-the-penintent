@@ -10,16 +10,16 @@ extends Node2D
 ## Quais peças da folha pintada (assets/vida/pendentes.png) cada sala pendura na frente.
 ## 0 sino, 1 lamparina, 2 incensário, 3 gaiola, 4 estandarte, 5 rosário, 6 ex-votos, 7 gancho.
 const SALAS := {
-	"city": [3, 5, 0],
-	"ossuary": [5, 7, 0],
-	"cistern": [0, 7, 5],
-	"cloister": [6, 5, 0],
+	"city": [3, 0],
+	"ossuary": [0, 7],
+	"cistern": [0, 7],
+	"cloister": [0, 3],
 	"belfry": [0, 7, 0],
-	"archive": [6, 5],
-	"refuge": [3, 7, 6],
-	"nave": [2, 5, 6],
+	"archive": [1, 0],
+	"refuge": [3, 7],
+	"nave": [2, 0],
 	"terrace": [0, 7],
-	"court": [3, 0, 7],
+	"court": [3, 0],
 }
 const VELOCIDADE := 1.35
 const SOMBRA := Color(0.075, 0.065, 0.085, 0.97)
@@ -66,9 +66,10 @@ func _montar(id: String) -> void:
 		peca.centered = false
 		peca.offset = Vector2(-64, 0)
 		# Grandes e largas, como algo perto demais da câmera; terminam antes da altura da luta.
-		var escala := rng.randf_range(0.80, 1.0)
-		peca.scale = Vector2(escala * 1.7, escala)
-		peca.position = Vector2(_x_na_camada(x), -150.0 - rng.randf_range(0.0, 60.0))
+		var escala := rng.randf_range(0.72, 0.86)
+		peca.scale = Vector2(escala * 1.5, escala)
+		# Termina no terço de cima da tela: nunca chega à altura da luta.
+		peca.position = Vector2(_x_na_camada(x), -512.0 * escala + rng.randf_range(170.0, 235.0))
 		peca.modulate = SOMBRA
 		plano.add_child(peca)
 		pecas.append(peca)
@@ -79,7 +80,7 @@ func _montar(id: String) -> void:
 		var balanco: Tween = peca.create_tween().set_loops()
 		balanco.tween_property(peca, "rotation", giro, tempo).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		balanco.tween_property(peca, "rotation", -giro, tempo).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		x += rng.randf_range(640.0, 980.0)
+		x += rng.randf_range(900.0, 1400.0)
 		i += 1
 
 ## Um golpe forte dá um tranco nas peças próximas.
