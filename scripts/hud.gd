@@ -30,7 +30,10 @@ func _ready() -> void:
 	size = Vector2(1280, 720)
 
 
+var pause_notice := ""
+
 func _process(_delta: float) -> void:
+	if game != null and not game.paused: pause_notice = ""
 	queue_redraw()
 
 
@@ -67,6 +70,19 @@ func _heading(pos: Vector2, text: String, font_size: int, color: Color, width: f
 	draw_string(title_font, pos, text, HORIZONTAL_ALIGNMENT_CENTER, width, font_size, color)
 
 
+## Troca as dicas entre teclado e controle conforme o último aparelho usado.
+func _input(event: InputEvent) -> void:
+	if game == null: return
+	if event is InputEventJoypadButton and event.pressed: game.using_pad = true
+	elif event is InputEventJoypadMotion and absf(event.axis_value) > 0.5: game.using_pad = true
+	elif (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and event.pressed): game.using_pad = false
+
+
+## Rótulo da tecla ou do botão, conforme o aparelho em uso.
+func _k(keyboard: String, pad: String) -> String:
+	return pad if game.using_pad else keyboard
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if game.dev_input(event):
 		get_viewport().set_input_as_handled()
@@ -74,10 +90,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	if (game.state == "title" or game.paused) and event.is_action_pressed("reduce_pulses"):
 		game.set_reduced_pulses(not game.reduced_pulses)
 		get_viewport().set_input_as_handled()
+	if event.is_action_pressed("toggle_fullscreen"):
+		game.toggle_fullscreen()
+		get_viewport().set_input_as_handled()
+		return
 	if game.paused and event.is_action_pressed("mute"):
 		game.soundscape.toggle_mute()
 	if game.paused and event.is_action_pressed("pause"):
 		game.toggle_pause()
+		get_viewport().set_input_as_handled()
+	elif game.paused and event.is_action_pressed("pause_confess"):
+		pause_notice = game.confess_from_pause()
 		get_viewport().set_input_as_handled()
 	if game.state == "title" and event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if Rect2(360, 420, 560, 56).has_point(event.position):
@@ -104,11 +127,11 @@ func _draw_title(vs: Vector2) -> void:
 	var hover := Rect2(360, 420, 560, 56).has_point(get_local_mouse_position())
 	draw_rect(Rect2(360, 420, 560, 56), Color(0.42, 0.32, 0.17, 0.32 if hover else 0.12))
 	draw_rect(Rect2(360, 420, 560, 56), Color(GOLD, 0.75 if hover else 0.38), false, 1)
-	_heading(Vector2(360, 456), "ENTER  ·  Iniciar peregrinação", 22, Color("e4d3af"), 560)
+	_heading(Vector2(360, 456), _k("ENTER", "A") + "  ·  Iniciar peregrinação", 22, Color("e4d3af"), 560)
 	if game.has_save:
-		_heading(Vector2(360, 513), "C  ·  Continuar jornada", 19, Color("b6b2a8"), 560)
-	_text(Vector2(0, 613), "A / D  mover     ESPAÇO  saltar     J  atacar     K  esquivar     E  interagir", 15, Color("aaa69a"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	_text(Vector2(0, 642), "F  curar     Q  penitência     ESC  pausa     M  som", 14, Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+		_heading(Vector2(360, 513), _k("C", "Y") + "  ·  Continuar jornada", 19, Color("b6b2a8"), 560)
+	_text(Vector2(0, 613), _k("A / D  mover     ESPAÇO  saltar     J  atacar     K  esquivar     E  interagir", "ANALÓGICO  mover     A  saltar     X  atacar     B  esquivar     Y  interagir"), 15, Color("aaa69a"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 642), _k("F  curar     Q  penitência     C  confessar     ESC  pausa     M  som     F11  tela cheia", "LB  curar     LT  penitência     RB  aparar     RT  carregado     START  pausa     BACK  mapa"), 14, Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_text(Vector2(0, 672), "P  ·  Reduzir pulsos e tremores nas cenas: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 14, Color("c2bba8") if game.reduced_pulses else Color("888b88"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 
 
@@ -156,16 +179,16 @@ func _draw_play(vs: Vector2) -> void:
 		draw_rect(Rect2(232,124,130*lance_holder.lance_weight/100.0,5),Color("8a8a90"))
 		_text(Vector2(368,130),"Peso da lança",10,Color("a8a8ae"))
 	if duo and q.state == "fallen":
-		_text(Vector2(232,146),"Beatriz caiu · chegue perto e segure H",12,Color("e05a5a"))
+		_text(Vector2(232,146),game.pad_text("Beatriz caiu · chegue perto e segure H"),12,Color("e05a5a"))
 	elif duo and p.state == "fallen":
 		_text(Vector2(232,146),"Você caiu · Beatriz pode te levantar",12,Color("e05a5a"))
 	elif not duo and p.hp <= p.max_hp * 0.25 and p.partner_hp > p.max_hp * 0.30 and p.share_cd <= 0.0:
-		_text(Vector2(232,146),"H · Sangue compartilhado",12,Color("e05a5a"))
+		_text(Vector2(232,146),game.pad_text("H · Sangue compartilhado"),12,Color("e05a5a"))
 	if game.stain_active:
 		draw_rect(Rect2(80+330*0.122+330*0.785*0.75,29+82*0.48,330*0.785*0.25,82*0.17),Color("342f38"))
 		_text(Vector2(259,98),"Culpa pendente · capacidade 75%",11,Color("c79c97"))
 	elif p.culpa >= 50:
-		_text(Vector2(278,98),"Q · PENITÊNCIA",11,Color("e9c991"))
+		_text(Vector2(278,98),_k("Q", "LT") + " · PENITÊNCIA",11,Color("e9c991"))
 	for i in range(p.max_flasks):
 		draw_texture_rect(ui_regions.flask,Rect2(122+i*30,104,20,37),false,Color.WHITE if i<p.flasks else Color(0.35,0.32,0.34,0.75))
 	if p.penitence != "none":
@@ -180,7 +203,15 @@ func _draw_play(vs: Vector2) -> void:
 	var objective_x: float = vs.x-350
 	for i in range(_wrap(objective,320,14).size()):
 		_text(Vector2(objective_x,111+i*20),_wrap(objective,320,14)[i],14,Color("ded1b9"))
-	_text(Vector2(vs.x-176,170),"TAB · CARTOGRAFIA",11,Color("c6af8b"))
+	_text(Vector2(vs.x-176,170),_k("TAB", "BACK") + " · CARTOGRAFIA",11,Color("c6af8b"))
+	# O Confessionário abre em qualquer lugar; a dica se apaga enquanto houver combate.
+	var can_confess: bool = game.calm_t >= game.CALM_BEFORE_CONFESSION
+	_text(Vector2(vs.x-345,170),_k("C", "Y (segurar)") + " · CONFESSAR",11,Color("c6af8b") if can_confess else Color(0.45,0.4,0.36,0.6))
+	if game.confess_hold_t > 0.08:
+		# Barra de progresso enquanto Y está pressionado.
+		var hold: float = clampf(game.confess_hold_t / game.CONFESS_HOLD, 0.0, 1.0)
+		draw_rect(Rect2(vs.x-345,175,130,3),Color(0,0,0,0.5))
+		draw_rect(Rect2(vs.x-345,175,130*hold,3),Color("e0c88f"))
 	if game.area_t > 0:
 		var opacity := minf(game.area_t,1)
 		_heading(Vector2(200,205),game.area_name,23,Color(0.86,0.8,0.68,opacity),vs.x-400)
@@ -208,11 +239,11 @@ func _draw_play(vs: Vector2) -> void:
 			_text(Vector2(0,156),"FORMA VERDADEIRA · vulnerável por %d s" % int(ceil(maxf(fb.form_t,0.0))),13,Color("e8c873"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	if game.prompt != "" and game.message_text == "" and game.state == "play":
 		_panel(Rect2(150,vs.y-51,vs.x-300,41))
-		_text(Vector2(0,vs.y-24),game.prompt,16,Color("eedcc0"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+		_text(Vector2(0,vs.y-24),game.pad_text(game.prompt),16,Color("eedcc0"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	elif game.play_time < 18 and game.message_text == "":
-		_text(Vector2(0,vs.y-24),"A/D · mover     ESPAÇO · saltar     J · espada (3 golpes)     I · carregado     L · aparo     K · esquiva     E · examinar     TAB · mapa",14,Color("c7baa4"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+		_text(Vector2(0,vs.y-24),_k("A/D · mover     ESPAÇO · saltar     J · espada (3 golpes)     I · carregado     L · aparo     K · esquiva     E · examinar     TAB · mapa", "ANALÓGICO · mover     A · saltar     X · espada (3 golpes)     RT · carregado     RB · aparo     B · esquiva     Y · examinar     BACK · mapa"),14,Color("c7baa4"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 	if game.toast_t > 0:
-		var text_lines := _wrap(game.toast_text,800,17)
+		var text_lines := _wrap(game.pad_text(game.toast_text),800,17)
 		for i in range(text_lines.size()):
 			_text(Vector2(240,259+i*24),text_lines[i],17,Color(0.94,0.84,0.69,minf(game.toast_t,1)),HORIZONTAL_ALIGNMENT_CENTER,800)
 	if game.message_text != "": _draw_message(vs)
@@ -255,9 +286,9 @@ func _draw_message(vs: Vector2) -> void:
 	_panel(rect)
 	_heading(Vector2(rect.position.x+24,rect.position.y+62),game.message_title,24,Color("d3b58a"),rect.size.x-48)
 	draw_line(rect.position+Vector2(68,79),rect.position+Vector2(rect.size.x-68,79),Color("765b3d"),1)
-	var lines := _wrap(game.message_text,rect.size.x-110,19)
+	var lines := _wrap(game.pad_text(game.message_text),rect.size.x-110,19)
 	for i in range(lines.size()): _text(rect.position+Vector2(55,115+i*25),lines[i],19,Color("e4d6c0"))
-	_text(Vector2(rect.position.x,rect.end.y-25),"E · Continuar",14,Color("bba27c"),HORIZONTAL_ALIGNMENT_CENTER,rect.size.x)
+	_text(Vector2(rect.position.x,rect.end.y-25),_k("E", "A") + " · Continuar",14,Color("bba27c"),HORIZONTAL_ALIGNMENT_CENTER,rect.size.x)
 
 func _draw_map(vs: Vector2) -> void:
 	draw_rect(Rect2(Vector2.ZERO,vs),Color(0.015,0.012,0.018,0.96))
@@ -280,7 +311,7 @@ func _draw_map(vs: Vector2) -> void:
 		for i in range(words.size()): _text(pos+Vector2(5,21+i*15),words[i],12,Color("e0cfb3") if known else Color("8d8174"),HORIZONTAL_ALIGNMENT_CENTER,145)
 		if id == ex.room: _text(pos+Vector2(0,-8),"VOCÊ",12,Color("e6b8a0"),HORIZONTAL_ALIGNMENT_CENTER,155)
 	_text(Vector2(0,620),"%d / %d lugares · %d / 2 correntes · %d / %d vestígios" % [ex.visited.size(),ex.rooms.size(),ex.bells.size(),ex.collected.size(),ex.pickups.size()],17,Color("cbb493"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
-	_text(Vector2(0,650),"Linhas douradas: atalhos abertos    ·    TAB: retornar",14,Color("aa987b"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
+	_text(Vector2(0,650),"Linhas douradas: atalhos abertos    ·    " + _k("TAB", "BACK") + ": retornar",14,Color("aa987b"),HORIZONTAL_ALIGNMENT_CENTER,vs.x)
 
 
 func _draw_ending(vs: Vector2) -> void:
@@ -291,6 +322,16 @@ func _draw_ending(vs: Vector2) -> void:
 		"Você viu suas mãos fechando os portões. Ainda não sabe por quê.",
 		"Esta é apenas a primeira etapa da peregrinação.",
 	]
+	var fim := "— FIM DO CAPÍTULO JOGÁVEL —"
+	if game.final_defeated:
+		# Depois do Vale, o encerramento fecha a história e deixa a pergunta da continuação.
+		lines = [
+			"O Flagelado não se levanta. Não havia outro no vale.",
+			"Você olhou o que fez. Atrás de você, os portões ficam abertos.",
+			"Beatriz caminha ao seu lado. O que é de um, carregam os dois.",
+			"Agora você sabe de quem eram as mãos. Falta saber de quem era a ordem.",
+		]
+		fim = "— FIM —"
 	if ending_art != null:
 		# A imagem de encerramento ocupa a tela inteira. O Penitente e a lanterna permanecem nítidos; as quatro linhas
 		# surgem uma por vez na faixa escura inferior, e a tela final aparece quando ENTER fica disponível.
@@ -302,16 +343,16 @@ func _draw_ending(vs: Vector2) -> void:
 			var la := smoothstep(start, start + 0.7, game.ending_t) * (1.0 - smoothstep(start + 2.5, start + 3.2, game.ending_t))
 			_text(Vector2(0, vs.y - 62.0), lines[i], 21, Color(0.92, 0.88, 0.8, la), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 		var tb := clampf((game.ending_t - 15.0) / 1.5, 0.0, 1.0)
-		_heading(Vector2(0, 84), "— FIM DO CAPÍTULO JOGÁVEL —", 30, Color(GOLD, tb), vs.x)
-		_text(Vector2(0, vs.y - 60.0), "ENTER  —  voltar ao título", 20, Color(0.88, 0.84, 0.78, tb), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+		_heading(Vector2(0, 84), fim, 30, Color(GOLD, tb), vs.x)
+		_text(Vector2(0, vs.y - 60.0), _k("ENTER", "A") + "  —  voltar ao título", 20, Color(0.88, 0.84, 0.78, tb), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 		return
 	draw_rect(Rect2(Vector2.ZERO, vs), Color(0, 0, 0, 0.94 * fa))
 	for i in range(lines.size()):
 		var la := clampf((game.ending_t - 1.5 - float(i) * 2.6) / 1.2, 0.0, 1.0)
 		draw_multiline_string(font, Vector2(180, 170.0 + float(i) * 78.0), lines[i], HORIZONTAL_ALIGNMENT_CENTER, vs.x - 360.0, 22, -1, Color(0.9, 0.87, 0.82, la))
 	var ta := clampf((game.ending_t - 15.0) / 1.5, 0.0, 1.0)
-	_text(Vector2(0, vs.y - 120.0), "— FIM DO CAPÍTULO JOGÁVEL —", 30, Color(GOLD, ta), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	_text(Vector2(0, vs.y - 80.0), "ENTER  —  voltar ao título", 20, Color(0.85, 0.8, 0.78, ta), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, vs.y - 120.0), fim, 30, Color(GOLD, ta), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, vs.y - 80.0), _k("ENTER", "A") + "  —  voltar ao título", 20, Color(0.85, 0.8, 0.78, ta), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 
 
 func _draw_dev(vs: Vector2) -> void:
@@ -339,13 +380,20 @@ func _draw_pause(vs: Vector2) -> void:
 	_text(Vector2(665, 182), "BEATRIZ · JOGADORA 2", 17, GOLD)
 	var first := ["A / D  ·  mover     ESPAÇO / W  ·  saltar", "J / X  ·  atacar     S + J no ar  ·  mergulho", "I  ·  segurar e soltar golpe carregado", "K / SHIFT  ·  esquivar     L  ·  aparar", "F  ·  curar     Q  ·  penitência", "E  ·  examinar, orar ou executar", "R  ·  oferecer lágrimas no altar", "V  ·  penitências     1 / 2 / 3  ·  escolher", "S + ESPAÇO  ·  descer de uma galeria", "H  ·  doar sangue / segurar para levantar"]
 	var second := ["← / →  ·  mover     ↑ / Num8  ·  saltar", "↓ / Num2  ·  baixo     Num1 ou .  ·  atacar", "Num5 ou Ç  ·  segurar e soltar golpe carregado", "Num3 ou ,  ·  esquivar     Num4 ou ;  ·  aparar", "Num6 ou ~  ·  curar", "ENTER numérico ou ´  ·  interagir", "Num0 ou [  ·  doar sangue / levantar parceiro", "F4  ·  alternar entre IA e jogadora 2", "O primeiro comando de J2 assume Beatriz", "Também aceita o segundo controle"]
+	if game.using_pad:
+		first = ["ANALÓGICO / DIRECIONAL  ·  mover", "A  ·  saltar     X  ·  atacar", "RT  ·  segurar e soltar golpe carregado", "B  ·  esquivar     RB  ·  aparar", "LB  ·  curar     LT  ·  penitência", "Y  ·  examinar, orar ou executar", "R3  ·  oferecer lágrimas no altar", "L3  ·  penitências     X / Y / B  ·  escolher", "↓ + A  ·  descer de uma galeria", "↑  ·  doar sangue / segurar para levantar"]
+		second = ["2º controle, mesmos botões do 1º:", "A saltar · X atacar · B esquivar", "Y interagir · RB aparar · RT carregado", "LB curar · ↑ doar sangue", "", "Teclado: setas e teclado numérico", "F4  ·  alternar entre IA e jogadora 2", "O primeiro comando de J2 assume Beatriz", "", ""]
 	for i in range(first.size()):
 		_text(Vector2(215, 217 + i * 27), first[i], 16, Color("c5c0b3"))
 		_text(Vector2(665, 217 + i * 27), second[i], 16, Color("c5c0b3"))
-	_text(Vector2(0, 518), "TAB  ·  mapa     M  ·  som     F3  ·  modo dev", 16, Color("c5c0b3"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 518), _k("TAB  ·  mapa     M  ·  som     F3  ·  modo dev", "BACK  ·  mapa     (teclado: M som · F3 modo dev)"), 16, Color("c5c0b3"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
 	_text(Vector2(0, 550), "P  ·  reduzir pulsos e tremores: %s" % ("LIGADO" if game.reduced_pulses else "DESLIGADO"), 16, Color("e0d3b0"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	_text(Vector2(0, 590), "O progresso é salvo ao orar e ao obter a espada ou a relíquia.", 15, Color("8f918e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
-	_heading(Vector2(0, 640), "ESC  ·  Retomar", 22, GOLD, vs.x)
+	_text(Vector2(0, 582), _k("C", "Y") + "  ·  Confessionário (fora de combate)", 17, Color("e0c88f"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	if pause_notice != "":
+		_text(Vector2(0, 608), pause_notice, 15, Color("e08a7a"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	else:
+		_text(Vector2(0, 608), "O progresso é salvo ao orar e ao obter a espada ou a relíquia.", 15, Color("8f918e"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_heading(Vector2(0, 640), _k("ESC", "START") + "  ·  Retomar", 22, GOLD, vs.x)
 
 
 func _draw_penitences(vs: Vector2) -> void:
@@ -361,6 +409,8 @@ func _draw_penitences(vs: Vector2) -> void:
 		var y := 246 + i * 115
 		_panel(Rect2(220,y,840,93))
 		if game.player.penitence == ["none", "nails", "chains"][i]: draw_rect(Rect2(220, y, 840, 93), GOLD, false, 2)
-		_text(Vector2(250, y + 34), rows[i][0], 23, GOLD)
+		var row_title: String = rows[i][0]
+		if game.using_pad: row_title = ["X", "Y", "B"][i] + row_title.substr(1)
+		_text(Vector2(250, y + 34), row_title, 23, GOLD)
 		_text(Vector2(250, y + 68), rows[i][1], 18, Color("d7cbbd"))
-	_text(Vector2(0, 650), "V  ·  Fechar     ESC  ·  Pausar", 18, Color("aea493"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+	_text(Vector2(0, 650), _k("V  ·  Fechar     ESC  ·  Pausar", "L3  ·  Fechar     START  ·  Pausar"), 18, Color("aea493"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)

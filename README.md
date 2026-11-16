@@ -1,67 +1,89 @@
 # Lacrimae of the Penitent
 
-Jogo de ação e exploração 2D feito no Godot. A história acompanha o Penitente pelo reino de Vespera, devastado por uma maldição ligada à culpa e à absolvição.
+Jogo de ação e exploração 2D, sombrio e gótico, sobre **culpa e fé**. Feito no Godot 4.6.
+
+Um guerreiro sem memória desperta num túmulo. A inscrição diante dele o acusa de ter condenado milhares de pessoas. Ao lado de Beatriz, uma carrasca que nunca olhou o rosto de quem feriu, ele atravessa uma cidade que não consegue enterrar os seus mortos para descobrir o que fez.
+
+> A culpa não queria castigo. Queria ser olhada.
+
+![O Confessionário](docs/confessionario-tela.png)
 
 ## Como jogar
 
-1. Abra o Godot Standard 4.6.3, usado na validação da versão 41.
-2. Importe o arquivo `project.godot`.
-3. Aguarde a importação dos arquivos e pressione **F5**.
+1. Instale o **Godot 4.6.3 Standard** (não precisa da versão .NET).
+2. No Godot, escolha **Importar** e abra o arquivo `project.godot` desta pasta.
+3. Espere a importação terminar e aperte **F5**.
+
+No Windows, também dá para usar `Jogar-Windows.cmd`.
+
+## O que há no jogo
+
+- **Onze lugares** interligados: a Cidade da Penitência, seis salas do percurso principal, três salas secretas e o Vale dos Flagelados.
+- **Dois personagens jogáveis ao mesmo tempo:** o Penitente (espada) e Beatriz (lança). Beatriz luta sozinha ou nas mãos de uma segunda pessoa.
+- **Combate:** combo de três golpes, golpe carregado, golpe descendente, aparo com contra-ataque, esquiva e execuções.
+- **Dois chefes:** o Guardião dos Sinos e o Flagelado.
+- **Dezessete criaturas**, muitas inspiradas nas Pinturas Negras de Goya, cada uma com aviso, ataque e abertura próprios.
+- **Confessionário com IA:** um personagem que responde às perguntas de quem joga (veja abaixo).
+- **História com começo, meio e fim**, com uma cutscene de revelação no final.
+- Altares para salvar, penitências equipáveis, mapa, trilha sonora com coro e cenários animados.
 
 ## Controles
 
-- **A / D:** mover o Penitente
-- **Espaço / W:** pular; **S + Espaço:** descer de uma galeria
-- **J / X:** atacar; no ar, corte aéreo
-- **I (segurar):** carregar golpe pesado; **S + J no ar:** golpe descendente
-- **L:** aparar
-- **K / Shift:** esquivar
-- **E:** interagir ou executar inimigo atordoado
-- **F:** curar
-- **Q:** penitência
-- **R:** oferecer lágrimas no altar
-- **V:** trocar penitências no altar; **1 / 2 / 3:** escolher
-- **Esc:** pausar
-- **M:** ativar ou silenciar o som
-- **TAB:** abrir o mapa
-- **H:** compartilhar sangue; perto do parceiro caído, segurar para levantá-lo
-- **P:** reduzir pulsos e tremores (no título ou na pausa)
-- **F3:** modo dev; ↑/↓ selecionam sala, Enter transporta, G alterna invencibilidade, N alterna voo e B vai ao chefe
-- **F4:** alternar Beatriz entre IA e jogadora 2
-- **F6:** liga ou desliga a pintura viva dos cenários (use se o jogo ficar lento)
-- **Enter:** iniciar; **C:** continuar salvamento no título
+| Ação | Teclado | Controle |
+|---|---|---|
+| Mover | A / D | Analógico ou direcional |
+| Pular (S + pulo desce de uma galeria) | Espaço ou W | A |
+| Atacar (combo de 3) | J ou X | X |
+| Golpe carregado (segurar e soltar) | I | RT |
+| Golpe descendente | S + J no ar | ↓ + X no ar |
+| Aparar (golpes com anel dourado) | L | RB |
+| Esquivar | K ou Shift | B |
+| Interagir, orar, executar | E | Y |
+| Curar | F | LB |
+| Penitência (com a culpa acima da metade) | Q | LT |
+| Doar sangue / levantar a parceira | H | ↑ |
+| Confessionário (fora de combate) | C | Segurar Y |
+| Mapa | TAB | Back |
+| Pausa | Esc | Start |
 
-Beatriz acompanha o Penitente e luta por conta própria. Para assumir o segundo personagem, use **setas** para mover, **↑ / Num8** para pular, **↓ / Num2** para baixo, teclado numérico **1** para atacar, **3** para esquivar, **4** para aparar, **5** para carregar golpe, **6** para curar, **0** para doar sangue e **Enter numérico** para interagir. Também é possível usar um segundo controle. **Em notebook sem teclado numérico** (teclado ABNT2): **.** atacar, **,** esquivar, **;** aparar, **Ç** golpe carregado, **~** curar, **´** interagir e **[** doar sangue. O primeiro comando de Beatriz tira o controle do jogo e o passa para a segunda pessoa; **F4** devolve.
+No altar: **E** ora (salva, cura e traz os inimigos de volta), **R** oferece lágrimas por mais vida, **V** troca de penitência.
 
-A [integração da versão 32](docs/v32-integracao.md) inclui os sons enviados pelo autor, a arte adaptada de Beatriz e a correção dos efeitos de duas fileiras.
+Outras teclas: **M** som, **F11** tela cheia, **P** reduz clarões e tremores, **F6** liga ou desliga os cenários animados (use se o jogo ficar lento).
 
-A [versão 33](docs/v33-integracao.md) acrescenta seis execuções próprias, impactos por material e três posturas de Beatriz conforme o peso da lança, com folhas de contato e testes no Godot 4.6.3.
+### Segunda pessoa (Beatriz)
 
-O primeiro ato tem onze locais: sete no percurso principal, três salas secretas (Nave do Silêncio, Terraço dos Sinos e Pátio dos Portões Selados) e o Vale dos Flagelados, alcançado após o Guardião e a memória dos portões. Há relevo de alvenaria no chão, galerias elevadas, atalhos, altares, descobertas opcionais e um mapa. Inclui penitências equipáveis, fragmentos de culpa e a homenagem no memorial dos portões.
+O primeiro comando da segunda pessoa assume Beatriz; **F4** devolve o controle ao jogo.
 
-Detalhes da expansão de salas em [docs/expansao-v09.md](docs/expansao-v09.md). O bestiário, com cinco criaturas inspiradas em Goya, está em [docs/bestiario-goya.md](docs/bestiario-goya.md) e as cenas de culpa em [docs/cenas-culpa.md](docs/cenas-culpa.md).
+- **Teclado numérico:** setas movem, ↑ pula, **1** ataca, **3** esquiva, **4** apara, **5** golpe carregado, **6** cura, **0** doa sangue, **Enter** interage.
+- **Notebook sem teclado numérico:** **.** ataca, **,** esquiva, **;** apara, **Ç** golpe carregado, **~** cura, **´** interage, **[** doa sangue.
+- **Segundo controle:** os mesmos botões do primeiro.
 
-O projeto está em desenvolvimento. A versão atual contém o trecho inicial do primeiro ato.
+## O Confessionário (IA)
 
-[Roteiro dos cinco atos](docs/roteiro-cinco-atos.md). Os atos II–V ainda estão no roteiro.
+A tecla **C**, em qualquer lugar e fora de combate, abre o Confessionário. O jogador escreve uma pergunta, ou escolhe uma das perguntas prontas, e o **Confessor** responde no tom do jogo: explica controles, dá pistas de caminho, dá dicas de combate e reconta a história já descoberta, sem entregar o final.
 
-Para jogar o Ato I e relatar o que sentiu, use o [roteiro de playtest](docs/roteiro-de-playtest.md).
+O Confessor é um modelo de linguagem (Gemini) que recebe, a cada pergunta, o estado real da partida: onde o jogador está, o que falta fazer, quantas vezes morreu e onde.
 
-Acessibilidade: a tecla **P**, no título e na pausa, reduz pulsos de luz e tremores nas cenas de culpa e do Guardião (veja [docs/acessibilidade-cenas.md](docs/acessibilidade-cenas.md)).
+Para ligar a IA:
 
-Combate: **J** golpe, **K** esquiva, **L** aparo (aperte quando o golpe chegar; golpes marcados com anel dourado podem ser aparados, os demais só se esquivam), **F** curar, **E** executar um inimigo aberto.
+1. Crie uma chave gratuita em <https://aistudio.google.com/apikey>.
+2. Copie `ia_local.cfg.exemplo` como `ia_local.cfg` e cole a chave.
+3. Jogue e aperte **C**.
 
+**Sem chave ou sem internet o Confessionário continua funcionando**, com respostas prontas por assunto. O rodapé do painel mostra quem respondeu. O arquivo da chave fica fora do repositório. Detalhes em [docs/confessionario.md](docs/confessionario.md).
 
-A [integração da versão 35](docs/v35-integracao.md) inclui o código de sangue das execuções, correções do modo dev e dos controles da dupla, a nova pausa e os pontos de integração dos sons de gore. Os sons existentes foram preservados. A lista adicional foi executada na [versão 36](docs/v36-integracao.md): 24 atlas novos ou repintados, cancelamento em esquiva no primeiro quadro ativo, comandos de combo preservados, esquiva perfeita com contra-ataque, dois padrões por criatura, suspensão aérea limitada e mortes com queda física. As execuções usam sangue estilizado e manchas persistentes. Os 20 WAVs de gore e combate enviados pelo autor também foram integrados, incluindo os avisos e a esquiva perfeita. [Validação dos sons](docs/v36-audio.json).
+## Para avaliar
 
-Na [versão 38](docs/v38-integracao.md), o Vale recebe camadas pintadas com paralaxe, forcas e gaiolas em pêndulos; O Flagelado tem elmo-gaiola e quatro etapas de armadura. Três monumentos animados dão vida às salas. Dissolução em cinzas, rastros de espada e lança, luz de aparo e respiração das criaturas foram integrados. As [nove fichas novas](docs/fichas/fichas-goya.md) foram aprovadas e integradas na versão 39, com animação e combate próprios. A documentação da integração contém detalhes do final da história.
+- **F3** abre o modo de desenvolvimento: ↑/↓ escolhem a sala, Enter transporta, **B** vai ao chefe, **G** liga a invencibilidade e **N** o voo.
+- [Guia de apresentação](docs/guia-de-apresentacao.md): um roteiro de dez minutos para mostrar o jogo.
+- [Documentação do jogo](docs/documentacao/) e [pranchas de conceito](docs/pranchas/).
 
-Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md), [resultados dos testes da v41](docs/v41-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
+## Como foi feito
 
-Na [versão 39](docs/v39-integracao.md), nove criaturas aprovadas entram no mapa com regras próprias, cenários vivos, bichos pintados e rosto barbado na revelação. [Contato das criaturas](docs/v39-criaturas-contato.jpg).
+Projeto acadêmico de Rodrigo. Código em GDScript, com testes automáticos em `tests/`.
 
-Na [versão 40](docs/v40-integracao.md), o polimento do Claude (personagens no piso pintado, pedra da cor de cada sala, espada na mão, folhas limpas) foi unido à versão 39 do Codex, e entraram 99 sons do Argon: os nove efeitos do Vale, as ambiências e a música da revelação. [Relatório dos sons](docs/sons-argon-v40.md).
+O projeto usou ferramentas de IA como apoio, sob direção do autor: Claude e Codex (código, integração, testes e documentação), geração de imagens e Argon (arte e efeitos sonoros), Lyria (trilha) e Flow/Veo (clipes da cutscene). A história, as decisões de design e a aprovação de cada peça são do autor. Nenhuma arte, código ou personagem de outro jogo foi copiado; Blasphemous foi referência de clima e de gênero.
 
-Na [versão 41](docs/v41-integracao.md), a trilha passa a ser a gerada pelo autor no Lyria 3.5 (nove faixas com coro, em OGG), e a revelação do Vale aceita uma cutscene em vídeo: [prompts e quadros iniciais](docs/prompts-cutscene-veo-v41.md).
+## O que vem depois
 
-Os clipes finais ainda não estão incluídos: a revelação usa os closes atuais até receber os vídeos. [Validação e limites da v41](docs/v41-integracao.md).
+O jogo termina com uma verdade e deixa uma pergunta. O Penitente descobre **de quem eram as mãos** que fecharam os portões. Falta saber **de quem foi a ordem**. Os portões levam à Grande Basílica.
