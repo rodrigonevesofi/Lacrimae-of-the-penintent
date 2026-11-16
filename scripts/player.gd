@@ -20,7 +20,7 @@ const MAX_FALL := 950.0
 
 var animator
 var sword: Sprite2D
-const SWORD_GRIP := Vector2(410, 360)
+const SWORD_GRIP := Vector2(520, 360)
 const SWORD_SCALE := 0.035
 ## Posição do punho em cada desenho de hero_motion.png (coordenadas da célula de 256 x 256), medida quadro a quadro.
 ## A empunhadura ocupa esse ponto para a mão fechar no cabo, em vez de ficar solta ao lado.
@@ -178,8 +178,9 @@ func _ready() -> void:
 	lance.add_child(point)
 	lance.visible = false
 	add_child(lance)
-	# À frente do corpo: o cabo cobre os dedos para a mão parecer fechada na empunhadura.
-	sword.z_index = 1
+	# Atrás do corpo: o punho fechado fica por cima do cabo, a lâmina sai de um lado da mão e o pomo
+	# do outro. Antes a espada ficava na frente e cobria a mão inteira, parecendo colada no braço.
+	move_child(sword, animator.get_index())
 	# Acompanha o desenho assim que muda: o punho se desloca até 30 pixels entre quadros de corrida.
 	animator.frame_changed.connect(_update_sword)
 	animator.animation_changed.connect(_update_sword)
@@ -939,7 +940,7 @@ func _draw() -> void:
 func draw_ellipse_shadow() -> void:
 	if is_on_floor() and state != "dead":
 		draw_set_transform(Vector2(0, -1), 0, Vector2(1, 0.2))
-		draw_circle(Vector2.ZERO, 18, Color(0, 0, 0, 0.3))
+		draw_circle(Vector2.ZERO, 21, Color(0, 0, 0, 0.36))
 		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
 

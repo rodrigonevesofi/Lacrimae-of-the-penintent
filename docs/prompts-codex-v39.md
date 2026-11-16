@@ -11,7 +11,7 @@ Trabalhe sobre o projeto dos dois pacotes v39 anexados, em **Godot 4.6.3**. Regr
 - Entregue o **projeto completo** publicado no repositório, não só um patch. Não apague imagens existentes.
 - **Não reduza o sangue** nem os efeitos de execução.
 - Comentários, funções e variáveis novas em **português**.
-- Antes de publicar, rode todas as suítes de `tests/`. `v39_cenario_smoke` (149 verificações), `vale_boss_smoke` e `story_decisions_check` precisam continuar passando. Diga o que foi verificado e o que não foi.
+- Antes de publicar, rode todas as suítes de `tests/`. `v39_cenario_smoke` (149 verificações), `v39_polimento_smoke` (56), `vale_boss_smoke` e `story_decisions_check` precisam continuar passando. Diga o que foi verificado e o que não foi.
 - O rosto do Penitente só pode aparecer em `scripts/vale_finale.gd`.
 
 ## 1. Refazer o rosto do Penitente (com barba)
@@ -60,6 +60,15 @@ Em `scripts/pintura_viva.gd`: quando os três arquivos existirem, desenhe céu (
 
 Entregue capturas das três salas com a câmera em dois pontos diferentes, mostrando o deslocamento entre as camadas.
 
-## 4. Criaturas novas
+## 4. Quadros com lâmina cortada (ver `docs/v39-polimento.md`)
+
+Alguns quadros foram pintados com a arma saindo da célula de 256 × 256 e aparecem cortados:
+
+- `hero_combat.png`, quadros 3 e 4 (a estocada e o seguinte do primeiro golpe): repinte os dois com a **lâmina inteira dentro da célula**, mesma pose, mesma âncora nos pés (128, 250). Se não couber, recue o corpo dentro da célula e anote o recuo em `"deslocamentos"` do clipe `attack_a` em `clips.json` (o jogo já usa esse campo para desenhar o quadro no lugar).
+- `beatriz_combate.png`, `beatriz_movimento.png` e `beatriz_reacoes.png`: a lança é mais comprida que a célula em vários quadros. Repinte esses quadros com a lança inteira, usando o mesmo recurso de `"deslocamentos"`, ou refaça as folhas com células de 384 × 256 (`"grid"` e `"anchor"` no clipe).
+
+Depois de mexer em qualquer folha do Penitente ou de Beatriz, rode `python3 tools/polir_folhas.py` e `python3 tests/folhas_limpas_check.py`: as folhas novas precisam sair sem pontos soltos e com a mesma luminosidade das de movimento.
+
+## 5. Criaturas novas
 
 **Não anime ainda.** As nove fichas de `docs/fichas/` aguardam a aprovação do autor.

@@ -2,7 +2,7 @@
 
 Sugestão de roteiro de 8 a 10 minutos para mostrar o jogo. Use o **modo dev (F3)** para pular deslocamentos.
 
-Versão atual: **39**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v39-integracao.md), [testes](v39-testes.json) e [prompts da arte desta rodada](v39-prompts-arte.md). As nove criaturas aprovadas já têm encontros e animações no mapa. A ambiência do Vale veio no pacote; nove efeitos e duas músicas opcionais ainda aguardam os arquivos do Argon.
+Versão atual: **40**, validada no Godot 4.6.3. Se incluir a sequência final abaixo, reserve mais 2 a 3 minutos. [Integração e capturas](v40-integracao.md), [testes](v40-testes.json) e [prompts da arte desta rodada](v39-prompts-arte.md). As nove criaturas aprovadas já têm encontros e animações no mapa. Os nove efeitos do Vale agora tocam e a revelação tem música própria. A luta final mantém a trilha do chefe; as demais músicas anteriores foram preservadas.
 
 1. **Abertura (1 min):** comece um jogo novo; deixe a primeira cena e a Cripta do Despertar falarem. Mostre o HUD: vida, culpa, lágrimas.
 2. **Combate (2 min)** — na Cidade, contra os primeiros inimigos:
@@ -58,3 +58,9 @@ Explique em uma frase: *o chefe final é a culpa que o protagonista pediu para e
 19. **Ossuário** (x=7520): mostre a lanterna da Viúva e o aparo da estocada. **Vale** (x=31340): apare o primeiro Disciplinante para abrir a formação.
 
 A arquitetura dessas salas conserva a camada de pintura recebida; céu e construção ainda não são camadas independentes. Não apresente os testes como avaliação humana da sensação do combate.
+
+## Atualização da v40
+
+Sem teclado numérico, Beatriz usa (ABNT2) **.** atacar, **,** esquivar, **;** aparar, **Ç** carregar, **~** curar, **´** interagir e **[** doar sangue. F4 alterna IA/jogadora 2. O sangue e as execuções continuam disponíveis.
+
+Na demonstração, mostre o apoio no piso do Claustro e do Campanário, as soleiras das portas altas e o cabo da espada sob a mão. Os efeitos do Vale e a trilha da revelação foram integrados; confira o volume numa partida antes de apresentar. A espada/lança ainda têm alguns quadros com pontas incompletas, conforme [limites da entrega](v40-integracao.md).

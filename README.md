@@ -4,7 +4,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 
 ## Como jogar
 
-1. Abra o Godot Standard 4.6.3, usado na validação da versão 39.
+1. Abra o Godot Standard 4.6.3, usado na validação da versão 40.
 2. Importe o arquivo `project.godot`.
 3. Aguarde a importação dos arquivos e pressione **F5**.
 
@@ -31,7 +31,7 @@ Jogo de ação e exploração 2D feito no Godot. A história acompanha o Peniten
 - **F6:** liga ou desliga a pintura viva dos cenários (use se o jogo ficar lento)
 - **Enter:** iniciar; **C:** continuar salvamento no título
 
-Beatriz acompanha o Penitente e luta por conta própria. Para assumir o segundo personagem, use **setas** para mover, **↑ / Num8** para pular, **↓ / Num2** para baixo, teclado numérico **1** para atacar, **3** para esquivar, **4** para aparar, **5** para carregar golpe, **6** para curar, **0** para doar sangue e **Enter numérico** para interagir. Também é possível usar um segundo controle.
+Beatriz acompanha o Penitente e luta por conta própria. Para assumir o segundo personagem, use **setas** para mover, **↑ / Num8** para pular, **↓ / Num2** para baixo, teclado numérico **1** para atacar, **3** para esquivar, **4** para aparar, **5** para carregar golpe, **6** para curar, **0** para doar sangue e **Enter numérico** para interagir. Também é possível usar um segundo controle. **Em notebook sem teclado numérico** (teclado ABNT2): **.** atacar, **,** esquivar, **;** aparar, **Ç** golpe carregado, **~** curar, **´** interagir e **[** doar sangue. O primeiro comando de Beatriz tira o controle do jogo e o passa para a segunda pessoa; **F4** devolve.
 
 A [integração da versão 32](docs/v32-integracao.md) inclui os sons enviados pelo autor, a arte adaptada de Beatriz e a correção dos efeitos de duas fileiras.
 
@@ -56,6 +56,8 @@ A [integração da versão 35](docs/v35-integracao.md) inclui o código de sangu
 
 Na [versão 38](docs/v38-integracao.md), o Vale recebe camadas pintadas com paralaxe, forcas e gaiolas em pêndulos; O Flagelado tem elmo-gaiola e quatro etapas de armadura. Três monumentos animados dão vida às salas. Dissolução em cinzas, rastros de espada e lança, luz de aparo e respiração das criaturas foram integrados. As [nove fichas novas](docs/fichas/fichas-goya.md) foram aprovadas e integradas na versão 39, com animação e combate próprios. A documentação da integração contém detalhes do final da história.
 
-Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md), [resultados dos testes da v39](docs/v39-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
+Para o professor: [guia de apresentação](docs/guia-de-apresentacao.md), [defeitos corrigidos](docs/v34-defeitos.md), [resultados dos testes da v40](docs/v40-testes.json) e [tabela de quadros](docs/combate-quadros.md). O guia registra o uso de Claude, Codex, geração de imagens e referências do Argon. As verificações automatizadas não substituem uma partida humana para avaliar a sensação do combate.
 
 Na [versão 39](docs/v39-integracao.md), nove criaturas aprovadas entram no mapa com regras próprias, cenários vivos, bichos pintados e rosto barbado na revelação. [Contato das criaturas](docs/v39-criaturas-contato.jpg).
+
+Na [versão 40](docs/v40-integracao.md), o polimento do Claude (personagens no piso pintado, pedra da cor de cada sala, espada na mão, folhas limpas) foi unido à versão 39 do Codex, e entraram 99 sons do Argon: os nove efeitos do Vale, as ambiências e a música da revelação. [Relatório dos sons](docs/sons-argon-v40.md).

@@ -1390,6 +1390,11 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	# Sombra de contato: prende a criatura ao piso pintado. Só quando está de pé no chão.
+	if is_on_floor() and not dead:
+		draw_set_transform(Vector2(0, -1), 0, Vector2(1, 0.2))
+		draw_circle(Vector2.ZERO, maxf(18.0, body_size.x * 0.62), Color(0, 0, 0, 0.34))
+		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	if fed_by_guilt and not dead:
 		draw_arc(Vector2(0, -body_size.y * 0.5), body_size.y * 0.6, 0, TAU, 32, Color(0.65, 0.08, 0.1, 0.45), 2)
 	if state == "stagger" and not dead and not executing:

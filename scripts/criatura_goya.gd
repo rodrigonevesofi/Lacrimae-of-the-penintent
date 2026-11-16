@@ -290,10 +290,10 @@ func _process(delta:float) -> void:
  queue_redraw()
 
 func _draw() -> void:
+ super._draw()
  if dead or executing:return
  if state=="windup":
   var cor:=Color("e7c17b") if attack_parryable else Color("b92d42")
-  draw_arc(Vector2(facing*35,-50),23,0,TAU,28,cor,2.5)
   if kind in [13,17]:
    draw_arc(alvo_marcado-global_position-Vector2(0,5),42,PI,TAU,28,cor,2)
   if kind==13:draw_line(Vector2(facing*35,-65),alvo_marcado-global_position-Vector2(0,40),Color(0.95,0.87,0.67,0.65),2)

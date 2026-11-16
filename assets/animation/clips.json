@@ -58,6 +58,14 @@
       "anchor": [
         128,
         250
+      ],
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        6,
+        15,
+        0
       ]
     },
     "attack_b": {
@@ -227,6 +235,14 @@
       "anchor": [
         128,
         250
+      ],
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        8,
+        0
       ]
     },
     "charged_heavy": {
@@ -238,6 +254,14 @@
       "anchor": [
         128,
         250
+      ],
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -3
       ]
     },
     "execute_devorador": {
@@ -253,7 +277,21 @@
       ],
       "duration": 1.0,
       "wound_frame": 8,
-      "kill_frame": 8
+      "kill_frame": 8,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
     },
     "execute_flagelante": {
       "sheet": "hero_executa_flagelante",
@@ -283,7 +321,21 @@
       ],
       "duration": 1.0,
       "wound_frame": 8,
-      "kill_frame": 8
+      "kill_frame": 8,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1
+      ]
     },
     "execute_asmodeia": {
       "sheet": "hero_executa_asmodeia",
@@ -298,7 +350,21 @@
       ],
       "duration": 1.0,
       "wound_frame": 8,
-      "kill_frame": 8
+      "kill_frame": 8,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        7,
+        7,
+        0,
+        0,
+        5,
+        3,
+        0,
+        0,
+        0
+      ]
     },
     "execute_duelista": {
       "sheet": "hero_executa_duelista",
@@ -328,7 +394,21 @@
       ],
       "duration": 1.0,
       "wound_frame": 8,
-      "kill_frame": 8
+      "kill_frame": 8,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        -5,
+        0,
+        0,
+        -2
+      ]
     }
   },
   "devotee": {
@@ -1795,28 +1875,60 @@
       "start": 0,
       "count": 6,
       "fps": 7,
-      "loop": true
+      "loop": true,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -3
+      ]
     },
     "run": {
       "sheet": "beatriz_movimento",
       "start": 6,
       "count": 6,
       "fps": 14,
-      "loop": true
+      "loop": true,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -7
+      ]
     },
     "roll": {
       "sheet": "beatriz_movimento",
       "start": 18,
       "count": 6,
       "fps": 14,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -2
+      ]
     },
     "jump": {
       "sheet": "beatriz_movimento",
       "start": 12,
       "count": 6,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -6
+      ]
     },
     "hurt": {
       "sheet": "beatriz_reacoes",
@@ -1844,14 +1956,30 @@
       "start": 0,
       "count": 6,
       "fps": 14,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -9
+      ]
     },
     "attack_b": {
       "sheet": "beatriz_combate",
       "start": 6,
       "count": 6,
       "fps": 14,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -10
+      ]
     },
     "heal": {
       "sheet": "beatriz_rituais",
@@ -1914,21 +2042,38 @@
       "start": 21,
       "count": 3,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        -12
+      ]
     },
     "air_land": {
       "sheet": "beatriz_movimento",
       "start": 16,
       "count": 2,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        -6
+      ]
     },
     "air_drift": {
       "sheet": "beatriz_movimento",
       "start": 12,
       "count": 6,
       "fps": 12,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -6
+      ]
     },
     "memorial_kneel": {
       "sheet": "beatriz_rituais",
@@ -1963,21 +2108,43 @@
       "start": 0,
       "count": 6,
       "fps": 14,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -14
+      ]
     },
     "parry_recoil": {
       "sheet": "beatriz_reacoes",
       "start": 2,
       "count": 4,
       "fps": 14,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        -14
+      ]
     },
     "strong_counter": {
       "sheet": "beatriz_combate",
       "start": 12,
       "count": 6,
       "fps": 14,
-      "loop": false
+      "loop": false,
+      "deslocamentos": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        -10
+      ]
     },
     "charged_heavy": {
       "sheet": "beatriz_combate",

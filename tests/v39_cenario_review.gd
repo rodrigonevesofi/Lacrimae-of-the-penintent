@@ -28,6 +28,13 @@ func run() -> void:
 	game._start_game(false, false)
 	await frames(20)
 	game.player.dev_god = true
+	# Com LACRIMAE_REVIEW_DUPLA, Beatriz entra (os testes por --script rodam sem ela por padrão).
+	var dupla := OS.has_environment("LACRIMAE_REVIEW_DUPLA")
+	var andar := OS.has_environment("LACRIMAE_REVIEW_ANDAR")
+	if dupla:
+		game.enable_duo(true)
+		await frames(3)
+		game.partner.dev_god = true
 	var salas: Array = ["city", "ossuary", "cistern", "cloister", "belfry", "archive", "refuge", "nave", "terrace", "court"]
 	if OS.has_environment("LACRIMAE_REVIEW_SALAS"): salas = Array(OS.get_environment("LACRIMAE_REVIEW_SALAS").split(","))
 	var fracao := float(OS.get_environment("LACRIMAE_REVIEW_X")) if OS.has_environment("LACRIMAE_REVIEW_X") else 0.42
@@ -35,9 +42,19 @@ func run() -> void:
 		var data: Dictionary = game.exploration.rooms[id]
 		var x: float = data.bounds.position.x + data.bounds.size.x * fracao
 		if id == "city": x = 3300.0
+		# Chão livre: sem alvenaria nem galeria baixa por perto.
+		for tentativa in range(40):
+			var livre := true
+			for r in game.exploration.blocks + game.exploration.ledges:
+				if x > r.position.x - 170.0 and x < r.end.x + 170.0 and r.position.y > data.floor - 260.0: livre = false
+			if livre: break
+			x += 60.0
 		game.exploration.travel(id, Vector2(x, data.floor), 1)
 		await frames(40)
 		game.player.global_position = Vector2(x, data.floor)
+		if dupla:
+			game.partner.global_position = Vector2(x - 80.0, data.floor)
+			game.partner.velocity = Vector2.ZERO
 		game.player.velocity = Vector2.ZERO
 		game.player.camera.reset_smoothing()
 		game.message_t = 0.0
@@ -49,9 +66,11 @@ func run() -> void:
 		# LACRIMAE_REVIEW_PASSO: quadros de jogo entre capturas (2 = vídeo a 30 por segundo).
 		var passo := int(OS.get_environment("LACRIMAE_REVIEW_PASSO")) if OS.has_environment("LACRIMAE_REVIEW_PASSO") else 5
 		if game.pintura.tem_chuva(): game.pintura.proximo_raio = 0.6
+		if andar: Input.action_press("right")
 		for i in range(quadros):
-			await capture("%s-%02d" % [id, i])
+			await capture("%s-%03d" % [id, i])
 			await frames(passo)
+		if andar: Input.action_release("right")
 		for peca in game.primeiro_plano.pecas: print("  frente: x na tela = ", int(peca.get_global_transform_with_canvas().origin.x), " y = ", int(peca.get_global_transform_with_canvas().origin.y))
 		print("CAPTURE: ", id, " pintura=", game.pintura.ativa(id), " corvos=", game.bichos.corvos.size(), " morcegos=", game.bichos.morcegos.size(), " ratos=", game.bichos.ratos.size(), " frente=", game.primeiro_plano.pecas.size())
 	game._delete_save()

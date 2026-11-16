@@ -30,7 +30,8 @@ func run() -> void:
 	for e in get_nodes_in_group("enemies"): e.queue_free()
 	p.revive(Vector2(700,600))
 	await frames(5)
-	expect(p.sword.z_index > p.animator.z_index,"the sword is drawn in front of the body, over the fingers")
+	# v39: a espada passou para trás do corpo; o punho fecha por cima do cabo (antes ela cobria a mão).
+	expect(p.sword.z_index == p.animator.z_index and p.sword.get_index() < p.animator.get_index(),"the sword is drawn behind the body, so the fist closes over the grip")
 	var worst_idle := 0.0
 	var seen_idle := {}
 	for i in range(90):

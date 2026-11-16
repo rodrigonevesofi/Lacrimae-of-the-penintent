@@ -559,6 +559,11 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	# Sombra de contato no chão do vale.
+	if is_on_floor():
+		draw_set_transform(Vector2(0, -1), 0, Vector2(1, 0.2))
+		draw_circle(Vector2.ZERO, maxf(22.0, body_size.x * 0.62), Color(0, 0, 0, 0.36))
+		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	if fallen: return
 	var mid := Vector2(0, -body_size.y * 0.5)
 	if form == "mirror" and state != "sleep":

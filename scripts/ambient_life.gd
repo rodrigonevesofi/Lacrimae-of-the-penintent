@@ -287,7 +287,12 @@ func _draw_monument(floor_y:float,view:Rect2) -> void:
 	var name:String={"cistern":"santo","ossuary":"ossuario","cloister":"relicario"}[room]
 	var size:=Vector2(620,620)
 	var rect:=Rect2(x-size.x/2,floor_y-size.y,size.x,size.y)
-	draw_texture_rect(paints[name+"_base"],rect,false)
+	# Na cor da parede da sala, e com sombra de contato no piso.
+	var cor: Color = game.art.pedra(1, room)
+	draw_set_transform(Vector2(x, floor_y - 2), 0, Vector2(1, 0.09))
+	draw_circle(Vector2.ZERO, 250, Color(0, 0, 0, 0.34))
+	draw_set_transform(Vector2.ZERO)
+	draw_texture_rect(paints[name+"_base"],rect,false,cor)
 	if name=="santo":
 		var flow:=fposmod(t*6.0,12.0)
 		draw_texture_rect(paints.santo_movimento,Rect2(rect.position+Vector2(0,flow),rect.size),false,Color(1,1,1,0.75))
@@ -296,5 +301,5 @@ func _draw_monument(floor_y:float,view:Rect2) -> void:
 		# A projeção da largura simula a rotação lenta no eixo das correntes.
 		var depth:=0.72+0.28*absf(cos(t*0.16)) if name=="relicario" else 1.0
 		draw_set_transform(Vector2(x,floor_y-size.y/2),turn,Vector2(depth,1))
-		draw_texture_rect(paints[name+"_movimento"],Rect2(-size/2,size),false)
+		draw_texture_rect(paints[name+"_movimento"],Rect2(-size/2,size),false,cor)
 		draw_set_transform(Vector2.ZERO)
