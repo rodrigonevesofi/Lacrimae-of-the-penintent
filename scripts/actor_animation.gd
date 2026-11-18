@@ -7,17 +7,47 @@ var definitions: Dictionary = {}
 var actor := ""
 var unit_scale := 0.44
 var manual := false
+const SHADER_ATOR := preload("res://shaders/ator_legivel.gdshader")
+
+## Como cada personagem se destaca. O Penitente tem borda dourada; Beatriz, prateada; os inimigos,
+## uma borda vermelha fraca; Iria, que não é inimiga, tem uma aura clara e quase nenhum contorno.
+## Efeitos (sangue, golpes, poeira) ficam de fora.
+const INIMIGOS := ["devotee", "mourner", "devorador", "flagelante", "duelista", "bruxa", "asmodeia", "carregador", "glutao", "disciplinantes", "meio_enterrado", "parcas", "sono", "romaria", "espantalho", "dois_velhos", "viuva", "peregrino_soltado", "guardian", "guardiao_grande", "guardiao_colosso"]
+## Clarão do golpe recebido (0 a 1), desenhado pelo shader de destaque.
+func clarao(valor: float) -> void:
+	if material is ShaderMaterial:
+		material.set_shader_parameter("clarao", clampf(valor, 0.0, 1.0))
+
+static func destaque_de(nome: String) -> Dictionary:
+	if nome == "hero":
+		return {"cor_borda": Color(1.0, 0.80, 0.48), "borda": 0.7, "realce": 1.14, "saturacao": 1.1, "brilho": 1.04, "raio": 5.0, "contorno": 0.95}
+	if nome == "beatriz":
+		return {"cor_borda": Color(0.74, 0.86, 1.0), "borda": 0.8, "realce": 1.18, "saturacao": 1.05, "brilho": 1.1, "raio": 5.0, "contorno": 0.95}
+	if nome == "iria":
+		return {"cor_borda": Color(1.0, 0.96, 0.84), "borda": 0.9, "realce": 1.0, "saturacao": 0.95, "brilho": 1.06, "raio": 4.0, "contorno": 0.35, "cor_contorno": Color(0.3, 0.24, 0.16), "aura": 0.6, "raio_aura": 20.0, "cor_aura": Color(1.0, 0.92, 0.7)}
+	if nome.begins_with("flagelado"):
+		return {"cor_borda": Color(0.9, 0.25, 0.2), "borda": 0.45, "realce": 1.15, "saturacao": 1.05, "brilho": 1.05, "raio": 5.0, "contorno": 0.95}
+	if nome in INIMIGOS:
+		var grande := nome.begins_with("guardi")
+		return {"cor_borda": Color(0.92, 0.22, 0.16), "borda": 0.5, "realce": 1.14, "saturacao": 1.06, "brilho": 1.02, "raio": 3.0 if grande else 5.0, "contorno": 0.92}
+	return {}
 
 func configure(actor_name: String, scale_factor: float) -> void:
 	var surface := CanvasItemMaterial.new()
 	surface.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	material = surface
-	if actor_name == "hero":
-		var readable := ShaderMaterial.new()
-		readable.shader = load("res://shaders/penitent_readability.gdshader")
-		material = readable
+	var destaque: Dictionary = destaque_de(actor_name)
+	if not destaque.is_empty():
+		# Personagens se destacam do cenário: contorno escuro, luz de borda e um pouco mais de contraste.
+		var legivel := ShaderMaterial.new()
+		legivel.shader = SHADER_ATOR
+		for chave in destaque: legivel.set_shader_parameter(chave, destaque[chave])
+		material = legivel
 	actor = actor_name
 	unit_scale = scale_factor
+	if not frame_changed.is_connected(_atualizar_limites):
+		frame_changed.connect(_atualizar_limites)
+		animation_changed.connect(_atualizar_limites)
 	scale = Vector2.ONE * unit_scale
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	if manifest_cache.is_empty():
@@ -74,11 +104,17 @@ func select(clip: String, direction: int, progress: float = -1.0) -> void:
 	var deslocamentos: Array = data.get("deslocamentos", [])
 	var desvio := float(deslocamentos[frame]) if frame < deslocamentos.size() else 0.0
 	position = Vector2((cell.x / 2 - float(anchor[0]) + desvio) * direction, cell.y / 2 - float(anchor[1])) * unit_scale
-	if material is ShaderMaterial:
-		var image: AtlasTexture = sprite_frames.get_frame_texture(clip, frame)
-		var sheet_size := image.atlas.get_size()
-		var bounds := Vector4(image.region.position.x / sheet_size.x, image.region.position.y / sheet_size.y, image.region.end.x / sheet_size.x, image.region.end.y / sheet_size.y)
-		material.set_shader_parameter("frame_bounds", bounds)
+	_atualizar_limites()
+
+## O shader de destaque lê os vizinhos de cada ponto; precisa saber em que célula da folha está o quadro atual,
+## inclusive quando a animação avança sozinha (corrida, parado).
+func _atualizar_limites() -> void:
+	if not (material is ShaderMaterial) or sprite_frames == null or not sprite_frames.has_animation(animation): return
+	var image = sprite_frames.get_frame_texture(animation, frame)
+	if not (image is AtlasTexture): return
+	var sheet_size: Vector2 = image.atlas.get_size()
+	var bounds := Vector4(image.region.position.x / sheet_size.x, image.region.position.y / sheet_size.y, image.region.end.x / sheet_size.x, image.region.end.y / sheet_size.y)
+	material.set_shader_parameter("frame_bounds", bounds)
 
 func pose(clip: String, direction: int, index: int) -> void:
 	var count := sprite_frames.get_frame_count(clip)

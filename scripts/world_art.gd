@@ -34,6 +34,8 @@ const GROUND_Y := 600.0
 const INK := Color("17191e")
 const STONE := Color("34383d")
 const EDGE := Color("68665f")
+## Sem o shader (F6), o cenário recua só escurecendo, para os personagens continuarem à frente.
+const RECUO := Color(0.80, 0.77, 0.79)
 const GOLD := Color("a58a59")
 
 func _ready() -> void:
@@ -100,6 +102,29 @@ func candle(pos: Vector2, height: float, phase: float) -> void:
 	polygon([tip + Vector2(-2, 2), tip + Vector2(0, -5), tip + Vector2(2, 2)], Color("ffd58a"))
 	draw_circle(tip, 1, Color("fff1c5"))
 
+## Relíquias que fortalecem: o Cálice de Sangue (vida) e o Espinho da Ira (dano), flutuando sobre um pedestal.
+func relic(pos: Vector2, calice: bool) -> void:
+	var bob := sin(game.t * 2.4 + pos.x) * 5.0
+	var c := pos + Vector2(0, -56 + bob)
+	draw_rect(Rect2(pos.x - 16, pos.y - 22, 32, 22), Color("2a2224"))
+	draw_rect(Rect2(pos.x - 20, pos.y - 26, 40, 6), GOLD)
+	var halo := Color(0.85, 0.12, 0.12, 0.22) if calice else Color(0.95, 0.75, 0.4, 0.2)
+	draw_circle(c, 26 + sin(game.t * 3.0) * 3.0, halo)
+	draw_circle(c, 15, Color(halo.r, halo.g, halo.b, 0.35))
+	if calice:
+		draw_colored_polygon(PackedVector2Array([c + Vector2(-13, -12), c + Vector2(13, -12), c + Vector2(6, 4), c + Vector2(-6, 4)]), Color("b08a4e"))
+		draw_colored_polygon(PackedVector2Array([c + Vector2(-10, -10), c + Vector2(10, -10), c + Vector2(5, 1), c + Vector2(-5, 1)]), Color(0.55, 0.02, 0.05))
+		draw_rect(Rect2(c.x - 2, c.y + 4, 4, 9), Color("9a7743"))
+		draw_rect(Rect2(c.x - 8, c.y + 13, 16, 3), Color("b08a4e"))
+		draw_circle(c + Vector2(-5, -9), 2, Color(1, 0.6, 0.6, 0.6))
+	else:
+		draw_colored_polygon(PackedVector2Array([c + Vector2(-3, 16), c + Vector2(3, 16), c + Vector2(1, -18), c + Vector2(-1, -18)]), Color("4a4648"))
+		for k in range(3):
+			var y := -8.0 + k * 8.0
+			draw_line(c + Vector2(0, y), c + Vector2(7, y - 5), Color("6b6567"), 2.0)
+			draw_line(c + Vector2(0, y + 3), c + Vector2(-7, y - 2), Color("6b6567"), 2.0)
+		draw_circle(c + Vector2(0, -18), 2, Color(0.8, 0.1, 0.1))
+
 func _draw() -> void:
 	if game == null:
 		return
@@ -109,7 +134,7 @@ func _draw() -> void:
 	# Toda a fase de 4800 unidades compartilha um panorama fixo no espaço do mundo.
 	# Sem imagem seguindo a câmera, repetição de textura, troca por sala ou dissolução temporal.
 	# Com a pintura viva ligada, quem desenha o panorama é pintura_viva.gd, com o shader.
-	if not _pintura_viva("city"): draw_texture_rect(panorama, PANORAMA_RECT, false)
+	if not _pintura_viva("city"): draw_texture_rect(panorama, PANORAMA_RECT, false, RECUO)
 	if game.exploration != null: draw_passages("city")
 	# A ponte quebrada é um buraco real no plano de caminhada em primeiro plano.
 	if abyss_art != null:
@@ -339,7 +364,7 @@ func draw_branch() -> void:
 	var art_rect := Rect2(b.position.x,floor_y-height*ex.ground_line(ex.room),b.size.x,height)
 	if not _pintura_viva(ex.room):
 		draw_rect(b,Color("17181d"))
-		draw_texture_rect(texture,art_rect,false)
+		draw_texture_rect(texture,art_rect,false,RECUO)
 	if data.get("outdoor",false): draw_foundation(b,floor_y)
 	draw_passages(ex.room)
 	for block in ex.blocks:
@@ -367,6 +392,9 @@ func draw_branch() -> void:
 		if altar.x > b.position.x and altar.x < b.end.x: prop(0,altar,185)
 	for item in ex.pickups:
 		if item.room != ex.room or ex.collected.has(item.id): continue
+		if item.get("relic", false):
+			relic(item.pos, str(item.id).begins_with("calice"))
+			continue
 		prop(2,item.pos,100)
 		var glow: Vector2 = item.pos+Vector2(0,-52)
 		draw_circle(glow,7+sin(game.t*3)*2,Color(0.85,0.75,0.5,0.25))

@@ -204,9 +204,10 @@ PROGRESSO DO ATO I
 3. Duas correntes prendem a passagem do Guardião: uma no alto da Cisterna dos Nomes, outra no alto do Campanário da Vigília. Solte as duas com E.
 4. O Guardião dos Sinos, corpo fundido ao bronze, espera além dos portões da cidade. Vencê-lo revela a primeira Lágrima Sagrada.
 O Vaso da Última Vigília, no Abrigo das Cinzas, aumenta em um os frascos de cura.
+Fora do caminho principal há relíquias em pedestais: três Cálices de Sangue (vida máxima +12 cada; na Cisterna dos Nomes, no Campanário da Vigília e no Terraço) e dois Espinhos da Ira (dano +8% cada; no Claustro e no Pátio). Dê pistas do lugar, não o caminho exato.
 
 CONTROLES
-A/D mover; Espaço ou W pular (S+Espaço desce de galerias); J ou X atacar (combo de 3; no ar, corte aéreo; S+J no ar, golpe descendente); segurar I golpe carregado; L aparar no instante do golpe (só golpes com anel dourado); K ou Shift esquivar; E interagir ou executar inimigo atordoado; F curar com frasco; Q penitência (gasta culpa a partir de 50%); no altar: E orar, R oferecer lágrimas por vida máxima, V trocar penitências (1 nenhuma, 2 Pregos da Contrição: +40% dano e -30% vida, 3 Correntes do Voto: penitência mais forte e esquiva mais lenta); C abre esta confissão em qualquer lugar, fora de combate; TAB mapa; Esc pausa; M som; P reduz clarões e tremores; H compartilhar sangue com Beatriz, ou segurar perto dela caída para levantá-la. Jogador 2 controla Beatriz com setas e teclado numérico ou um segundo controle; F4 alterna Beatriz entre sozinha e jogadora 2. F11 tela cheia; F6 liga ou desliga os cenários vivos.
+A/D mover; Espaço ou W pular (S+Espaço desce de galerias); J ou X atacar (sequência de quatro golpes; no ar, dois cortes; S+J no ar, golpe descendente); toque rápido em I corte ascendente, que joga a criatura para cima; segurar I golpe carregado; J logo depois da esquiva faz a investida; U lança a Lâmina de Sangue (gasta um quarto da culpa e atravessa as criaturas); L aparar (só golpes que brilham em dourado antes de sair; aparar um pouco tarde ainda bloqueia três quartos do dano, e apertar L logo depois de ser atingido devolve a vida e abre o inimigo); K ou Shift esquivar; E interagir ou executar inimigo atordoado (cada família de criatura é executada de um jeito); quando uma ação é possível, a tecla aparece acima do objeto; F curar com frasco; Q penitência (gasta culpa a partir de 50%); no altar: E orar, R abrir as oferendas (lágrimas por mais vida, mais força ou mais um frasco), V trocar penitências (1 nenhuma, 2 Pregos da Contrição: +40% dano e -30% vida, 3 Correntes do Voto: penitência mais forte e esquiva mais lenta); C abre esta confissão em qualquer lugar, fora de combate; TAB mapa; Esc pausa; M som; P reduz clarões e tremores; H compartilhar sangue com Beatriz, ou segurar perto dela caída para levantá-la. Jogador 2 controla Beatriz com setas e teclado numérico ou um segundo controle; F4 alterna Beatriz entre sozinha e jogadora 2. F11 tela cheia; F6 liga ou desliga os cenários vivos.
 
 REGRAS DO MUNDO
 Orar num altar salva, cura, enche os frascos e faz os inimigos comuns voltarem. Lágrimas são a moeda. Ao morrer, as lágrimas ficam num fragmento de culpa no lugar da morte, a culpa sobe e a capacidade cai até o peregrino voltar ao fragmento. A culpa sobe ao sofrer e causar dano; a penitência (Q) a converte em fogo sagrado.
@@ -234,6 +235,7 @@ func state_context() -> String:
 		lines.append("Correntes dos sinos soltas: %d de 2%s." % [ex.bells.size(), _missing_bells(ex.bells)])
 	lines.append("Vida %d de %d, culpa %d%%, lágrimas %d, frascos de cura %d de %d." % [ceili(p.hp), int(p.max_hp), int(p.culpa), int(p.lagrimas), int(p.flasks), int(p.max_flasks)])
 	lines.append("Espada: %s. Espinho da Contrição (salto duplo): %s. Guardião dos Sinos: %s." % ["sim" if p.has_weapon else "ainda não", "sim" if game.relic_taken else "ainda não", "vencido" if game.boss_defeated else "não vencido"])
+	lines.append("Cálices de Sangue: %d de 3. Espinhos da Ira: %d de 2. Oferendas feitas: vida %d, força %d, frascos %d." % [int(p.calices), int(p.espinhos), int(p.upgrades), int(p.forca), int(p.frascos_extra)])
 	if game.boss_defeated:
 		lines.append("Vale dos Flagelados: %s." % ("a jornada terminou; ele já olhou o que havia lá" if game.final_defeated else "ainda não venceu o que espera lá"))
 	if p.penitence != "none":
@@ -291,6 +293,7 @@ func suggestions() -> Array[String]:
 
 const TOPICS := {
 	"controles": ["control", "tecla", "botao", "comando", "como ataca", "como pula", "como cura", "aparar", "aparo", "esquiv", "parry"],
+	"crescer": ["forca", "mais forte", "aumentar", "upgrade", "melhorar", "calice", "espinho da ira", "oferend", "mais dano", "vida maxima", "evoluir", "subir de nivel"],
 	"reliquia": ["reliquia", "espinho", "salto duplo", "pulo duplo", "abismo", "nao alcanco", "muito alto"],
 	"sinos": ["sino", "corrente", "portao", "passagem", "travad", "fechad", "bloquead"],
 	"vale": ["vale", "flagelad", "reflex", "espelho"],
@@ -329,7 +332,10 @@ func offline_answer(topic: String) -> String:
 	var objective: String = ex.objective() if ex != null else "seguir adiante"
 	match topic:
 		"controles":
-			return "Ouça, e grave na carne: J ataca, K esquiva, L apara no instante do golpe dourado, I carrega o golpe pesado, F cura, Q queima a culpa em penitência. E examina, ora e executa quem cambaleia."
+			return "Ouça, e grave na carne: J ataca quatro vezes seguidas, K esquiva, e J logo depois da esquiva avança. Um toque em I ergue a criatura; segurado, carrega o golpe pesado. L apara o que brilha em ouro, e mesmo atrasado ainda bloqueia. U lança a Lâmina de Sangue com a culpa. F cura, Q queima a culpa em penitência. E examina, ora e executa quem cambaleia."
+		"crescer":
+			var achados := "" if p == null else " Você carrega %d de 3 Cálices e %d de 2 Espinhos." % [int(p.calices), int(p.espinhos)]
+			return "A carne cresce de duas maneiras. No altar, R abre as oferendas: lágrimas por mais vida, mais força ou mais um frasco. E fora do caminho, em pedestais esquecidos, há Cálices de Sangue que alargam a vida e Espinhos da Ira que afiam a lâmina.%s Procure onde a Cisterna, o Campanário e o Terraço escondem o que sobrou dos fiéis." % achados
 		"reliquia":
 			if game != null and game.relic_taken:
 				return "O Espinho já está em você. Salte, e no ar salte outra vez: o que antes era alto demais agora é só mais um degrau da penitência."
@@ -351,7 +357,7 @@ func offline_answer(topic: String) -> String:
 				return "Há um vale além dos portões, mas os sinos ainda o guardam. Primeiro o Guardião."
 			return "No Vale espera alguém que você precisa olhar. Enquanto ele vestir a sua forma, ferir é ferir-se: apare o golpe dele com L, ou espere que reze, e só então golpeie. Lá embaixo eu não o ouvirei."
 		"altar":
-			return "Ajoelhado aqui, E ora: salva, cura e enche os frascos, mas devolve os inimigos comuns. R oferece lágrimas por mais vida; V troca as penitências."
+			return "Ajoelhado aqui, E ora: salva, cura e enche os frascos, mas devolve os inimigos comuns. R abre as oferendas: lágrimas por mais vida, mais força ou mais um frasco. V troca as penitências."
 		"culpa":
 			return "A culpa cresce quando você sofre e quando fere. Acima da metade, Q a converte em fogo sagrado. Ao morrer, suas lágrimas ficam num fragmento: volte a ele antes que o peso o enfraqueça."
 		"cura":

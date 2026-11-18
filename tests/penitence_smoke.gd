@@ -9,6 +9,12 @@ func expect(ok: bool, label: String) -> void:
 	else:
 		failures += 1
 		push_error(label)
+## v43: as lágrimas voam do corpo até a bolsa; conta também as que ainda estão no ar.
+func no_ar() -> int:
+	var soma := 0
+	for l in game.lagrimas_ar: soma += int(l.valor)
+	return soma
+
 func frames(n: int) -> void:
 	for i in range(n):
 		await physics_frame
@@ -128,6 +134,7 @@ func run() -> void:
 		p.hp = 40
 		p.culpa = 0
 		p.lagrimas = 0
+		game.lagrimas_ar.clear()
 		p.apply_penitence("none")
 		await frames(4)
 		e = game.EnemyScript.new()
@@ -152,10 +159,10 @@ func run() -> void:
 		expect(p.animator.animation == ("execute_devotee" if kind == 0 else "execute_mourner"), "correct hero execution clip kind %d" % kind)
 		expect(e.animator.animation == "executed", "victim uses separate animated execution kind %d" % kind)
 		await frames(25)
-		expect(e.dead and p.hp == 48 and p.lagrimas == e.reward, "contact grants one kill and eight health kind %d" % kind)
-		var coins: int = p.lagrimas
+		expect(e.dead and p.hp == 48 and p.lagrimas + no_ar() == e.reward, "contact grants one kill and eight health kind %d" % kind)
+		var coins: int = p.lagrimas + no_ar()
 		e._die()
-		expect(p.lagrimas == coins, "kill reward cannot be claimed twice kind %d" % kind)
+		expect(p.lagrimas + no_ar() == coins, "kill reward cannot be claimed twice kind %d" % kind)
 		# The killing blow lingers (impact pause and slow motion); control must still return within two seconds.
 		var waited := 0
 		while p.state == "execution" and waited < 120:

@@ -126,9 +126,17 @@ func run() -> void:
 	expect(game.player.hp == game.player.max_hp and game.player.flasks == 3, "altar restores health and healing charges")
 	game.player.lagrimas = 150
 	game.player.state = "idle"
+	# v43: [R] abre as oferendas; 1 (ou X) compra a vida.
 	Input.action_press("offer")
 	game._play_update(0.016)
 	Input.action_release("offer")
+	expect(game.penitence_menu and game.menu_altar == "oferendas", "altar offering opens the offerings menu")
+	Input.action_press("penitence_none")
+	game._play_update(0.016)
+	Input.action_release("penitence_none")
+	# O toque em [R] ainda conta como "acabou de apertar" até o fim deste quadro: espera o quadro passar antes de fechar.
+	await frames(1)
+	game.penitence_menu = false
 	expect(game.player.upgrades == 1 and game.player.max_hp == 115 and game.player.lagrimas == 50, "altar offering spends tears and increases max health")
 	game._take_relic()
 	expect(game.player.has_double_jump and game.relic_taken, "relic grants double jump")

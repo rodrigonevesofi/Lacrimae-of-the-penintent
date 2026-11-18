@@ -163,6 +163,8 @@ func run() -> void:
 	await clear()
 
 	p.revive(Vector2(1080,600))
+	# v43: a preparação ficou mais curta; o golpe chega antes de acabar a invulnerabilidade de quem levantou.
+	p.invuln = 0.0
 	var f3 = spawn(4,Vector2(1000,600),0)
 	f3.cd = 0.0
 	await frames(40)

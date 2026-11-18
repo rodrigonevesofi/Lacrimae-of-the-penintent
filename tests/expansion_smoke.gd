@@ -89,7 +89,7 @@ func static_checks() -> void:
 	for altar in ex.extra_altars:
 		if not supported(altar,rooms[room_of(altar.x)].floor) or inside_block(altar): items_ok = false
 	expect(items_ok,"pickups and altars rest on stone, clear of masonry")
-	expect(ex.pickups.size() == 9,"nine discoveries across the act")
+	expect(ex.pickups.size() == 14,"fourteen discoveries across the act (nine plus five relics in v43)")
 
 func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()

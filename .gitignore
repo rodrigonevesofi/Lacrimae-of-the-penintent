@@ -14,3 +14,6 @@ docs/**/*.import
 
 # Chave do Gemini (Confessionário)
 ia_local.cfg
+
+# Só para gravar o vídeo em 1080p; não vai para o repositório.
+override.cfg

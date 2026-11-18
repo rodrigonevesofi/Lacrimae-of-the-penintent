@@ -17,9 +17,9 @@ func run() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	expect(game.soundscape.music_streams.size() == 12 and game.soundscape.music_streams.has("revelacao") and game.soundscape.music_streams.has("vale"),"ten contextual scores plus the Vale and revelation scores (v41) load")
-	var trims_zero := true
-	for group in game.soundscape.MIX_TRIM_DB: if game.soundscape.MIX_TRIM_DB[group] != 0.0: trims_zero = false
-	expect(trims_zero and game.soundscape.trim_for("knock") == 0.0 and game.soundscape.trim_for("devorador_rugido") == 0.0,"the mix trims start at zero until the author has listened")
+	# v43: a mixagem foi medida (LUFS) numa luta de teste: a trilha sobe e os efeitos descem.
+	var mix: Dictionary = game.soundscape.MIX_TRIM_DB
+	expect(float(mix.tracks) > 0.0 and float(mix.action) < 0.0 and game.soundscape.trim_for("knock") == float(mix.scene) and game.soundscape.trim_for("devorador_rugido") == float(mix.creature),"the measured mix lifts the score and lowers the effects")
 	expect(game.soundscape.desired_context() == "menu","title selects sacred menu score")
 	game._start_game(false,false)
 	for i in range(3):

@@ -20,7 +20,8 @@ No Windows, também dá para usar `Jogar-Windows.cmd`.
 
 - **Onze lugares** interligados: a Cidade da Penitência, seis salas do percurso principal, três salas secretas e o Vale dos Flagelados.
 - **Dois personagens jogáveis ao mesmo tempo:** o Penitente (espada) e Beatriz (lança). Beatriz luta sozinha ou nas mãos de uma segunda pessoa.
-- **Combate:** combo de três golpes, golpe carregado, golpe descendente, aparo com contra-ataque, esquiva e execuções.
+- **Combate:** sequência de quatro golpes, corte ascendente, golpe carregado, investida, dois golpes no ar, golpe descendente, Lâmina de Sangue, aparo com bloqueio e contra-ataque, esquiva e **seis execuções diferentes** que desmembram as criaturas.
+- **Crescer na jornada:** oferendas no altar (vida, força e frascos) e cinco relíquias escondidas (Cálices de Sangue dão vida, Espinhos da Ira dão força).
 - **Dois chefes:** o Guardião dos Sinos e o Flagelado.
 - **Dezessete criaturas**, muitas inspiradas nas Pinturas Negras de Goya, cada uma com aviso, ataque e abertura próprios.
 - **Confessionário com IA:** um personagem que responde às perguntas de quem joga (veja abaixo).
@@ -33,10 +34,13 @@ No Windows, também dá para usar `Jogar-Windows.cmd`.
 |---|---|---|
 | Mover | A / D | Analógico ou direcional |
 | Pular (S + pulo desce de uma galeria) | Espaço ou W | A |
-| Atacar (combo de 3) | J ou X | X |
-| Golpe carregado (segurar e soltar) | I | RT |
+| Atacar (sequência de 4; 2 golpes no ar) | J ou X | X |
+| Corte ascendente (toque rápido) | I | RT |
+| Golpe carregado (segurar e soltar) | Segurar I | Segurar RT |
 | Golpe descendente | S + J no ar | ↓ + X no ar |
-| Aparar (golpes com anel dourado) | L | RB |
+| Investida | J logo depois da esquiva | X logo depois da esquiva |
+| Lâmina de Sangue (gasta um quarto da culpa) | U | R3 |
+| Aparar (golpes com brilho dourado) | L | RB |
 | Esquivar | K ou Shift | B |
 | Interagir, orar, executar | E | Y |
 | Curar | F | LB |
@@ -46,16 +50,22 @@ No Windows, também dá para usar `Jogar-Windows.cmd`.
 | Mapa | TAB | Back |
 | Pausa | Esc | Start |
 
-No altar: **E** ora (salva, cura e traz os inimigos de volta), **R** oferece lágrimas por mais vida, **V** troca de penitência.
+Quando uma ação é possível, a tecla aparece acima do objeto ou da criatura.
+
+No altar: **E** ora (salva, cura e traz os inimigos de volta), **R** abre as oferendas (lágrimas por mais vida, mais força ou mais um frasco), **V** troca de penitência.
+
+Aparo: o golpe aparável brilha em dourado antes de sair. Aparar um pouco tarde ainda bloqueia três quartos do dano, e apertar o aparo logo depois de levar o golpe devolve a vida e abre o inimigo.
 
 Outras teclas: **M** som, **F11** tela cheia, **P** reduz clarões e tremores, **F6** liga ou desliga os cenários animados (use se o jogo ficar lento).
 
 ### Segunda pessoa (Beatriz)
 
+Beatriz faz tudo o que o Penitente faz: os mesmos golpes, aparo, Lâmina de Sangue e execuções. As lágrimas que ela recolhe vão para a mesma bolsa, e as oferendas do altar valem para os dois.
+
 O primeiro comando da segunda pessoa assume Beatriz; **F4** devolve o controle ao jogo.
 
-- **Teclado numérico:** setas movem, ↑ pula, **1** ataca, **3** esquiva, **4** apara, **5** golpe carregado, **6** cura, **0** doa sangue, **Enter** interage.
-- **Notebook sem teclado numérico:** **.** ataca, **,** esquiva, **;** apara, **Ç** golpe carregado, **~** cura, **´** interage, **[** doa sangue.
+- **Teclado numérico:** setas movem, ↑ pula, **1** ataca, **3** esquiva, **4** apara, **5** corte ascendente ou golpe carregado, **7** Lâmina de Sangue, **6** cura, **0** doa sangue, **Enter** interage e executa.
+- **Notebook sem teclado numérico:** **.** ataca, **,** esquiva, **;** apara, **Ç** corte ascendente ou golpe carregado, **=** Lâmina de Sangue, **~** cura, **´** interage, **[** doa sangue.
 - **Segundo controle:** os mesmos botões do primeiro.
 
 ## O Confessionário (IA)
@@ -78,11 +88,9 @@ Para ligar a IA:
 - [Guia de apresentação](docs/guia-de-apresentacao.md): um roteiro de dez minutos para mostrar o jogo.
 - [Documentação do jogo](docs/documentacao/) e [pranchas de conceito](docs/pranchas/).
 
-## Como foi feito
+## Equipe
 
-Projeto acadêmico de Rodrigo. Código em GDScript, com testes automáticos em `tests/`.
-
-O projeto usou ferramentas de IA como apoio, sob direção do autor: Claude e Codex (código, integração, testes e documentação), geração de imagens e Argon (arte e efeitos sonoros), Lyria (trilha) e Flow/Veo (clipes da cutscene). A história, as decisões de design e a aprovação de cada peça são do autor. Nenhuma arte, código ou personagem de outro jogo foi copiado; Blasphemous foi referência de clima e de gênero.
+Projeto acadêmico de Rodrigo, Mateus, Bárbara e Nicole. Código em GDScript, com testes automáticos em `tests/`.
 
 ## O que vem depois
 

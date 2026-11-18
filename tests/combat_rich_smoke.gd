@@ -35,7 +35,7 @@ func run() -> void:
 	p.revive(Vector2(900,600))
 	p.facing = 1
 	await frames(4)
-	# Chain of three
+	# v43: sequência de quatro (corte, contracorte, estocada, descendente); o quarto é o arremate.
 	p._start_attack()
 	var first: bool = p.finisher
 	p.state = "idle"
@@ -43,7 +43,11 @@ func run() -> void:
 	var second: bool = p.finisher
 	p.state = "idle"
 	p._start_attack()
-	expect(not first and not second and p.finisher,"the third blow of a chain is the finisher")
+	var third: bool = p.finisher
+	var tipo3: String = p.golpe_tipo
+	p.state = "idle"
+	p._start_attack()
+	expect(not first and not second and not third and tipo3 == "estocada" and p.finisher and p.golpe_tipo == "descendente","the fourth blow of a chain is the finisher")
 	var target = spawn(0,Vector2(960,600))
 	var hp0: float = target.hp
 	p.position = Vector2(900,600)

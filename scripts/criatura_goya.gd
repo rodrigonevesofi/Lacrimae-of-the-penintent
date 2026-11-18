@@ -112,7 +112,7 @@ func _decidir(distancia:float,delta:float) -> void:
 
 func _preparar_ataque() -> void:
  state="windup"
- duracao_aviso=1.15 if kind in [13,16,17] else 0.8
+ duracao_aviso=0.9 if kind in [13,16,17] else 0.6
  if kind==11:duracao_aviso+=float(get_instance_id()%3)*0.12
  duracao_ataque=0.32
  duracao_abertura=1.2 if kind in [10,12,15,16] else 0.85
@@ -270,6 +270,7 @@ func _process(delta:float) -> void:
   if fade<=0:queue_free()
  animator.modulate=Color.WHITE.lerp(Color(1.5,1.1,1.0),0.6) if flash>0 else tint
  animator.modulate.a=spawn_opacity*fade
+ if animator.has_method("clarao"): animator.clarao(flash/0.12*0.85 if not dead else 0.0)
  var progresso:=0.0
  var clipe:="idle"
  if executing:clipe="executed";progresso=execution_progress

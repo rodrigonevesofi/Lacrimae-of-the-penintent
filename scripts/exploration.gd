@@ -42,6 +42,11 @@ var pickups: Array[Dictionary] = [
 	{"id":"rope","room":"terrace","pos":Vector2(26100,200),"name":"Corda do sino sem badalo","reward":150,"text":"O sino foi calado por dentro, antes de tocar a última vez.\nA corda foi cortada à altura da mão.\n\nNa Ordem, quem tocava o sino sem ordem era punido.\n\n+150 lágrimas."},
 	{"id":"seal","room":"court","pos":Vector2(28800,600),"name":"Os Portões Selados","reward":0,"text":"Os portões estão fechados por fora, com correntes que ninguém forjou aqui.\nGravado na madeira, sob um selo raspado: \"POR ORDEM DO SELO: NINGUÉM SAIRÁ, NINGUÉM ENTRARÁ.\"\n\nAbaixo, riscado por unhas: \"Pai, abra. Estamos aqui.\"\n\nEste caminho ainda não se abre.\nAlgo que você carrega ainda é a chave."},
 	{"id":"decree","room":"court","pos":Vector2(28700,360),"name":"Decreto selado em cera","reward":200,"text":"\"Quem lamentar será tratado como cúmplice da praga.\nQuem chorar será contado entre os culpados.\"\n\nO nome no selo foi raspado a faca. O pulso que assinou tremia.\nPela primeira vez, você duvida de quem ordenou.\n\n+200 lágrimas."},
+	{"id":"calice_1","room":"cistern","pos":Vector2(9950,600),"name":"Cálice de Sangue","relic":true,"text":"Um cálice de bronze, ainda morno, cheio até a borda.\nO sangue de quem foi absolvido não coagula.\n\nVida máxima +12."},
+	{"id":"calice_2","room":"belfry","pos":Vector2(15400,1100),"name":"Cálice de Sangue","relic":true,"text":"Deixado no último degrau, como oferenda a quem subisse.\n\nVida máxima +12."},
+	{"id":"calice_3","room":"terrace","pos":Vector2(25800,600),"name":"Cálice de Sangue","relic":true,"text":"O vento do terraço não secou o que há dentro dele.\n\nVida máxima +12."},
+	{"id":"espinho_1","room":"cloister","pos":Vector2(12140,500),"name":"Espinho da Ira","relic":true,"text":"Um espinho de ferro arrancado de uma coroa.\nQuem o aperta na mão golpeia com mais raiva.\n\nDano +8%."},
+	{"id":"espinho_2","room":"court","pos":Vector2(28300,550),"name":"Espinho da Ira","relic":true,"text":"Preso na madeira dos portões, ao lado das marcas de unhas.\n\nDano +8%."},
 	{"id":"witness","room":"ossuary","pos":Vector2(6550,600),"name":"O lugar vazio","text":"Aqui não se enterravam nomes: enterravam-se números.\nUm espaço entre os túmulos continua limpo.\n\nAlguém voltou por uma pessoa que não encontrou."},
 ]
 
@@ -102,6 +107,7 @@ func ground_line(id: String) -> float:
 
 func travel(id: String, pos: Vector2, arrival_facing: int = 0, blocking: bool = false) -> void:
 	for hazard in get_tree().get_nodes_in_group("hazards"): hazard.queue_free()
+	if game.has_method("recolher_lagrimas"): game.recolher_lagrimas()
 	room = id
 	if not visited.has(room): visited.append(room)
 	game.player.position = pos
@@ -167,7 +173,14 @@ func restore(data: Dictionary) -> void:
 	var distance = data.get("distance",0)
 	journey_distance = clampf(float(distance),0.0,1.0e9) if distance is int or distance is float else 0.0
 	if game.doll_found and not collected.has("doll"): collected.append("doll")
-	game.player.max_flasks = 4 if collected.has("vessel") else 3
+	game.player.max_flasks = (4 if collected.has("vessel") else 3) + game.player.frascos_extra
+	# Relíquias que aumentam vida e dano: contadas pelo que já foi recolhido.
+	game.player.calices = 0
+	game.player.espinhos = 0
+	for id in collected:
+		if str(id).begins_with("calice"): game.player.calices += 1
+		elif str(id).begins_with("espinho"): game.player.espinhos += 1
+	game.player.apply_penitence(game.player.penitence)
 	update_gate()
 
 func is_transitioning() -> bool:
@@ -302,6 +315,7 @@ func update(_delta: float) -> bool:
 		if p.distance_to(here) > 65: continue
 		var locked: bool = link.get("latch",false) and not forward and not opened.has(link.id)
 		game.prompt = "[E] " + ("Grade fechada pelo outro lado" if locked else "Atravessar · " + str(rooms[link.b if forward else link.a].name))
+		game.prompt_at = here + Vector2(0, -150)
 		if Input.is_action_just_pressed("interact") and game.player.state == "idle":
 			if locked: game.toast("A corrente foi presa pelo outro lado. Procure outro caminho.")
 			else:
@@ -313,6 +327,7 @@ func update(_delta: float) -> bool:
 	for entry in [{"id":"water","room":"cistern","pos":Vector2(9650,40)}, {"id":"vigil","room":"belfry","pos":Vector2(15120,-260)}]:
 		if room != entry.room or p.distance_to(entry.pos) > 65 or bells.has(entry.id): continue
 		game.prompt = "[E] Soltar a corrente dos sinos"
+		game.prompt_at = entry.pos + Vector2(0, -90)
 		if Input.is_action_just_pressed("interact") and game.player.state == "idle":
 			bells.append(entry.id)
 			update_gate()
@@ -324,6 +339,7 @@ func update(_delta: float) -> bool:
 	for item in pickups:
 		if item.room != room or collected.has(item.id) or p.distance_to(item.pos) > 55: continue
 		game.prompt = "[E] Examinar · " + item.name
+		game.prompt_at = item.pos + Vector2(0, -80)
 		if Input.is_action_just_pressed("interact"):
 			collected.append(item.id)
 			game.soundscape.play_sfx("coleta")
@@ -332,8 +348,16 @@ func update(_delta: float) -> bool:
 				game.player.blood_tears = 5
 			if item.get("reward",0) > 0: game.player.lagrimas += int(item.reward)
 			if item.id == "vessel":
-				game.player.max_flasks = 4
-				game.player.flasks = mini(game.player.flasks+1,4)
+				game.player.max_flasks = 4 + game.player.frascos_extra
+				game.player.flasks = mini(game.player.flasks+1,game.player.max_flasks)
+			if str(item.id).begins_with("calice"):
+				game.player.calices += 1
+				game.player.apply_penitence(game.player.penitence)
+				game.player.hp = game.player.max_hp
+				game._sincronizar_progresso()
+			elif str(item.id).begins_with("espinho"):
+				game.player.espinhos += 1
+				game._sincronizar_progresso()
 			game.show_message(item.name,game.story_pickup_text(str(item.id),str(item.text)))
 			game._save()
 		return true
@@ -344,9 +368,10 @@ func update(_delta: float) -> bool:
 		# Os altares das ramificações usam os mesmos sistemas de oração, equipamento e pontos de controle.
 		for i in range(3,game.altars.size()):
 			if p.distance_to(game.altars[i]) < 65:
-				game.prompt = "[E] Orar  ·  [V] Penitências  ·  [R] Oferecer %d lágrimas" % (100 * (game.player.upgrades+1))
+				game.prompt = game.altar_prompt()
+				game.prompt_at = game.altars[i] + Vector2(0, -150)
 				if Input.is_action_just_pressed("interact"): game._pray(i)
-				elif Input.is_action_just_pressed("offer"): game.offer_health()
+				elif Input.is_action_just_pressed("offer"): game.abrir_oferendas()
 		if not game.relic_taken and p.distance_to(game.relic_pos) < 55:
 			game._take_relic()
 		return true

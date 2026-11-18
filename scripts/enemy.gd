@@ -357,7 +357,11 @@ func _die() -> void:
 	_sfx("chefe_morte" if kind == 2 else ("morte_grande" if kind == 3 else "morte"))
 	collision_layer = 0
 	if player != null and is_instance_valid(player):
-		player.lagrimas += reward
+		var bolsa = player
+		var diretor = get_tree().get_first_node_in_group("game")
+		if diretor != null and diretor.player != null: bolsa = diretor.player
+		if diretor != null and diretor.has_method("lagrimas_voando"): diretor.lagrimas_voando(global_position - Vector2(0, body_size.y * 0.5), reward)
+		else: bolsa.lagrimas += reward
 		player.add_culpa(8)
 	if kind == 5:
 		for sister in coven_others():
@@ -412,6 +416,8 @@ func _physics_process(delta: float) -> void:
 	anim_t += delta
 	flash = maxf(flash - delta, 0.0)
 	state_t -= delta
+	# Preparações mais curtas que antes: o aviso continua claro, mas não dá tempo de sobra (v43).
+	if kind != 2 and state in AVISOS: state_t -= delta * (RITMO_AVISO - 1.0)
 	cd -= delta * (1.35 if fed_by_guilt else 1.0)
 	if dead:
 		death_age += delta
@@ -1306,6 +1312,10 @@ func _col(base: Color) -> Color:
 
 
 const WINDUPS := {0:0.55,1:0.75,3:1.0,4:0.5,5:0.75,6:0.9,7:0.55,8:0.4}
+const AVISOS := ["windup", "alt_windup", "strike_wind"]
+const RITMO_AVISO := 1.35
+## Quanto antes do golpe o brilho dourado aparece: é a hora de aparar.
+const BRILHO_APARO := 0.30
 const STRIKES := {0:0.18,3:0.32,7:0.18}
 const RECOVERS := {0:0.7,3:1.5,4:0.8,7:0.7,8:0.9}
 
@@ -1323,6 +1333,7 @@ func _process(delta: float) -> void:
 	spawn_opacity = minf(spawn_opacity + delta / 0.45, 1.0)
 	animator.modulate = _col(Color(1, 0.87, 0.80) if kind == 2 and phase >= 2 else tint)
 	animator.modulate.a *= spawn_opacity
+	animator.clarao(flash / 0.12 * 0.85 if not dead else 0.0)
 	animator.speed_scale = 1.0
 	if executing:
 		animator.select("executed", facing, execution_progress)
@@ -1389,6 +1400,14 @@ func _process(delta: float) -> void:
 			_: animator.select("walk" if state == "walk" else "idle", facing)
 	queue_redraw()
 
+## Estrela de quatro pontas no instante certo de reagir: dourada (aparar) ou vermelha (esquivar).
+func desenhar_brilho(onde: Vector2, cor: Color, k: float) -> void:
+	var tam := lerpf(10.0, 34.0, sin(clampf(k, 0.0, 1.0) * PI * 0.5))
+	var c := Color(1.0, 0.98, 0.9, 0.95)
+	draw_colored_polygon(PackedVector2Array([onde + Vector2(0, -tam), onde + Vector2(tam * 0.16, 0), onde + Vector2(0, tam), onde + Vector2(-tam * 0.16, 0)]), c)
+	draw_colored_polygon(PackedVector2Array([onde + Vector2(-tam, 0), onde + Vector2(0, tam * 0.16), onde + Vector2(tam, 0), onde + Vector2(0, -tam * 0.16)]), c)
+	draw_circle(onde, tam * 0.3, Color(cor.r, cor.g, cor.b, 0.6))
+
 func _draw() -> void:
 	# Sombra de contato: prende a criatura ao piso pintado. Só quando está de pé no chão.
 	if is_on_floor() and not dead:
@@ -1416,6 +1435,8 @@ func _draw() -> void:
 		draw_arc(mark, 22.0, 0, TAU, 28, cue, 3.0)
 		draw_line(mark + Vector2(0, -30), mark + Vector2(0, -23), cue, 3.0)
 		if not attack_parryable: draw_line(mark + Vector2(-6, -30), mark + Vector2(6, -30), cue, 3.0)
+		if state_t <= BRILHO_APARO:
+			desenhar_brilho(mark, cue, 1.0 - state_t / BRILHO_APARO)
 	match kind:
 		3:
 			if state == "windup":
