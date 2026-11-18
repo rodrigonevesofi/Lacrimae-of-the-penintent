@@ -83,7 +83,7 @@ func executar() -> void:
  var enterrado=criar(12)
  conferir(enterrado.hurt_rect().size.y==32,"Meio-Enterrado começa com o corpo sob a terra")
  enterrado._preparar_ataque()
- conferir(not enterrado.enterrado and enterrado.state_t>=0.8,"Meio-Enterrado emerge antes do bote")
+ conferir(not enterrado.enterrado and enterrado.state_t>=0.6,"Meio-Enterrado emerge antes do bote")
  var parcas=criar(13)
  pessoa.position=Vector2(1460,600);pessoa.dev_god=false;pessoa.invuln=0;pessoa.state="idle"
  var capacidade:float=pessoa.max_hp

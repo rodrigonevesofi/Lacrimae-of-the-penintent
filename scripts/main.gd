@@ -87,10 +87,14 @@ const FRAGMENT_LIFT := Vector2(0, -46)
 var stain_active := false
 var death_pos := Vector2.ZERO
 var penitence_menu := false
+## O menu do altar mostra as penitências ou as oferendas (vida, força, frasco).
+var menu_altar := "penitencias"
 var stain_amount := 0
 var stain_pos := Vector2.ZERO
 var has_save := false
 var prompt := ""
+## Onde o aviso de tecla aparece no mundo (acima do objeto, da pessoa ou da criatura). INF = acima do Penitente.
+var prompt_at := Vector2.INF
 var message_title := ""
 var message_text := ""
 var message_t := 0.0
@@ -460,6 +464,8 @@ func _setup_input() -> void:
 	_add_action("heavy", [KEY_I])
 	_add_action("swap", [KEY_T])
 	_add_action("share_blood", [KEY_H])
+	_add_action("prece", [KEY_U])
+	_add_action("p2_prece", [KEY_KP_7, KEY_EQUAL])
 	# Jogador 2 (Beatriz): setas e teclado numérico, ou o segundo controle.
 	# Em notebook sem teclado numérico: as teclas à direita do M e do L (no ABNT2: , . ; ç ~ ´ [).
 	_add_action("p2_left", [KEY_LEFT])
@@ -497,6 +503,7 @@ func _setup_input() -> void:
 const PAD_BUTTONS := {
 	"jump": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "roll": JOY_BUTTON_B, "interact": JOY_BUTTON_Y,
 	"parry": JOY_BUTTON_RIGHT_SHOULDER, "heal": JOY_BUTTON_LEFT_SHOULDER, "share_blood": JOY_BUTTON_DPAD_UP,
+	"prece": JOY_BUTTON_RIGHT_STICK,
 	"left": JOY_BUTTON_DPAD_LEFT, "right": JOY_BUTTON_DPAD_RIGHT, "down": JOY_BUTTON_DPAD_DOWN,
 }
 const PAD_TRIGGERS := {"heavy": JOY_AXIS_TRIGGER_RIGHT, "penance": JOY_AXIS_TRIGGER_LEFT}
@@ -742,6 +749,7 @@ func enable_duo(on: bool) -> void:
 		partner.hp = clampf(player.partner_hp, 1.0, partner.max_hp)
 		partner.lance_weight = player.lance_weight
 		partner.died.connect(_on_player_died)
+		_sincronizar_progresso()
 	elif not on and partner != null and is_instance_valid(partner):
 		player.maldicao_parceira=partner.maldicao_parcas
 		partner.remove_from_group("players")
@@ -756,7 +764,7 @@ func _update_duo(delta: float) -> void:
 	partner.has_weapon = player.has_weapon
 	var gameplay_input: bool = not paused and not dev_mode and message_text.is_empty() and narrative.mode.is_empty() and not penitence_menu and not exploration.map_open and not exploration.is_transitioning()
 	if partner.ai and gameplay_input:
-		for a in ["left", "right", "jump", "attack", "roll", "parry", "heavy", "heal", "share_blood"]:
+		for a in ["left", "right", "jump", "attack", "roll", "parry", "heavy", "heal", "share_blood", "prece", "interact"]:
 			if Input.is_action_just_pressed("p2_" + a):
 				partner.ai = false
 				toast("Jogador 2 assumiu Beatriz. (F4 devolve ao jogo)")
@@ -825,6 +833,8 @@ func _build_lights() -> void:
 # ---------------------------------------------------------------- jogo
 func _start_game(load_save: bool, cinematic: bool = true) -> void:
 	exploration.reset()
+	# Lágrimas que ainda voavam na partida anterior não atravessam um carregamento.
+	lagrimas_ar.clear()
 	story_flags.clear()
 	dialogue_pages.clear()
 	dialogue_complete_flag = ""
@@ -947,6 +957,7 @@ func _on_player_died() -> void:
 
 
 func _respawn() -> void:
+	recolher_lagrimas()
 	stain_active = true
 	stain_amount = player.lagrimas
 	stain_pos = death_pos
@@ -1087,6 +1098,74 @@ func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55,
 	animation.select(kind, flip)
 	animation.animation_finished.connect(anchor.queue_free)
 
+## Lágrimas visíveis: saem do corpo da criatura e voam até quem estiver mais perto (o Penitente
+## ou Beatriz). A bolsa é uma só, a do Penitente: tanto faz quem matou ou quem pegou.
+var lagrimas_ar: Array = []
+var lagrima_textura: Texture2D
+var coleta_ms := 0
+func lagrimas_voando(de: Vector2, valor: int) -> void:
+	if valor <= 0: return
+	var n := clampi(valor / 10, 3, 12)
+	var resto := valor
+	for i in range(n):
+		var parte := resto if i == n - 1 else valor / n
+		resto -= parte
+		var ang := randf_range(-PI * 0.9, -PI * 0.1)
+		lagrimas_ar.append({"p": de + Vector2(randf_range(-10, 10), randf_range(-10, 10)), "v": Vector2(cos(ang), sin(ang)) * randf_range(180, 360), "valor": parte, "t": -randf() * 0.25})
+
+## Entrega de uma vez as lágrimas que ainda voam (troca de sala, morte).
+func recolher_lagrimas() -> void:
+	for l in lagrimas_ar: player.lagrimas += int(l.valor)
+	lagrimas_ar.clear()
+
+func _atualizar_lagrimas(delta: float) -> void:
+	if lagrimas_ar.is_empty(): return
+	var alvos: Array = [player]
+	if partner != null and is_instance_valid(partner) and partner.standing(): alvos.append(partner)
+	var vivas: Array = []
+	for l in lagrimas_ar:
+		l.t += delta
+		var alvo = alvos[0]
+		for a in alvos:
+			if a.global_position.distance_to(l.p) < alvo.global_position.distance_to(l.p): alvo = a
+		var destino: Vector2 = alvo.global_position + Vector2(0, -52)
+		if l.t > 0.28:
+			# Depois de espirrar, a lágrima é puxada para quem a recolhe, cada vez mais rápido.
+			var puxa: float = 1400.0 + 2600.0 * minf(l.t, 1.2)
+			l.v = l.v.move_toward((destino - l.p).normalized() * minf(1300.0, 300.0 + l.t * 900.0), puxa * delta)
+		else:
+			l.v.y += 500.0 * delta
+		l.p += l.v * delta
+		if l.p.distance_to(destino) < 26.0 or l.t > 3.0:
+			player.lagrimas += int(l.valor)
+			if Time.get_ticks_msec() - coleta_ms > 60:
+				coleta_ms = Time.get_ticks_msec()
+				soundscape.play_sfx("lagrima_coleta")
+		else:
+			vivas.append(l)
+	lagrimas_ar = vivas
+
+## Clarão de tela inteira (aparo perfeito, golpe mortal). A interface desenha e apaga.
+var clarao_cor := Color(1, 1, 1, 0)
+var clarao_t := 0.0
+var clarao_dur := 0.1
+func clarao(cor: Color, duracao: float) -> void:
+	if reduced_pulses: return
+	clarao_cor = cor
+	clarao_dur = maxf(duracao, 0.01)
+	clarao_t = clarao_dur
+
+## Gotas de sangue que espirram na "lente" e escorrem devagar pela tela.
+var gotas_tela: Array = []
+func sangue_na_tela(quantas: int) -> void:
+	if reduced_pulses: return
+	var vs := get_viewport_rect().size
+	for i in range(quantas):
+		if gotas_tela.size() >= 40: gotas_tela.pop_front()
+		var borda := randf() < 0.7
+		var x := randf_range(0.0, vs.x) if not borda else (randf_range(0.0, vs.x * 0.22) if randf() < 0.5 else randf_range(vs.x * 0.78, vs.x))
+		gotas_tela.append({"p": Vector2(x, randf_range(vs.y * 0.05, vs.y * 0.75)), "r": randf_range(8.0, 30.0), "t": 0.0, "vida": randf_range(2.2, 3.6), "escorre": randf_range(10.0, 34.0)})
+
 func spawn_fx(pos: Vector2, col: Color) -> void:
 	var effect_anchor := Node2D.new()
 	effect_anchor.position = pos
@@ -1141,6 +1220,10 @@ func _save() -> void:
 		"maldicao_parcas": player.maldicao_parcas,
 		"maldicao_parceira": partner.maldicao_parcas if partner!=null and is_instance_valid(partner) else player.maldicao_parceira,
 		"upgrades": player.upgrades,
+		"forca": player.forca,
+		"frascos_extra": player.frascos_extra,
+		"calices": player.calices,
+		"espinhos": player.espinhos,
 	}
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
@@ -1201,6 +1284,10 @@ func _load() -> void:
 	boss_defeated = _clean_bool(parsed.get("boss", false), false)
 	final_defeated = _clean_bool(parsed.get("final", false), false)
 	player.upgrades = _clean_int(parsed.get("upgrades", 0), 0, 0, 50)
+	player.forca = _clean_int(parsed.get("forca", 0), 0, 0, 5)
+	player.frascos_extra = _clean_int(parsed.get("frascos_extra", 0), 0, 0, 2)
+	player.calices = _clean_int(parsed.get("calices", 0), 0, 0, 3)
+	player.espinhos = _clean_int(parsed.get("espinhos", 0), 0, 0, 2)
 	player.maldicao_parcas=_clean_float(parsed.get("maldicao_parcas",0),0,0,36)
 	player.maldicao_parceira=_clean_float(parsed.get("maldicao_parceira",0),0,0,36)
 	var saved_penitence = parsed.get("penitence", "none")
@@ -1277,6 +1364,10 @@ func _update_lights() -> void:
 
 
 func _update_fx(delta: float) -> void:
+	_atualizar_lagrimas(delta)
+	clarao_t = maxf(clarao_t - delta / maxf(Engine.time_scale, 0.05), 0.0)
+	for g in gotas_tela: g["t"] = float(g["t"]) + delta / maxf(Engine.time_scale, 0.05)
+	gotas_tela = gotas_tela.filter(func(g): return float(g["t"]) < float(g["vida"]))
 	for f in fx_list:
 		f["t"] += delta
 	fx_list = fx_list.filter(func(f): return f["t"] < 0.4)
@@ -1288,10 +1379,19 @@ func _play_update(delta: float) -> void:
 	play_time += delta
 	telemetry.tick(delta, exploration.room)
 	prompt = ""
+	prompt_at = Vector2.INF
 	if exploration.has_method("is_transitioning") and exploration.is_transitioning(): return
 	if narrative.mode != "":
 		return
 	if penitence_menu:
+		if menu_altar == "oferendas":
+			for i in range(3):
+				if Input.is_action_just_pressed(["penitence_none", "penitence_nails", "penitence_chains"][i]):
+					comprar_oferenda(i)
+			if Input.is_action_just_pressed("offer"):
+				penitence_menu = false
+				player._clear_combat_input()
+			return
 		for choice in ["none", "nails", "chains"]:
 			if Input.is_action_just_pressed("penitence_" + choice):
 				player.apply_penitence(choice)
@@ -1343,19 +1443,28 @@ func _play_update(delta: float) -> void:
 			toast("Fragmento recuperado. A capacidade da penitência foi restaurada.\n" + GuiltText.whisper(echo_count))
 			echo_count += 1
 		_save()
+	if partner != null and is_instance_valid(partner) and partner.state == "idle" and partner.is_on_floor():
+		var qp: Vector2 = partner.global_position
+		for alvo in get_tree().get_nodes_in_group("enemies"):
+			if not alvo.dead and alvo.state == "stagger" and not alvo.executing and absf(alvo.position.x - qp.x) < 72 and absf(alvo.position.y - qp.y) < (170 if alvo.family == "flyer" else 80):
+				if partner.pressed("interact"): partner.begin_execution(alvo)
+				break
 	for target in get_tree().get_nodes_in_group("enemies"):
 		if not target.dead and target.state == "stagger" and not target.executing and absf(target.position.x - pp.x) < 72 and absf(target.position.y - pp.y) < (170 if target.family == "flyer" else 80) and player.state == "idle" and player.is_on_floor():
-			prompt = "[E] Executar — Vida +8 · Culpa +12"
+			prompt = "[E] Executar"
+			prompt_at = target.global_position + Vector2(0, -target.body_size.y - 30.0)
 			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
 			return
 	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(Vector2(4700,600)) < 65:
 		if not final_defeated:
 			# Além dos portões fica o Vale, e nele a última luta.
 			prompt = "[E] Descer ao Vale dos Flagelados"
+			prompt_at = Vector2(4700, 470)
 			if Input.is_action_just_pressed("interact"):
 				enter_vale()
 			return
 		prompt = "[E] Contemplar a primeira Lágrima · encerrar a vigília"
+		prompt_at = Vector2(4700, 470)
 		if Input.is_action_just_pressed("interact"):
 			state = "ending"
 			ending_t = 0
@@ -1369,6 +1478,7 @@ func _play_update(delta: float) -> void:
 
 	if not player.has_weapon and pp.distance_to(SWORD_POS) < 70.0:
 		prompt = "[E] Empunhar a espada"
+		prompt_at = SWORD_POS + Vector2(0, -70)
 		if Input.is_action_just_pressed("interact"):
 			soundscape.chime()
 			player.has_weapon = true
@@ -1379,6 +1489,7 @@ func _play_update(delta: float) -> void:
 
 	if pp.distance_to(Vector2(990, 600)) < 65:
 		prompt = "[E] Falar com Iria" if not iria_met else "[E] Ouvir Iria"
+		prompt_at = Vector2(990, 470)
 		if Input.is_action_just_pressed("interact"):
 			iria_met = true
 			var has_register: bool = exploration.collected.has("register")
@@ -1390,6 +1501,7 @@ func _play_update(delta: float) -> void:
 		var can_name: bool = known_name and not story_flags.has("memorial_named")
 		if not memorial_honored or can_name:
 			prompt = "[E] Gravar o nome de Alba no memorial" if memorial_honored else "[E] Deixar a boneca no memorial"
+			prompt_at = Vector2(2800, 480)
 			if Input.is_action_just_pressed("interact"):
 				memorial_honored = true
 				if known_name and not story_flags.has("memorial_named"): story_flags.append("memorial_named")
@@ -1416,14 +1528,16 @@ func _play_update(delta: float) -> void:
 
 	if near_altar >= 0:
 		var cost: int = 100 * (player.upgrades + 1)
-		prompt = "[E] Orar  ·  [R] Oferecer %d lágrimas (+15 de vida base)  ·  [V] Penitências" % cost
+		prompt = altar_prompt()
+		prompt_at = altars[near_altar] + Vector2(0, -150)
 		if player.state == "idle":
 			if Input.is_action_just_pressed("interact"):
 				_pray(near_altar)
 			elif Input.is_action_just_pressed("offer"):
-				offer_health()
+				abrir_oferendas()
 	elif near_lore >= 0:
 		prompt = "[E] Examinar"
+		prompt_at = Vector2(float(lore[near_lore]["x"]), GROUND_Y - 90.0)
 		if Input.is_action_just_pressed("interact"):
 			show_message(lore[near_lore]["title"], lore[near_lore]["text"])
 
@@ -1571,6 +1685,15 @@ func _draw_dynamic() -> void:
 
 
 func _draw_fx() -> void:
+	if lagrima_textura == null and ResourceLoader.exists("res://assets/ui/lagrima_gema.png"): lagrima_textura = load("res://assets/ui/lagrima_gema.png")
+	for l in lagrimas_ar:
+		var brilho := 0.75 + 0.25 * sin(l.t * 30.0)
+		fxn.draw_circle(l.p, 9.0, Color(0.9, 0.12, 0.14, 0.18 * brilho))
+		if lagrima_textura != null:
+			fxn.draw_texture_rect(lagrima_textura, Rect2(l.p - Vector2(5, 8), Vector2(10, 16)), false, Color(1, 1, 1, brilho))
+		else:
+			fxn.draw_circle(l.p, 4.0, Color(0.8, 0.05, 0.08))
+		fxn.draw_line(l.p, l.p - l.v.normalized() * 14.0, Color(0.85, 0.15, 0.15, 0.35), 2.0)
 	for f in fx_list:
 		var tt: float = f["t"]
 		var col: Color = f["c"]
@@ -1600,6 +1723,67 @@ func at_altar() -> bool:
 	for altar in altars:
 		if player.position.distance_to(altar) < 70: return true
 	return false
+
+## Texto do altar (a interface desenha cada tecla acima do altar).
+func altar_prompt() -> String:
+	return "[E] Orar  ·  [R] Oferendas  ·  [V] Penitências"
+
+func abrir_oferendas() -> void:
+	if player.state != "idle" or not at_altar(): return
+	menu_altar = "oferendas"
+	penitence_menu = true
+	soundscape.play_sfx("ui_confirmar")
+
+## Oferendas no altar: lágrimas em troca de vida, força ou mais um frasco.
+const OFERENDAS := [
+	{"nome": "Carne que suporta", "efeito": "+15 de vida máxima", "base": 100, "max": 5},
+	{"nome": "Braço da penitência", "efeito": "+10% de dano", "base": 150, "max": 5},
+	{"nome": "Frasco da vigília", "efeito": "+1 frasco de cura", "base": 400, "max": 2},
+]
+func nivel_oferenda(i: int) -> int:
+	return [player.upgrades, player.forca, player.frascos_extra][i]
+
+func custo_oferenda(i: int) -> int:
+	return int(OFERENDAS[i].base) * (nivel_oferenda(i) + 1)
+
+func comprar_oferenda(i: int) -> void:
+	var o: Dictionary = OFERENDAS[i]
+	if nivel_oferenda(i) >= int(o.max):
+		toast("Nada mais pode ser oferecido aqui.")
+		return
+	var custo := custo_oferenda(i)
+	if player.lagrimas < custo:
+		toast("Lágrimas insuficientes (precisa de %d)." % custo)
+		soundscape.play_sfx("ui_mover")
+		return
+	player.lagrimas -= custo
+	match i:
+		0:
+			player.upgrades += 1
+			player.apply_penitence(player.penitence)
+			player.hp = player.max_hp
+		1: player.forca += 1
+		2:
+			player.frascos_extra += 1
+			player.max_flasks += 1
+			player.flasks = player.max_flasks
+	_sincronizar_progresso()
+	soundscape.play_sfx("oferenda")
+	spawn_fx(player.global_position + Vector2(0, -50), Color(0.9, 0.2, 0.2))
+	toast("%s · %s" % [o.nome, o.efeito])
+	_save()
+
+## Beatriz recebe as mesmas melhorias que o Penitente.
+func _sincronizar_progresso() -> void:
+	if partner == null or not is_instance_valid(partner): return
+	partner.upgrades = player.upgrades
+	partner.forca = player.forca
+	partner.calices = player.calices
+	partner.espinhos = player.espinhos
+	if partner.max_flasks != player.max_flasks:
+		partner.max_flasks = player.max_flasks
+		partner.flasks = mini(partner.flasks + 1, partner.max_flasks)
+	partner.apply_penitence(partner.penitence)
 
 func offer_health() -> void:
 	if player.state != "idle" or not at_altar(): return

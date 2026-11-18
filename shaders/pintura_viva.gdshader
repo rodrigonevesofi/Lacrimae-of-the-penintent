@@ -20,6 +20,9 @@ uniform float clarao = 0.0;                // relâmpago: clareia o céu
 uniform float faixa_agua = 2.0;            // abaixo deste V a água é lâmina parada; acima dele, jorro
 uniform vec3 cor_halo : source_color = vec3(1.0, 0.62, 0.28);
 uniform vec3 cor_clarao : source_color = vec3(0.62, 0.70, 0.95);
+// Recuo: o cenário fica um pouco mais escuro e menos colorido que os personagens, que vêm à frente.
+uniform float recuo : hint_range(0.0, 1.0) = 1.0;
+uniform vec3 cor_nevoa : source_color = vec3(0.10, 0.07, 0.07);
 
 float acaso(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -89,5 +92,9 @@ void fragment() {
 	cor.rgb *= 1.0 + b.b * (0.26 * (nevoa - 0.5) + 0.07 * sin(tempo * 0.7 + ponto.x * 0.01)) ;
 	cor.rgb += cor_clarao * b.b * clarao * 0.35;
 
+	float lum_fundo = dot(cor.rgb, vec3(0.2126, 0.7152, 0.0722));
+	vec3 recuado = mix(vec3(lum_fundo), cor.rgb, 0.78) * 0.80;
+	recuado = mix(recuado, cor_nevoa, 0.10);
+	cor.rgb = mix(cor.rgb, recuado, recuo);
 	COLOR = cor * COLOR;
 }

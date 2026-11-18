@@ -69,7 +69,7 @@ func run() -> void:
 	for i in range(240):
 		if not sound.switching: break
 		await frames(1)
-	if not sound.muted: expect(absf(sound.ambience.volume_db - (-3.0)) < 0.5,"music returns to its normal level once the scene ends")
+	if not sound.muted: expect(absf(sound.ambience.volume_db - (-3.0 + float(sound.MIX_TRIM_DB.tracks))) < 0.5,"music returns to its normal level once the scene ends")
 	n.mode = "echo"
 	n.echo_index = 0
 	n.elapsed = 3.0

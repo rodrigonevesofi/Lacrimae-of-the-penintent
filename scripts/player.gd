@@ -2,6 +2,9 @@ extends CharacterBody2D
 ## O Penitente das Lágrimas (jogador)
 
 const Util = preload("res://scripts/util.gd")
+const RastroGolpe = preload("res://scripts/rastro_golpe.gd")
+const LaminaSangue = preload("res://scripts/lamina_sangue.gd")
+const Gore = preload("res://scripts/gore.gd")
 
 signal died
 
@@ -12,7 +15,18 @@ const DJUMP_V := -560.0
 const ROLL_SPEED := 540.0
 const ROLL_TIME := 0.34
 const ATTACK_TIME := 0.36
-const COMBO_DURATIONS := [0.32, 0.36, 0.46]
+const COMBO_DURATIONS := [0.30, 0.32, 0.34, 0.50]
+## Os quatro golpes da sequência: corte, contracorte, estocada e o arremate descendente.
+const COMBO_TIPOS := ["corte", "contracorte", "estocada", "descendente"]
+const COMBO_DANO := [20.0, 24.0, 28.0, 40.0]
+const INVESTIDA_TIME := 0.28
+const ASCENDENTE_TIME := 0.42
+## Soltar o golpe pesado antes disso faz o corte ascendente; segurar, o golpe carregado.
+const TOQUE_PESADO := 0.18
+const PRECE_CUSTO := 25.0
+const AIR_ATTACKS_MAX := 2
+## Aparo tardio: apertar o aparo logo depois de ser atingido por um golpe aparável ainda vale.
+const PERDAO_APARO := 0.12
 const INPUT_BUFFER := 0.22
 const AIR_ATTACK_TIME := 0.48
 const AIR_RECOVERY_TIME := 0.16
@@ -48,7 +62,8 @@ var perfect_dodge_used := false
 var perfect_dodges := 0
 var air_chain := 0
 var execution_wound := false
-## Combate: sequência de três golpes com arremate no terceiro, golpe pesado carregado e ataque descendente.
+## Combate: sequência de quatro golpes com arremate no quarto, corte ascendente, golpe pesado carregado, investida,
+## dois golpes no ar, ataque descendente e Lâmina de Sangue.
 const HEAVY_STRIKE_TIME := 0.32
 const HEAVY_FULL := 0.9
 var combo_step := 0
@@ -65,6 +80,24 @@ var roll_direction := 0.0
 var parry_direction := 0.0
 var camera_focus_x := 0.0
 var plunge_landed := false
+var golpe_tipo := "corte"
+## Execução: aproximação da câmera e câmera lenta mudam com o jeito de matar.
+const EXECUCAO_ZOOM := {"cabeca": 1.75, "vertical": 1.45, "cintura": 1.55, "erguer": 1.6, "coracao": 1.9, "cranio": 1.5}
+const EXECUCAO_LENTO := {"cabeca": [0.18, 0.5], "vertical": [0.3, 0.32], "cintura": [0.22, 0.4], "erguer": [0.3, 0.45], "coracao": [0.35, 0.65], "cranio": [0.15, 0.3]}
+var execucao_zoom := 1.5
+## Depois de uma execução, a armadura fica manchada de sangue e limpa aos poucos.
+var ensanguentado := 0.0
+var perdao_t := 0.0
+var perdao_dano := 0.0
+var perdao_de := 0.0
+var perdao_quem = null
+var roll_fim_t := 0.0
+var fantasma_t := 0.0
+var prece_cd := 0.0
+var bloqueios := 0
+var air_attacks := 0
+var investida_hits := 0
+var ascendente_salto := false
 ## Modo de desenvolvimento (F3): atravessa paredes e evita dano para apresentar as salas.
 ## Dois penitentes carregam o mesmo fardo: o Penitente e Beatriz. No modo solo, T troca quem está em cena;
 ## cada um tem sua vida e, perto da morte, o outro pode sangrar para salvá-lo (H).
@@ -89,6 +122,10 @@ var ai_held := {}
 var ai_tap := {}
 var ai_axis := 0.0
 var ai_attack_cd := 0.0
+## v43: Beatriz no automático também varia os golpes (corte ascendente, investida e Lâmina de Sangue).
+var ai_golpes := 0
+var ai_prece_cd := 0.0
+var ai_pesado_pendente := false
 var revive_t := 0.0
 signal fell
 var dev_fly := false
@@ -97,8 +134,8 @@ const BLOOD_DECALS_MAX := 14
 ## Mancha vermelha nas bordas da tela no golpe mortal de uma execução (desenhada pelo HUD).
 var gore_flash := 0.0
 var parries := 0
-const PARRY_TIME := 0.46
-const PARRY_WINDOW := 0.22
+const PARRY_TIME := 0.52
+const PARRY_WINDOW := 0.36
 var jump_elapsed := 0.0
 var landing_t := 0.0
 var was_grounded := true
@@ -116,6 +153,11 @@ var hp := 100.0
 var culpa := 0.0
 var lagrimas := 0
 var upgrades := 0
+## Progressão (v43): força comprada no altar e relíquias achadas pelo caminho.
+var forca := 0           # cada nível: +10% de dano
+var frascos_extra := 0   # frascos comprados no altar
+var calices := 0         # Cálice de Sangue: +12 de vida máxima cada
+var espinhos := 0        # Espinho da Ira: +8% de dano cada
 var max_flasks := 3
 var flasks := 3
 var has_double_jump := false
@@ -319,7 +361,7 @@ func _physics_process(delta: float) -> void:
 	if state == "execution":
 		velocity = Vector2.ZERO
 		var progress := 1.0 - state_t / execution_length
-		camera.zoom = execution_zoom_start.lerp(execution_zoom_start * 1.5, sin(clampf(progress, 0, 1) * PI))
+		camera.zoom = execution_zoom_start.lerp(execution_zoom_start * execucao_zoom, sin(clampf(progress, 0, 1) * PI))
 		if is_instance_valid(execution_target):
 			execution_target.execution_progress = clampf(progress, 0, 1)
 			if progress >= execution_wound_at and not execution_wound:
@@ -330,8 +372,8 @@ func _physics_process(delta: float) -> void:
 					get_tree().call_group("game", "play_sfx", "hit_carne")
 					get_tree().call_group("game", "play_sfx", "carne_rasga")
 					var wound := _execution_torso()
-					_blood_burst(wound, 1.0, 40)
-					get_tree().call_group("game", "spawn_effect", "sangue", wound, facing, 0.55, "impactos")
+					# O primeiro ferimento é contido; o leque grande de sangue fica para o golpe mortal de cada estilo.
+					_blood_burst(wound, 0.8, 30)
 					get_tree().call_group("game", "blood_splats", execution_target.global_position, facing, 5, 0.9)
 					hit_pause = maxf(hit_pause, 0.06)
 					shake = maxf(shake, 4.0)
@@ -352,15 +394,18 @@ func _physics_process(delta: float) -> void:
 				# pelo chão, uma poça larga e a borda da tela manchada de vermelho.
 				hit_pause = 0.16
 				shake = 10
-				_blood_burst(torso, 1.6, 90)
-				_arterial_spray(torso, 4)
-				get_tree().call_group("game", "spawn_effect", "sangue", torso, facing, 0.85, "impactos")
-				get_tree().call_group("game", "spawn_effect", "star", torso, facing, 0.6, "golpe")
+				# Cada criatura morre de um jeito: o corte, o jorro e o corpo recortado mudam (scripts/gore.gd).
+				var estilo := Gore.estilo_de(execution_target.kind)
+				_assinatura_execucao(estilo, torso, execution_target)
 				get_tree().call_group("game", "blood_splats", ground, facing, 14, 1.4)
 				_blood_decal(ground)
 				gore_flash = 0.5
 				_blood_tear()
-				_slow_motion(0.25, 0.3)
+				Gore.finalizar(game, execution_target, estilo, facing, self, global_position.y)
+				var lento: Array = EXECUCAO_LENTO.get(estilo, [0.25, 0.3])
+				_slow_motion(lento[0], lento[1])
+				gore_flash = 0.7
+				ensanguentado = 1.0
 				add_weight(12.0)
 		if state_t <= 0:
 			if is_instance_valid(execution_target): execution_target.executing = false
@@ -383,6 +428,7 @@ func _physics_process(delta: float) -> void:
 	was_grounded = on_floor
 	if on_floor:
 		air_attack_used = false
+		air_attacks = 0
 		air_chain = 0
 		if just_landed and aerial_after_cut and state == "idle":
 			state = "air_recover"
@@ -406,6 +452,9 @@ func _physics_process(delta: float) -> void:
 	parry_buffer = maxf(parry_buffer - delta, 0.0)
 	heavy_buffer = maxf(heavy_buffer - delta, 0.0)
 	parry_cd = maxf(parry_cd - delta, 0.0)
+	perdao_t = maxf(perdao_t - delta, 0.0)
+	roll_fim_t = maxf(roll_fim_t - delta, 0.0)
+	prece_cd = maxf(prece_cd - delta, 0.0)
 	counter_t = maxf(counter_t - delta, 0.0)
 	combo_window = maxf(combo_window - delta, 0.0)
 	swap_cd = maxf(swap_cd - delta, 0.0)
@@ -436,8 +485,12 @@ func _physics_process(delta: float) -> void:
 				pass
 			elif heavy_buffer > 0.0 and has_weapon and on_floor:
 				_start_charge()
+			elif attack_buffer > 0.0 and has_weapon and roll_fim_t > 0.0 and on_floor:
+				_start_investida()
 			elif attack_buffer > 0.0 and has_weapon:
 				_start_attack()
+			elif pressed("prece") and has_weapon and not (game != null and game.at_altar()):
+				_lancar_prece()
 			elif pressed("swap") and partner() == null:
 				swap_character()
 			elif pressed("share_blood"):
@@ -483,7 +536,8 @@ func _physics_process(delta: float) -> void:
 			elif _jump_from_recovery(on_floor):
 				pass
 			elif not held("heavy") or heavy_t > 2.5:
-				_start_heavy()
+				if heavy_t < TOQUE_PESADO: _start_ascendente()
+				else: _start_heavy()
 		"heavy":
 			velocity.x = move_toward(velocity.x, facing * 40.0, 2400.0 * delta)
 			if not heavy_done and state_t <= heavy_len * 0.7:
@@ -516,6 +570,9 @@ func _physics_process(delta: float) -> void:
 				_attack_hits(true)
 			if state == "air_attack" and progress >= 5.0 / 12.0 and _buffered_roll():
 				pass
+			elif state == "air_attack" and progress >= 0.55 and attack_buffer > 0.0 and air_attacks < AIR_ATTACKS_MAX:
+				air_attack_used = false
+				_start_air_attack()
 			elif state == "air_attack" and state_t <= 0:
 				state = "idle"
 		"air_recover":
@@ -536,9 +593,45 @@ func _physics_process(delta: float) -> void:
 				parry_cd = 0.25
 		"roll":
 			velocity.x = facing * ROLL_SPEED
+			if attack_buffer > 0.0 and has_weapon and on_floor and ROLL_TIME - state_t > 0.10:
+				_start_investida()
+			elif state_t <= 0.0:
+				state = "idle"
+				roll_fim_t = 0.16
+				velocity.x = facing * speed() * 0.6
+		"investida":
+			var k := clampf(state_t / INVESTIDA_TIME, 0.0, 1.0)
+			velocity.x = facing * lerpf(120.0, 720.0, sqrt(k))
+			fantasma_t -= delta
+			if fantasma_t <= 0.0:
+				fantasma_t = 0.035
+				_fantasma(Color(1.0, 0.35, 0.28, 0.55))
+			_investida_hits()
+			if state_t <= INVESTIDA_TIME * 0.35 and _buffered_roll():
+				pass
+			elif state_t <= 0.0:
+				state = "idle"
+				velocity.x = facing * 140.0
+		"ascendente":
+			var pa := 1.0 - state_t / maxf(ASCENDENTE_TIME * attack_scale(), 0.01)
+			velocity.x = move_toward(velocity.x, facing * 40.0, 2400.0 * delta)
+			if pa >= 0.28 and pa <= 0.62:
+				_swing_trail()
+				_ascendente_hits()
+			if pa >= 0.45 and not ascendente_salto and on_floor:
+				# Um pequeno salto acompanha o corte: dá para seguir com os golpes no ar.
+				ascendente_salto = true
+				velocity.y = -360.0
+			if pa >= 0.62 and attack_buffer > 0.0 and not on_floor:
+				_start_air_attack()
+			elif pa >= 0.62 and _buffered_roll():
+				pass
+			elif state_t <= 0.0:
+				state = "idle"
+		"prece":
+			velocity.x = move_toward(velocity.x, 0.0, 2400.0 * delta)
 			if state_t <= 0.0:
 				state = "idle"
-				velocity.x = facing * speed() * 0.6
 		"hurt":
 			velocity.x = move_toward(velocity.x, 0.0, 900.0 * delta)
 			if state_t <= 0.0:
@@ -575,6 +668,9 @@ func _process(_delta: float) -> void:
 
 func _update_animation() -> void:
 	var tint: Color = CHARACTERS[character].tint if animator.actor == "hero" else Color.WHITE
+	if ensanguentado > 0.0:
+		ensanguentado = maxf(ensanguentado - get_process_delta_time() / 18.0, 0.0)
+		tint = tint.lerp(Color(0.86, 0.5, 0.46), ensanguentado * 0.3)
 	if invuln > 0 and not cinematic_focus and state not in ["roll", "dead", "execution"]:
 		tint.a = 0.6 if int(anim_t * 18) % 2 else 1.0
 	animator.modulate = tint
@@ -589,9 +685,32 @@ func _update_animation() -> void:
 		return
 	match state:
 		"execution": animator.select(_execution_clip(), facing, 1 - state_t / execution_length)
-		"air_attack": animator.select("air_attack",facing,1-state_t/AIR_ATTACK_TIME)
+		"air_attack":
+			var pa := 1.0 - state_t / AIR_ATTACK_TIME
+			if golpe_tipo == "aereo2" and _tem_clipe("golpe_aereo2"): animator.select("golpe_aereo2", facing, clampf(pa, 0.0, 0.999))
+			else: animator.select("air_attack", facing, pa)
 		"air_recover": animator.select("air_land",facing,1-state_t/AIR_RECOVERY_TIME)
-		"attack": animator.select("strong_counter" if counter_attack or finisher else ("attack_a" if combo == 1 else "attack_b"), facing, 1 - state_t / attack_len)
+		"attack":
+			var pg := clampf(1 - state_t / attack_len, 0.0, 0.999)
+			if counter_attack: animator.select("strong_counter", facing, pg)
+			elif golpe_tipo != "corte" and _tem_clipe("golpe_" + golpe_tipo): animator.select("golpe_" + golpe_tipo, facing, pg)
+			else:
+				match golpe_tipo:
+					"contracorte": animator.select("attack_b", facing, pg)
+					"estocada": animator.select("strong_counter", facing, pg)
+					"descendente": animator.select("charged_heavy", facing, 0.5 + pg * 0.499)
+					_: animator.select("attack_a", facing, pg)
+		"investida":
+			var pi := clampf(1.0 - state_t / INVESTIDA_TIME, 0.0, 0.999)
+			if _tem_clipe("golpe_investida"): animator.select("golpe_investida", facing, pi)
+			else: animator.select("strong_counter", facing, 0.15 + pi * 0.6)
+		"ascendente":
+			var pu := clampf(1.0 - state_t / maxf(ASCENDENTE_TIME * attack_scale(), 0.01), 0.0, 0.999)
+			animator.select("golpe_ascendente" if _tem_clipe("golpe_ascendente") else "attack_b", facing, pu)
+		"prece":
+			var pp := clampf(1.0 - state_t / 0.34, 0.0, 0.999)
+			if _tem_clipe("golpe_prece"): animator.select("golpe_prece", facing, pp)
+			else: animator.select("strong_counter", facing, pp * 0.6)
 		"charge": animator.select("charged_heavy", facing, minf(heavy_t / HEAVY_FULL, 1.0) * 3.99 / 6.0)
 		"heavy": animator.select("charged_heavy", facing, (4.0 + clampf(1.0 - state_t / heavy_len, 0.0, 1.0) * 1.99) / 6.0)
 		"plunge": animator.select("air_attack", facing, 0.55)
@@ -633,10 +752,11 @@ func _start_attack() -> void:
 	get_tree().call_group("game", "play_sfx", "lanca_estocada" if character == "beatriz" else "swing")
 	attack_buffer = 0.0
 	# Sequência de três: o terceiro golpe dentro do intervalo é o arremate.
-	combo_step = (combo_step + 1) % 3 if combo_window > 0.0 else 0
-	finisher = combo_step == 2
+	combo_step = (combo_step + 1) % COMBO_DURATIONS.size() if combo_window > 0.0 else 0
+	finisher = combo_step == COMBO_DURATIONS.size() - 1
+	golpe_tipo = COMBO_TIPOS[combo_step]
 	combo_window = float(COMBO_DURATIONS[combo_step]) * attack_scale() + 0.30
-	velocity.x = facing * (210.0 if finisher else 125.0)
+	velocity.x = facing * [125.0, 140.0, 240.0, 200.0][combo_step]
 	state = "attack"
 	counter_attack = counter_t > 0.0
 	counter_t = 0.0
@@ -649,7 +769,10 @@ func _start_attack() -> void:
 
 func _attack_hits(aerial: bool = false) -> void:
 	var width := 86.0 * float(CHARACTERS[character].reach)
+	if golpe_tipo == "estocada": width *= 1.4
+	elif golpe_tipo == "descendente": width *= 1.15
 	var r := Rect2(global_position + Vector2(6.0 if facing > 0 else -(6.0 + width), -66.0), Vector2(width, 66.0))
+	if golpe_tipo == "descendente": r = Rect2(r.position + Vector2(0, -24), r.size + Vector2(0, 24))
 	if aerial:
 		var air_width := 92.0 * float(CHARACTERS[character].reach)
 		r = Rect2(global_position + Vector2(8.0 if facing > 0 else -(8.0 + air_width),-108.0),Vector2(air_width,82.0))
@@ -662,7 +785,7 @@ func _attack_hits(aerial: bool = false) -> void:
 			# Bronze e armadura ressoam; a carne cede.
 			get_tree().call_group("game", "play_sfx", "hit_carne" if impact_kind == "sangue" else "hit_metal")
 			hit_list.append(e)
-			var dmg := (38.0 if counter_attack else (22.0 if aerial else (34.0 if finisher else (20.0 if combo == 1 else 26.0)))) * sword_multiplier()
+			var dmg := (38.0 if counter_attack else (22.0 if aerial else float(COMBO_DANO[clampi(combo_step, 0, 3)]))) * sword_multiplier()
 			e.last_hitter = self
 			var airborne: bool = e.state == "launched"
 			e.take_hit(dmg, global_position.x)
@@ -676,7 +799,11 @@ func _attack_hits(aerial: bool = false) -> void:
 			if finisher and not aerial:
 				get_tree().call_group("game", "play_sfx", "arremate")
 				_launch(e, 360.0, -220.0)
-				if e.dead: _slow_motion(0.3, 0.16)
+				if e.dead:
+					_slow_motion(0.3, 0.16)
+					_desmembrar_morto(e, "vertical" if golpe_tipo == "descendente" else "cintura")
+			elif counter_attack and e.dead:
+				_desmembrar_morto(e, "cabeca")
 			# Cada golpe tem peso: pausa no impacto, pausa maior ao matar, faíscas e sangue.
 			var stop := 0.085 if e.dead else (0.065 if finisher or counter_attack else 0.045)
 			hit_pause = maxf(hit_pause, stop)
@@ -795,6 +922,9 @@ func _parry_success(attacker, from_x: float) -> void:
 	get_tree().call_group("game", "play_sfx", "hit")
 	get_tree().call_group("game", "play_sfx", "aparo")
 	get_tree().call_group("game", "spawn_effect", "parry", global_position + Vector2(facing * 46.0, -54.0), facing, 0.7)
+	get_tree().call_group("game", "spawn_effect", "faiscas", global_position + Vector2(facing * 46.0, -54.0), facing, 0.55, "impactos")
+	get_tree().call_group("game", "clarao", Color(1.0, 0.93, 0.7, 0.35), 0.12)
+	_slow_motion(0.3, 0.16)
 	if attacker != null and is_instance_valid(attacker) and attacker.has_method("parried"):
 		attacker.parried()
 	if parries == 1:
@@ -806,8 +936,11 @@ func take_hit(dmg: float, from_x: float, attacker = null, parryable: bool = fals
 		return
 	if state == "roll" and ROLL_TIME - state_t <= PERFECT_DODGE_WINDOW and attacker != null:
 		_perfect_dodge()
-	if state == "parry" and parryable and state_t > PARRY_TIME - PARRY_WINDOW and (from_x - global_position.x) * float(facing) >= -10.0:
-		_parry_success(attacker, from_x)
+	if state == "parry" and parryable and (from_x - global_position.x) * float(facing) >= -10.0:
+		if state_t > PARRY_TIME - PARRY_WINDOW:
+			_parry_success(attacker, from_x)
+		else:
+			_bloqueio(dmg, from_x)
 		return
 	if state == "dead" or invuln > 0.0 or cinematic_focus or state == "execution":
 		return
@@ -815,6 +948,11 @@ func take_hit(dmg: float, from_x: float, attacker = null, parryable: bool = fals
 	_clear_combat_input()
 	combo_window = 0.0
 	damage_flash = 0.25
+	if parryable and attacker != null and (from_x - global_position.x) * float(facing) >= -10.0 and has_weapon:
+		perdao_t = PERDAO_APARO
+		perdao_dano = dmg
+		perdao_de = from_x
+		perdao_quem = attacker
 	hp -= dmg
 	add_culpa(dmg * 0.6)
 	invuln = 0.8
@@ -954,6 +1092,7 @@ func add_culpa(amount: float) -> void:
 func sword_multiplier() -> float:
 	var m := 1.4 if penitence == "nails" else 1.0
 	m *= float(CHARACTERS[character].damage)
+	m *= 1.0 + 0.10 * forca + 0.08 * espinhos
 	if character == "beatriz":
 		m *= 1.0 + lance_weight * 0.006
 	return m
@@ -1014,7 +1153,7 @@ func apply_character() -> void:
 
 func apply_penitence(id: String) -> void:
 	penitence = id if id in ["none", "nails", "chains"] else "none"
-	max_hp = maxf(30.0,(100.0 + upgrades * 15.0) * (0.7 if penitence == "nails" else 1.0)-maldicao_parcas)
+	max_hp = maxf(30.0,(100.0 + upgrades * 15.0 + calices * 12.0) * (0.7 if penitence == "nails" else 1.0)-maldicao_parcas)
 	hp = minf(hp, max_hp)
 
 func begin_execution(target) -> bool:
@@ -1025,6 +1164,7 @@ func begin_execution(target) -> bool:
 	if target.dead or target.kind == 2 or target.kind == 9 or target.state != "stagger" or target.executing: return false
 	if absf(target.position.x - position.x) > 72 or absf(target.position.y - position.y) > (170 if target.family == "flyer" else 80): return false
 	execution_zoom_start = camera.zoom
+	execucao_zoom = float(EXECUCAO_ZOOM.get(Gore.estilo_de(target.kind), 1.5))
 	execution_target = target
 	execution_contact = false
 	execution_wound = false
@@ -1145,6 +1285,7 @@ func _heavy_hits() -> void:
 		e.last_hitter = self
 		e.take_hit(dmg, global_position.x)
 		if full and e.kind == 8 and not e.exposed: e._break_coffin()
+		if e.dead and full: _desmembrar_morto(e, "cintura")
 		_launch(e, 440.0 if full else 230.0, -300.0 if full else -130.0)
 		e.hit_pause = maxf(e.hit_pause, 0.085)
 		var spot: Vector2 = e.global_position + Vector2(0.0, -e.body_size.y * 0.55)
@@ -1173,6 +1314,7 @@ func _plunge_impact() -> void:
 		if absf(d.x) < 130.0 and absf(d.y) < 70.0 and _clear_strike(e):
 			e.last_hitter = self
 			e.take_hit((45.0 if counter_attack else 30.0) * sword_multiplier(), global_position.x)
+			if e.dead: _desmembrar_morto(e, "cranio")
 			var away := 1 if d.x >= 0.0 else -1
 			var keep := facing
 			facing = away
@@ -1202,6 +1344,7 @@ func _ai_think(delta: float) -> void:
 	ai_held.clear()
 	ai_axis = 0.0
 	ai_attack_cd = maxf(ai_attack_cd - delta, 0.0)
+	ai_prece_cd = maxf(ai_prece_cd - delta, 0.0)
 	var lead = partner()
 	if lead == null or not standing():
 		return
@@ -1223,6 +1366,11 @@ func _ai_think(delta: float) -> void:
 		var reach := 96.0 * float(CHARACTERS[character].reach)
 		if absf(dx) > reach * 0.85:
 			ai_axis = signf(dx)
+			# De longe, com culpa bastante, lança a Lâmina de Sangue.
+			if ai_prece_cd <= 0.0 and culpa >= PRECE_CUSTO * 2.0 and absf(dx) < 460.0 and is_on_floor():
+				facing = 1 if dx > 0.0 else -1
+				ai_tap["prece"] = true
+				ai_prece_cd = 5.0
 		else:
 			facing = 1 if dx > 0.0 else -1
 			if foe.state in ["windup", "strike_wind", "alt_windup"] and foe.state_t < 0.22:
@@ -1233,8 +1381,16 @@ func _ai_think(delta: float) -> void:
 			elif foe.state == "stagger" and is_on_floor():
 				ai_tap["interact"] = true
 				ai_tap["attack"] = true
-			elif ai_attack_cd <= 0.0:
+			elif roll_fim_t > 0.0 and is_on_floor():
+				# Saindo da esquiva, emenda a investida.
 				ai_tap["attack"] = true
+			elif ai_attack_cd <= 0.0:
+				ai_golpes += 1
+				if ai_golpes % 5 == 4: ai_pesado_pendente = true
+				if ai_pesado_pendente and is_on_floor():
+					ai_tap["heavy"] = true
+					ai_pesado_pendente = false
+				else: ai_tap["attack"] = true
 				ai_attack_cd = 0.5
 	else:
 		var gap: float = lead.global_position.x - global_position.x
@@ -1245,6 +1401,11 @@ func _ai_think(delta: float) -> void:
 			ai_tap["heal"] = true
 	if is_on_wall() and absf(ai_axis) > 0.0 and is_on_floor():
 		ai_tap["jump"] = true
+
+## Quadros desenhados para os golpes novos (golpe_contracorte, golpe_estocada, golpe_descendente, golpe_investida,
+## golpe_ascendente, golpe_aereo2, golpe_prece). Enquanto não existem em clips.json, os golpes usam quadros antigos.
+func _tem_clipe(nome: String) -> bool:
+	return animator != null and animator.definitions.has(nome)
 
 ## Cada criatura usa sua execução própria quando a animação correspondente existe ("execute_<actor>");
 ## enquanto isso, usa a execução compartilhada de humanoides ou do Chorão.
@@ -1261,21 +1422,25 @@ func _execution_torso() -> Vector2:
 		return execution_target.global_position + Vector2(0.0, -execution_target.body_size.y * 0.55)
 	return global_position + Vector2(facing * 45, -42)
 
-func _blood_burst(at: Vector2, size: float, drops: int) -> void:
+func _blood_burst(at: Vector2, size: float, drops: int, direcao := Vector2.ZERO, abertura := 46.0) -> void:
 	get_tree().call_group("game", "play_sfx", "sangue_jato")
 	get_tree().call_group("game", "wall_splat", at)
 	var game = get_tree().get_first_node_in_group("game")
 	if game == null: return
-	game.spawn_effect("blood", at, facing, size)
-	game.spawn_effect("blood", at + Vector2(float(facing) * 18.0, -8.0), facing, size * 0.75)
+	if direcao == Vector2.ZERO:
+		game.spawn_effect("blood", at, facing, size)
+		game.spawn_effect("blood", at + Vector2(float(facing) * 18.0, -8.0), facing, size * 0.75)
+	else:
+		# Jorro com direção (execuções): a mancha redonda fica pequena para a direção do sangue aparecer.
+		game.spawn_effect("blood", at, facing, size * 0.45)
 	var spray := CPUParticles2D.new()
 	spray.one_shot = true
 	spray.emitting = false
 	spray.amount = maxi(drops, 1)
 	spray.lifetime = 1.4
 	spray.explosiveness = 0.95
-	spray.direction = Vector2(float(facing), -0.7)
-	spray.spread = 46.0
+	spray.direction = Vector2(float(facing), -0.7) if direcao == Vector2.ZERO else direcao
+	spray.spread = abertura
 	spray.initial_velocity_min = 220.0
 	spray.initial_velocity_max = 640.0 * clampf(size, 0.6, 1.6)
 	spray.gravity = Vector2(0, 1500)
@@ -1388,17 +1553,84 @@ func _blood_tear() -> void:
 	get_tree().create_timer(2.2).timeout.connect(tear.queue_free)
 
 ## O jato arterial: pulsos de sangue que saem da ferida em sequência, como um coração que ainda bate.
-func _arterial_spray(at: Vector2, pulses: int) -> void:
+func _arterial_spray(at: Vector2, pulses: int, direcao := Vector2.ZERO, abertura := 46.0) -> void:
 	for k in range(pulses):
 		var delay := 0.11 * k
 		var strength := 1.0 - 0.18 * k
 		get_tree().create_timer(delay, true, false, true).timeout.connect(func():
 			if not is_inside_tree(): return
-			get_tree().call_group("game", "spawn_effect", "pulse", at, facing, 0.9 * strength, "jato_arterial")
-			_blood_burst(at + Vector2(0.0, -4.0 * k), 0.9 * strength, int(34 * strength))
+			# O desenho do jato arterial aponta sempre para cima e para a frente; nos jorros com direção própria
+			# (cada estilo de execução) ele ficaria igual em todos, então só as gotas mostram o sentido.
+			if direcao == Vector2.ZERO:
+				get_tree().call_group("game", "spawn_effect", "pulse", at, facing, 0.9 * strength, "jato_arterial")
+				_blood_burst(at + Vector2(0.0, -4.0 * k), 0.9 * strength, int(34 * strength))
+			else:
+				_blood_burst(at + Vector2(0.0, -4.0 * k), 1.1 * strength, int(48 * strength), direcao, abertura)
 			get_tree().call_group("game", "play_sfx", "sangue_jato")
 			get_tree().call_group("game", "blood_splats", Vector2(at.x, global_position.y), facing, 3, 1.0)
 		)
+
+## O instante do golpe mortal, diferente em cada estilo: a forma do corte e a direção do sangue
+## dizem, antes dos pedaços caírem, o que aconteceu com o corpo.
+func _assinatura_execucao(estilo: String, torso: Vector2, alvo) -> void:
+	var altura: float = alvo.body_size.y if is_instance_valid(alvo) else 120.0
+	var pe: Vector2 = alvo.global_position if is_instance_valid(alvo) else global_position
+	var pescoco := pe + Vector2(0.0, -altura * 0.86)
+	var cintura := pe + Vector2(0.0, -altura * 0.48)
+	var peito := pe + Vector2(0.0, -altura * 0.68)
+	var lado := float(facing)
+	match estilo:
+		"cabeca":
+			# Corte horizontal no pescoço e uma fonte de sangue que sobe em pulsos.
+			_corte_execucao("contracorte", pescoco, 1.5)
+			_blood_burst(pescoco, 1.2, 50, Vector2(0.12 * lado, -1.0), 14.0)
+			_arterial_spray(pescoco, 5, Vector2(0.08 * lado, -1.0), 10.0)
+		"vertical":
+			# Uma linha de cima a baixo e o sangue abrindo para os dois lados.
+			_corte_execucao("descendente", peito + Vector2(0.0, -10.0), 1.7)
+			_blood_burst(cintura, 1.3, 60, Vector2(-1.0, -0.35), 22.0)
+			_blood_burst(cintura, 1.3, 60, Vector2(1.0, -0.35), 22.0)
+			_arterial_spray(peito, 3, Vector2(0.0, -1.0), 40.0)
+		"cintura":
+			# Um talho reto na cintura; o sangue sai deitado, para a frente, e escorre.
+			_corte_execucao("corte", cintura, 1.6)
+			_blood_burst(cintura, 1.4, 80, Vector2(lado, -0.08), 16.0)
+			_arterial_spray(cintura, 3, Vector2(lado, 0.15), 24.0)
+			get_tree().call_group("game", "spawn_effect", "sangue", cintura, facing, 0.8, "impactos")
+		"erguer":
+			# A lâmina sobe pelo corpo e o sangue desce por ela.
+			_corte_execucao("ascendente", peito, 1.6)
+			_blood_burst(peito, 1.0, 40, Vector2(0.0, 1.0), 26.0)
+			_arterial_spray(peito + Vector2(lado * 14.0, 0.0), 6, Vector2(-0.15 * lado, 1.0), 14.0)
+		"coracao":
+			# Uma estocada no peito; o sangue sai pelas costas.
+			_corte_execucao("estocada", peito, 1.4)
+			_blood_burst(peito + Vector2(lado * 20.0, 0.0), 1.1, 60, Vector2(lado, -0.3), 30.0)
+			_arterial_spray(peito, 2, Vector2(lado, -0.2), 30.0)
+		"cranio":
+			# Golpe de cima que esmaga: impacto, osso e sangue espirrando para baixo e para os lados.
+			_corte_execucao("descendente", pescoco + Vector2(0.0, -20.0), 1.9)
+			get_tree().call_group("game", "spawn_effect", "star", pescoco, facing, 0.8, "golpe")
+			get_tree().call_group("game", "spawn_effect", "osso", pescoco, facing, 0.9, "impactos")
+			_blood_burst(pescoco, 1.6, 90, Vector2(0.0, 0.4), 120.0)
+			shake = 16
+		_:
+			_blood_burst(torso, 1.6, 90)
+			_arterial_spray(torso, 4)
+			get_tree().call_group("game", "spawn_effect", "sangue", torso, facing, 0.7, "impactos")
+
+## Rastro grande do golpe que executa, com a forma do estilo.
+func _corte_execucao(tipo: String, onde: Vector2, tamanho: float) -> void:
+	var game = get_tree().get_first_node_in_group("game")
+	if game == null: return
+	var rastro = RastroGolpe.new()
+	rastro.tipo = tipo
+	rastro.lado = facing
+	rastro.lanca = character == "beatriz"
+	rastro.forte = true
+	rastro.position = onde
+	rastro.scale = Vector2.ONE * tamanho
+	game.add_child(rastro)
 
 func _blood_decal(ground: Vector2) -> void:
 	var game = get_tree().get_first_node_in_group("game")
@@ -1467,7 +1699,9 @@ func _update_sword() -> void:
 
 
 func _start_air_attack() -> void:
-	if not has_weapon or air_attack_used: return
+	if not has_weapon or air_attack_used or air_attacks >= AIR_ATTACKS_MAX: return
+	air_attacks += 1
+	golpe_tipo = "aereo" if air_attacks == 1 else "aereo2"
 	counter_attack = counter_t > 0.0
 	counter_t = 0.0
 	var direction := axis()
@@ -1496,6 +1730,8 @@ func _capture_combat_input() -> void:
 	if pressed("parry") and has_weapon:
 		parry_buffer = 0.18
 		parry_direction = axis()
+		if perdao_t > 0.0 and state == "hurt" and hp > 0.0:
+			_aparo_tardio()
 	if pressed("roll"):
 		roll_buffer = 0.18
 		roll_direction = axis()
@@ -1550,7 +1786,170 @@ func _swing_trail() -> void:
 	impact_direction = Vector2(facing,0.18)
 	if swing_effect: return
 	swing_effect = true
-	get_tree().call_group("game", "spawn_effect", "arc", global_position + Vector2(float(facing) * 58.0, -52.0), facing, 0.62, "golpe")
+	var tipo := golpe_tipo
+	if state == "air_attack": tipo = golpe_tipo if golpe_tipo.begins_with("aereo") else "aereo"
+	elif state == "ascendente": tipo = "ascendente"
+	elif counter_attack: tipo = "contra"
+	# Rastro desenhado da lâmina: núcleo claro e borda de sangue, com uma forma para cada golpe.
+	var rastro = RastroGolpe.new()
+	rastro.tipo = tipo
+	rastro.lado = facing
+	rastro.lanca = character == "beatriz"
+	rastro.forte = finisher or counter_attack
+	rastro.position = global_position + Vector2(0.0, -52.0)
+	var game = get_tree().get_first_node_in_group("game")
+	if game != null: game.add_child(rastro)
+
+## Golpes fortes que matam também desmembram (só criaturas de carne, no chão).
+func _desmembrar_morto(e, estilo: String) -> void:
+	if not is_instance_valid(e) or e.has_meta("desmembrado") or e.kind in [2, 9] or e.family == "flyer" or _impact_kind(e) != "sangue": return
+	var game = get_tree().get_first_node_in_group("game")
+	if game == null: return
+	Gore.finalizar(game, e, estilo, facing, self)
+	gore_flash = maxf(gore_flash, 0.4)
+
+## Uma cópia translúcida do corpo fica para trás na investida.
+func _fantasma(cor: Color) -> void:
+	var game = get_tree().get_first_node_in_group("game")
+	if game == null or animator == null or animator.sprite_frames == null: return
+	var copia := Sprite2D.new()
+	copia.texture = animator.sprite_frames.get_frame_texture(animator.animation, animator.frame)
+	copia.flip_h = animator.flip_h
+	copia.scale = animator.scale
+	copia.global_position = animator.global_position
+	copia.modulate = cor
+	copia.z_index = 4
+	copia.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	game.add_child(copia)
+	var some := copia.create_tween()
+	some.tween_property(copia, "modulate:a", 0.0, 0.2)
+	some.tween_callback(copia.queue_free)
+
+## Investida: depois de esquivar, um ataque vira uma estocada que atravessa a sala e fura quem estiver no caminho.
+func _start_investida() -> void:
+	_clear_combat_input()
+	combo_window = 0.0
+	golpe_tipo = "estocada"
+	counter_attack = counter_t > 0.0
+	counter_t = 0.0
+	state = "investida"
+	state_t = INVESTIDA_TIME
+	invuln = maxf(invuln, 0.12)
+	hit_list.clear()
+	swing_effect = false
+	investida_hits = 0
+	fantasma_t = 0.0
+	velocity.x = facing * 720.0
+	get_tree().call_group("game", "play_sfx", "lanca_estocada" if character == "beatriz" else "swing")
+	get_tree().call_group("game", "play_sfx", "investida")
+	_swing_trail()
+
+func _investida_hits() -> void:
+	var r := Rect2(global_position + Vector2(-10.0 if facing > 0 else -96.0, -70.0), Vector2(106.0 * float(CHARACTERS[character].reach) * 0.8, 62.0))
+	for e in get_tree().get_nodes_in_group("enemies"):
+		if e.dead or hit_list.has(e) or not r.intersects(e.hurt_rect()) or not _clear_strike(e): continue
+		hit_list.append(e)
+		investida_hits += 1
+		var kind_hit := _impact_kind(e)
+		e.last_hitter = self
+		e.take_hit((44.0 if counter_attack else 30.0) * sword_multiplier(), global_position.x)
+		e.hit_pause = maxf(e.hit_pause, 0.07)
+		hit_pause = maxf(hit_pause, 0.04)
+		shake = maxf(shake, 6.0)
+		add_culpa(4)
+		var spot: Vector2 = e.global_position + Vector2(0.0, -e.body_size.y * 0.55)
+		get_tree().call_group("game", "play_sfx", "hit_carne" if kind_hit == "sangue" else "hit_metal")
+		get_tree().call_group("game", "spawn_effect", kind_hit, spot, facing, 0.42, "impactos")
+		if kind_hit == "sangue":
+			_blood_burst(spot, 0.8, 22)
+			get_tree().call_group("game", "blood_splats", e.global_position, facing, 4, 1.0)
+		if not e.dead: _launch(e, 260.0, -120.0)
+		elif e.family != "flyer": _desmembrar_morto(e, "cintura")
+
+## Corte ascendente: um toque no golpe pesado. Joga a criatura para cima e acerta quem voa logo acima.
+func _start_ascendente() -> void:
+	_clear_combat_input()
+	combo_window = 0.0
+	counter_attack = counter_attack or counter_t > 0.0
+	counter_t = 0.0
+	golpe_tipo = "ascendente"
+	state = "ascendente"
+	state_t = ASCENDENTE_TIME * attack_scale()
+	ascendente_salto = false
+	hit_list.clear()
+	swing_effect = false
+	velocity.x = facing * 90.0
+	get_tree().call_group("game", "play_sfx", "corte_ascendente")
+
+func _ascendente_hits() -> void:
+	var largura := 96.0 * float(CHARACTERS[character].reach)
+	var r := Rect2(global_position + Vector2(0.0 if facing > 0 else -largura, -170.0), Vector2(largura, 170.0))
+	for e in get_tree().get_nodes_in_group("enemies"):
+		if e.dead or hit_list.has(e) or not r.intersects(e.hurt_rect()) or not _clear_strike(e): continue
+		hit_list.append(e)
+		var kind_hit := _impact_kind(e)
+		e.last_hitter = self
+		e.take_hit((36.0 if counter_attack else 26.0) * sword_multiplier(), global_position.x)
+		e.hit_pause = maxf(e.hit_pause, 0.07)
+		hit_pause = maxf(hit_pause, 0.06)
+		shake = maxf(shake, 5.0)
+		add_culpa(3)
+		var spot: Vector2 = e.global_position + Vector2(0.0, -e.body_size.y * 0.55)
+		get_tree().call_group("game", "play_sfx", "hit_carne" if kind_hit == "sangue" else "hit_metal")
+		get_tree().call_group("game", "spawn_effect", kind_hit, spot, facing, 0.4, "impactos")
+		if kind_hit == "sangue": _blood_burst(spot + Vector2(0, -10), 0.7, 18)
+		if not e.dead and e.kind != 2 and e.kind != 9 and e.state != "stagger" and not (e.kind == 8 and not e.exposed):
+			e.state = "launched"
+			e.launch_elapsed = 0.0
+			e.juggle_hits = 0
+			e.suspend_t = 0.0
+			e.velocity = Vector2(float(facing) * 70.0, -560.0 if e.family == "walker" else -260.0)
+
+## Lâmina de Sangue: a culpa acumulada vira um corte que voa. Custa um quarto da barra de culpa.
+func _lancar_prece() -> void:
+	if prece_cd > 0.0 or not is_on_floor(): return
+	if culpa < PRECE_CUSTO:
+		get_tree().call_group("game", "toast", "A culpa ainda é leve para a Lâmina de Sangue (precisa de 25%).")
+		return
+	culpa -= PRECE_CUSTO
+	prece_cd = 0.55
+	state = "prece"
+	state_t = 0.34
+	velocity.x = 0.0
+	var lamina = LaminaSangue.new()
+	lamina.dono = self
+	lamina.lado = facing
+	lamina.dano = 34.0 * sword_multiplier()
+	lamina.position = global_position + Vector2(float(facing) * 40.0, -54.0)
+	var game = get_tree().get_first_node_in_group("game")
+	if game != null: game.add_child(lamina)
+	get_tree().call_group("game", "play_sfx", "lamina_sangue")
+	get_tree().call_group("game", "play_sfx", "sangue_jato")
+	shake = maxf(shake, 4.0)
+
+## Aparo atrasado: o golpe aparável chegou depois da janela, mas a guarda ainda estava erguida.
+## Bloqueia boa parte do dano e não abre o inimigo.
+func _bloqueio(dmg: float, from_x: float) -> void:
+	bloqueios += 1
+	hp -= dmg * 0.25
+	velocity.x = signf(global_position.x - from_x) * 180.0
+	hit_pause = maxf(hit_pause, 0.05)
+	shake = maxf(shake, 3.0)
+	get_tree().call_group("game", "play_sfx", "bloqueio")
+	get_tree().call_group("game", "spawn_effect", "faiscas", global_position + Vector2(facing * 40.0, -58.0), facing, 0.4, "impactos")
+	if bloqueios == 1:
+		get_tree().call_group("game", "toast", "Bloqueio: apare um pouco antes, no brilho dourado, para abrir o inimigo.")
+	if hp <= 0.0: die()
+
+## Apertar o aparo logo depois de ser atingido por um golpe aparável ainda conta como aparo.
+func _aparo_tardio() -> void:
+	hp = minf(hp + perdao_dano, max_hp)
+	culpa = maxf(culpa - perdao_dano * 0.6, 0.0)
+	damage_flash = 0.0
+	state = "parry"
+	state_t = PARRY_TIME
+	perdao_t = 0.0
+	_parry_success(perdao_quem, perdao_de)
 
 ## O fio das Parcas só reduz a capacidade; nunca causa uma morte fora da janela de dano.
 func receber_maldicao(valor:float) -> void:

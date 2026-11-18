@@ -31,6 +31,11 @@ func run() -> void:
 	Input.action_press("offer")
 	await frames(3)
 	Input.action_release("offer")
+	# v43: [R] abre as oferendas; 1 compra a vida.
+	Input.action_press("penitence_none")
+	await frames(3)
+	Input.action_release("penitence_none")
+	game.penitence_menu = false
 	expect(game.player.upgrades==1 and game.player.lagrimas==23,"tower altar supports the same offering as city altars")
 	game._pray(5)
 	game.narrative.elapsed=2

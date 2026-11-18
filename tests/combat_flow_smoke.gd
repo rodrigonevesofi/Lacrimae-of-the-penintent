@@ -83,8 +83,16 @@ func run() -> void:
 	p.take_hit(16, e.position.x, e, true)
 	expect(p.parry_hit and e.state == "stagger", "aparo preserva abertura real do inimigo")
 	await tap("attack")
-	await frames(8)
-	expect(p.state == "attack" and p.counter_attack, "contra-ataque responde logo depois do aparo")
+	# v43: o aparo agora tem um instante de câmera lenta e pausa; o contra-ataque sai logo depois dela.
+	# A câmera lenta corre em tempo real, então o quadro exato muda com a carga da máquina: procura o
+	# contra-ataque dentro de uma janela curta em vez de num quadro fixo.
+	var contra := false
+	for k in range(40):
+		if p.state == "attack" and p.counter_attack:
+			contra = true
+			break
+		await frames(1)
+	expect(contra, "contra-ataque responde logo depois do aparo")
 	await reset()
 	Input.action_press("heavy")
 	p._start_charge()
@@ -99,7 +107,8 @@ func run() -> void:
 	Input.action_release("jump")
 	await reset()
 	await tap("heavy")
-	expect(p.state == "heavy", "toque curto no pesado produz golpe, não comando perdido")
+	# v43: o toque curto no pesado é o corte ascendente; segurar faz o golpe carregado.
+	expect(p.state == "ascendente", "toque curto no pesado produz golpe, não comando perdido")
 	await reset()
 	p.character = "beatriz"
 	p.lance_weight = 100
@@ -109,7 +118,9 @@ func run() -> void:
 	p._start_attack()
 	p.state = "idle"
 	p._start_attack()
-	expect(p.finisher and p.attack_len > first_len, "Beatriz com lança pesada ainda completa a cadeia de três")
+	p.state = "idle"
+	p._start_attack()
+	expect(p.finisher and p.attack_len > first_len, "Beatriz com lança pesada ainda completa a cadeia de quatro")
 	p.position = Vector2(1300, 500)
 	p.facing = -1
 	var aerial = enemy_at(Vector2(1160, 500))

@@ -15,7 +15,17 @@ var knock_count := 0
 ## Ajustes de mixagem em dB, somados ao nível base de cada grupo. Começam em zero de propósito: a auditoria dos
 ## volumes (docs/auditoria-volume.md) propôs ajustes, mas eles foram medidos nos arquivos, sem ouvir durante o jogo.
 ## Após a escuta, reajustar a mixagem exige apenas alterar estes quatro números.
-const MIX_TRIM_DB := {"tracks": 0.0, "action": 0.0, "scene": 0.0, "creature": 0.0, "ambience": 0.0}
+## v43: medido numa luta de 14 s (tools/medir_mixagem.gd), os efeitos estavam em -8,4 LUFS e a música em -23,2:
+## a trilha sumia. Agora a música sobe 8 dB, os efeitos descem 6 e o limitador não soma mais 3 dB a tudo.
+## Alvo: música perto de -18 LUFS e efeitos de luta logo acima dela.
+const MIX_TRIM_DB := {"tracks": 9.0, "action": -10.0, "scene": -3.0, "creature": -8.0, "ambience": -1.0}
+## Sons que se repetem muito numa luta (respingos, jatos) descem mais, para não virar uma parede de ruído.
+const TRIM_NOME := {"respingo_chao": -6.0, "sangue_jato": -3.0, "carne_rasga": -3.0, "step": -2.0, "osso_quebra": -2.0}
+
+func trim_nome(name: String) -> float:
+	for chave in TRIM_NOME:
+		if name.begins_with(chave): return float(TRIM_NOME[chave])
+	return 0.0
 const SCENE_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
 
 func trim_for(name: String) -> float:
@@ -35,6 +45,9 @@ const GORE_HOOKS := ["lamina_sai", "corpo_cai_carne", "corpo_cai_armadura", "esq
 const VALE_HOOKS := ["chefe_transforma", "reflexo_devolve", "gota_culpa", "gota_recolhe", "chefe_reza", "placa_cai", "chefe_ajoelha", "capacete_sai", "beatriz_chega"]
 ## Músicas opcionais: a luta no Vale e a revelação. Sem os arquivos, tocam a do chefe e a de história.
 const OPTIONAL_MUSIC := ["vale", "revelacao"]
+## v43: golpes e mortes novos. Enquanto o arquivo não chega, toca o som parecido mais próximo (SUBSTITUTOS).
+const V43_HOOKS := ["investida", "corte_ascendente", "lamina_sangue", "bloqueio", "decapitacao", "corpo_partido", "coracao_arrancado", "cranio_esmagado", "lagrima_coleta", "oferenda"]
+const SUBSTITUTOS := {"investida": "esquiva_perfeita", "corte_ascendente": "swing", "lamina_sangue": "golpe_carregado_solta", "bloqueio": "hit_metal", "decapitacao": "osso_quebra", "corpo_partido": "carne_rasga", "coracao_arrancado": "carne_rasga", "cranio_esmagado": "osso_quebra", "lagrima_coleta": "coleta", "oferenda": "altar"}
 const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "dor", "aterrissagem", "coleta", "porta", "projetil", "projetil_impacto", "espinho", "aparo", "execucao", "portao_fecha", "portao_abre", "ui_mover", "ui_confirmar"]
 ## Os sons narrativos são sempre reproduzidos da mesma forma; os demais variam um pouco em altura e volume.
 const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
@@ -81,7 +94,7 @@ func _build_buses() -> void:
 	if AudioServer.get_bus_effect_count(master) == 0:
 		var limiter: AudioEffect = ClassDB.instantiate("AudioEffectHardLimiter") if ClassDB.class_exists("AudioEffectHardLimiter") else AudioEffectLimiter.new()
 		limiter.set("ceiling_db", -1.0)
-		limiter.set("pre_gain_db", 3.0)
+		limiter.set("pre_gain_db", 0.0)
 		AudioServer.add_bus_effect(master, limiter)
 	var sfx := AudioServer.get_bus_index("SFX")
 	if AudioServer.get_bus_effect_count(sfx) == 0:
@@ -146,7 +159,7 @@ func _ready() -> void:
 		add_child(layer)
 		beds.append(layer)
 	var every_effect: Array = EFFECT_NAMES.duplicate()
-	for hook in HOOK_NAMES + PENDING_HOOKS + GORE_HOOKS + VALE_HOOKS:
+	for hook in HOOK_NAMES + PENDING_HOOKS + GORE_HOOKS + VALE_HOOKS + V43_HOOKS:
 		if ResourceLoader.exists("res://assets/audio/%s.wav" % hook): every_effect.append(hook)
 	for family in FAMILIES.values():
 		for variant in family:
@@ -156,7 +169,7 @@ func _ready() -> void:
 		voice.bus = "SFX"
 		voice.stream = load("res://assets/audio/%s.wav" % name)
 		voice.max_polyphony = 6
-		voice.volume_db = (-7 if name.begins_with("step") else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))) + trim_for(name)
+		voice.volume_db = (-7 if name.begins_with("step") else (-8 if name.begins_with("murmurio") else (-4 if CREATURE_SFX.has(name) else -2))) + trim_for(name) + trim_nome(name)
 		base_db[name] = voice.volume_db
 		add_child(voice)
 		effects[name] = voice
@@ -171,6 +184,7 @@ func resolve(name: String) -> String:
 		for variant in FAMILIES[family]:
 			if effects.has(variant): options.append(variant)
 		if not options.is_empty(): return options[randi() % options.size()]
+	if not effects.has(name) and SUBSTITUTOS.has(name) and not FAMILIES.has(name): return resolve(SUBSTITUTOS[name])
 	if not effects.has(name) and name.begins_with("hit_"): return "hit"
 	if not effects.has(name) and name == "lanca_estocada": return "swing"
 	return name
@@ -317,8 +331,8 @@ func _process(delta: float) -> void:
 		change_context(desired_context())
 	var base := -3.0 + MIX_TRIM_DB.tracks
 	if game.narrative != null:
-		if game.narrative.mode == "prayer": base = -9.0
-		elif game.narrative.mode in ["memory", "echo", "memorial"]: base = game.narrative.music_target()
+		if game.narrative.mode == "prayer": base = -9.0 + MIX_TRIM_DB.tracks
+		elif game.narrative.mode in ["memory", "echo", "memorial"]: base = game.narrative.music_target() + MIX_TRIM_DB.tracks
 	var quiet_memory: bool = game.narrative != null and game.narrative.mode == "memory" and game.narrative.elapsed >= 6.6 and game.narrative.elapsed < 7.1
 	if quiet_memory:
 		base = -38
