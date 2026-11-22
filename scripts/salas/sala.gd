@@ -62,6 +62,17 @@ const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)  # o mesmo de world_art.gd, em
 ## Posição da sala no mapa (aba TAB).
 @export var posicao_no_mapa := Vector2.ZERO
 
+@export_group("Som")
+## Passos do Penitente nesta sala (família de sons de soundscape.gd).
+@export_enum("step_pedra", "step_osso", "step_agua", "step_madeira") var passos := "step_pedra"
+## Quanto da cauda acústica da sala os efeitos carregam (reverberação do barramento SFX).
+@export_range(0.0, 1.0, 0.01) var reverberacao := 0.12
+## Música da sala fora de combate e de cena: exploração, templo ou uma faixa própria. Na Cidade, a zona
+## musica_do_templo põe o canto do templo no começo da sala.
+@export_enum("exploration", "temple", "nave", "terraco", "patio") var musica := "exploration"
+## Laço de ambiente em assets/audio/ (sem extensão), tocado sob a música enquanto o Penitente está aqui.
+@export var ambiente := ""
+
 @export_group("Colisão")
 ## Espessura do chão de colisão, para baixo do piso.
 @export var espessura_piso := 500.0
@@ -90,6 +101,7 @@ func dados() -> Dictionary:
 	if altura_arte >= 0.0: d["art_h"] = altura_arte
 	if ao_ar_livre: d["outdoor"] = true
 	if procedural: d["procedural"] = true
+	d["sound"] = {"steps": passos, "reverb": reverberacao, "music": musica, "ambience": ambiente}
 	d["map"] = posicao_no_mapa
 	return d
 

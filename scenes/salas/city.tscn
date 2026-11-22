@@ -27,6 +27,8 @@ espessura_piso = 400.0
 espessura_parede = 60.0
 parede_acima = 300.0
 parede_abaixo = 450.0
+reverberacao = 0.1
+ambiente = "amb_city"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=1294751039]
 
@@ -493,3 +495,9 @@ position = Vector2(3790, -300)
 script = ExtResource("13_zona")
 zona = "parede_do_chefe"
 tamanho = Vector2(40, 1200)
+
+[node name="MusicaDoTemplo" type="Node2D" parent="Zonas" unique_id=1425301226]
+position = Vector2(0, 100)
+script = ExtResource("13_zona")
+zona = "musica_do_templo"
+tamanho = Vector2(1250, 800)

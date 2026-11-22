@@ -17,6 +17,9 @@ arte = "terraco_sinos"
 linha_do_chao = 0.835
 altura_arte = 880.0
 posicao_no_mapa = Vector2(1000, 380)
+reverberacao = 0.16
+musica = "terraco"
+ambiente = "amb_terrace"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=586042341]
 

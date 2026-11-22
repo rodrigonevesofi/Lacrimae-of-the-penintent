@@ -17,6 +17,8 @@ altura_arte = 1250.0
 ao_ar_livre = true
 procedural = true
 posicao_no_mapa = Vector2(1180, 560)
+reverberacao = 0.2
+ambiente = "amb_vale"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=190778392]
 

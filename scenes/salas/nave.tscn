@@ -18,6 +18,9 @@ arte = "nave_silencio"
 linha_do_chao = 0.848
 altura_arte = 880.0
 posicao_no_mapa = Vector2(20, 230)
+reverberacao = 0.4
+musica = "nave"
+ambiente = "amb_nave"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=2032120668]
 

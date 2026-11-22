@@ -17,6 +17,9 @@ tamanho = Vector2(2400, 1300)
 arte = "cistern"
 linha_do_chao = 0.845
 posicao_no_mapa = Vector2(450, 540)
+passos = "step_agua"
+reverberacao = 0.36
+ambiente = "amb_cistern"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=1355199334]
 

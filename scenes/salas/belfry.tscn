@@ -20,6 +20,9 @@ piso = 1750.0
 arte = "tower"
 linha_do_chao = 0.957
 posicao_no_mapa = Vector2(920, 190)
+passos = "step_madeira"
+reverberacao = 0.32
+ambiente = "amb_belfry"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=1969789527]
 

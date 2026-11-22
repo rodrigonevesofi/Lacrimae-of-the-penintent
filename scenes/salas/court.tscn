@@ -16,6 +16,9 @@ arte = "patio_portoes"
 linha_do_chao = 0.852
 altura_arte = 800.0
 posicao_no_mapa = Vector2(1000, 560)
+reverberacao = 0.14
+musica = "patio"
+ambiente = "amb_court"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=2106304600]
 

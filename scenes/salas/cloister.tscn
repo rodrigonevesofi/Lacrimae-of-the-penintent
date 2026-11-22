@@ -18,6 +18,8 @@ piso = 1050.0
 arte = "cloister"
 linha_do_chao = 0.94
 posicao_no_mapa = Vector2(700, 330)
+reverberacao = 0.3
+ambiente = "amb_cloister"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=1503819485]
 

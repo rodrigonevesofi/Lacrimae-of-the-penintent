@@ -11,9 +11,12 @@ const DESCRICAO := {
 	"portao_dos_sinos": "Portão dos sinos: parede sólida até as duas correntes caírem",
 	"aviso_das_correntes": "Aviso das correntes: vale a faixa de x, enquanto o portão está fechado",
 	"parede_do_chefe": "Parede do Guardião: fecha a luta quando ele acorda",
+	"musica_do_templo": "Canto do templo: antes da borda direita desta faixa, a música é a do templo",
 }
+## Zonas que viram paredes sólidas no jogo (as outras só valem pela faixa de x).
+const SOLIDAS := ["portao_dos_sinos", "parede_do_chefe"]
 
-@export_enum("portao_dos_sinos", "aviso_das_correntes", "parede_do_chefe") var zona := "portao_dos_sinos":
+@export_enum("portao_dos_sinos", "aviso_das_correntes", "parede_do_chefe", "musica_do_templo") var zona := "portao_dos_sinos":
 	set(valor):
 		zona = valor
 		queue_redraw()
@@ -24,7 +27,7 @@ const DESCRICAO := {
 
 func _draw() -> void:
 	if not Sala.visivel(): return
-	var solida := zona != "aviso_das_correntes"
+	var solida := zona in SOLIDAS
 	var cor := Color(0.95, 0.35, 0.25) if solida else Color(0.95, 0.85, 0.35)
 	draw_rect(Rect2(Vector2.ZERO, tamanho), Color(cor, 0.22 if solida else 0.12))
 	draw_rect(Rect2(Vector2.ZERO, tamanho), cor, false, 3.0)

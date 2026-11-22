@@ -16,6 +16,10 @@ tamanho = Vector2(2600, 1300)
 arte = "ossuary"
 linha_do_chao = 0.88
 posicao_no_mapa = Vector2(210, 430)
+passos = "step_osso"
+reverberacao = 0.28
+musica = "temple"
+ambiente = "amb_ossuary"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=1273521947]
 

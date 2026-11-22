@@ -16,6 +16,9 @@ linha_do_chao = 0.795
 altura_arte = 1250.0
 ao_ar_livre = true
 posicao_no_mapa = Vector2(210, 650)
+reverberacao = 0.18
+musica = "temple"
+ambiente = "amb_refuge"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=31854608]
 

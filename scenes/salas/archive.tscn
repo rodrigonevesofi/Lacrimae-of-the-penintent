@@ -16,6 +16,9 @@ arte = "gallery"
 linha_do_chao = 0.735
 altura_arte = 1250.0
 posicao_no_mapa = Vector2(700, 110)
+passos = "step_madeira"
+reverberacao = 0.22
+ambiente = "amb_archive"
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=83474145]
 
