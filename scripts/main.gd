@@ -17,14 +17,13 @@ const ENEMY_SCENES := {
 const ValeScene = preload("res://scripts/vale_scene.gd")
 const AmbientLife = preload("res://scripts/ambient_life.gd")
 const ValeFinale = preload("res://scripts/vale_finale.gd")
-const HudScript = preload("res://scripts/hud.gd")
+const InterfaceScene = preload("res://scenes/interface.tscn")
 const WorldArt = preload("res://scripts/world_art.gd")
 const PinturaViva = preload("res://scripts/pintura_viva.gd")
 const Bichos = preload("res://scripts/bichos.gd")
 const PrimeiroPlano = preload("res://scripts/primeiro_plano.gd")
 const Story = preload("res://scripts/story_text.gd")
 const ConfessorScript = preload("res://scripts/confessor.gd")
-const ConfessionPanel = preload("res://scripts/confession_panel.gd")
 const Telemetry = preload("res://scripts/telemetry.gd")
 
 const GROUND_Y := 600.0
@@ -807,16 +806,14 @@ func _build_fx_layer() -> void:
 
 
 func _build_hud() -> void:
-	var cl := CanvasLayer.new()
-	cl.layer = 10
-	add_child(cl)
-	hud = HudScript.new()
+	# HUD e Confessionário vêm de scenes/interface.tscn; as referências são passadas antes de entrar na árvore.
+	var interface := InterfaceScene.instantiate()
+	hud = interface.get_node("HUD")
 	hud.game = self
-	cl.add_child(hud)
-	confession_panel = ConfessionPanel.new()
+	confession_panel = interface.get_node("ConfessionPanel")
 	confession_panel.game = self
 	confession_panel.confessor = confessor
-	cl.add_child(confession_panel)
+	add_child(interface)
 
 
 func _add_flicker_light(pos: Vector2, col: Color, energy: float, sc: float) -> PointLight2D:

@@ -11,6 +11,8 @@ var ui_regions: Dictionary = {}
 const GOLD := Color(0.86, 0.7, 0.38)
 
 
+## Fica em scenes/interface.tscn (camada 10, processa mesmo em pausa, ignora o mouse, 1280 x 720).
+## O desenho continua em _draw: barras, molduras, mapa e telas são compostos por código.
 func _ready() -> void:
 	ui_art = load("res://assets/reliquary_ui.png")
 	for path in ["res://assets/ending/ato1_portoes_v2.png", "res://assets/ending/ato1_portoes.png"]:
@@ -25,9 +27,6 @@ func _ready() -> void:
 	font = ThemeDB.fallback_font
 	title_font = load("res://assets/title_font.ttf")
 	title_art = load("res://assets/monastery.png")
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	size = Vector2(1280, 720)
 
 
 var pause_notice := ""
