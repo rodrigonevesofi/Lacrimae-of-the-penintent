@@ -1,0 +1,104 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_pcl6o"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_k1qmk"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_hxaro"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_yar7i"]
+
+[node name="Refuge" type="Node2D" unique_id=718040944]
+position = Vector2(19000, -350)
+script = ExtResource("1_pcl6o")
+id = "refuge"
+nome = "ABRIGO DAS CINZAS"
+arte = "gates"
+linha_do_chao = 0.795
+altura_arte = 1250.0
+ao_ar_livre = true
+posicao_no_mapa = Vector2(210, 650)
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=31854608]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=948034516]
+position = Vector2(300, 870)
+script = ExtResource("2_k1qmk")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1088631530]
+position = Vector2(440, 790)
+script = ExtResource("2_k1qmk")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=860125427]
+position = Vector2(580, 710)
+script = ExtResource("2_k1qmk")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=715703891]
+position = Vector2(720, 630)
+script = ExtResource("2_k1qmk")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=1843069731]
+position = Vector2(720, 630)
+script = ExtResource("2_k1qmk")
+tamanho = Vector2(600, 26)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=1870409457]
+position = Vector2(1320, 630)
+script = ExtResource("2_k1qmk")
+tamanho = Vector2(95, 26)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=662546023]
+
+[node name="Bloco1" type="Node2D" parent="Alvenaria" unique_id=1967166302]
+position = Vector2(900, 900)
+script = ExtResource("2_k1qmk")
+tamanho = Vector2(200, 50)
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=65719494]
+
+[node name="Flagelante1" type="Node2D" parent="Inimigos" unique_id=334647574]
+position = Vector2(600, 950)
+script = ExtResource("3_hxaro")
+tipo = 4
+alcance = 120.0
+
+[node name="Devotee2" type="Node2D" parent="Inimigos" unique_id=307229104]
+position = Vector2(1480, 950)
+script = ExtResource("3_hxaro")
+alcance = 80.0
+
+[node name="Mourner3" type="Node2D" parent="Inimigos" unique_id=778614407]
+position = Vector2(750, 850)
+script = ExtResource("3_hxaro")
+tipo = 1
+alcance = 110.0
+
+[node name="Glutao4" type="Node2D" parent="Inimigos" unique_id=831647080]
+position = Vector2(1190, 950)
+script = ExtResource("3_hxaro")
+tipo = 10
+alcance = 70.0
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=45124599]
+
+[node name="Portas" type="Node2D" parent="." unique_id=99499330]
+
+[node name="Shelter_B" type="Node2D" parent="Portas" unique_id=1528825792]
+position = Vector2(160, 950)
+script = ExtResource("4_yar7i")
+ligacao = "shelter"
+lado = "b"
+
+[node name="RefugeReturn_A" type="Node2D" parent="Portas" unique_id=1845022959]
+position = Vector2(1830, 950)
+script = ExtResource("4_yar7i")
+ligacao = "refuge_return"
+rotulo = "Escadaria do abrigo"
+
+[node name="NaveOut_B" type="Node2D" parent="Portas" unique_id=906628572]
+position = Vector2(1260, 630)
+script = ExtResource("4_yar7i")
+ligacao = "nave_out"
+lado = "b"

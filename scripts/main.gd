@@ -113,28 +113,11 @@ var relic_pos := Vector2(14580, 1100)
 
 var altars: Array[Vector2] = [Vector2(540, 600), Vector2(1810, 600), Vector2(3620, 600)]
 
-var platforms: Array[Rect2] = [
-	Rect2(380, 520, 140, 22),
-	Rect2(1350, 520, 120, 22),
-	Rect2(1500, 440, 120, 22),
-	Rect2(1650, 360, 220, 22),
-	Rect2(2700, 520, 160, 22),
-	Rect2(2950, 440, 160, 22),
-	Rect2(3200, 520, 140, 22),
-	Rect2(4000, 515, 150, 22),
-	Rect2(4500, 515, 150, 22),
-]
+## Plataformas e inimigos da Cidade: editados em scenes/salas/city.tscn.
+var platforms: Array[Rect2] = preload("res://scripts/act_one_layout.gd").city_platforms()
 
 # [tipo, x, y, alcance]  (0 = devoto, 1 = chorão)
-var enemy_defs: Array = [
-	[0, 800.0, 600.0, 140.0],
-	[0, 1250.0, 600.0, 160.0],
-	[1, 1750.0, 480.0, 110.0],
-	[0, 2600.0, 600.0, 150.0],
-	[0, 2950.0, 600.0, 160.0],
-	[1, 3100.0, 470.0, 130.0],
-	[0, 3350.0, 600.0, 110.0],
-]
+var enemy_defs: Array = preload("res://scripts/act_one_layout.gd").city_enemies()
 
 var candle_xs: Array[float] = [
 	150.0, 330.0, 540.0, 700.0, 960.0, 1180.0, 1420.0, 1700.0, 1860.0,

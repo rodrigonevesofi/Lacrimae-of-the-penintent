@@ -8,8 +8,8 @@ extends Node2D
 ## cenário, colisões e marcadores. É só uma visualização: quando o jogo roda, o nó se
 ## apaga em _ready e não altera nada da jogabilidade.
 ##
-## Para mudar o mapa, edite os dados nos scripts (act_one_layout.gd, main.gd) e clique
-## em "Atualizar" no Inspetor; o desenho acompanha.
+## Para mudar o mapa, edite as salas em scenes/salas/ (plataformas, alvenaria, inimigos, arenas, portas)
+## e clique em "Atualizar" no Inspetor; o desenho acompanha.
 
 const Layout = preload("res://scripts/act_one_layout.gd")
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
@@ -31,9 +31,10 @@ const ENEMY_NAMES := {0: "Devoto", 1: "Chorão", 2: "Guardião", 3: "Devorador",
 	set(value):
 		mostrar_nomes = value
 		queue_redraw()
-## Clique para reler os scripts depois de alterar o layout.
+## Clique para reler as salas (scenes/salas/) e os scripts depois de alterar o mapa.
 @export var atualizar := false:
 	set(value):
+		Layout.recarregar()
 		_data.clear()
 		queue_redraw()
 

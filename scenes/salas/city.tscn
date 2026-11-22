@@ -1,0 +1,131 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_cwcgp"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_054h8"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_w5plu"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_wrclx"]
+
+[node name="City" type="Node2D" unique_id=504323771]
+position = Vector2(0, -300)
+script = ExtResource("1_cwcgp")
+id = "city"
+nome = "CIDADE DA PENITÊNCIA"
+tamanho = Vector2(4800, 1250)
+arte = "vespera_panorama"
+posicao_no_mapa = Vector2(450, 330)
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=1294751039]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=1706862920]
+position = Vector2(380, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(140, 22)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1317531726]
+position = Vector2(1350, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(120, 22)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=504675364]
+position = Vector2(1500, 740)
+script = ExtResource("2_054h8")
+tamanho = Vector2(120, 22)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=439105840]
+position = Vector2(1650, 660)
+script = ExtResource("2_054h8")
+tamanho = Vector2(220, 22)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=2025269825]
+position = Vector2(2700, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(160, 22)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=834328545]
+position = Vector2(2950, 740)
+script = ExtResource("2_054h8")
+tamanho = Vector2(160, 22)
+
+[node name="Plataforma7" type="Node2D" parent="Plataformas" unique_id=297516583]
+position = Vector2(3200, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(140, 22)
+
+[node name="Plataforma8" type="Node2D" parent="Plataformas" unique_id=903473451]
+position = Vector2(4000, 815)
+script = ExtResource("2_054h8")
+tamanho = Vector2(150, 22)
+
+[node name="Plataforma9" type="Node2D" parent="Plataformas" unique_id=382444860]
+position = Vector2(4500, 815)
+script = ExtResource("2_054h8")
+tamanho = Vector2(150, 22)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=389083304]
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1524586229]
+
+[node name="Devotee1" type="Node2D" parent="Inimigos" unique_id=442124716]
+position = Vector2(800, 900)
+script = ExtResource("3_w5plu")
+alcance = 140.0
+
+[node name="Devotee2" type="Node2D" parent="Inimigos" unique_id=1291789059]
+position = Vector2(1250, 900)
+script = ExtResource("3_w5plu")
+alcance = 160.0
+
+[node name="Mourner3" type="Node2D" parent="Inimigos" unique_id=1393806665]
+position = Vector2(1750, 780)
+script = ExtResource("3_w5plu")
+tipo = 1
+alcance = 110.0
+
+[node name="Devotee4" type="Node2D" parent="Inimigos" unique_id=675224370]
+position = Vector2(2600, 900)
+script = ExtResource("3_w5plu")
+alcance = 150.0
+
+[node name="Devotee5" type="Node2D" parent="Inimigos" unique_id=1885613071]
+position = Vector2(2950, 900)
+script = ExtResource("3_w5plu")
+alcance = 160.0
+
+[node name="Mourner6" type="Node2D" parent="Inimigos" unique_id=851534567]
+position = Vector2(3100, 770)
+script = ExtResource("3_w5plu")
+tipo = 1
+alcance = 130.0
+
+[node name="Devotee7" type="Node2D" parent="Inimigos" unique_id=72231618]
+position = Vector2(3350, 900)
+script = ExtResource("3_w5plu")
+alcance = 110.0
+
+[node name="Arenas" type="Node2D" parent="." unique_id=1735123512]
+
+[node name="Portas" type="Node2D" parent="." unique_id=142854958]
+
+[node name="Burial_A" type="Node2D" parent="Portas" unique_id=429356488]
+position = Vector2(1160, 900)
+script = ExtResource("4_wrclx")
+ligacao = "burial"
+rotulo = "Ossuário dos Sem Nome"
+
+[node name="WaterReturn_B" type="Node2D" parent="Portas" unique_id=919080653]
+position = Vector2(2400, 900)
+script = ExtResource("4_wrclx")
+ligacao = "water_return"
+lado = "b"
+
+[node name="Vows_A" type="Node2D" parent="Portas" unique_id=1330868875]
+position = Vector2(3080, 900)
+script = ExtResource("4_wrclx")
+ligacao = "vows"
+rotulo = "Claustro dos Votos"
+
+[node name="TowerReturn_B" type="Node2D" parent="Portas" unique_id=1016751222]
+position = Vector2(3380, 900)
+script = ExtResource("4_wrclx")
+ligacao = "tower_return"
+lado = "b"

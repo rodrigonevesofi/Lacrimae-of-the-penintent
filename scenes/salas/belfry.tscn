@@ -1,0 +1,209 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_uggqh"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_ej4f6"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_b7yqg"]
+[ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_iopiy"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_2sf2g"]
+
+[node name="Belfry" type="Node2D" unique_id=223313884]
+position = Vector2(14200, -650)
+script = ExtResource("1_uggqh")
+id = "belfry"
+nome = "CAMPANÁRIO DA VIGÍLIA"
+tamanho = Vector2(2000, 2050)
+piso = 1100.0
+arte = "tower"
+linha_do_chao = 0.957
+posicao_no_mapa = Vector2(920, 190)
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=1969789527]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=1057595748]
+position = Vector2(300, 1670)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1597631584]
+position = Vector2(440, 1590)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=1111060603]
+position = Vector2(580, 1510)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=1134875731]
+position = Vector2(720, 1430)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=38299021]
+position = Vector2(860, 1350)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=1050954137]
+position = Vector2(1000, 1270)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma7" type="Node2D" parent="Plataformas" unique_id=365960439]
+position = Vector2(1140, 1190)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma8" type="Node2D" parent="Plataformas" unique_id=1237656722]
+position = Vector2(1140, 1190)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(500, 28)
+
+[node name="Plataforma9" type="Node2D" parent="Plataformas" unique_id=1179860146]
+position = Vector2(1140, 1110)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma10" type="Node2D" parent="Plataformas" unique_id=1235854295]
+position = Vector2(1000, 1030)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma11" type="Node2D" parent="Plataformas" unique_id=2047583841]
+position = Vector2(860, 950)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma12" type="Node2D" parent="Plataformas" unique_id=330784659]
+position = Vector2(720, 870)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma13" type="Node2D" parent="Plataformas" unique_id=1924619490]
+position = Vector2(580, 790)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma14" type="Node2D" parent="Plataformas" unique_id=971834981]
+position = Vector2(440, 710)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma15" type="Node2D" parent="Plataformas" unique_id=1508530853]
+position = Vector2(300, 630)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma16" type="Node2D" parent="Plataformas" unique_id=867098798]
+position = Vector2(150, 550)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(400, 28)
+
+[node name="Plataforma17" type="Node2D" parent="Plataformas" unique_id=799893718]
+position = Vector2(700, 390)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(450, 28)
+
+[node name="Plataforma18" type="Node2D" parent="Plataformas" unique_id=1733554524]
+position = Vector2(1640, 1190)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(45, 28)
+
+[node name="Plataforma19" type="Node2D" parent="Plataformas" unique_id=1550338842]
+position = Vector2(62, 550)
+script = ExtResource("2_ej4f6")
+tamanho = Vector2(88, 28)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=1729134584]
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1823908691]
+
+[node name="Devotee1" type="Node2D" parent="Inimigos" unique_id=716651509]
+position = Vector2(600, 1750)
+script = ExtResource("3_b7yqg")
+alcance = 160.0
+
+[node name="Mourner2" type="Node2D" parent="Inimigos" unique_id=1466095963]
+position = Vector2(900, 1410)
+script = ExtResource("3_b7yqg")
+tipo = 1
+alcance = 130.0
+
+[node name="Devorador3" type="Node2D" parent="Inimigos" unique_id=1736092009]
+position = Vector2(1350, 1190)
+script = ExtResource("3_b7yqg")
+tipo = 3
+alcance = 120.0
+
+[node name="Mourner4" type="Node2D" parent="Inimigos" unique_id=357263365]
+position = Vector2(580, 690)
+script = ExtResource("3_b7yqg")
+tipo = 1
+
+[node name="Arenas" type="Node2D" parent="." unique_id=1084381235]
+
+[node name="ArenaBelfry" type="Node2D" parent="Arenas" unique_id=1877753564]
+position = Vector2(430, 1750)
+script = ExtResource("4_iopiy")
+id = "belfry"
+largura = 1200.0
+recompensa = 250
+
+[node name="Leva1" type="Node2D" parent="Arenas/ArenaBelfry" unique_id=268332316]
+
+[node name="Devotee1" type="Node2D" parent="Arenas/ArenaBelfry/Leva1" unique_id=1348352782]
+position = Vector2(150, 0)
+script = ExtResource("3_b7yqg")
+alcance = 60.0
+
+[node name="Devotee2" type="Node2D" parent="Arenas/ArenaBelfry/Leva1" unique_id=1734431289]
+position = Vector2(1020, 0)
+script = ExtResource("3_b7yqg")
+alcance = 60.0
+
+[node name="Leva2" type="Node2D" parent="Arenas/ArenaBelfry" unique_id=1378551316]
+
+[node name="Carregador1" type="Node2D" parent="Arenas/ArenaBelfry/Leva2" unique_id=2001126743]
+position = Vector2(570, 0)
+script = ExtResource("3_b7yqg")
+tipo = 8
+alcance = 60.0
+
+[node name="Duelista2" type="Node2D" parent="Arenas/ArenaBelfry/Leva2" unique_id=505359196]
+position = Vector2(820, 0)
+script = ExtResource("3_b7yqg")
+tipo = 7
+alcance = 60.0
+
+[node name="Duelista3" type="Node2D" parent="Arenas/ArenaBelfry/Leva2" unique_id=1799157766]
+position = Vector2(890, 0)
+script = ExtResource("3_b7yqg")
+tipo = 7
+alcance = 60.0
+
+[node name="Portas" type="Node2D" parent="." unique_id=973045400]
+
+[node name="Tower_B" type="Node2D" parent="Portas" unique_id=487531848]
+position = Vector2(150, 1750)
+script = ExtResource("5_2sf2g")
+ligacao = "tower"
+lado = "b"
+
+[node name="ArchiveReturn_B" type="Node2D" parent="Portas" unique_id=1564691147]
+position = Vector2(1520, 1190)
+script = ExtResource("5_2sf2g")
+ligacao = "archive_return"
+lado = "b"
+
+[node name="TowerReturn_A" type="Node2D" parent="Portas" unique_id=1062426050]
+position = Vector2(1840, 1750)
+script = ExtResource("5_2sf2g")
+ligacao = "tower_return"
+rotulo = "Porta da vigília"
+trinco = true
+
+[node name="Sky_A" type="Node2D" parent="Portas" unique_id=786682299]
+position = Vector2(220, 550)
+script = ExtResource("5_2sf2g")
+ligacao = "sky"
+rotulo = "Terraço dos Sinos"

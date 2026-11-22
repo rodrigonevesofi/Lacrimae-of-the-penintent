@@ -1,0 +1,184 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_j868g"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_a0pj6"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_1y11b"]
+[ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_q1dg5"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_wndhd"]
+
+[node name="Cloister" type="Node2D" unique_id=456787940]
+position = Vector2(11000, -450)
+script = ExtResource("1_j868g")
+id = "cloister"
+nome = "CLAUSTRO DOS VOTOS"
+tamanho = Vector2(2800, 1400)
+arte = "cloister"
+linha_do_chao = 0.94
+posicao_no_mapa = Vector2(700, 330)
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=1503819485]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=401090222]
+position = Vector2(320, 970)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1103616128]
+position = Vector2(460, 890)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=419737890]
+position = Vector2(600, 810)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=41871518]
+position = Vector2(740, 730)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=1476498684]
+position = Vector2(880, 650)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=1815552281]
+position = Vector2(1020, 570)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma7" type="Node2D" parent="Plataformas" unique_id=284736419]
+position = Vector2(1160, 490)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma8" type="Node2D" parent="Plataformas" unique_id=1107765917]
+position = Vector2(1160, 490)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(1000, 28)
+
+[node name="Plataforma9" type="Node2D" parent="Plataformas" unique_id=939515933]
+position = Vector2(2160, 570)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma10" type="Node2D" parent="Plataformas" unique_id=1136844576]
+position = Vector2(2270, 650)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma11" type="Node2D" parent="Plataformas" unique_id=1595481045]
+position = Vector2(2380, 730)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma12" type="Node2D" parent="Plataformas" unique_id=1730634368]
+position = Vector2(2490, 810)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma13" type="Node2D" parent="Plataformas" unique_id=147282876]
+position = Vector2(2600, 890)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(145, 24)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=1814616134]
+
+[node name="Bloco1" type="Node2D" parent="Alvenaria" unique_id=841379441]
+position = Vector2(1000, 1000)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(300, 50)
+
+[node name="Bloco2" type="Node2D" parent="Alvenaria" unique_id=1773622087]
+position = Vector2(1060, 950)
+script = ExtResource("2_a0pj6")
+tamanho = Vector2(160, 100)
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1521132781]
+
+[node name="Flagelante1" type="Node2D" parent="Inimigos" unique_id=766365967]
+position = Vector2(700, 1050)
+script = ExtResource("3_1y11b")
+tipo = 4
+alcance = 170.0
+
+[node name="Devotee2" type="Node2D" parent="Inimigos" unique_id=1136148356]
+position = Vector2(1400, 490)
+script = ExtResource("3_1y11b")
+alcance = 150.0
+
+[node name="Mourner3" type="Node2D" parent="Inimigos" unique_id=1026818060]
+position = Vector2(2000, 750)
+script = ExtResource("3_1y11b")
+tipo = 1
+alcance = 130.0
+
+[node name="Flagelante4" type="Node2D" parent="Inimigos" unique_id=576332790]
+position = Vector2(2380, 1050)
+script = ExtResource("3_1y11b")
+tipo = 4
+
+[node name="DoisVelhos5" type="Node2D" parent="Inimigos" unique_id=458772925]
+position = Vector2(870, 1050)
+script = ExtResource("3_1y11b")
+tipo = 17
+alcance = 0.0
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=912832302]
+
+[node name="ArenaCloister" type="Node2D" parent="Arenas" unique_id=1927995238]
+position = Vector2(1380, 1050)
+script = ExtResource("4_q1dg5")
+id = "cloister"
+largura = 930.0
+recompensa = 250
+
+[node name="Leva1" type="Node2D" parent="Arenas/ArenaCloister" unique_id=1019245075]
+
+[node name="Flagelante1" type="Node2D" parent="Arenas/ArenaCloister/Leva1" unique_id=745320239]
+position = Vector2(180, 0)
+script = ExtResource("3_1y11b")
+tipo = 4
+alcance = 60.0
+
+[node name="Flagelante2" type="Node2D" parent="Arenas/ArenaCloister/Leva1" unique_id=934908524]
+position = Vector2(800, 0)
+script = ExtResource("3_1y11b")
+tipo = 4
+alcance = 60.0
+
+[node name="Leva2" type="Node2D" parent="Arenas/ArenaCloister" unique_id=1805028456]
+
+[node name="Devorador1" type="Node2D" parent="Arenas/ArenaCloister/Leva2" unique_id=2061333008]
+position = Vector2(470, 0)
+script = ExtResource("3_1y11b")
+tipo = 3
+alcance = 50.0
+
+[node name="Portas" type="Node2D" parent="." unique_id=1849908243]
+
+[node name="Vows_B" type="Node2D" parent="Portas" unique_id=208435903]
+position = Vector2(160, 1050)
+script = ExtResource("5_wndhd")
+ligacao = "vows"
+lado = "b"
+
+[node name="Tower_A" type="Node2D" parent="Portas" unique_id=377896510]
+position = Vector2(2520, 1050)
+script = ExtResource("5_wndhd")
+ligacao = "tower"
+rotulo = "Campanário da Vigília"
+
+[node name="Records_A" type="Node2D" parent="Portas" unique_id=1480802393]
+position = Vector2(1800, 490)
+script = ExtResource("5_wndhd")
+ligacao = "records"
+rotulo = "Arquivo das Confissões"
+
+[node name="BellWalk_B" type="Node2D" parent="Portas" unique_id=852761662]
+position = Vector2(1950, 490)
+script = ExtResource("5_wndhd")
+ligacao = "bell_walk"
+lado = "b"

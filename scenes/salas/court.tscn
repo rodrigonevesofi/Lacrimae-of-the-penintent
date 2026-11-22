@@ -1,0 +1,75 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_r6s0l"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_lbk35"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_me5ei"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_7tj13"]
+
+[node name="Court" type="Node2D" unique_id=1362481682]
+position = Vector2(27400, -350)
+script = ExtResource("1_r6s0l")
+id = "court"
+nome = "PÁTIO DOS PORTÕES SELADOS"
+arte = "patio_portoes"
+linha_do_chao = 0.852
+altura_arte = 800.0
+posicao_no_mapa = Vector2(1000, 560)
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=2106304600]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=121313676]
+position = Vector2(700, 870)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(200, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1981576417]
+position = Vector2(900, 790)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(200, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=1506517810]
+position = Vector2(1100, 710)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(440, 26)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=727547871]
+
+[node name="Bloco1" type="Node2D" parent="Alvenaria" unique_id=2144760419]
+position = Vector2(800, 900)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(200, 50)
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1831288897]
+
+[node name="Devorador1" type="Node2D" parent="Inimigos" unique_id=27836190]
+position = Vector2(1250, 950)
+script = ExtResource("3_me5ei")
+tipo = 3
+
+[node name="Mourner2" type="Node2D" parent="Inimigos" unique_id=1300520720]
+position = Vector2(900, 600)
+script = ExtResource("3_me5ei")
+tipo = 1
+alcance = 120.0
+
+[node name="Devotee3" type="Node2D" parent="Inimigos" unique_id=838926351]
+position = Vector2(1650, 950)
+script = ExtResource("3_me5ei")
+alcance = 80.0
+
+[node name="Romaria4" type="Node2D" parent="Inimigos" unique_id=850571664]
+position = Vector2(670, 950)
+script = ExtResource("3_me5ei")
+tipo = 15
+alcance = 45.0
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=1926270233]
+
+[node name="Portas" type="Node2D" parent="." unique_id=298430692]
+
+[node name="SealRoad_B" type="Node2D" parent="Portas" unique_id=1790252203]
+position = Vector2(160, 950)
+script = ExtResource("4_7tj13")
+ligacao = "seal_road"
+lado = "b"
