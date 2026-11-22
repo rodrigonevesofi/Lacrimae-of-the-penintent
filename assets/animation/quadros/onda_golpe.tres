@@ -1,0 +1,125 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/animation/onda_golpe.png" id="1_fb0nq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1y264"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(0, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_86ykn"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(256, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4gpqm"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(512, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2pqs1"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(768, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tdny0"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(1024, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5tgil"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(1280, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tju03"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(0, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ths1v"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(0, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_74wf6"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(256, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_63jq1"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(512, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uo2f6"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(768, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_axkgw"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(1024, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66jmg"]
+atlas = ExtResource("1_fb0nq")
+region = Rect2(1280, 0, 256, 256)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1y264")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_86ykn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4gpqm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2pqs1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tdny0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5tgil")
+}],
+"loop": 0,
+"name": &"anel",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tju03")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ths1v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_74wf6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_63jq1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uo2f6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_axkgw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66jmg")
+}],
+"loop": 0,
+"name": &"poeira",
+"speed": 14.0
+}]

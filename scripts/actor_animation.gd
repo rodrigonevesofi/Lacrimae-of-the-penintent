@@ -1,44 +1,20 @@
-@tool
 extends AnimatedSprite2D
 ## Os quadros de animação são desenhos distintos recortados de uma grade regular de origem.
 ## A jogabilidade e o contato visual compartilham a linha do tempo normalizada de cada ação.
 ##
-## Os quadros são montados quando o jogo roda (configure() lê assets/animation/clips.json); por isso o nó fica
-## vazio na cena. Para ver o personagem no editor, preencha "Prévia no editor": o script desenha ali um quadro,
-## sem gravar quadros, material nem escala na cena. No jogo a prévia não faz nada.
+## Os quadros de cada personagem ficam num SpriteFrames em assets/animation/quadros/<ator>.tres (abra no painel
+## SpriteFrames do editor para ver attack_a, hurt, parry...). Esses arquivos são gerados a partir de
+## assets/animation/clips.json por tools/gerar_quadros.gd: para mudar recortes, fps ou laços, edite clips.json e
+## rode o gerador (tests/quadros_smoke.gd acusa quando os dois divergem). clips.json também guarda o que o
+## SpriteFrames não tem: a âncora dos pés e os deslocamentos usados em select().
+const PASTA_QUADROS := "res://assets/animation/quadros/"
 static var manifest_cache: Dictionary = {}
-## Liga a prévia fora do editor (para capturas de conferência).
-static var previa_fora_do_editor := false
 static var frames_cache: Dictionary = {}
 var definitions: Dictionary = {}
 var actor := ""
 var unit_scale := 0.44
 var manual := false
 
-@export_group("Prévia no editor")
-## Personagem desenhado no editor (um nome de assets/animation/clips.json, como hero ou beatriz).
-@export var previa_ator := "":
-	set(valor):
-		previa_ator = valor
-		queue_redraw()
-## Escala com que o jogo desenha o personagem (a mesma passada a configure()).
-@export var previa_escala := 0.44:
-	set(valor):
-		previa_escala = valor
-		queue_redraw()
-@export var previa_animacao := "idle":
-	set(valor):
-		previa_animacao = valor
-		queue_redraw()
-@export var previa_quadro := 0:
-	set(valor):
-		previa_quadro = maxi(valor, 0)
-		queue_redraw()
-@export_group("")
-## O quadro da prévia fica guardado aqui: se só uma variável local de _draw() o segurasse, seria liberado
-## antes de o quadro ser desenhado e apareceria branco.
-var _previa: AtlasTexture
-var _previa_chave := ""
 const SHADER_ATOR := preload("res://shaders/ator_legivel.gdshader")
 
 ## Como cada personagem se destaca. O Penitente tem borda dourada; Beatriz, prateada; os inimigos,
@@ -87,18 +63,25 @@ func configure(actor_name: String, scale_factor: float) -> void:
 		sprite_frames = frames_cache[actor]
 		play("idle")
 		return
-	sprite_frames = SpriteFrames.new()
-	sprite_frames.remove_animation("default")
-	for clip in definitions:
-		var data: Dictionary = definitions[clip]
-		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
-		sprite_frames.add_animation(clip)
-		sprite_frames.set_animation_loop(clip, data.get("loop", true))
-		sprite_frames.set_animation_speed(clip, float(data.get("fps", 12)))
-		for i in range(int(data["count"])):
-			sprite_frames.add_frame(clip, quadro(data, i, sheet))
+	var arquivo := PASTA_QUADROS + actor + ".tres"
+	sprite_frames = load(arquivo) if ResourceLoader.exists(arquivo) else montar_quadros(actor)
 	frames_cache[actor] = sprite_frames
 	play("idle")
+
+## Os quadros de um personagem montados direto de clips.json (o gerador grava isto em quadros/<ator>.tres).
+static func montar_quadros(ator: String) -> SpriteFrames:
+	var quadros := SpriteFrames.new()
+	quadros.remove_animation("default")
+	var definicoes: Dictionary = manifesto()[ator]
+	for clip in definicoes:
+		var data: Dictionary = definicoes[clip]
+		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
+		quadros.add_animation(clip)
+		quadros.set_animation_loop(clip, data.get("loop", true))
+		quadros.set_animation_speed(clip, float(data.get("fps", 12)))
+		for i in range(int(data["count"])):
+			quadros.add_frame(clip, quadro(data, i, sheet))
+	return quadros
 
 ## As definições de assets/animation/clips.json, lidas uma vez.
 static func manifesto() -> Dictionary:
@@ -124,25 +107,6 @@ static func quadro(data: Dictionary, i: int, sheet: Texture2D = null) -> AtlasTe
 	region.filter_clip = true
 	return region
 
-## Prévia no editor: o quadro escolhido com os pés na origem do nó pai, como select() o posiciona no jogo.
-## Só desenha enquanto o nó não tem quadros próprios, isto é, antes de configure().
-func _draw() -> void:
-	if previa_ator.is_empty() or sprite_frames != null: return
-	if not (Engine.is_editor_hint() or previa_fora_do_editor): return
-	var definicoes: Dictionary = manifesto().get(previa_ator, {})
-	if not definicoes.has(previa_animacao): return
-	var data: Dictionary = definicoes[previa_animacao]
-	var i := clampi(previa_quadro, 0, int(data["count"]) - 1)
-	var chave := "%s/%s/%d" % [previa_ator, previa_animacao, i]
-	if chave != _previa_chave:
-		_previa = quadro(data, i)
-		_previa_chave = chave
-	var imagem := _previa
-	var anchor: Array = data.get("anchor", [128, 250])
-	var deslocamentos: Array = data.get("deslocamentos", [])
-	var desvio := float(deslocamentos[i]) if i < deslocamentos.size() else 0.0
-	var canto := Vector2(desvio - float(anchor[0]), -float(anchor[1])) * previa_escala
-	draw_texture_rect(imagem, Rect2(canto, imagem.get_size() * previa_escala), false)
 
 func select(clip: String, direction: int, progress: float = -1.0) -> void:
 	if not definitions.has(clip):
