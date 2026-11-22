@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_l2qvo"]
 [ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_uplk0"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_y7bv2"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_jmui2"]
 
 [node name="Cistern" type="Node2D" unique_id=1383495263]
 script = ExtResource("1_ln2so")
@@ -12,7 +13,6 @@ id = "cistern"
 nome = "CISTERNA DOS NOMES"
 origem = Vector2(8200, -350)
 tamanho = Vector2(2400, 1300)
-piso = 950.0
 arte = "cistern"
 linha_do_chao = 0.845
 posicao_no_mapa = Vector2(450, 540)
@@ -179,3 +179,18 @@ position = Vector2(640, 710)
 script = ExtResource("5_y7bv2")
 ligacao = "refuge_return"
 lado = "b"
+
+[node name="Altares" type="Node2D" parent="." unique_id=647568683]
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=1667460719]
+
+[node name="Calice1" type="Node2D" parent="Vestigios" unique_id=1773851899]
+position = Vector2(1750, 950)
+script = ExtResource("6_jmui2")
+id_vestigio = "calice_1"
+nome = "Cálice de Sangue"
+texto = "Um cálice de bronze, ainda morno, cheio até a borda.
+O sangue de quem foi absolvido não coagula.
+
+Vida máxima +12."
+reliquia = true

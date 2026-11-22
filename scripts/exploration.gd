@@ -23,8 +23,9 @@ const FADE_IN_TIME := 0.22
 var gate: StaticBody2D
 var journey_distance := 0.0
 var last_position := Vector2.ZERO
-var extra_altars: Array[Vector2] = [Vector2(5500,600),Vector2(11250,600),Vector2(14420,1100),Vector2(21800,600),Vector2(25100,600),Vector2(27950,600)]
-const ALTAR_NAMES := {5500:"Altar dos Sem Nome",11250:"Altar dos Votos",14420:"Altar da Vigília",21800:"Altar da Santa Calada",25100:"Altar dos Sinos Partidos",27950:"Altar dos Portões Selados"}
+## Altares e vestígios das salas: editados em scenes/salas/<id>.tscn (nós Altares e Vestigios).
+var extra_altars: Array[Vector2] = Layout.extra_altars()
+var ALTAR_NAMES := Layout.altar_names_by_x()
 var arenas_done: Array = []
 var arenas_enabled := true
 var arena_active := ""
@@ -33,22 +34,7 @@ var arena_enemies: Array = []
 var arena_bodies: Array = []
 var arena_rects: Array[Rect2] = []
 
-var pickups: Array[Dictionary] = [
-	{"id":"doll","room":"refuge","pos":Vector2(20030,280),"name":"Boneca coberta de cinzas","text":"A boneca estava entre cobertores pequenos.\nAlguém preparou abrigo para quem nunca chegou.\n\nNo pátio, há um memorial sem nomes legíveis."},
-	{"id":"register","room":"archive","pos":Vector2(17800,280),"name":"Registro dos que esperaram","text":"Uma lista de famílias, sem sentença ou confissão.\nAo lado de cada nome, a mesma palavra: aguardando.\n\nA Ordem chamou o silêncio de consentimento.\nVocê pode levar estes nomes até Iria."},
-	{"id":"vessel","room":"refuge","pos":Vector2(20600,600),"name":"Vaso da Última Vigília","text":"Uma curandeira manteve esta chama acesa até o fim.\nSeu pequeno frasco ainda pode carregar uma lágrima.\n\nCapacidade curativa aumentada em um frasco."},
-	{"id":"pews","room":"nave","pos":Vector2(22480,360),"name":"Bancos voltados para a parede","reward":120,"text":"Todos os bancos da nave foram virados para a pedra nua.\n\n\"Porque os seus ouvidos se fecharam, e eles não ouviram.\"\n\nHá lágrimas secas nas fendas da madeira.\n\n+120 lágrimas."},
-	{"id":"silence","room":"nave","pos":Vector2(23600,200),"name":"Terço de contas apagadas","reward":250,"text":"Cada conta foi lixada até perder o nome que levava.\nRestou o fio, e o fio ainda está quente.\n\nUma mão devota esteve aqui antes de você.\n\n+250 lágrimas."},
-	{"id":"rope","room":"terrace","pos":Vector2(26100,200),"name":"Corda do sino sem badalo","reward":150,"text":"O sino foi calado por dentro, antes de tocar a última vez.\nA corda foi cortada à altura da mão.\n\nNa Ordem, quem tocava o sino sem ordem era punido.\n\n+150 lágrimas."},
-	{"id":"seal","room":"court","pos":Vector2(28800,600),"name":"Os Portões Selados","reward":0,"text":"Os portões estão fechados por fora, com correntes que ninguém forjou aqui.\nGravado na madeira, sob um selo raspado: \"POR ORDEM DO SELO: NINGUÉM SAIRÁ, NINGUÉM ENTRARÁ.\"\n\nAbaixo, riscado por unhas: \"Pai, abra. Estamos aqui.\"\n\nEste caminho ainda não se abre.\nAlgo que você carrega ainda é a chave."},
-	{"id":"decree","room":"court","pos":Vector2(28700,360),"name":"Decreto selado em cera","reward":200,"text":"\"Quem lamentar será tratado como cúmplice da praga.\nQuem chorar será contado entre os culpados.\"\n\nO nome no selo foi raspado a faca. O pulso que assinou tremia.\nPela primeira vez, você duvida de quem ordenou.\n\n+200 lágrimas."},
-	{"id":"calice_1","room":"cistern","pos":Vector2(9950,600),"name":"Cálice de Sangue","relic":true,"text":"Um cálice de bronze, ainda morno, cheio até a borda.\nO sangue de quem foi absolvido não coagula.\n\nVida máxima +12."},
-	{"id":"calice_2","room":"belfry","pos":Vector2(15400,1100),"name":"Cálice de Sangue","relic":true,"text":"Deixado no último degrau, como oferenda a quem subisse.\n\nVida máxima +12."},
-	{"id":"calice_3","room":"terrace","pos":Vector2(25800,600),"name":"Cálice de Sangue","relic":true,"text":"O vento do terraço não secou o que há dentro dele.\n\nVida máxima +12."},
-	{"id":"espinho_1","room":"cloister","pos":Vector2(12140,500),"name":"Espinho da Ira","relic":true,"text":"Um espinho de ferro arrancado de uma coroa.\nQuem o aperta na mão golpeia com mais raiva.\n\nDano +8%."},
-	{"id":"espinho_2","room":"court","pos":Vector2(28300,550),"name":"Espinho da Ira","relic":true,"text":"Preso na madeira dos portões, ao lado das marcas de unhas.\n\nDano +8%."},
-	{"id":"witness","room":"ossuary","pos":Vector2(6550,600),"name":"O lugar vazio","text":"Aqui não se enterravam nomes: enterravam-se números.\nUm espaço entre os túmulos continua limpo.\n\nAlguém voltou por uma pessoa que não encontrou."},
-]
+var pickups: Array[Dictionary] = Layout.pickups()
 
 func build() -> void:
 	for id in rooms:

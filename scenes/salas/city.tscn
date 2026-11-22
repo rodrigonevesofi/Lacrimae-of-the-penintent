@@ -4,6 +4,9 @@
 [ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_054h8"]
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_w5plu"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_wrclx"]
+[ext_resource type="Script" path="res://scripts/salas/altar.gd" id="5_wrclx"]
+[ext_resource type="Script" path="res://scripts/salas/inscricao.gd" id="6_bd6si"]
+[ext_resource type="Script" path="res://scripts/salas/vela.gd" id="7_bjs07"]
 
 [node name="City" type="Node2D" unique_id=504323771]
 script = ExtResource("1_cwcgp")
@@ -130,3 +133,146 @@ position = Vector2(3380, 900)
 script = ExtResource("4_wrclx")
 ligacao = "tower_return"
 lado = "b"
+
+[node name="Altares" type="Node2D" parent="." unique_id=1408502656]
+
+[node name="Altar1" type="Node2D" parent="Altares" unique_id=1159249757]
+position = Vector2(540, 900)
+script = ExtResource("5_wrclx")
+nome = "Altar das Primeiras Lágrimas"
+
+[node name="Altar2" type="Node2D" parent="Altares" unique_id=1734907156]
+position = Vector2(1810, 900)
+script = ExtResource("5_wrclx")
+nome = "Altar do Limiar"
+
+[node name="Altar3" type="Node2D" parent="Altares" unique_id=458060727]
+position = Vector2(3620, 900)
+script = ExtResource("5_wrclx")
+nome = "Altar da Última Vela"
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=403510813]
+
+[node name="Inscricoes" type="Node2D" parent="." unique_id=1018347344]
+
+[node name="Inscricao1" type="Node2D" parent="Inscricoes" unique_id=2105036492]
+position = Vector2(730, 900)
+script = ExtResource("6_bd6si")
+titulo = "A Primeira Mártir"
+texto = "Diante de um antigo altar, ela chorou sangue.
+Os registros dizem que centenas receberam absolvição.
+
+Desde então, Vespera passou a medir a culpa em lágrimas."
+
+[node name="Inscricao2" type="Node2D" parent="Inscricoes" unique_id=133164793]
+position = Vector2(1390, 900)
+script = ExtResource("6_bd6si")
+titulo = "A Regra do Confessor"
+texto = "Bem-aventurados os que choram.
+
+Um decreto sem nome: quem não chora deverá aprender a dor.
+Uma segunda mão riscou: misericórdia quero, não sacrifício.
+
+À margem: procure no campanário aquilo que ainda o ergue."
+
+[node name="Inscricao3" type="Node2D" parent="Inscricoes" unique_id=2044609946]
+position = Vector2(2630, 900)
+script = ExtResource("6_bd6si")
+titulo = "A Pedra e a Sentença"
+texto = "Quem está sem pecado, atire a primeira pedra.
+
+A Ordem raspou a primeira linha. Conservou as pedras.
+As lágrimas levaram o remorso. Os atos permaneceram."
+
+[node name="Inscricao4" type="Node2D" parent="Inscricoes" unique_id=1713095345]
+position = Vector2(3860, 900)
+script = ExtResource("6_bd6si")
+titulo = "Os Portões Fechados"
+texto = "Foi a justiça que ergueu estes portões.
+
+A sentença foi gravada acima da tranca.
+Embaixo, alguém riscou: aqui também esperavam crianças.
+
+A assinatura foi raspada. Sua mão treme ao tocar a pedra."
+
+[node name="Velas" type="Node2D" parent="." unique_id=1161115896]
+
+[node name="Vela1" type="Node2D" parent="Velas" unique_id=1717580747]
+position = Vector2(150, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela2" type="Node2D" parent="Velas" unique_id=150878544]
+position = Vector2(330, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela3" type="Node2D" parent="Velas" unique_id=33237315]
+position = Vector2(540, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela4" type="Node2D" parent="Velas" unique_id=573033027]
+position = Vector2(700, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela5" type="Node2D" parent="Velas" unique_id=1261903342]
+position = Vector2(960, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela6" type="Node2D" parent="Velas" unique_id=828031511]
+position = Vector2(1180, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela7" type="Node2D" parent="Velas" unique_id=1444574293]
+position = Vector2(1420, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela8" type="Node2D" parent="Velas" unique_id=1357985537]
+position = Vector2(1700, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela9" type="Node2D" parent="Velas" unique_id=1833547619]
+position = Vector2(1860, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela10" type="Node2D" parent="Velas" unique_id=118835883]
+position = Vector2(2330, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela11" type="Node2D" parent="Velas" unique_id=162098789]
+position = Vector2(2520, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela12" type="Node2D" parent="Velas" unique_id=1308959433]
+position = Vector2(2800, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela13" type="Node2D" parent="Velas" unique_id=1842475016]
+position = Vector2(3050, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela14" type="Node2D" parent="Velas" unique_id=1821970671]
+position = Vector2(3300, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela15" type="Node2D" parent="Velas" unique_id=164391455]
+position = Vector2(3560, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela16" type="Node2D" parent="Velas" unique_id=2035616313]
+position = Vector2(3700, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela17" type="Node2D" parent="Velas" unique_id=1572225099]
+position = Vector2(3900, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela18" type="Node2D" parent="Velas" unique_id=343319110]
+position = Vector2(4150, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela19" type="Node2D" parent="Velas" unique_id=1184363805]
+position = Vector2(4450, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela20" type="Node2D" parent="Velas" unique_id=243145341]
+position = Vector2(4700, 900)
+script = ExtResource("7_bjs07")

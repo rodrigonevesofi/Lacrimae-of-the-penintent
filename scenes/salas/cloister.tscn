@@ -5,6 +5,8 @@
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_1y11b"]
 [ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_q1dg5"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_wndhd"]
+[ext_resource type="Script" path="res://scripts/salas/altar.gd" id="6_1y11b"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="7_q1dg5"]
 
 [node name="Cloister" type="Node2D" unique_id=456787940]
 script = ExtResource("1_j868g")
@@ -183,3 +185,23 @@ position = Vector2(1950, 490)
 script = ExtResource("5_wndhd")
 ligacao = "bell_walk"
 lado = "b"
+
+[node name="Altares" type="Node2D" parent="." unique_id=953155836]
+
+[node name="Altar1" type="Node2D" parent="Altares" unique_id=842470479]
+position = Vector2(250, 1050)
+script = ExtResource("6_1y11b")
+nome = "Altar dos Votos"
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=578684902]
+
+[node name="Espinho1" type="Node2D" parent="Vestigios" unique_id=1052281127]
+position = Vector2(1140, 950)
+script = ExtResource("7_q1dg5")
+id_vestigio = "espinho_1"
+nome = "Espinho da Ira"
+texto = "Um espinho de ferro arrancado de uma coroa.
+Quem o aperta na mão golpeia com mais raiva.
+
+Dano +8%."
+reliquia = true

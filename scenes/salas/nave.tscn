@@ -4,6 +4,8 @@
 [ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_4t7ec"]
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_c2x5k"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_w1108"]
+[ext_resource type="Script" path="res://scripts/salas/altar.gd" id="5_c2x5k"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_w1108"]
 
 [node name="Nave" type="Node2D" unique_id=1863889185]
 script = ExtResource("1_c7ird")
@@ -128,3 +130,39 @@ position = Vector2(2450, 1050)
 script = ExtResource("4_w1108")
 ligacao = "nave_out"
 rotulo = "Passagem do coro"
+
+[node name="Altares" type="Node2D" parent="." unique_id=240083512]
+
+[node name="Altar1" type="Node2D" parent="Altares" unique_id=1054054182]
+position = Vector2(400, 1050)
+script = ExtResource("5_c2x5k")
+nome = "Altar da Santa Calada"
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=835092322]
+
+[node name="Pews" type="Node2D" parent="Vestigios" unique_id=20071118]
+position = Vector2(1080, 810)
+script = ExtResource("6_w1108")
+id_vestigio = "pews"
+nome = "Bancos voltados para a parede"
+texto = "Todos os bancos da nave foram virados para a pedra nua.
+
+\"Porque os seus ouvidos se fecharam, e eles não ouviram.\"
+
+Há lágrimas secas nas fendas da madeira.
+
++120 lágrimas."
+recompensa = 120
+
+[node name="Silence" type="Node2D" parent="Vestigios" unique_id=1574186088]
+position = Vector2(2200, 650)
+script = ExtResource("6_w1108")
+id_vestigio = "silence"
+nome = "Terço de contas apagadas"
+texto = "Cada conta foi lixada até perder o nome que levava.
+Restou o fio, e o fio ainda está quente.
+
+Uma mão devota esteve aqui antes de você.
+
++250 lágrimas."
+recompensa = 250

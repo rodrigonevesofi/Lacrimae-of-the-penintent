@@ -5,13 +5,13 @@
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_1uuqp"]
 [ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_m17hd"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_tsthx"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_fnek0"]
 
 [node name="Archive" type="Node2D" unique_id=1611202148]
 script = ExtResource("1_f0127")
 id = "archive"
 nome = "ARQUIVO DAS CONFISSÕES"
 origem = Vector2(16600, -350)
-piso = 950.0
 arte = "gallery"
 linha_do_chao = 0.735
 altura_arte = 1250.0
@@ -131,3 +131,18 @@ position = Vector2(800, 630)
 script = ExtResource("5_tsthx")
 ligacao = "nave_in"
 rotulo = "Nave do Silêncio"
+
+[node name="Altares" type="Node2D" parent="." unique_id=1071100489]
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=882404549]
+
+[node name="Register" type="Node2D" parent="Vestigios" unique_id=224125381]
+position = Vector2(1200, 630)
+script = ExtResource("6_fnek0")
+id_vestigio = "register"
+nome = "Registro dos que esperaram"
+texto = "Uma lista de famílias, sem sentença ou confissão.
+Ao lado de cada nome, a mesma palavra: aguardando.
+
+A Ordem chamou o silêncio de consentimento.
+Você pode levar estes nomes até Iria."

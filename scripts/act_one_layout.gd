@@ -21,7 +21,8 @@ static func recarregar() -> void:
 static func _dados() -> Dictionary:
 	if not _cache.is_empty(): return _cache
 	var d := {"rooms": {}, "platforms": [] as Array[Rect2], "blocks": [] as Array[Rect2], "arenas": [], "portas": [],
-		"enemies": [], "criaturas": [], "city_platforms": [] as Array[Rect2], "city_enemies": []}
+		"enemies": [], "criaturas": [], "city_platforms": [] as Array[Rect2], "city_enemies": [],
+		"altars": [], "pickups": [] as Array[Dictionary], "city_lore": [], "city_candles": [] as Array[float]}
 	for id in SALAS:
 		var sala: Node2D = load("res://scenes/salas/%s.tscn" % id).instantiate()
 		d.rooms[id] = sala.dados()
@@ -48,6 +49,17 @@ static func _dados() -> Dictionary:
 			d.arenas.append({"id": a.id, "room": id, "x0": p.x, "x1": p.x + a.largura, "floor": p.y, "reward": a.recompensa, "waves": levas})
 		for porta in _filhos(sala, "Portas"):
 			d.portas.append({"ligacao": porta.ligacao, "lado": porta.lado, "rotulo": porta.rotulo, "trinco": porta.trinco, "sala": id, "pos": _no_mundo(porta, sala)})
+		for altar in _filhos(sala, "Altares"):
+			d.altars.append({"room": id, "pos": _no_mundo(altar, sala), "name": altar.nome})
+		for v in _filhos(sala, "Vestigios"):
+			var item := {"id": v.id_vestigio, "room": id, "pos": _no_mundo(v, sala), "name": v.nome, "text": v.texto}
+			if v.recompensa >= 0: item["reward"] = v.recompensa
+			if v.reliquia: item["relic"] = true
+			d.pickups.append(item)
+		if cidade:
+			for ins in _filhos(sala, "Inscricoes"):
+				d.city_lore.append({"x": _no_mundo(ins, sala).x, "title": ins.titulo, "text": ins.texto})
+			for vela in _filhos(sala, "Velas"): d.city_candles.append(_no_mundo(vela, sala).x)
 		sala.free()
 	d["passages"] = _ligacoes(d.portas)
 	d.erase("portas")
@@ -113,6 +125,51 @@ static func enemies() -> Array:
 ## Encontros das fichas aprovadas (criatura marcada no MarcadorInimigo), no mesmo formato de enemies().
 static func criaturas_aprovadas() -> Array:
 	return _dados().criaturas.duplicate(true)
+
+## Altares de descanso: {"room", "pos", "name"}, a Cidade primeiro e depois as salas na ordem do mapa.
+## O salvamento guarda o índice do altar nesta lista; altares novos entram no fim de cada sala.
+static func altars() -> Array:
+	return _dados().altars.duplicate(true)
+
+static func city_altars() -> Array[Vector2]:
+	var result: Array[Vector2] = []
+	for a in _dados().altars:
+		if a.room == "city": result.append(a.pos)
+	return result
+
+static func city_altar_names() -> Array[String]:
+	var result: Array[String] = []
+	for a in _dados().altars:
+		if a.room == "city": result.append(a.name)
+	return result
+
+## Altares fora da Cidade, acrescentados por exploration.gd depois dos da Cidade.
+static func extra_altars() -> Array[Vector2]:
+	var result: Array[Vector2] = []
+	for a in _dados().altars:
+		if a.room != "city": result.append(a.pos)
+	return result
+
+## Nome de cada altar fora da Cidade, pela posição x (inteira).
+static func altar_names_by_x() -> Dictionary:
+	var result := {}
+	for a in _dados().altars:
+		if a.room != "city": result[int(a.pos.x)] = a.name
+	return result
+
+## Vestígios coletáveis: {"id", "room", "pos", "name", "text"} e, quando houver, "reward" e "relic".
+static func pickups() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for item in _dados().pickups: result.append(item.duplicate(true))
+	return result
+
+## Inscrições da Cidade: {"x", "title", "text"}.
+static func city_lore() -> Array:
+	return _dados().city_lore.duplicate(true)
+
+## Posição x das velas no chão da Cidade.
+static func city_candles() -> Array[float]:
+	return _dados().city_candles.duplicate()
 
 ## Plataformas da Cidade, construídas por main.gd (as das outras salas são de exploration.gd).
 static func city_platforms() -> Array[Rect2]:

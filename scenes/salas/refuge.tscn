@@ -4,13 +4,13 @@
 [ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_k1qmk"]
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_hxaro"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_yar7i"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="5_k1qmk"]
 
 [node name="Refuge" type="Node2D" unique_id=718040944]
 script = ExtResource("1_pcl6o")
 id = "refuge"
 nome = "ABRIGO DAS CINZAS"
 origem = Vector2(19000, -350)
-piso = 950.0
 arte = "gates"
 linha_do_chao = 0.795
 altura_arte = 1250.0
@@ -103,3 +103,27 @@ position = Vector2(1260, 630)
 script = ExtResource("4_yar7i")
 ligacao = "nave_out"
 lado = "b"
+
+[node name="Altares" type="Node2D" parent="." unique_id=892221946]
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=291969276]
+
+[node name="Doll" type="Node2D" parent="Vestigios" unique_id=554189762]
+position = Vector2(1030, 630)
+script = ExtResource("5_k1qmk")
+id_vestigio = "doll"
+nome = "Boneca coberta de cinzas"
+texto = "A boneca estava entre cobertores pequenos.
+Alguém preparou abrigo para quem nunca chegou.
+
+No pátio, há um memorial sem nomes legíveis."
+
+[node name="Vessel" type="Node2D" parent="Vestigios" unique_id=2103514039]
+position = Vector2(1600, 950)
+script = ExtResource("5_k1qmk")
+id_vestigio = "vessel"
+nome = "Vaso da Última Vigília"
+texto = "Uma curandeira manteve esta chama acesa até o fim.
+Seu pequeno frasco ainda pode carregar uma lágrima.
+
+Capacidade curativa aumentada em um frasco."

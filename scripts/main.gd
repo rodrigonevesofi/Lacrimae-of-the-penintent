@@ -111,31 +111,21 @@ var flicker: Array = []
 
 var relic_pos := Vector2(14580, 1100)
 
-var altars: Array[Vector2] = [Vector2(540, 600), Vector2(1810, 600), Vector2(3620, 600)]
+## Altares, plataformas, inimigos, velas e inscrições da Cidade: editados em scenes/salas/city.tscn.
+## exploration.gd acrescenta os altares das outras salas a altars e altar_names.
+const Layout = preload("res://scripts/act_one_layout.gd")
+var altars: Array[Vector2] = Layout.city_altars()
+var altar_names: Array[String] = Layout.city_altar_names()
 
-## Plataformas e inimigos da Cidade: editados em scenes/salas/city.tscn.
-var platforms: Array[Rect2] = preload("res://scripts/act_one_layout.gd").city_platforms()
+var platforms: Array[Rect2] = Layout.city_platforms()
 
 # [tipo, x, y, alcance]  (0 = devoto, 1 = chorão)
-var enemy_defs: Array = preload("res://scripts/act_one_layout.gd").city_enemies()
+var enemy_defs: Array = Layout.city_enemies()
 
-var candle_xs: Array[float] = [
-	150.0, 330.0, 540.0, 700.0, 960.0, 1180.0, 1420.0, 1700.0, 1860.0,
-	2330.0, 2520.0, 2800.0, 3050.0, 3300.0, 3560.0, 3700.0, 3900.0, 4150.0, 4450.0, 4700.0,
-]
+var candle_xs: Array[float] = Layout.city_candles()
 
-var lore: Array = [
-	{"x": 730.0, "title": "A Primeira Mártir",
-	"text": "Diante de um antigo altar, ela chorou sangue.\nOs registros dizem que centenas receberam absolvição.\n\nDesde então, Vespera passou a medir a culpa em lágrimas."},
-	{"x": 1390.0, "title": "A Regra do Confessor",
-	"text": "Bem-aventurados os que choram.\n\nUm decreto sem nome: quem não chora deverá aprender a dor.\nUma segunda mão riscou: misericórdia quero, não sacrifício.\n\nÀ margem: procure no campanário aquilo que ainda o ergue."},
-	{"x": 2630.0, "title": "A Pedra e a Sentença",
-	"text": "Quem está sem pecado, atire a primeira pedra.\n\nA Ordem raspou a primeira linha. Conservou as pedras.\nAs lágrimas levaram o remorso. Os atos permaneceram."},
-	{"x": 3860.0, "title": "Os Portões Fechados",
-	"text": "Foi a justiça que ergueu estes portões.\n\nA sentença foi gravada acima da tranca.\nEmbaixo, alguém riscou: aqui também esperavam crianças.\n\nA assinatura foi raspada. Sua mão treme ao tocar a pedra."},
-]
-
-var altar_names: Array[String] = ["Altar das Primeiras Lágrimas", "Altar do Limiar", "Altar da Última Vela"]
+## Inscrições: {"x", "title", "text"}.
+var lore: Array = Layout.city_lore()
 
 
 func _ready() -> void:

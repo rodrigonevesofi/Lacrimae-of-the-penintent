@@ -4,6 +4,8 @@
 [ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_kouny"]
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_4l68w"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_gi41h"]
+[ext_resource type="Script" path="res://scripts/salas/altar.gd" id="5_4l68w"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_gi41h"]
 
 [node name="Ossuary" type="Node2D" unique_id=275576213]
 script = ExtResource("1_jrm75")
@@ -11,7 +13,6 @@ id = "ossuary"
 nome = "OSSUÁRIO DOS SEM NOME"
 origem = Vector2(5200, -350)
 tamanho = Vector2(2600, 1300)
-piso = 950.0
 arte = "ossuary"
 linha_do_chao = 0.88
 posicao_no_mapa = Vector2(210, 430)
@@ -140,3 +141,22 @@ position = Vector2(1250, 550)
 script = ExtResource("4_gi41h")
 ligacao = "shelter"
 rotulo = "Abrigo das Cinzas"
+
+[node name="Altares" type="Node2D" parent="." unique_id=1950110921]
+
+[node name="Altar1" type="Node2D" parent="Altares" unique_id=1806528873]
+position = Vector2(300, 950)
+script = ExtResource("5_4l68w")
+nome = "Altar dos Sem Nome"
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=1137223999]
+
+[node name="Witness" type="Node2D" parent="Vestigios" unique_id=837566185]
+position = Vector2(1350, 950)
+script = ExtResource("6_gi41h")
+id_vestigio = "witness"
+nome = "O lugar vazio"
+texto = "Aqui não se enterravam nomes: enterravam-se números.
+Um espaço entre os túmulos continua limpo.
+
+Alguém voltou por uma pessoa que não encontrou."
