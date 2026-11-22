@@ -19,9 +19,11 @@ const DESCRICAO := {
 	"corrente_vigilia": "Corrente do sino (campanário)",
 	"entrada_vale": "Chegada ao Vale",
 	"chefe_vale": "O Flagelado (chefe final)",
+	"gatilho_chefe": "Gatilho do Guardião: acorda quando o Penitente passa deste x, com os dois sinos",
+	"atalho_dev_portao": "Modo dev (B): chegada diante do portão",
 }
 
-@export_enum("tumulo", "espada", "iria", "memorial", "portao_do_vale", "chefe_guardiao", "reliquia", "corrente_agua", "corrente_vigilia", "entrada_vale", "chefe_vale") var ponto := "tumulo":
+@export_enum("tumulo", "espada", "iria", "memorial", "portao_do_vale", "chefe_guardiao", "reliquia", "corrente_agua", "corrente_vigilia", "entrada_vale", "chefe_vale", "gatilho_chefe", "atalho_dev_portao") var ponto := "tumulo":
 	set(valor):
 		ponto = valor
 		queue_redraw()

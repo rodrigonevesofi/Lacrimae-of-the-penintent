@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://scripts/salas/abismo.gd" id="10_1foqq"]
 [ext_resource type="Script" path="res://scripts/salas/trecho.gd" id="11_ekw3g"]
 [ext_resource type="Script" path="res://scripts/salas/decoracao.gd" id="12_bmifk"]
+[ext_resource type="Script" path="res://scripts/salas/zona.gd" id="13_zona"]
 
 [node name="City" type="Node2D" unique_id=504323771]
 script = ExtResource("1_cwcgp")
@@ -377,6 +378,16 @@ position = Vector2(4700, 900)
 script = ExtResource("8_bd6si")
 ponto = "portao_do_vale"
 
+[node name="GatilhoChefe" type="Node2D" parent="Pontos" unique_id=918235696]
+position = Vector2(3900, 900)
+script = ExtResource("8_bd6si")
+ponto = "gatilho_chefe"
+
+[node name="AtalhoDevPortao" type="Node2D" parent="Pontos" unique_id=813447292]
+position = Vector2(3700, 900)
+script = ExtResource("8_bd6si")
+ponto = "atalho_dev_portao"
+
 [node name="Luzes" type="Node2D" parent="." unique_id=595790626]
 
 [node name="LuzDoAbismo" parent="Luzes" unique_id=1114029044 instance=ExtResource("9_luz")]
@@ -463,3 +474,22 @@ tipo = "corrente"
 position = Vector2(3794, 230)
 script = ExtResource("12_bmifk")
 tipo = "corrente"
+
+[node name="Zonas" type="Node2D" parent="." unique_id=595465664]
+
+[node name="PortaoDosSinos" type="Node2D" parent="Zonas" unique_id=456561138]
+position = Vector2(3780, 100)
+script = ExtResource("13_zona")
+tamanho = Vector2(28, 800)
+
+[node name="AvisoDasCorrentes" type="Node2D" parent="Zonas" unique_id=928133548]
+position = Vector2(3640, 100)
+script = ExtResource("13_zona")
+zona = "aviso_das_correntes"
+tamanho = Vector2(150, 800)
+
+[node name="ParedeDoChefe" type="Node2D" parent="Zonas" unique_id=1341114595]
+position = Vector2(3790, -300)
+script = ExtResource("13_zona")
+zona = "parede_do_chefe"
+tamanho = Vector2(40, 1200)

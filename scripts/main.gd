@@ -67,6 +67,8 @@ var MEMORIAL_POS: Vector2 = Layout.ponto("memorial")
 ## Diante dos portões: descida ao Vale depois do Guardião (ou o encerramento, se o Vale já foi vencido).
 var VALE_GATE_POS: Vector2 = Layout.ponto("portao_do_vale")
 var GUARDIAN_POS: Vector2 = Layout.ponto("chefe_guardiao")
+## O Guardião acorda quando o Penitente passa deste x (com os dois sinos tocados).
+var GUARDIAN_TRIGGER_X: float = Layout.ponto("gatilho_chefe").x
 const PROLOGUE: Array[Dictionary] = [
 	{"title": "O TÚMULO SEM NOME", "text": "Você desperta em um túmulo de pedra, nas profundezas\nde uma catedral abandonada. Não se lembra do seu nome.\n\nMarcas de antigos rituais cobrem seu corpo. Ao seu lado,\numa coroa enferrujada repousa entre espinhos."},
 	{"title": "A INSCRIÇÃO", "text": "Aquele que condenou milhares deverá carregar\no peso de cada lágrima.\n\nQue sua morte seja negada até que sua culpa\nencontre repouso."},
@@ -347,7 +349,7 @@ func dev_input(event: InputEvent) -> bool:
 			if player.dev_fly: _leave_dev_fly()
 			else: player.dev_fly = true
 		KEY_B:
-			exploration.travel("city", Vector2(3700, 600))
+			exploration.travel("city", Layout.ponto("atalho_dev_portao"))
 		_: return false
 	return true
 
@@ -1513,9 +1515,9 @@ func _play_update(delta: float) -> void:
 			show_message(lore[near_lore]["title"], lore[near_lore]["text"])
 
 	# gatilho do chefe
-	if boss != null and is_instance_valid(boss) and not boss.awake and not boss.dead and pp.x > 3900.0 and exploration.bells.size() == 2:
+	if boss != null and is_instance_valid(boss) and not boss.awake and not boss.dead and pp.x > GUARDIAN_TRIGGER_X and exploration.bells.size() == 2:
 		boss.awaken()
-		boss_wall = _add_solid(Rect2(3790, -600, 40, 1200), false)
+		boss_wall = _add_solid(Layout.zona("parede_do_chefe"), false)
 		if narrative.mode == "": narrative.begin("boss_intro")
 		toast("Os sinos tocam. O Guardião reconhece sua presença.")
 

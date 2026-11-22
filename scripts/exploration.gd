@@ -117,7 +117,7 @@ func update_gate() -> void:
 	if is_instance_valid(gate): gate.queue_free()
 	gate = null
 	if bells.size() < 2:
-		gate = game._add_solid(Rect2(3780,-200,28,800),false)
+		gate = game._add_solid(Layout.zona("portao_dos_sinos"),false)
 
 func spawn_enemies() -> void:
 	for d in Layout.enemies():
@@ -344,7 +344,8 @@ func update(_delta: float) -> bool:
 			game.show_message(item.name,game.story_pickup_text(str(item.id),str(item.text)))
 			game._save()
 		return true
-	if room == "city" and p.x > 3640 and p.x < 3790 and bells.size() < 2:
+	var aviso := Layout.zona("aviso_das_correntes")
+	if room == "city" and p.x > aviso.position.x and p.x < aviso.end.x and bells.size() < 2:
 		game.prompt = "Duas correntes prendem a passagem · cisterna e campanário"
 	if room != "city":
 		game.area_name = rooms[room].name

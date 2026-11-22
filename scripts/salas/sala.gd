@@ -7,7 +7,8 @@ extends Node2D
 ##
 ## Filhos esperados: Plataformas (Retangulo, atravessáveis por baixo), Alvenaria (Retangulo, sólidos),
 ## Inimigos (MarcadorInimigo), Arenas (Arena), Portas (Porta), Altares (Altar), Vestigios (Vestigio) e
-## Pontos (Ponto: túmulo, espada, Iria, chefes, correntes do sino...) e Luzes (Luz).
+## Pontos (Ponto: túmulo, espada, Iria, chefes, correntes do sino...), Zonas (Zona: portão dos sinos, parede
+## do chefe...) e Luzes (Luz).
 ## Só na Cidade: Inscricoes (Inscricao), Velas (Vela), Abismo (o vão da ponte), Trechos (Trecho: nomes de área)
 ## e Decoracoes (Decoracao: gaiolas, panos, correntes). Todos são opcionais.
 ##
