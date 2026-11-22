@@ -134,7 +134,8 @@ func run():
 	game.soundscape.ambience.stop();game.soundscape.incoming.stop();game.soundscape.guilt_layer.stop()
 	for voice in game.soundscape.effects.values():voice.stop()
 	var old=game.player
-	p=ProbePlayer.new();game.add_child(p);game.player=p;old.queue_free()
+	# A sonda usa a cena do jogador (filhos, colisão, câmera) com o script observador no lugar de player.gd.
+	p=game.PlayerScene.instantiate();p.set_script(ProbePlayer);game.add_child(p);game.player=p;old.queue_free()
 	await frames(3)
 	var only="devorador" if "--only-devorador" in OS.get_cmdline_user_args() else ("asmodeia_controle" if "--only-asmodeia" in OS.get_cmdline_user_args() else "")
 	if only!="":

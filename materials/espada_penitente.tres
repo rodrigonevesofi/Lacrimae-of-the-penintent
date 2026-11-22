@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" uid="uid://w4j0yut36s8x" path="res://shaders/penitent_readability.gdshader" id="1_leitura"]
+
+[resource]
+shader = ExtResource("1_leitura")
+shader_parameter/midtone_gain = 1.12
+shader_parameter/edge_strength = 0.16

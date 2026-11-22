@@ -43,7 +43,7 @@ para que a equipe possa trocar por sprites e áudio reais depois.
 | Frente | Onde mexer |
 |---|---|
 | 01 Direção, Game Design e Narrativa | `main.gd`: array `lore` (textos), `show_message` (intro), `HUD._draw_ending` (final); constantes de dano/vida em `player.gd` e `enemy.gd` |
-| 02 Programação — Jogador e Combate | `player.gd`, `enemy.gd`, `tear.gd`, `spike.gd` |
+| 02 Programação — Jogador e Combate | `player.gd`, `enemy.gd`, `tear.gd`, `spike.gd`; a estrutura do jogador (espada, lança, colisão, luz, câmera) fica em `scenes/player.tscn` |
 | 03 Programação — Sistemas e Integração | `hud.gd`, save/load em `main.gd` (`_save`, `_load`), mapa de teclas em `main.gd` (`_setup_input`) |
 | 04 Character Design e Animação | `_draw()` de `player.gd` e `enemy.gd` — substituir por `AnimatedSprite2D` |
 | 05 Cenários, Level Design e Áudio | `main.gd`: `platforms`, `enemy_defs`, `candle_xs`, `_draw()` (cenário), luzes (`_build_lights`); **áudio ainda não existe** (adicionar `AudioStreamPlayer`) |

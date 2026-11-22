@@ -3,7 +3,7 @@ extends Node2D
 
 const Util = preload("res://scripts/util.gd")
 const GuiltText = preload("res://scripts/guilt_text.gd")
-const PlayerScript = preload("res://scripts/player.gd")
+const PlayerScene = preload("res://scenes/player.tscn")
 const EnemyScript = preload("res://scripts/enemy.gd")
 const CriaturaGoyaScript = preload("res://scripts/criatura_goya.gd")
 const FinalBossScript = preload("res://scripts/penitent_boss.gd")
@@ -591,7 +591,7 @@ func _build_world() -> void:
 
 
 func _build_player() -> void:
-	player = PlayerScript.new()
+	player = PlayerScene.instantiate()
 	player.position = altars[0]
 	add_child(player)
 	player.died.connect(_on_player_died)
@@ -735,7 +735,7 @@ func enable_duo(on: bool) -> void:
 	if on and (partner == null or not is_instance_valid(partner)):
 		player.character = "penitente"
 		player.apply_character()
-		partner = PlayerScript.new()
+		partner = PlayerScene.instantiate()
 		partner.is_partner = true
 		partner.prefix = "p2_"
 		partner.ai = true

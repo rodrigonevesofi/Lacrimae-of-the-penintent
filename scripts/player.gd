@@ -1,7 +1,6 @@
 extends CharacterBody2D
 ## O Penitente das Lágrimas (jogador)
 
-const Util = preload("res://scripts/util.gd")
 const RastroGolpe = preload("res://scripts/rastro_golpe.gd")
 const LaminaSangue = preload("res://scripts/lamina_sangue.gd")
 const Gore = preload("res://scripts/gore.gd")
@@ -32,8 +31,9 @@ const AIR_ATTACK_TIME := 0.48
 const AIR_RECOVERY_TIME := 0.16
 const MAX_FALL := 950.0
 
-var animator
-var sword: Sprite2D
+# Nós montados em scenes/player.tscn (edite-os pelo editor do Godot).
+@onready var animator = $Animator
+@onready var sword: Sprite2D = $Sword
 const SWORD_GRIP := Vector2(520, 360)
 const SWORD_SCALE := 0.035
 ## Posição do punho em cada desenho de hero_motion.png (coordenadas da célula de 256 x 256), medida quadro a quadro.
@@ -112,7 +112,7 @@ var lance_weight := 0.0
 var swap_cd := 0.0
 var share_cd := 0.0
 var attack_len := ATTACK_TIME
-var lance: Node2D
+@onready var lance: Node2D = $Lance
 ## Os dois penitentes caminham juntos. O jogo controla Beatriz até o segundo jogador usar um
 ## dos comandos dela (prefixo "p2_"). Quem cai ainda pode receber sangue do parceiro para se levantar.
 var is_partner := false
@@ -180,77 +180,28 @@ var safe_pos := Vector2.ZERO
 var shake := 0.0
 var impact_direction := Vector2.ZERO
 var roll_cd := 0.0
-var camera: Camera2D
-var light: PointLight2D
+@onready var camera: Camera2D = $Camera2D
+@onready var light: PointLight2D = $Light
 
 
+## A estrutura do jogador (espada, lança provisória de Beatriz, colisão, luz, câmera, grupos e camadas
+## de colisão) fica em scenes/player.tscn. A ordem dos filhos importa: a espada vem antes do Animator,
+## atrás do corpo, para o punho fechado ficar por cima do cabo. Crie o jogador com
+## preload("res://scenes/player.tscn").instantiate(), nunca com player.gd.new().
 func _ready() -> void:
-	var visuals = load("res://scripts/combat_visuals.gd").new()
-	visuals.name = "CombatVisuals"
-	add_child(visuals)
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	appearance = AtlasTexture.new()
 	appearance.atlas = load("res://assets/characters.png")
 	appearance.region = Rect2(0, 0, 384, 1000)
 	appearance.filter_clip = true
-	animator = preload("res://scripts/actor_animation.gd").new()
+	# Os quadros vêm de assets/animation/clips.json; por isso o animador é configurado aqui, não na cena.
 	animator.configure("hero", 0.44)
-	add_child(animator)
-	sword = Sprite2D.new()
-	sword.texture = load("res://assets/penitent_sword.png")
-	sword.centered = false
+	# SWORD_GRIP também mede a lâmina em _update_sword; o deslocamento sai dele para não divergir da cena.
 	sword.offset = -SWORD_GRIP
-	sword.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	var sword_surface := ShaderMaterial.new()
-	sword_surface.shader = load("res://shaders/penitent_readability.gdshader")
-	sword_surface.set_shader_parameter("midtone_gain",1.12)
-	sword_surface.set_shader_parameter("edge_strength",0.16)
-	sword.material = sword_surface
-	add_child(sword)
-	# Lança provisória de Beatriz quando a arte própria está ausente: haste de ferro batido e ponta cinzenta.
-	lance = Node2D.new()
-	lance.z_index = 1
-	var shaft := Polygon2D.new()
-	shaft.polygon = PackedVector2Array([Vector2(-30, -2), Vector2(70, -2), Vector2(70, 2), Vector2(-30, 2)])
-	shaft.color = Color(0.22, 0.18, 0.16)
-	lance.add_child(shaft)
-	var point := Polygon2D.new()
-	point.polygon = PackedVector2Array([Vector2(70, -5), Vector2(92, 0), Vector2(70, 5)])
-	point.color = Color(0.62, 0.62, 0.64)
-	lance.add_child(point)
-	lance.visible = false
-	add_child(lance)
-	# Atrás do corpo: o punho fechado fica por cima do cabo, a lâmina sai de um lado da mão e o pomo
-	# do outro. Antes a espada ficava na frente e cobria a mão inteira, parecendo colada no braço.
-	move_child(sword, animator.get_index())
 	# Acompanha o desenho assim que muda: o punho se desloca até 30 pixels entre quadros de corrida.
 	animator.frame_changed.connect(_update_sword)
 	animator.animation_changed.connect(_update_sword)
-	add_to_group("player")
-	collision_layer = 2
-	collision_mask = 1
-	floor_snap_length = 10.0
-	var cs := CollisionShape2D.new()
-	var rs := RectangleShape2D.new()
-	rs.size = Vector2(22, 56)
-	cs.shape = rs
-	cs.position = Vector2(0, -28)
-	add_child(cs)
-	light = Util.make_light(Color(1.0, 0.82, 0.6), 0.32, 2.6)
-	light.position = Vector2(0, -40)
-	add_child(light)
-	camera = Camera2D.new()
-	camera.offset = Vector2(0, -110)
-	camera.position_smoothing_enabled = true
-	camera.position_smoothing_speed = 7.0
-	camera.limit_left = 0
-	camera.limit_right = 4800
-	camera.limit_bottom = 800
-	camera.limit_top = -300
-	add_child(camera)
 	# A câmera do Penitente enquadra o mundo; a câmera da parceira fica desligada.
 	if is_partner: camera.enabled = false
-	add_to_group("players")
 	safe_pos = global_position
 
 

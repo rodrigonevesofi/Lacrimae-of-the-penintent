@@ -77,7 +77,8 @@ func run():
 	game.soundscape.ambience.stop();game.soundscape.incoming.stop();game.soundscape.guilt_layer.stop()
 	for voice in game.soundscape.effects.values():voice.stop()
 	var original=game.player
-	p=Player.new();game.add_child(p);game.player=p;original.queue_free()
+	# A sonda usa a cena do jogador (filhos, colisão, câmera) com o script observador no lugar de player.gd.
+	p=game.PlayerScene.instantiate();p.set_script(Player);game.add_child(p);game.player=p;original.queue_free()
 	await frames(3)
 	for i in range(10):await trial(i)
 	release();report();game._delete_save();game.queue_free();game=null;p=null;boss=null
