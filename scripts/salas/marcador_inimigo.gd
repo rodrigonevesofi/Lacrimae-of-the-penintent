@@ -3,6 +3,8 @@ extends Node2D
 ## Onde um inimigo aparece. A posição do nó é o ponto dos pés (x, y do chão ou da plataforma).
 ## O tipo segue a tabela TYPES de scripts/enemy.gd.
 
+const Sala = preload("res://scripts/salas/sala.gd")
+
 const TIPOS = preload("res://scripts/enemy.gd").TYPES
 
 @export var tipo := 0:
@@ -20,9 +22,14 @@ const TIPOS = preload("res://scripts/enemy.gd").TYPES
 @export var criatura := false
 
 func _draw() -> void:
-	if not Engine.is_editor_hint(): return
+	if not Sala.visivel(): return
 	var cor := Color(0.95, 0.45, 0.85) if criatura else Color(0.95, 0.35, 0.3)
 	draw_line(Vector2(-alcance, 0), Vector2(alcance, 0), Color(cor, 0.5), 2.0)
 	draw_circle(Vector2(0, -20), 14.0, cor)
 	var nome: String = TIPOS[tipo].name if TIPOS.has(tipo) else "tipo %d?" % tipo
-	draw_string(ThemeDB.fallback_font, Vector2(-60, -44), nome + (" · g%d" % grupo if grupo >= 0 else ""), HORIZONTAL_ALIGNMENT_CENTER, 120, 16, cor)
+	_texto(Vector2(-60, -44), nome + (" · g%d" % grupo if grupo >= 0 else ""), HORIZONTAL_ALIGNMENT_CENTER, 120, 16, cor)
+
+func _texto(pos: Vector2, texto: String, alinhamento: HorizontalAlignment, largura: float, tamanho_fonte: int, cor: Color) -> void:
+	var fonte := ThemeDB.fallback_font
+	draw_string_outline(fonte, pos, texto, alinhamento, largura, tamanho_fonte, 5, Color(0, 0, 0, 0.85))
+	draw_string(fonte, pos, texto, alinhamento, largura, tamanho_fonte, cor)

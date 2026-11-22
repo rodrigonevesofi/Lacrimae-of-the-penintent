@@ -6,11 +6,12 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_w1108"]
 
 [node name="Nave" type="Node2D" unique_id=1863889185]
-position = Vector2(21400, -450)
 script = ExtResource("1_c7ird")
 id = "nave"
 nome = "NAVE DO SILÊNCIO"
+origem = Vector2(21400, -450)
 tamanho = Vector2(2600, 1400)
+piso = 1050.0
 arte = "nave_silencio"
 linha_do_chao = 0.848
 altura_arte = 880.0

@@ -6,10 +6,11 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_7tj13"]
 
 [node name="Court" type="Node2D" unique_id=1362481682]
-position = Vector2(27400, -350)
 script = ExtResource("1_r6s0l")
 id = "court"
 nome = "PÁTIO DOS PORTÕES SELADOS"
+origem = Vector2(27400, -350)
+piso = 950.0
 arte = "patio_portoes"
 linha_do_chao = 0.852
 altura_arte = 800.0

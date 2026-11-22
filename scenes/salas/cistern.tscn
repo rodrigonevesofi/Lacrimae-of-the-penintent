@@ -7,11 +7,12 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_y7bv2"]
 
 [node name="Cistern" type="Node2D" unique_id=1383495263]
-position = Vector2(8200, -350)
 script = ExtResource("1_ln2so")
 id = "cistern"
 nome = "CISTERNA DOS NOMES"
+origem = Vector2(8200, -350)
 tamanho = Vector2(2400, 1300)
+piso = 950.0
 arte = "cistern"
 linha_do_chao = 0.845
 posicao_no_mapa = Vector2(450, 540)

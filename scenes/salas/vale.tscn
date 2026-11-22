@@ -4,11 +4,12 @@
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="2_spmnc"]
 
 [node name="Vale" type="Node2D" unique_id=1874735420]
-position = Vector2(30200, -500)
 script = ExtResource("1_al3mw")
 id = "vale"
 nome = "VALE DOS FLAGELADOS"
+origem = Vector2(30200, -500)
 tamanho = Vector2(3400, 1400)
+piso = 1100.0
 arte = "gates"
 linha_do_chao = 0.8
 altura_arte = 1250.0

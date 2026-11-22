@@ -2,7 +2,8 @@ extends RefCounted
 ## O mapa do Ato I. Cada sala é uma cena em scenes/salas/<id>.tscn (edite-as no editor do Godot):
 ## limites, piso, pintura, plataformas, alvenaria, inimigos, arenas e portas. Este script lê as cenas
 ## e entrega os mesmos dados de sempre ao jogo (exploration.gd, world_art.gd, main.gd, a prévia do editor).
-## As coordenadas devolvidas são do mundo; dentro das cenas, cada sala usa coordenadas locais.
+## As coordenadas devolvidas são do mundo; dentro das cenas, cada sala começa em (0, 0) e "origem" diz onde
+## esse canto fica no mundo.
 ##
 ## "ground" é a fração da altura da pintura em que fica o piso pintado. O chão de colisão é posto
 ## exatamente ali: antes várias salas usavam 0,86 por padrão e os personagens andavam acima ou na beira
@@ -56,14 +57,14 @@ static func _dados() -> Dictionary:
 static func _filhos(sala: Node, grupo: String) -> Array:
 	return sala.get_node(grupo).get_children() if sala.has_node(grupo) else []
 
-## Posição no mundo de um nó dentro da sala (soma as posições até a raiz, que fica no canto da sala).
+## Posição no mundo de um nó dentro da sala: soma as posições até a raiz (o canto da sala) e a origem dela.
 static func _no_mundo(no: Node2D, sala: Node2D) -> Vector2:
 	var p := Vector2.ZERO
 	var atual: Node = no
 	while atual != sala:
 		p += atual.position
 		atual = atual.get_parent()
-	return p + sala.position
+	return p + sala.origem
 
 ## Junta as duas portas de cada ligação (mesmo "ligacao"); o lado "a" dá o rótulo e o trinco.
 static func _ligacoes(portas: Array) -> Array[Dictionary]:

@@ -6,10 +6,11 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_yar7i"]
 
 [node name="Refuge" type="Node2D" unique_id=718040944]
-position = Vector2(19000, -350)
 script = ExtResource("1_pcl6o")
 id = "refuge"
 nome = "ABRIGO DAS CINZAS"
+origem = Vector2(19000, -350)
+piso = 950.0
 arte = "gates"
 linha_do_chao = 0.795
 altura_arte = 1250.0

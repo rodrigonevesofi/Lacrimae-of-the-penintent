@@ -7,12 +7,12 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_2sf2g"]
 
 [node name="Belfry" type="Node2D" unique_id=223313884]
-position = Vector2(14200, -650)
 script = ExtResource("1_uggqh")
 id = "belfry"
 nome = "CAMPANÁRIO DA VIGÍLIA"
+origem = Vector2(14200, -650)
 tamanho = Vector2(2000, 2050)
-piso = 1100.0
+piso = 1750.0
 arte = "tower"
 linha_do_chao = 0.957
 posicao_no_mapa = Vector2(920, 190)

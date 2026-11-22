@@ -7,10 +7,11 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_tsthx"]
 
 [node name="Archive" type="Node2D" unique_id=1611202148]
-position = Vector2(16600, -350)
 script = ExtResource("1_f0127")
 id = "archive"
 nome = "ARQUIVO DAS CONFISSÕES"
+origem = Vector2(16600, -350)
+piso = 950.0
 arte = "gallery"
 linha_do_chao = 0.735
 altura_arte = 1250.0

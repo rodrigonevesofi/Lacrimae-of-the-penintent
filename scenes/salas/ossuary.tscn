@@ -6,11 +6,12 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_gi41h"]
 
 [node name="Ossuary" type="Node2D" unique_id=275576213]
-position = Vector2(5200, -350)
 script = ExtResource("1_jrm75")
 id = "ossuary"
 nome = "OSSUÁRIO DOS SEM NOME"
+origem = Vector2(5200, -350)
 tamanho = Vector2(2600, 1300)
+piso = 950.0
 arte = "ossuary"
 linha_do_chao = 0.88
 posicao_no_mapa = Vector2(210, 430)
