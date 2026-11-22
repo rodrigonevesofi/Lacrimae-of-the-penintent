@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_2sf2g"]
 [ext_resource type="Script" path="res://scripts/salas/altar.gd" id="6_b7yqg"]
 [ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="7_iopiy"]
+[ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="8_iopiy"]
 
 [node name="Belfry" type="Node2D" unique_id=223313884]
 script = ExtResource("1_uggqh")
@@ -228,3 +229,15 @@ texto = "Deixado no último degrau, como oferenda a quem subisse.
 
 Vida máxima +12."
 reliquia = true
+
+[node name="Pontos" type="Node2D" parent="." unique_id=462841660]
+
+[node name="Reliquia" type="Node2D" parent="Pontos" unique_id=2090274667]
+position = Vector2(380, 1750)
+script = ExtResource("8_iopiy")
+ponto = "reliquia"
+
+[node name="CorrenteVigilia" type="Node2D" parent="Pontos" unique_id=1954731075]
+position = Vector2(920, 390)
+script = ExtResource("8_iopiy")
+ponto = "corrente_vigilia"

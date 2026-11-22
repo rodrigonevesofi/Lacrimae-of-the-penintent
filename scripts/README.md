@@ -46,7 +46,7 @@ para que a equipe possa trocar por sprites e áudio reais depois.
 | 02 Programação — Jogador e Combate | `player.gd`, `enemy.gd`, `tear.gd`, `spike.gd`; a estrutura do jogador (espada, lança, colisão, luz, câmera) fica em `scenes/player.tscn` |
 | 03 Programação — Sistemas e Integração | `hud.gd`, save/load em `main.gd` (`_save`, `_load`), mapa de teclas em `main.gd` (`_setup_input`) |
 | 04 Character Design e Animação | `_draw()` de `player.gd` e `enemy.gd` — substituir por `AnimatedSprite2D` |
-| 05 Cenários, Level Design e Áudio | salas em `scenes/salas/<id>.tscn` (limites, piso, pintura, plataformas, alvenaria, inimigos, arenas, portas, altares, vestígios, inscrições e velas, editáveis no editor; `act_one_layout.gd` as lê); `main.gd`: `_draw()` (cenário), luzes (`_build_lights`); **áudio ainda não existe** (adicionar `AudioStreamPlayer`) |
+| 05 Cenários, Level Design e Áudio | salas em `scenes/salas/<id>.tscn` (limites, piso, pintura, plataformas, alvenaria, inimigos, arenas, portas, altares, vestígios, inscrições, velas e pontos especiais como túmulo, Iria e chefes, editáveis no editor; `act_one_layout.gd` as lê); `main.gd`: `_draw()` (cenário), luzes (`_build_lights`); **áudio ainda não existe** (adicionar `AudioStreamPlayer`) |
 
 ## Dicas para evoluir
 - Trocar o cenário por `TileMap` e a arte por sprites mantendo as mesmas colisões.

@@ -504,7 +504,7 @@ func _draw_aviso_mundo(vs: Vector2) -> void:
 ## Iria não é inimiga: um losango dourado e o nome dela aparecem quando o Penitente se aproxima.
 func _draw_npc(vs: Vector2) -> void:
 	if game.state != "play" or game.exploration.room != "city" or game.message_text != "": return
-	var iria := Vector2(990, 600)
+	var iria: Vector2 = game.IRIA_POS
 	var dist: float = game.player.global_position.distance_to(iria)
 	if dist > 640.0: return
 	var a: float = clampf((640.0 - dist) / 260.0, 0.0, 1.0)

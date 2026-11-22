@@ -22,7 +22,7 @@ static func _dados() -> Dictionary:
 	if not _cache.is_empty(): return _cache
 	var d := {"rooms": {}, "platforms": [] as Array[Rect2], "blocks": [] as Array[Rect2], "arenas": [], "portas": [],
 		"enemies": [], "criaturas": [], "city_platforms": [] as Array[Rect2], "city_enemies": [],
-		"altars": [], "pickups": [] as Array[Dictionary], "city_lore": [], "city_candles": [] as Array[float]}
+		"altars": [], "pickups": [] as Array[Dictionary], "city_lore": [], "city_candles": [] as Array[float], "pontos": {}}
 	for id in SALAS:
 		var sala: Node2D = load("res://scenes/salas/%s.tscn" % id).instantiate()
 		d.rooms[id] = sala.dados()
@@ -56,6 +56,9 @@ static func _dados() -> Dictionary:
 			if v.recompensa >= 0: item["reward"] = v.recompensa
 			if v.reliquia: item["relic"] = true
 			d.pickups.append(item)
+		for p in _filhos(sala, "Pontos"):
+			if d.pontos.has(p.ponto): push_error("Ponto %s repetido nas salas %s e %s." % [p.ponto, d.pontos[p.ponto].room, id])
+			d.pontos[p.ponto] = {"room": id, "pos": _no_mundo(p, sala)}
 		if cidade:
 			for ins in _filhos(sala, "Inscricoes"):
 				d.city_lore.append({"x": _no_mundo(ins, sala).x, "title": ins.titulo, "text": ins.texto})
@@ -170,6 +173,17 @@ static func city_lore() -> Array:
 ## Posição x das velas no chão da Cidade.
 static func city_candles() -> Array[float]:
 	return _dados().city_candles.duplicate()
+
+## Posição no mundo de um ponto especial (nós Pontos das salas, scripts/salas/ponto.gd), pelo nome.
+static func ponto(nome: String) -> Vector2:
+	if not _dados().pontos.has(nome):
+		push_error("Ponto especial %s não está em nenhuma sala (scenes/salas/, nó Pontos)." % nome)
+		return Vector2.ZERO
+	return _dados().pontos[nome].pos
+
+## Sala em que fica um ponto especial.
+static func sala_do_ponto(nome: String) -> String:
+	return str(_dados().pontos[nome].room) if _dados().pontos.has(nome) else ""
 
 ## Plataformas da Cidade, construídas por main.gd (as das outras salas são de exploration.gd).
 static func city_platforms() -> Array[Rect2]:

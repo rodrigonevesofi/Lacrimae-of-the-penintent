@@ -45,7 +45,7 @@ func _ready() -> void:
 	iria_animation = preload("res://scripts/actor_animation.gd").new()
 	iria_animation.configure("iria", 0.38)
 	var iria_anchor := Node2D.new()
-	iria_anchor.position = Vector2(990, 600)
+	iria_anchor.position = game.IRIA_POS
 	add_child(iria_anchor)
 	iria_anchor.add_child(iria_animation)
 	sacred_props = load("res://assets/sacred_props.png")
@@ -165,23 +165,25 @@ func _draw() -> void:
 		draw_rect(Rect2(pos.x - 22, pos.y + 22, 44, 60), Color("3a3433"), false, 2)
 		for dx in [-14, -5, 5, 14]:
 			draw_line(pos + Vector2(dx, 22), pos + Vector2(dx, 82), Color("6d5a43"), 2)
-	draw_set_transform(Vector2(2800,599),0,Vector2(1,0.13))
+	draw_set_transform(game.MEMORIAL_POS + Vector2(0, -1),0,Vector2(1,0.13))
 	draw_circle(Vector2.ZERO,95,Color(0,0,0,0.25))
 	draw_set_transform(Vector2.ZERO)
-	prop(1,Vector2(150,600),260)
+	var tumulo: Vector2 = game.TOMB_POS
+	prop(1,tumulo,260)
 	# Coroa deixada ao lado do túmulo.
-	draw_arc(Vector2(245, 593), 12, PI, TAU, 10, GOLD, 2)
+	draw_arc(tumulo + Vector2(95, -7), 12, PI, TAU, 10, GOLD, 2)
 	for i in range(5):
-		draw_line(Vector2(234 + i * 5, 590), Vector2(232 + i * 5, 584), GOLD, 1)
+		draw_line(tumulo + Vector2(84 + i * 5, -10), tumulo + Vector2(82 + i * 5, -16), GOLD, 1)
 	if not game.player.has_weapon:
 		var x: float = game.SWORD_POS.x
-		draw_line(Vector2(x, 597), Vector2(x, 527), Color("c1bfad"), 4)
-		draw_line(Vector2(x - 13, 543), Vector2(x + 13, 543), GOLD, 3)
-		draw_line(Vector2(x, 543), Vector2(x, 523), Color("5d342b"), 5)
-		draw_circle(Vector2(x, 521), 4, GOLD)
+		var y: float = game.SWORD_POS.y
+		draw_line(Vector2(x, y - 3), Vector2(x, y - 73), Color("c1bfad"), 4)
+		draw_line(Vector2(x - 13, y - 57), Vector2(x + 13, y - 57), GOLD, 3)
+		draw_line(Vector2(x, y - 57), Vector2(x, y - 77), Color("5d342b"), 5)
+		draw_circle(Vector2(x, y - 79), 4, GOLD)
 		for i in range(5):
-			draw_line(Vector2(x, 553 + i * 7), Vector2(x + 5, 550 + i * 7), GOLD, 1)
-		draw_circle(Vector2(x, 553), 25 + sin(game.t * 2) * 3, Color(0.8, 0.63, 0.3, 0.04))
+			draw_line(Vector2(x, y - 47 + i * 7), Vector2(x + 5, y - 50 + i * 7), GOLD, 1)
+		draw_circle(Vector2(x, y - 47), 25 + sin(game.t * 2) * 3, Color(0.8, 0.63, 0.3, 0.04))
 	for altar in game.altars:
 		if altar.x < 4800: prop(0,altar,185)
 	for entry in game.lore: prop(2,Vector2(entry.x,600),120)
@@ -266,7 +268,7 @@ func build_memorial() -> void:
 	var size := memorial_base.texture.get_size()
 	var unit := 220.0/size.x
 	memorial_base.scale = Vector2.ONE*unit
-	memorial_base.position = Vector2(2800,600+(size.y/2-1008)*unit)
+	memorial_base.position = game.MEMORIAL_POS + Vector2(0,(size.y/2-1008)*unit)
 	# A imagem de origem tem brilho translúcido suave em torno da silhueta. Este material de recorte
 	# remove o halo durante a renderização e preserva a suavização das bordas da pedra.
 	var shader := Shader.new()
@@ -278,7 +280,7 @@ func build_memorial() -> void:
 	memorial_doll = Sprite2D.new()
 	memorial_doll.texture = load("res://assets/cloth_doll.png")
 	memorial_doll.scale = Vector2.ONE*0.037
-	memorial_doll.position = Vector2(2800,543+(627-1136)*0.037)
+	memorial_doll.position = game.MEMORIAL_POS + Vector2(0,-57+(627-1136)*0.037)
 	memorial_doll.visible = false
 	add_child(memorial_doll)
 
@@ -398,7 +400,7 @@ func draw_branch() -> void:
 		prop(2,item.pos,100)
 		var glow: Vector2 = item.pos+Vector2(0,-52)
 		draw_circle(glow,7+sin(game.t*3)*2,Color(0.85,0.75,0.5,0.25))
-	for entry in [{"id":"water","room":"cistern","pos":Vector2(9650,40)}, {"id":"vigil","room":"belfry","pos":Vector2(15120,-260)}]:
+	for entry in ex.bell_chains():
 		if entry.room == ex.room:
 			prop(4,entry.pos,150,Color(0.65,0.65,0.62) if ex.bells.has(entry.id) else Color.WHITE)
 	if not game.relic_taken and ex.room == "belfry":

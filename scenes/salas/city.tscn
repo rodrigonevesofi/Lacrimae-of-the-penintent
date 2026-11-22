@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/salas/altar.gd" id="5_wrclx"]
 [ext_resource type="Script" path="res://scripts/salas/inscricao.gd" id="6_bd6si"]
 [ext_resource type="Script" path="res://scripts/salas/vela.gd" id="7_bjs07"]
+[ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="8_bd6si"]
 
 [node name="City" type="Node2D" unique_id=504323771]
 script = ExtResource("1_cwcgp")
@@ -276,3 +277,34 @@ script = ExtResource("7_bjs07")
 [node name="Vela20" type="Node2D" parent="Velas" unique_id=243145341]
 position = Vector2(4700, 900)
 script = ExtResource("7_bjs07")
+
+[node name="Pontos" type="Node2D" parent="." unique_id=1560290924]
+
+[node name="Tumulo" type="Node2D" parent="Pontos" unique_id=1507415646]
+position = Vector2(150, 900)
+script = ExtResource("8_bd6si")
+
+[node name="Espada" type="Node2D" parent="Pontos" unique_id=265299034]
+position = Vector2(340, 900)
+script = ExtResource("8_bd6si")
+ponto = "espada"
+
+[node name="Iria" type="Node2D" parent="Pontos" unique_id=1659734299]
+position = Vector2(990, 900)
+script = ExtResource("8_bd6si")
+ponto = "iria"
+
+[node name="Memorial" type="Node2D" parent="Pontos" unique_id=2126058535]
+position = Vector2(2800, 900)
+script = ExtResource("8_bd6si")
+ponto = "memorial"
+
+[node name="ChefeGuardiao" type="Node2D" parent="Pontos" unique_id=1949644681]
+position = Vector2(4380, 900)
+script = ExtResource("8_bd6si")
+ponto = "chefe_guardiao"
+
+[node name="PortaoDoVale" type="Node2D" parent="Pontos" unique_id=680677643]
+position = Vector2(4700, 900)
+script = ExtResource("8_bd6si")
+ponto = "portao_do_vale"

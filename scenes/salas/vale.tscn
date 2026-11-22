@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_al3mw"]
 [ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="2_spmnc"]
+[ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="3_spmnc"]
 
 [node name="Vale" type="Node2D" unique_id=1874735420]
 script = ExtResource("1_al3mw")
@@ -54,3 +55,15 @@ criatura = true
 [node name="Altares" type="Node2D" parent="." unique_id=1361405317]
 
 [node name="Vestigios" type="Node2D" parent="." unique_id=1489426778]
+
+[node name="Pontos" type="Node2D" parent="." unique_id=1398761657]
+
+[node name="EntradaVale" type="Node2D" parent="Pontos" unique_id=206619607]
+position = Vector2(280, 1100)
+script = ExtResource("3_spmnc")
+ponto = "entrada_vale"
+
+[node name="ChefeVale" type="Node2D" parent="Pontos" unique_id=270806441]
+position = Vector2(2100, 1100)
+script = ExtResource("3_spmnc")
+ponto = "chefe_vale"

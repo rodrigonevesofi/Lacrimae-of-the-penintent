@@ -2,6 +2,8 @@ extends Node2D
 ## Cena principal: monta a fase, luzes, jogador, HUD, salvamento e narrativa.
 
 const Util = preload("res://scripts/util.gd")
+## O mapa: salas em scenes/salas/ (plataformas, inimigos, altares, pontos especiais...).
+const Layout = preload("res://scripts/act_one_layout.gd")
 const GuiltText = preload("res://scripts/guilt_text.gd")
 const PlayerScene = preload("res://scenes/player.tscn")
 const EnemyScript = preload("res://scripts/enemy.gd")
@@ -64,8 +66,14 @@ var area_name := ""
 var area_t := 0.0
 var art: Node2D
 var soundscape: Node
-const TOMB_POS := Vector2(150, 600)
-const SWORD_POS := Vector2(340, 600)
+## Pontos especiais (nós Pontos em scenes/salas/): editados no editor, lidos ao iniciar.
+var TOMB_POS: Vector2 = Layout.ponto("tumulo")
+var SWORD_POS: Vector2 = Layout.ponto("espada")
+var IRIA_POS: Vector2 = Layout.ponto("iria")
+var MEMORIAL_POS: Vector2 = Layout.ponto("memorial")
+## Diante dos portões: descida ao Vale depois do Guardião (ou o encerramento, se o Vale já foi vencido).
+var VALE_GATE_POS: Vector2 = Layout.ponto("portao_do_vale")
+var GUARDIAN_POS: Vector2 = Layout.ponto("chefe_guardiao")
 const PROLOGUE: Array[Dictionary] = [
 	{"title": "O TÚMULO SEM NOME", "text": "Você desperta em um túmulo de pedra, nas profundezas\nde uma catedral abandonada. Não se lembra do seu nome.\n\nMarcas de antigos rituais cobrem seu corpo. Ao seu lado,\numa coroa enferrujada repousa entre espinhos."},
 	{"title": "A INSCRIÇÃO", "text": "Aquele que condenou milhares deverá carregar\no peso de cada lágrima.\n\nQue sua morte seja negada até que sua culpa\nencontre repouso."},
@@ -109,11 +117,10 @@ var toast_t := 0.0
 var fx_list: Array = []
 var flicker: Array = []
 
-var relic_pos := Vector2(14580, 1100)
+var relic_pos: Vector2 = Layout.ponto("reliquia")
 
 ## Altares, plataformas, inimigos, velas e inscrições da Cidade: editados em scenes/salas/city.tscn.
 ## exploration.gd acrescenta os altares das outras salas a altars e altar_names.
-const Layout = preload("res://scripts/act_one_layout.gd")
 var altars: Array[Vector2] = Layout.city_altars()
 var altar_names: Array[String] = Layout.city_altar_names()
 
@@ -590,8 +597,8 @@ func new_enemy(kind: int, script: Script = null) -> CharacterBody2D:
 ## O Vale fica além dos portões: só se desce depois que o Guardião dos Sinos cai e a memória dos portões volta.
 ## Lá espera o Flagelado (scripts/penitent_boss.gd), que só a revelação mostra ser o próprio Penitente. Beatriz não entra com ele: o vale só deixa passar
 ## quem carrega aquela culpa. Ela só atravessa quando a segunda parte da armadura cai.
-const VALE_ENTRANCE := Vector2(30480, 600)
-const VALE_BOSS_POS := Vector2(32300, 600)
+var VALE_ENTRANCE: Vector2 = Layout.ponto("entrada_vale")
+var VALE_BOSS_POS: Vector2 = Layout.ponto("chefe_vale")
 const VALE_LINES := {
 	"enter": "VALE DOS FLAGELADOS\nOnde a culpa permanece.",
 	"held": "Beatriz para à beira do vale. A névoa não a deixa passar:\n\"Ninguém atravessa a culpa de outro.\"",
@@ -898,7 +905,7 @@ func _spawn_enemies() -> void:
 	_criar_criaturas_aprovadas()
 	if not boss_defeated:
 		var b = new_enemy(2)
-		b.setup(2, Vector2(4380.0, GROUND_Y), 0.0, player)
+		b.setup(2, GUARDIAN_POS, 0.0, player)
 		b.killed.connect(_on_enemy_killed)
 		add_child(b)
 		b.display_name = "Guardião dos Sinos"
@@ -1442,16 +1449,16 @@ func _play_update(delta: float) -> void:
 			prompt_at = target.global_position + Vector2(0, -target.body_size.y - 30.0)
 			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
 			return
-	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(Vector2(4700,600)) < 65:
+	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(VALE_GATE_POS) < 65:
 		if not final_defeated:
 			# Além dos portões fica o Vale, e nele a última luta.
 			prompt = "[E] Descer ao Vale dos Flagelados"
-			prompt_at = Vector2(4700, 470)
+			prompt_at = VALE_GATE_POS + Vector2(0, -130)
 			if Input.is_action_just_pressed("interact"):
 				enter_vale()
 			return
 		prompt = "[E] Contemplar a primeira Lágrima · encerrar a vigília"
-		prompt_at = Vector2(4700, 470)
+		prompt_at = VALE_GATE_POS + Vector2(0, -130)
 		if Input.is_action_just_pressed("interact"):
 			state = "ending"
 			ending_t = 0
@@ -1474,21 +1481,21 @@ func _play_update(delta: float) -> void:
 		return
 
 
-	if pp.distance_to(Vector2(990, 600)) < 65:
+	if pp.distance_to(IRIA_POS) < 65:
 		prompt = "[E] Falar com Iria" if not iria_met else "[E] Ouvir Iria"
-		prompt_at = Vector2(990, 470)
+		prompt_at = IRIA_POS + Vector2(0, -130)
 		if Input.is_action_just_pressed("interact"):
 			iria_met = true
 			var has_register: bool = exploration.collected.has("register")
 			show_dialogue(Story.iria_pages(has_register, story_flags.has("names_read"), memorial_honored, story_flags.has("memorial_named"), memory_seen), "names_read" if has_register and not story_flags.has("names_read") else "")
 			_save()
 		return
-	if doll_found and pp.distance_to(Vector2(2800, 600)) < 60:
+	if doll_found and pp.distance_to(MEMORIAL_POS) < 60:
 		var known_name: bool = exploration.collected.has("register")
 		var can_name: bool = known_name and not story_flags.has("memorial_named")
 		if not memorial_honored or can_name:
 			prompt = "[E] Gravar o nome de Alba no memorial" if memorial_honored else "[E] Deixar a boneca no memorial"
-			prompt_at = Vector2(2800, 480)
+			prompt_at = MEMORIAL_POS + Vector2(0, -120)
 			if Input.is_action_just_pressed("interact"):
 				memorial_honored = true
 				if known_name and not story_flags.has("memorial_named"): story_flags.append("memorial_named")

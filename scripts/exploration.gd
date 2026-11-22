@@ -36,6 +36,11 @@ var arena_rects: Array[Rect2] = []
 
 var pickups: Array[Dictionary] = Layout.pickups()
 
+## As duas correntes do sino (pontos corrente_agua e corrente_vigilia das salas).
+static func bell_chains() -> Array:
+	return [{"id":"water","room":Layout.sala_do_ponto("corrente_agua"),"pos":Layout.ponto("corrente_agua")},
+		{"id":"vigil","room":Layout.sala_do_ponto("corrente_vigilia"),"pos":Layout.ponto("corrente_vigilia")}]
+
 func build() -> void:
 	for id in rooms:
 		if id == "city": continue
@@ -310,7 +315,7 @@ func update(_delta: float) -> bool:
 				request_travel(str(face.room),face.foot + Vector2(face.arrival_dir * face.spawn_offset,0),int(face.arrival_dir))
 		return true
 	# Os dois mecanismos do sino ficam em rotas verticais distintas, fora do corredor principal.
-	for entry in [{"id":"water","room":"cistern","pos":Vector2(9650,40)}, {"id":"vigil","room":"belfry","pos":Vector2(15120,-260)}]:
+	for entry in bell_chains():
 		if room != entry.room or p.distance_to(entry.pos) > 65 or bells.has(entry.id): continue
 		game.prompt = "[E] Soltar a corrente dos sinos"
 		game.prompt_at = entry.pos + Vector2(0, -90)

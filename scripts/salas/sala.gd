@@ -6,7 +6,8 @@ extends Node2D
 ## act_one_layout.gd lê estas cenas e entrega os dados ao jogo já em coordenadas do mundo.
 ##
 ## Filhos esperados: Plataformas (Retangulo, atravessáveis por baixo), Alvenaria (Retangulo, sólidos),
-## Inimigos (MarcadorInimigo), Arenas (Arena), Portas (Porta), Altares (Altar) e Vestigios (Vestigio).
+## Inimigos (MarcadorInimigo), Arenas (Arena), Portas (Porta), Altares (Altar), Vestigios (Vestigio) e
+## Pontos (Ponto: túmulo, espada, Iria, chefes, correntes do sino...).
 ## Só na Cidade: Inscricoes (Inscricao) e Velas (Vela). Todos são opcionais.
 ##
 ## No editor, a sala mostra a pintura de fundo posicionada como em world_art.gd, o chão e os limites.

@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_uplk0"]
 [ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_y7bv2"]
 [ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_jmui2"]
+[ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="7_l2qvo"]
 
 [node name="Cistern" type="Node2D" unique_id=1383495263]
 script = ExtResource("1_ln2so")
@@ -194,3 +195,10 @@ O sangue de quem foi absolvido não coagula.
 
 Vida máxima +12."
 reliquia = true
+
+[node name="Pontos" type="Node2D" parent="." unique_id=364947999]
+
+[node name="CorrenteAgua" type="Node2D" parent="Pontos" unique_id=1186852444]
+position = Vector2(1450, 390)
+script = ExtResource("7_l2qvo")
+ponto = "corrente_agua"
