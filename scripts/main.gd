@@ -125,6 +125,8 @@ var altars: Array[Vector2] = Layout.city_altars()
 var altar_names: Array[String] = Layout.city_altar_names()
 
 var platforms: Array[Rect2] = Layout.city_platforms()
+## O vão da ponte quebrada (nó Abismo da Cidade): sem chão de x até y.
+var abyss_span: Vector2 = Layout.city_abyss()
 
 # [tipo, x, y, alcance]  (0 = devoto, 1 = chorão)
 var enemy_defs: Array = Layout.city_enemies()
@@ -565,10 +567,11 @@ func _build_world() -> void:
 	var mod := CanvasModulate.new()
 	mod.color = Color(0.76, 0.74, 0.80)
 	add_child(mod)
-	_add_solid(Rect2(0, GROUND_Y, 2000, 400), false)
-	_add_solid(Rect2(2270, GROUND_Y, 2530, 400), false)
-	_add_solid(Rect2(-60, -600, 60, 2000), false)
-	_add_solid(Rect2(4800, -600, 60, 2000), false)
+	var cidade: Rect2 = Layout.rooms().city.bounds
+	_add_solid(Rect2(cidade.position.x, GROUND_Y, abyss_span.x - cidade.position.x, 400), false)
+	_add_solid(Rect2(abyss_span.y, GROUND_Y, cidade.end.x - abyss_span.y, 400), false)
+	_add_solid(Rect2(cidade.position.x - 60, -600, 60, 2000), false)
+	_add_solid(Rect2(cidade.end.x, -600, 60, 2000), false)
 	for p in platforms:
 		_add_solid(p, true)
 	dyn = Node2D.new()
@@ -810,8 +813,9 @@ func _build_lights() -> void:
 	for a in altars:
 		_add_flicker_light(a + Vector2(0, -60), Color(1.0, 0.78, 0.5), 0.65, 2.6)
 	relic_light = _add_flicker_light(relic_pos + Vector2(0, -30), Color(1.0, 0.85, 0.5), 1.1, 1.8)
-	_add_flicker_light(Vector2(2135, 780), Color(0.75, 0.2, 0.2), 0.8, 3.0)
-	_add_flicker_light(Vector2(4290, 380), Color(0.9, 0.3, 0.25), 0.6, 5.0)
+	# Luzes de cenário postas nas salas (nós Luzes), como a do fundo do abismo e a dos portões.
+	for luz in Layout.luzes():
+		_add_flicker_light(luz.pos, luz.color, luz.energy, luz.scale)
 	stain_light = Util.make_light(Color(0.6, 0.8, 1.0), 0.9, 1.5)
 	stain_light.visible = false
 	add_child(stain_light)
@@ -1465,7 +1469,7 @@ func _play_update(delta: float) -> void:
 			player.controllable = false
 		return
 	if exploration.update(delta): return
-	var new_area := "CRIPTA DO DESPERTAR" if pp.x < 1250.0 else (("PÁTIO DOS NOMES RISCADOS" if pp.x < 2270 else "GALERIA DAS CONFISSÕES") if pp.x < 3300.0 else "PORTÕES DO SILÊNCIO")
+	var new_area := Layout.city_area_at(pp.x)
 	if area_name != new_area:
 		area_name = new_area
 		area_t = 4.5

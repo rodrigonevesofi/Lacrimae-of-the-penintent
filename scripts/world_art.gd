@@ -13,6 +13,7 @@ var doorway_art: Texture2D
 var memorial_base: Sprite2D
 var memorial_doll: Sprite2D
 var gate_memory: AtlasTexture
+const Layout = preload("res://scripts/act_one_layout.gd")
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
 var iria_animation
 ## A cor da pedra de cada sala, medida na própria pintura: [piso, parede].
@@ -137,18 +138,20 @@ func _draw() -> void:
 	if not _pintura_viva("city"): draw_texture_rect(panorama, PANORAMA_RECT, false, RECUO)
 	if game.exploration != null: draw_passages("city")
 	# A ponte quebrada é um buraco real no plano de caminhada em primeiro plano.
+	var abismo: Vector2 = game.abyss_span
+	var vao := abismo.y - abismo.x
 	if abyss_art != null:
 		# Abismo pintado: pedra quebrada nas duas bordas, névoa subindo e luz tênue ao fundo.
-		draw_rect(Rect2(2000, 600, 270, 330), Color("0b0e12"))
-		draw_texture_rect(abyss_art, Rect2(2000, 596, 270, 400), false)
+		draw_rect(Rect2(abismo.x, 600, vao, 330), Color("0b0e12"))
+		draw_texture_rect(abyss_art, Rect2(abismo.x, 596, vao, 400), false)
 	else:
-		draw_rect(Rect2(2000, 600, 270, 310), Color("12171d"))
-		for edge in [2000, 2270]:
-			var side := -1 if edge == 2000 else 1
+		draw_rect(Rect2(abismo.x, 600, vao, 310), Color("12171d"))
+		for edge in [abismo.x, abismo.y]:
+			var side := -1 if edge == abismo.x else 1
 			polygon([Vector2(edge, 600), Vector2(edge + side * 35, 600), Vector2(edge + side * 22, 666), Vector2(edge + side * 12, 631)], Color("595149"))
 	# O primeiro plano deve corresponder exatamente às plataformas de colisão.
-	_draw_ground(0, 2000)
-	_draw_ground(2270, 4800)
+	_draw_ground(0, abismo.x)
+	_draw_ground(abismo.y, PANORAMA_RECT.end.x)
 	for p in game.platforms:
 		# Suportes esculpidos conectam fisicamente as saliências ao edifício atrás.
 		for end_x in [p.position.x + 12, p.end.x - 12]:
@@ -157,9 +160,10 @@ func _draw() -> void:
 		draw_line(p.position, Vector2(p.end.x, p.position.y), Color("b5a084"), 2)
 	# Iria permanece separada dos combatentes; a bengala identifica sua silhueta.
 	# Gaiolas vazias suspensas: silhuetas de fundo, nunca colisões ocultas.
-	for x in range(1430, 3200, 360):
+	for gaiola in Layout.city_decor("gaiola"):
+		var x: float = gaiola.x
 		var sway := sin(game.t * 0.65 + x) * 5
-		var pos := Vector2(x + sway, 190)
+		var pos := Vector2(x + sway, gaiola.y)
 		draw_line(Vector2(x, -100), pos, Color("252228"), 2)
 		draw_arc(pos + Vector2(0, 22), 22, PI, TAU, 16, Color("6d5a43"), 2)
 		draw_rect(Rect2(pos.x - 22, pos.y + 22, 44, 60), Color("3a3433"), false, 2)
@@ -192,15 +196,15 @@ func _draw() -> void:
 	for cx in game.candle_xs:
 		for i in range(3): candle(Vector2(cx + rng.randf_range(-18,18),599),rng.randf_range(9,22),float(i))
 	if game.exploration != null and game.exploration.bells.size() < 2:
-		for x in [3781,3794]:
-			for y in range(-70,600,18): draw_arc(Vector2(x,y),7,0,TAU,12,Color("967853"),3)
+		for corrente in Layout.city_decor("corrente"):
+			for y in range(int(corrente.y),600,18): draw_arc(Vector2(corrente.x,y),7,0,TAU,12,Color("967853"),3)
 	# Entulho, ossos pequenos e raízes no chão. Determinísticos entre quadros.
 	for i in range(120):
 		var x := rng.randf_range(10, 4790)
-		if x > 2000 and x < 2270:
+		if x > abismo.x and x < abismo.y:
 			continue
 		polygon([Vector2(x - 4, 600), Vector2(x - 2, 594), Vector2(x + 5, 596), Vector2(x + 7, 600)], Color("4b4945"))
-	for anchor in [Vector2(1160, 170), Vector2(2550, 110), Vector2(3380, 180)]:
+	for anchor in Layout.city_decor("pano"):
 		for i in range(8):
 			var yy: float = anchor.y + i * 17
 			var sway := sin(game.t * 1.2 + i * 0.4) * i * 0.75

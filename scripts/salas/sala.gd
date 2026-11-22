@@ -7,8 +7,9 @@ extends Node2D
 ##
 ## Filhos esperados: Plataformas (Retangulo, atravessáveis por baixo), Alvenaria (Retangulo, sólidos),
 ## Inimigos (MarcadorInimigo), Arenas (Arena), Portas (Porta), Altares (Altar), Vestigios (Vestigio) e
-## Pontos (Ponto: túmulo, espada, Iria, chefes, correntes do sino...).
-## Só na Cidade: Inscricoes (Inscricao) e Velas (Vela). Todos são opcionais.
+## Pontos (Ponto: túmulo, espada, Iria, chefes, correntes do sino...) e Luzes (Luz).
+## Só na Cidade: Inscricoes (Inscricao), Velas (Vela), Abismo (o vão da ponte), Trechos (Trecho: nomes de área)
+## e Decoracoes (Decoracao: gaiolas, panos, correntes). Todos são opcionais.
 ##
 ## No editor, a sala mostra a pintura de fundo posicionada como em world_art.gd, o chão e os limites.
 
@@ -16,7 +17,6 @@ extends Node2D
 static var desenhar_fora_do_editor := false
 
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)  # o mesmo de world_art.gd, em coordenadas do mundo
-const ABISMO_RECT := Rect2(2000, 596, 270, 400)
 
 @export var id := ""
 @export var nome := ""
@@ -95,15 +95,20 @@ func _draw() -> void:
 		var pano := _textura("vespera_panorama")
 		if pano: draw_texture_rect(pano, Rect2(PANORAMA_RECT.position - origem, PANORAMA_RECT.size), false)
 		var abismo := _textura("abismo_ponte")
-		if abismo: draw_texture_rect(abismo, Rect2(ABISMO_RECT.position - origem, ABISMO_RECT.size), false)
+		if abismo and has_node("Abismo"):
+			var vao: Node2D = get_node("Abismo")
+			draw_texture_rect(abismo, Rect2(vao.position + Vector2(0, -4), Vector2(vao.largura, 400)), false)
 	else:
 		var fundo := _textura(arte) if not arte.is_empty() else null
 		var altura := altura_arte if altura_arte >= 0.0 else (1900.0 if id == "belfry" else 1100.0)
 		var chao_pintado := linha_do_chao if linha_do_chao >= 0.0 else 0.86
 		if fundo: draw_texture_rect(fundo, Rect2(0, piso - altura * chao_pintado, tamanho.x, altura), false)
 	# Chão de colisão e limites (as paredes ficam logo fora das bordas).
-	# A Cidade tem o abismo da ponte entre x 2000 e 2270 (main.gd); as outras salas têm chão inteiro.
-	var trechos := [Vector2(0, 2000 - origem.x), Vector2(2270 - origem.x, tamanho.x)] if id == "city" else [Vector2(0, tamanho.x)]
+	# A Cidade tem o vão do abismo (nó Abismo); as outras salas têm chão inteiro.
+	var trechos := [Vector2(0, tamanho.x)]
+	if id == "city" and has_node("Abismo"):
+		var vao: Node2D = get_node("Abismo")
+		trechos = [Vector2(0, vao.position.x), Vector2(vao.position.x + vao.largura, tamanho.x)]
 	for t in trechos:
 		var x0: float = t.x
 		var x1: float = t.y

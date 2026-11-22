@@ -108,7 +108,8 @@ func _draw() -> void:
 			var pano := _texture("vespera_panorama")
 			if pano: draw_texture_rect(pano, PANORAMA_RECT, false)
 			var abyss := _texture("abismo_ponte")
-			if abyss: draw_texture_rect(abyss, Rect2(2000, 596, 270, 400), false)
+			var vao := Layout.city_abyss()
+			if abyss: draw_texture_rect(abyss, Rect2(vao.x, 596, vao.y - vao.x, 400), false)
 		else:
 			var tex := _texture(str(room.art))
 			var height := float(room.get("art_h", 1900.0 if id == "belfry" else 1100.0))
@@ -117,8 +118,10 @@ func _draw() -> void:
 	if mostrar_colisoes:
 		var solid := Color(0.25, 0.85, 0.45, 0.35)
 		var ledge := Color(0.3, 0.75, 1.0, 0.55)
-		# Chão da cidade com o abismo entre 2000 e 2270, e o chão de cada ramificação.
-		for r in [Rect2(0, 600, 2000, 400), Rect2(2270, 600, 2530, 400)]: draw_rect(r, solid)
+		# Chão da cidade com o vão do abismo, e o chão de cada ramificação.
+		var vao := Layout.city_abyss()
+		var cidade: Rect2 = rooms.city.bounds
+		for r in [Rect2(cidade.position.x, 600, vao.x - cidade.position.x, 400), Rect2(vao.y, 600, cidade.end.x - vao.y, 400)]: draw_rect(r, solid)
 		for id in rooms:
 			if id == "city": continue
 			var b: Rect2 = rooms[id].bounds

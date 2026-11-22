@@ -22,7 +22,8 @@ static func _dados() -> Dictionary:
 	if not _cache.is_empty(): return _cache
 	var d := {"rooms": {}, "platforms": [] as Array[Rect2], "blocks": [] as Array[Rect2], "arenas": [], "portas": [],
 		"enemies": [], "criaturas": [], "city_platforms": [] as Array[Rect2], "city_enemies": [],
-		"altars": [], "pickups": [] as Array[Dictionary], "city_lore": [], "city_candles": [] as Array[float], "pontos": {}}
+		"altars": [], "pickups": [] as Array[Dictionary], "city_lore": [], "city_candles": [] as Array[float], "pontos": {},
+		"luzes": [], "city_abyss": Vector2.ZERO, "city_trechos": [], "city_decor": []}
 	for id in SALAS:
 		var sala: Node2D = load("res://scenes/salas/%s.tscn" % id).instantiate()
 		d.rooms[id] = sala.dados()
@@ -56,6 +57,8 @@ static func _dados() -> Dictionary:
 			if v.recompensa >= 0: item["reward"] = v.recompensa
 			if v.reliquia: item["relic"] = true
 			d.pickups.append(item)
+		for luz in _filhos(sala, "Luzes"):
+			d.luzes.append({"room": id, "pos": _no_mundo(luz, sala), "color": luz.cor, "energy": luz.energia, "scale": luz.alcance})
 		for p in _filhos(sala, "Pontos"):
 			if d.pontos.has(p.ponto): push_error("Ponto %s repetido nas salas %s e %s." % [p.ponto, d.pontos[p.ponto].room, id])
 			d.pontos[p.ponto] = {"room": id, "pos": _no_mundo(p, sala)}
@@ -63,6 +66,12 @@ static func _dados() -> Dictionary:
 			for ins in _filhos(sala, "Inscricoes"):
 				d.city_lore.append({"x": _no_mundo(ins, sala).x, "title": ins.titulo, "text": ins.texto})
 			for vela in _filhos(sala, "Velas"): d.city_candles.append(_no_mundo(vela, sala).x)
+			if sala.has_node("Abismo"):
+				var borda := _no_mundo(sala.get_node("Abismo"), sala).x
+				d.city_abyss = Vector2(borda, borda + sala.get_node("Abismo").largura)
+			for t in _filhos(sala, "Trechos"): d.city_trechos.append([_no_mundo(t, sala).x, t.nome])
+			d.city_trechos.sort_custom(func(a, b): return a[0] < b[0])
+			for deco in _filhos(sala, "Decoracoes"): d.city_decor.append({"tipo": deco.tipo, "pos": _no_mundo(deco, sala)})
 		sala.free()
 	d["passages"] = _ligacoes(d.portas)
 	d.erase("portas")
@@ -184,6 +193,34 @@ static func ponto(nome: String) -> Vector2:
 ## Sala em que fica um ponto especial.
 static func sala_do_ponto(nome: String) -> String:
 	return str(_dados().pontos[nome].room) if _dados().pontos.has(nome) else ""
+
+## Luzes de cenário que tremulam (nós Luzes das salas): {"room", "pos", "color", "energy", "scale"}.
+static func luzes() -> Array:
+	return _dados().luzes.duplicate(true)
+
+## O vão da ponte quebrada no chão da Cidade, de x (borda esquerda) a y (borda direita).
+static func city_abyss() -> Vector2:
+	return _dados().city_abyss
+
+## Trechos da Cidade, em ordem de x: [x do começo, nome da área].
+static func city_trechos() -> Array:
+	return _dados().city_trechos.duplicate(true)
+
+## Nome da área da Cidade numa posição x (o trecho que começa antes dela; antes do primeiro, o primeiro).
+static func city_area_at(x: float) -> String:
+	var trechos: Array = _dados().city_trechos
+	if trechos.is_empty(): return str(_dados().rooms.city.name)
+	var nome: String = trechos[0][1]
+	for t in trechos:
+		if x >= t[0]: nome = t[1]
+	return nome
+
+## Posições dos elementos de cenário da Cidade de um tipo ("gaiola", "pano", "corrente").
+static func city_decor(tipo: String) -> Array[Vector2]:
+	var result: Array[Vector2] = []
+	for deco in _dados().city_decor:
+		if deco.tipo == tipo: result.append(deco.pos)
+	return result
 
 ## Plataformas da Cidade, construídas por main.gd (as das outras salas são de exploration.gd).
 static func city_platforms() -> Array[Rect2]:

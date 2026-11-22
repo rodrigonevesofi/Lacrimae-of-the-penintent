@@ -8,6 +8,10 @@
 [ext_resource type="Script" path="res://scripts/salas/inscricao.gd" id="6_bd6si"]
 [ext_resource type="Script" path="res://scripts/salas/vela.gd" id="7_bjs07"]
 [ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="8_bd6si"]
+[ext_resource type="Script" path="res://scripts/salas/luz.gd" id="9_cy8ya"]
+[ext_resource type="Script" path="res://scripts/salas/abismo.gd" id="10_1foqq"]
+[ext_resource type="Script" path="res://scripts/salas/trecho.gd" id="11_ekw3g"]
+[ext_resource type="Script" path="res://scripts/salas/decoracao.gd" id="12_bmifk"]
 
 [node name="City" type="Node2D" unique_id=504323771]
 script = ExtResource("1_cwcgp")
@@ -308,3 +312,91 @@ ponto = "chefe_guardiao"
 position = Vector2(4700, 900)
 script = ExtResource("8_bd6si")
 ponto = "portao_do_vale"
+
+[node name="Luzes" type="Node2D" parent="." unique_id=595790626]
+
+[node name="LuzDoAbismo" type="Node2D" parent="Luzes" unique_id=1114029044]
+position = Vector2(2135, 1080)
+script = ExtResource("9_cy8ya")
+cor = Color(0.75, 0.2, 0.2, 1)
+energia = 0.8
+alcance = 3.0
+
+[node name="LuzDosPortoes" type="Node2D" parent="Luzes" unique_id=526376734]
+position = Vector2(4290, 680)
+script = ExtResource("9_cy8ya")
+cor = Color(0.9, 0.3, 0.25, 1)
+alcance = 5.0
+
+[node name="Abismo" type="Node2D" parent="." unique_id=1450526971]
+position = Vector2(2000, 900)
+script = ExtResource("10_1foqq")
+
+[node name="Trechos" type="Node2D" parent="." unique_id=1763183181]
+
+[node name="Trecho1" type="Node2D" parent="Trechos" unique_id=863085873]
+position = Vector2(0, 900)
+script = ExtResource("11_ekw3g")
+nome = "CRIPTA DO DESPERTAR"
+
+[node name="Trecho2" type="Node2D" parent="Trechos" unique_id=1417505081]
+position = Vector2(1250, 900)
+script = ExtResource("11_ekw3g")
+nome = "PÁTIO DOS NOMES RISCADOS"
+
+[node name="Trecho3" type="Node2D" parent="Trechos" unique_id=861878140]
+position = Vector2(2270, 900)
+script = ExtResource("11_ekw3g")
+nome = "GALERIA DAS CONFISSÕES"
+
+[node name="Trecho4" type="Node2D" parent="Trechos" unique_id=1951041664]
+position = Vector2(3300, 900)
+script = ExtResource("11_ekw3g")
+nome = "PORTÕES DO SILÊNCIO"
+
+[node name="Decoracoes" type="Node2D" parent="." unique_id=1781190618]
+
+[node name="Gaiola1" type="Node2D" parent="Decoracoes" unique_id=506246973]
+position = Vector2(1430, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola2" type="Node2D" parent="Decoracoes" unique_id=1315697553]
+position = Vector2(1790, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola3" type="Node2D" parent="Decoracoes" unique_id=917789551]
+position = Vector2(2150, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola4" type="Node2D" parent="Decoracoes" unique_id=74673596]
+position = Vector2(2510, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola5" type="Node2D" parent="Decoracoes" unique_id=421832665]
+position = Vector2(2870, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Pano1" type="Node2D" parent="Decoracoes" unique_id=814084743]
+position = Vector2(1160, 470)
+script = ExtResource("12_bmifk")
+tipo = "pano"
+
+[node name="Pano2" type="Node2D" parent="Decoracoes" unique_id=407371915]
+position = Vector2(2550, 410)
+script = ExtResource("12_bmifk")
+tipo = "pano"
+
+[node name="Pano3" type="Node2D" parent="Decoracoes" unique_id=685125646]
+position = Vector2(3380, 480)
+script = ExtResource("12_bmifk")
+tipo = "pano"
+
+[node name="Corrente1" type="Node2D" parent="Decoracoes" unique_id=1249300874]
+position = Vector2(3781, 230)
+script = ExtResource("12_bmifk")
+tipo = "corrente"
+
+[node name="Corrente2" type="Node2D" parent="Decoracoes" unique_id=1640926088]
+position = Vector2(3794, 230)
+script = ExtResource("12_bmifk")
+tipo = "corrente"
