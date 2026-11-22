@@ -43,7 +43,7 @@ para que a equipe possa trocar por sprites e áudio reais depois.
 | Frente | Onde mexer |
 |---|---|
 | 01 Direção, Game Design e Narrativa | inscrições da Cidade e textos dos vestígios nas cenas `scenes/salas/` (nós Inscricoes e Vestigios); `main.gd`: `show_message` (intro), `HUD._draw_ending` (final); constantes de dano/vida em `player.gd` e `enemy.gd` |
-| 02 Programação — Jogador e Combate | `player.gd`, `enemy.gd`, `tear.gd`, `spike.gd`; a estrutura do jogador (espada, lança, colisão, luz, câmera) fica em `scenes/player.tscn` |
+| 02 Programação — Jogador e Combate | `player.gd`, `enemy.gd`, `tear.gd`, `spike.gd`; a estrutura do jogador (espada, lança, colisão, luz, câmera) fica em `scenes/player.tscn`, a dos inimigos em `scenes/inimigos/`, a dos projéteis em `scenes/projeteis/` e os efeitos de sangue e gore em `scenes/efeitos/` |
 | 03 Programação — Sistemas e Integração | `hud.gd`, save/load em `main.gd` (`_save`, `_load`), mapa de teclas em `main.gd` (`_setup_input`) |
 | 04 Character Design e Animação | `_draw()` de `player.gd` e `enemy.gd` — substituir por `AnimatedSprite2D` |
 | 05 Cenários, Level Design e Áudio | salas em `scenes/salas/<id>.tscn` (limites, piso, pintura, plataformas, alvenaria, inimigos, arenas, portas, altares, vestígios, inscrições, velas, pontos especiais como túmulo, Iria e chefes, luzes, o abismo, os trechos e a decoração da Cidade, editáveis no editor; `act_one_layout.gd` as lê); `main.gd`: `_draw()` (cenário), luzes (`_build_lights`); **áudio ainda não existe** (adicionar `AudioStreamPlayer`) |

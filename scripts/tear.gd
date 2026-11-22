@@ -1,9 +1,8 @@
 extends Node2D
 ## Projétil de lágrima (também usado como onda de choque do chefe)
 
-const Util = preload("res://scripts/util.gd")
-
-var animator
+## Criado a partir de scenes/projeteis/lagrima.tscn (animador e luz ficam na cena).
+@onready var animator = $Animator
 var player = null
 var vel := Vector2.ZERO
 var grav := 0.0
@@ -26,13 +25,9 @@ var t := 0.0
 
 
 func _ready() -> void:
-	add_to_group("hazards")
-	animator = preload("res://scripts/actor_animation.gd").new()
+	# A onda de choque do chefe usa o mesmo desenho, maior; "wave" é definido antes de entrar na árvore.
 	animator.configure("fx", 0.24 if wave else 0.14)
-	add_child(animator)
 	animator.select("projectile", 1)
-	var l := Util.make_light(Color(0.65, 0.82, 1.0), 0.6, 0.8)
-	add_child(l)
 	call_deferred("_announce")
 
 

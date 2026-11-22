@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" uid="uid://1k4u0ygynlkj" path="res://scripts/tear.gd" id="1_lagrima"]
+[ext_resource type="Script" uid="uid://cll0ytq64qybt" path="res://scripts/actor_animation.gd" id="2_animacao"]
+[ext_resource type="Texture2D" path="res://materials/luz_radial.tres" id="3_luz"]
+
+[node name="Lagrima" type="Node2D" groups=["hazards"]]
+script = ExtResource("1_lagrima")
+
+[node name="Animator" type="AnimatedSprite2D" parent="."]
+script = ExtResource("2_animacao")
+
+[node name="Light" type="PointLight2D" parent="."]
+color = Color(0.65, 0.82, 1, 1)
+energy = 0.6
+texture = ExtResource("3_luz")
+texture_scale = 0.8

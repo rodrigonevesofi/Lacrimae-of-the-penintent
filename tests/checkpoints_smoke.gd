@@ -61,7 +61,7 @@ func run() -> void:
 	expect(game.player.max_flasks==4 and game.player.flasks==4,"optional healing reward survives restart")
 	expect(game.stain_active and game.stain_pos.distance_to(Vector2(14800,1100))<5,"deep-room guilt fragment persists")
 	for e in get_nodes_in_group("enemies"):e.set_physics_process(false)
-	var shot=load("res://scripts/tear.gd").new()
+	var shot=load("res://scenes/projeteis/lagrima.tscn").instantiate()
 	shot.player=game.player
 	shot.position=game.player.position+Vector2(60,-30)
 	shot.vel=Vector2(-200,0)
