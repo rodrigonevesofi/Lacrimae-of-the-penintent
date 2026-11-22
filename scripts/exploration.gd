@@ -41,16 +41,8 @@ static func bell_chains() -> Array:
 	return [{"id":"water","room":Layout.sala_do_ponto("corrente_agua"),"pos":Layout.ponto("corrente_agua")},
 		{"id":"vigil","room":Layout.sala_do_ponto("corrente_vigilia"),"pos":Layout.ponto("corrente_vigilia")}]
 
+## O chão, as paredes, as plataformas e a alvenaria de cada sala vêm das salas da main.tscn (main.gd _build_world).
 func build() -> void:
-	for id in rooms:
-		if id == "city": continue
-		var data: Dictionary = rooms[id]
-		var bounds: Rect2 = data.bounds
-		game._add_solid(Rect2(bounds.position.x, data.floor, bounds.size.x, 500), false)
-		game._add_solid(Rect2(bounds.position.x-40,bounds.position.y,40,bounds.size.y+300),false)
-		game._add_solid(Rect2(bounds.end.x,bounds.position.y,40,bounds.size.y+300),false)
-	for ledge in ledges: game._add_solid(ledge,true)
-	for block in blocks: game._add_solid(block,false)
 	for pos in extra_altars:
 		game.altars.append(pos)
 		game.altar_names.append(ALTAR_NAMES[int(pos.x)])

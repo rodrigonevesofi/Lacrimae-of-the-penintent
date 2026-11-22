@@ -548,7 +548,8 @@ func _setup_gamepads() -> void:
 
 
 # ---------------------------------------------------------------- construção
-func _add_solid(r: Rect2, one_way: bool) -> StaticBody2D:
+## Corpo de colisão retangular em coordenadas do mundo, filho de `onde` (a main ou uma sala).
+func _add_solid(r: Rect2, one_way: bool, onde: Node2D = self) -> StaticBody2D:
 	var b := StaticBody2D.new()
 	b.set_meta("one_way",one_way)
 	b.collision_layer = 1
@@ -557,33 +558,58 @@ func _add_solid(r: Rect2, one_way: bool) -> StaticBody2D:
 	var rs := RectangleShape2D.new()
 	rs.size = r.size
 	cs.shape = rs
-	cs.position = r.position + r.size / 2.0
+	cs.position = r.position + r.size / 2.0 - onde.position
 	cs.one_way_collision = one_way
 	b.add_child(cs)
-	add_child(b)
+	onde.add_child(b)
 	return b
+
+
+## As salas instanciadas na main.tscn (nó Salas), na ordem do mapa. Sem a cena (main.gd usado direto,
+## como em alguns testes), as salas são instanciadas aqui.
+func _salas() -> Array[Node2D]:
+	var raiz: Node2D = get_node_or_null("Salas")
+	if raiz == null:
+		raiz = Node2D.new()
+		raiz.name = "Salas"
+		add_child(raiz)
+		move_child(raiz, 0)
+	var lista: Array[Node2D] = []
+	for id in Layout.SALAS:
+		var sala: Node2D = null
+		for filho in raiz.get_children():
+			if filho.get("id") == id: sala = filho
+		if sala == null:
+			sala = load("res://scenes/salas/%s.tscn" % id).instantiate()
+			raiz.add_child(sala)
+		if sala.position != sala.origem:
+			push_warning("Sala %s fora da origem na main.tscn; volta para %s." % [id, sala.origem])
+		sala.position = sala.origem
+		lista.append(sala)
+	return lista
 
 
 func _build_world() -> void:
 	var mod := CanvasModulate.new()
 	mod.color = Color(0.76, 0.74, 0.80)
 	add_child(mod)
-	var cidade: Rect2 = Layout.rooms().city.bounds
-	_add_solid(Rect2(cidade.position.x, GROUND_Y, abyss_span.x - cidade.position.x, 400), false)
-	_add_solid(Rect2(abyss_span.y, GROUND_Y, cidade.end.x - abyss_span.y, 400), false)
-	_add_solid(Rect2(cidade.position.x - 60, -600, 60, 2000), false)
-	_add_solid(Rect2(cidade.end.x, -600, 60, 2000), false)
-	for p in platforms:
-		_add_solid(p, true)
+	# Cada sala da cena cria o próprio chão, paredes, plataformas e alvenaria.
+	for sala in _salas():
+		for c in sala.colisoes(): _add_solid(c[0], c[1], sala)
 	dyn = Node2D.new()
 	dyn.draw.connect(_draw_dynamic)
 	add_child(dyn)
 
 
 func _build_player() -> void:
-	player = PlayerScene.instantiate()
+	# O Penitente está na main.tscn (nó Player); sem a cena, é instanciado aqui.
+	player = get_node_or_null("Player")
+	if player == null:
+		player = PlayerScene.instantiate()
+		add_child(player)
+	# Vai para depois do cenário e do chão, como antes: a pintura das salas não o cobre.
+	move_child(player, -1)
 	player.position = altars[0]
-	add_child(player)
 	player.died.connect(_on_player_died)
 
 
@@ -790,14 +816,17 @@ func _build_fx_layer() -> void:
 
 
 func _build_hud() -> void:
-	# HUD e Confessionário vêm de scenes/interface.tscn; as referências são passadas antes de entrar na árvore.
-	var interface := InterfaceScene.instantiate()
+	# HUD e Confessionário vêm de scenes/interface.tscn, instanciada na main.tscn (nó Interface).
+	var interface: CanvasLayer = get_node_or_null("Interface")
+	if interface == null:
+		interface = InterfaceScene.instantiate()
+		add_child(interface)
+	move_child(interface, -1)
 	hud = interface.get_node("HUD")
 	hud.game = self
 	confession_panel = interface.get_node("ConfessionPanel")
 	confession_panel.game = self
-	confession_panel.confessor = confessor
-	add_child(interface)
+	confession_panel.conectar(confessor)
 
 
 func _add_flicker_light(pos: Vector2, col: Color, energy: float, sc: float) -> PointLight2D:

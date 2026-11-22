@@ -38,9 +38,16 @@ func _ready() -> void:
 	panel_art.atlas = load("res://assets/reliquary_ui.png")
 	panel_art.region = Rect2(535, 580, 540, 345)
 	panel_art.filter_clip = true
-	if confessor != null: input.max_length = confessor.MAX_QUESTION
 	input.text_submitted.connect(_on_submitted)
-	if confessor != null: confessor.answered.connect(_on_answered)
+
+
+## Liga o painel ao confessor. A main chama depois que a interface já está na árvore.
+func conectar(c) -> void:
+	if confessor != null and confessor.answered.is_connected(_on_answered): confessor.answered.disconnect(_on_answered)
+	confessor = c
+	if confessor == null: return
+	input.max_length = confessor.MAX_QUESTION
+	confessor.answered.connect(_on_answered)
 
 
 func open(where: String) -> void:

@@ -22,6 +22,10 @@ tamanho = Vector2(4800, 1250)
 piso = 900.0
 arte = "vespera_panorama"
 posicao_no_mapa = Vector2(450, 330)
+espessura_piso = 400.0
+espessura_parede = 60.0
+parede_acima = 300.0
+parede_abaixo = 450.0
 
 [node name="Plataformas" type="Node2D" parent="." unique_id=1294751039]
 

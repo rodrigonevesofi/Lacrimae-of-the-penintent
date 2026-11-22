@@ -1,11 +1,59 @@
 [gd_scene format=3 uid="uid://ehirqr3jld36"]
 
 [ext_resource type="Script" uid="uid://cbpurixeqyov" path="res://scripts/main.gd" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://c4tew4gy3wh0u" path="res://scripts/editor_preview.gd" id="2_preview"]
+[ext_resource type="PackedScene" path="res://scenes/salas/city.tscn" id="2_city"]
+[ext_resource type="PackedScene" path="res://scenes/salas/ossuary.tscn" id="3_ossuary"]
+[ext_resource type="PackedScene" path="res://scenes/salas/cistern.tscn" id="4_cistern"]
+[ext_resource type="PackedScene" path="res://scenes/salas/cloister.tscn" id="5_cloister"]
+[ext_resource type="PackedScene" path="res://scenes/salas/belfry.tscn" id="6_belfry"]
+[ext_resource type="PackedScene" path="res://scenes/salas/archive.tscn" id="7_archive"]
+[ext_resource type="PackedScene" path="res://scenes/salas/refuge.tscn" id="8_refuge"]
+[ext_resource type="PackedScene" path="res://scenes/salas/nave.tscn" id="9_nave"]
+[ext_resource type="PackedScene" path="res://scenes/salas/terrace.tscn" id="10_terrace"]
+[ext_resource type="PackedScene" path="res://scenes/salas/court.tscn" id="11_court"]
+[ext_resource type="PackedScene" path="res://scenes/salas/vale.tscn" id="12_vale"]
+[ext_resource type="PackedScene" uid="uid://dirlgu4kpg3ya" path="res://scenes/player.tscn" id="13_player"]
+[ext_resource type="PackedScene" path="res://scenes/interface.tscn" id="14_interface"]
 
 [node name="Main" type="Node2D" unique_id=2021083514]
 script = ExtResource("1_o5qli")
 
-[node name="EditorPreview" type="Node2D" parent="." unique_id=1730452291]
-z_index = -100
-script = ExtResource("2_preview")
+[node name="Salas" type="Node2D" parent="." unique_id=1730452291]
+
+[node name="City" parent="Salas" unique_id=795425564 instance=ExtResource("2_city")]
+position = Vector2(0, -300)
+
+[node name="Ossuary" parent="Salas" unique_id=423946139 instance=ExtResource("3_ossuary")]
+position = Vector2(5200, -350)
+
+[node name="Cistern" parent="Salas" unique_id=947876999 instance=ExtResource("4_cistern")]
+position = Vector2(8200, -350)
+
+[node name="Cloister" parent="Salas" unique_id=1497871144 instance=ExtResource("5_cloister")]
+position = Vector2(11000, -450)
+
+[node name="Belfry" parent="Salas" unique_id=203694312 instance=ExtResource("6_belfry")]
+position = Vector2(14200, -650)
+
+[node name="Archive" parent="Salas" unique_id=255555737 instance=ExtResource("7_archive")]
+position = Vector2(16600, -350)
+
+[node name="Refuge" parent="Salas" unique_id=1863673106 instance=ExtResource("8_refuge")]
+position = Vector2(19000, -350)
+
+[node name="Nave" parent="Salas" unique_id=1250797845 instance=ExtResource("9_nave")]
+position = Vector2(21400, -450)
+
+[node name="Terrace" parent="Salas" unique_id=302142728 instance=ExtResource("10_terrace")]
+position = Vector2(24400, -350)
+
+[node name="Court" parent="Salas" unique_id=885310972 instance=ExtResource("11_court")]
+position = Vector2(27400, -350)
+
+[node name="Vale" parent="Salas" unique_id=1351527726 instance=ExtResource("12_vale")]
+position = Vector2(30200, -500)
+
+[node name="Player" parent="." unique_id=224551738 instance=ExtResource("13_player")]
+position = Vector2(150, 600)
+
+[node name="Interface" parent="." unique_id=1189709946 instance=ExtResource("14_interface")]

@@ -29,9 +29,11 @@ script = ExtResource("1_jogador")
 [node name="CombatVisuals" parent="." unique_id=1009971070 instance=ExtResource("2_visuais")]
 
 [node name="Sword" type="Sprite2D" parent="." unique_id=54145852]
+visible = false
 texture_filter = 4
 material = ExtResource("4_material")
 texture = ExtResource("3_espada")
+scale = Vector2(0.035, 0.035)
 centered = false
 offset = Vector2(-520, -360)
 

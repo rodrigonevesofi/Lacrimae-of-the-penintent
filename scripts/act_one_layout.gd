@@ -1,7 +1,8 @@
 extends RefCounted
 ## O mapa do Ato I. Cada sala é uma cena em scenes/salas/<id>.tscn (edite-as no editor do Godot):
 ## limites, piso, pintura, plataformas, alvenaria, inimigos, arenas e portas. Este script lê as cenas
-## e entrega os mesmos dados de sempre ao jogo (exploration.gd, world_art.gd, main.gd, a prévia do editor).
+## e entrega os mesmos dados de sempre ao jogo (exploration.gd, world_art.gd, main.gd). A main.tscn instancia as
+## mesmas cenas para mostrar o mundo inteiro no editor; o que vale é o que está salvo em cada sala.
 ## As coordenadas devolvidas são do mundo; dentro das cenas, cada sala começa em (0, 0) e "origem" diz onde
 ## esse canto fica no mundo.
 ##
@@ -14,7 +15,7 @@ const SALAS := ["city", "ossuary", "cistern", "cloister", "belfry", "archive", "
 
 static var _cache := {}
 
-## Esquece o que foi lido (a prévia do editor chama ao atualizar, depois de editar uma sala).
+## Esquece o que foi lido (para reler as salas depois de editá-las com o jogo ou uma ferramenta aberta).
 static func recarregar() -> void:
 	_cache.clear()
 
