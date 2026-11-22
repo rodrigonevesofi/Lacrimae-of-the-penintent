@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dirlgu4kpg3ya"]
 
 [ext_resource type="Script" uid="uid://2ameqyby4amd" path="res://scripts/player.gd" id="1_jogador"]
-[ext_resource type="Script" uid="uid://dqsh61qcpdtom" path="res://scripts/combat_visuals.gd" id="2_visuais"]
+[ext_resource type="PackedScene" path="res://scenes/efeitos/combat_visuals.tscn" id="2_visuais"]
 [ext_resource type="Texture2D" uid="uid://dm22g4a3btdp8" path="res://assets/penitent_sword.png" id="3_espada"]
 [ext_resource type="Material" path="res://materials/espada_penitente.tres" id="4_material"]
 [ext_resource type="Script" uid="uid://cll0ytq64qybt" path="res://scripts/actor_animation.gd" id="5_animacao"]
@@ -26,8 +26,7 @@ collision_layer = 2
 floor_snap_length = 10.0
 script = ExtResource("1_jogador")
 
-[node name="CombatVisuals" type="Node2D" parent="." unique_id=1009971070]
-script = ExtResource("2_visuais")
+[node name="CombatVisuals" parent="." unique_id=1009971070 instance=ExtResource("2_visuais")]
 
 [node name="Sword" type="Sprite2D" parent="." unique_id=54145852]
 texture_filter = 4

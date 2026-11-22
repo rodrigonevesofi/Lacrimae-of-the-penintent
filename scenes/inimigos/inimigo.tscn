@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" uid="uid://c07lg7lgjqhcc" path="res://scripts/enemy.gd" id="1_inimigo"]
-[ext_resource type="Script" uid="uid://dqsh61qcpdtom" path="res://scripts/combat_visuals.gd" id="2_visuais"]
+[ext_resource type="PackedScene" path="res://scenes/efeitos/combat_visuals.tscn" id="2_visuais"]
 [ext_resource type="Script" uid="uid://cll0ytq64qybt" path="res://scripts/actor_animation.gd" id="3_animacao"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_corpo"]
@@ -13,8 +13,7 @@ texture_filter = 4
 collision_layer = 4
 script = ExtResource("1_inimigo")
 
-[node name="CombatVisuals" type="Node2D" parent="."]
-script = ExtResource("2_visuais")
+[node name="CombatVisuals" parent="." instance=ExtResource("2_visuais")]
 
 [node name="Animator" type="AnimatedSprite2D" parent="."]
 script = ExtResource("3_animacao")

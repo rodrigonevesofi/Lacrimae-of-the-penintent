@@ -223,14 +223,9 @@ func _shed_plates() -> void:
 	plates.emitting = true
 	get_tree().create_timer(2.2).timeout.connect(plates.queue_free)
 	# Uma peça de cada queda permanece no chão, marcando a armadura já abandonada.
-	var fallen_plate:=Sprite2D.new()
-	var tile:=AtlasTexture.new()
-	tile.atlas=plates.texture
-	tile.region=Rect2(clampi(stage-1,0,3)*128,0,128,128)
-	fallen_plate.texture=tile
-	fallen_plate.scale=Vector2.ONE*0.4
+	var fallen_plate:Sprite2D=preload("res://scripts/efeitos.gd").PLACA_CAIDA.instantiate()
+	fallen_plate.texture.region=Rect2(clampi(stage-1,0,3)*128,0,128,128)
 	fallen_plate.position=global_position+Vector2(0,-65)
-	fallen_plate.z_index=-1
 	game.add_child(fallen_plate)
 	var landing:=Vector2(clampf(global_position.x-facing*randf_range(45,100),arena_left,arena_right),592)
 	var fall:=fallen_plate.create_tween()

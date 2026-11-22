@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" uid="uid://da4hi2kcld48s" path="res://assets/efeitos/sangue_parede.png" id="1_parede"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mancha"]
+resource_local_to_scene = true
+atlas = ExtResource("1_parede")
+region = Rect2(0, 0, 256, 256)
+
+[node name="ManchaParede" type="Sprite2D" groups=["blood_walls"]]
+z_index = 4
+scale = Vector2(0.3, 0.55)
+texture = SubResource("AtlasTexture_mancha")

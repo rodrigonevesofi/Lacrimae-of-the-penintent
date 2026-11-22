@@ -9,6 +9,7 @@ const PlayerScene = preload("res://scenes/player.tscn")
 const EnemyScript = preload("res://scripts/enemy.gd")
 const CriaturaGoyaScript = preload("res://scripts/criatura_goya.gd")
 const FinalBossScript = preload("res://scripts/penitent_boss.gd")
+const Efeitos = preload("res://scripts/efeitos.gd")
 ## Uma cena por família de inimigo (scenes/inimigos/); os dados de cada tipo ficam em EnemyScript.TYPES.
 const ENEMY_SCENES := {
 	"walker": preload("res://scenes/inimigos/inimigo_andante.tscn"),
@@ -997,12 +998,11 @@ func toast(s: String) -> void:
 
 ## O fragmento recuperado se desfaz em luz no local onde estava.
 func _dissolve_fragment(pos: Vector2) -> void:
-	var anchor := Node2D.new()
+	var anchor: Node2D = Efeitos.EFEITO_ANIMADO.instantiate()
 	anchor.position = pos + FRAGMENT_LIFT
 	anchor.z_index = 5
-	var animation = preload("res://scripts/actor_animation.gd").new()
+	var animation = anchor.get_node("Animacao")
 	animation.configure("fragmento", 0.72)
-	anchor.add_child(animation)
 	add_child(anchor)
 	animation.select("dissolve", 1)
 	animation.animation_finished.connect(anchor.queue_free)
@@ -1034,18 +1034,12 @@ func _place_splat(at: Vector2, size: float) -> void:
 		var oldest = old.pop_front()
 		oldest.remove_from_group("blood_splats")
 		oldest.queue_free()
-	var splat := Node2D.new()
+	var splat: Sprite2D = Efeitos.MANCHA_CHAO.instantiate()
 	splat.position = at + Vector2(0.0, -1.0)
-	splat.z_index = 5
 	splat.add_to_group("blood_splats")
-	var stain := Sprite2D.new()
-	var paint := AtlasTexture.new()
-	paint.atlas = load("res://assets/efeitos/sangue_chao.png")
-	paint.region = Rect2(randi_range(0, 7) * 128, 0, 128, 64)
-	stain.texture = paint
-	stain.scale = Vector2(size * 3.2 / 128.0, size * 0.8 / 64.0)
-	stain.flip_h = randf() < 0.5
-	splat.add_child(stain)
+	splat.texture.region = Rect2(randi_range(0, 7) * 128, 0, 128, 64)
+	splat.scale = Vector2(size * 3.2 / 128.0, size * 0.8 / 64.0)
+	splat.flip_h = randf() < 0.5
 	add_child(splat)
 	soundscape.play_sfx_at("respingo_chao", at)
 	var fade := splat.create_tween()
@@ -1068,16 +1062,10 @@ func wall_splat(at: Vector2) -> void:
 		var first = old.pop_front()
 		first.remove_from_group("blood_walls")
 		first.queue_free()
-	var stain := Sprite2D.new()
-	var paint := AtlasTexture.new()
-	paint.atlas = load("res://assets/efeitos/sangue_parede.png")
-	paint.region = Rect2(randi_range(0, 3) * 256, 0, 256, 256)
-	stain.texture = paint
+	var stain: Sprite2D = Efeitos.MANCHA_PAREDE.instantiate()
+	stain.texture.region = Rect2(randi_range(0, 3) * 256, 0, 256, 256)
 	stain.position = wall.position
-	stain.scale = Vector2(0.30, 0.55)
 	stain.flip_h = wall.normal.x < 0
-	stain.z_index = 4
-	stain.add_to_group("blood_walls")
 	add_child(stain)
 	var fade := stain.create_tween()
 	fade.tween_interval(40.0)
@@ -1085,13 +1073,11 @@ func wall_splat(at: Vector2) -> void:
 	fade.tween_callback(stain.queue_free)
 
 func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55, actor: String = "efeitos", tint: Color = Color.WHITE) -> void:
-	var anchor := Node2D.new()
+	var anchor: Node2D = Efeitos.EFEITO_ANIMADO.instantiate()
 	anchor.position = pos
-	anchor.z_index = 6
 	anchor.modulate = tint
-	var animation = preload("res://scripts/actor_animation.gd").new()
+	var animation = anchor.get_node("Animacao")
 	animation.configure(actor, size)
-	anchor.add_child(animation)
 	add_child(anchor)
 	animation.select(kind, flip)
 	animation.animation_finished.connect(anchor.queue_free)

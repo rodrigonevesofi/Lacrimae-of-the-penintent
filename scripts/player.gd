@@ -1512,14 +1512,10 @@ func _blood_decal(ground: Vector2) -> void:
 		var oldest = old.pop_front()
 		oldest.remove_from_group("blood_decals")
 		oldest.queue_free()
-	var pool := Sprite2D.new()
-	var art := AtlasTexture.new()
-	art.atlas = load("res://assets/efeitos/sangue_chao.png")
-	art.region = Rect2(randi_range(4, 7) * 128, 0, 128, 64)
-	pool.texture = art
+	var pool: Sprite2D = Efeitos.MANCHA_CHAO.instantiate()
+	pool.texture.region = Rect2(randi_range(4, 7) * 128, 0, 128, 64)
 	pool.scale = Vector2(2.1, 0.75)
 	pool.flip_h = facing < 0
-	pool.z_index = 5
 	var query := PhysicsRayQueryParameters2D.create(ground - Vector2(0, 4), ground + Vector2(0, 1200), 1)
 	var floor_hit := get_world_2d().direct_space_state.intersect_ray(query)
 	if not floor_hit.is_empty(): ground = floor_hit.position

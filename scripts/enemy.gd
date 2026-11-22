@@ -745,11 +745,8 @@ func _break_coffin() -> void:
 		director.shake_cam(5.0)
 		# A pedra quebrada permanece onde caiu.
 		if ResourceLoader.exists("res://assets/detritos_caixao.png"):
-			var rubble := Sprite2D.new()
-			rubble.texture = load("res://assets/detritos_caixao.png")
-			rubble.scale = Vector2(0.5, 0.5)
+			var rubble: Sprite2D = load(preload("res://scripts/efeitos.gd").DETRITOS_CAIXAO).instantiate()
 			rubble.flip_h = facing < 0
-			rubble.z_index = 4
 			rubble.position = global_position + Vector2(float(facing) * 34.0, -30.0)
 			director.add_child(rubble)
 
@@ -1207,12 +1204,8 @@ func _crack_floor() -> void:
 	var director = get_tree().get_first_node_in_group("game")
 	if director == null or not ResourceLoader.exists("res://assets/rachadura_chao.png"):
 		return
-	var crack := Sprite2D.new()
-	crack.texture = load("res://assets/rachadura_chao.png")
-	crack.scale = Vector2(0.7, 0.7)
-	crack.z_index = 4
+	var crack: Sprite2D = load(preload("res://scripts/efeitos.gd").RACHADURA_CHAO).instantiate()
 	crack.position = Vector2(global_position.x, global_position.y - 30.0)
-	crack.add_to_group("boss_cracks")
 	director.add_child(crack)
 	var fade := crack.create_tween()
 	fade.tween_interval(6.0)

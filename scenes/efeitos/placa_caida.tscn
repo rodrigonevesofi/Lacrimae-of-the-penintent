@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" uid="uid://2ufr0wf4yg55" path="res://assets/efeitos/placas_flagelado.png" id="1_placas"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_placa"]
+resource_local_to_scene = true
+atlas = ExtResource("1_placas")
+region = Rect2(0, 0, 128, 128)
+
+[node name="PlacaCaida" type="Sprite2D"]
+z_index = -1
+scale = Vector2(0.4, 0.4)
+texture = SubResource("AtlasTexture_placa")

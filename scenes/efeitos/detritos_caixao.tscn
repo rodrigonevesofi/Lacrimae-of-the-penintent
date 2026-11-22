@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" uid="uid://cnsl4ihnw7yp8" path="res://assets/detritos_caixao.png" id="1_detritos"]
+
+[node name="DetritosCaixao" type="Sprite2D"]
+z_index = 4
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_detritos")

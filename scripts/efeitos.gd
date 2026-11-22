@@ -13,3 +13,12 @@ const GORE_OSSOS = preload("res://scenes/efeitos/gore_ossos.tscn")
 const GORE_MASSA = preload("res://scenes/efeitos/gore_massa.tscn")
 const PLACAS_FLAGELADO = preload("res://scenes/efeitos/placas_flagelado.tscn")
 const LAMINA_SANGUE = preload("res://scenes/efeitos/lamina_sangue.tscn")
+## Manchas de sangue: o recorte do atlas é sorteado por quem cria (cada mancha tem o seu).
+const MANCHA_CHAO = preload("res://scenes/efeitos/mancha_chao.tscn")
+const MANCHA_PAREDE = preload("res://scenes/efeitos/mancha_parede.tscn")
+## Âncora com animação do atlas de efeitos (poeira, faíscas, impactos); configure a animação antes de adicionar.
+const EFEITO_ANIMADO = preload("res://scenes/efeitos/efeito_animado.tscn")
+const PLACA_CAIDA = preload("res://scenes/efeitos/placa_caida.tscn")
+## Arte opcional: carregue só se o arquivo existir.
+const DETRITOS_CAIXAO := "res://scenes/efeitos/detritos_caixao.tscn"
+const RACHADURA_CHAO := "res://scenes/efeitos/rachadura_chao.tscn"

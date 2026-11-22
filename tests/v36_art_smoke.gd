@@ -50,7 +50,8 @@ func run() -> void:
 	var p = game.player
 	p.revive(Vector2(900,600))
 	game._place_splat(Vector2(900,600),10)
-	var stain = get_nodes_in_group("blood_splats")[0].get_child(0)
+	# A mancha é o próprio sprite (scenes/efeitos/mancha_chao.tscn), não mais um nó com o sprite dentro.
+	var stain = get_nodes_in_group("blood_splats")[0]
 	expect(stain is Sprite2D and stain.texture.atlas.resource_path.ends_with("sangue_chao.png"), "manchas no piso usam a pintura, não polígonos")
 	game.wall_splat(Vector2(900,560))
 	expect(get_nodes_in_group("blood_walls").is_empty(), "sem parede perto não cria sangue suspenso")
