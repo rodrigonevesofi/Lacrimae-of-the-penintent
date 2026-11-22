@@ -39,6 +39,7 @@ offset = Vector2(-520, -360)
 
 [node name="Animator" type="AnimatedSprite2D" parent="." unique_id=1518565744]
 script = ExtResource("5_animacao")
+previa_ator = "hero"
 
 [node name="Lance" type="Node2D" parent="." unique_id=526463926]
 visible = false

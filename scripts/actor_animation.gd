@@ -1,12 +1,44 @@
+@tool
 extends AnimatedSprite2D
 ## Os quadros de animação são desenhos distintos recortados de uma grade regular de origem.
 ## A jogabilidade e o contato visual compartilham a linha do tempo normalizada de cada ação.
+##
+## Os quadros são montados quando o jogo roda (configure() lê assets/animation/clips.json); por isso o nó fica
+## vazio na cena. Para ver o personagem no editor, preencha "Prévia no editor": o script desenha ali um quadro,
+## sem gravar quadros, material nem escala na cena. No jogo a prévia não faz nada.
 static var manifest_cache: Dictionary = {}
+## Liga a prévia fora do editor (para capturas de conferência).
+static var previa_fora_do_editor := false
 static var frames_cache: Dictionary = {}
 var definitions: Dictionary = {}
 var actor := ""
 var unit_scale := 0.44
 var manual := false
+
+@export_group("Prévia no editor")
+## Personagem desenhado no editor (um nome de assets/animation/clips.json, como hero ou beatriz).
+@export var previa_ator := "":
+	set(valor):
+		previa_ator = valor
+		queue_redraw()
+## Escala com que o jogo desenha o personagem (a mesma passada a configure()).
+@export var previa_escala := 0.44:
+	set(valor):
+		previa_escala = valor
+		queue_redraw()
+@export var previa_animacao := "idle":
+	set(valor):
+		previa_animacao = valor
+		queue_redraw()
+@export var previa_quadro := 0:
+	set(valor):
+		previa_quadro = maxi(valor, 0)
+		queue_redraw()
+@export_group("")
+## O quadro da prévia fica guardado aqui: se só uma variável local de _draw() o segurasse, seria liberado
+## antes de o quadro ser desenhado e apareceria branco.
+var _previa: AtlasTexture
+var _previa_chave := ""
 const SHADER_ATOR := preload("res://shaders/ator_legivel.gdshader")
 
 ## Como cada personagem se destaca. O Penitente tem borda dourada; Beatriz, prateada; os inimigos,
@@ -50,9 +82,7 @@ func configure(actor_name: String, scale_factor: float) -> void:
 		animation_changed.connect(_atualizar_limites)
 	scale = Vector2.ONE * unit_scale
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	if manifest_cache.is_empty():
-		manifest_cache = JSON.parse_string(FileAccess.get_file_as_string("res://assets/animation/clips.json"))
-	definitions = manifest_cache[actor]
+	definitions = manifesto()[actor]
 	if frames_cache.has(actor):
 		sprite_frames = frames_cache[actor]
 		play("idle")
@@ -62,26 +92,57 @@ func configure(actor_name: String, scale_factor: float) -> void:
 	for clip in definitions:
 		var data: Dictionary = definitions[clip]
 		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
-		# Aceita o formato legado grid e a quantidade de fileiras da v32.
-		var grid: Array = data.get("grid", [6, int(data.get("rows", 4))])
-		var columns := int(grid[0])
-		var cell := sheet.get_size() / Vector2(columns, int(grid[1]))
 		sprite_frames.add_animation(clip)
 		sprite_frames.set_animation_loop(clip, data.get("loop", true))
 		sprite_frames.set_animation_speed(clip, float(data.get("fps", 12)))
 		for i in range(int(data["count"])):
-			var indices: Array = data.get("frames", [])
-			var index := int(indices[i]) if not indices.is_empty() else int(data["start"]) + i
-			var row := floori(float(index) / columns)
-			var start := Vector2(roundf((index % columns) * cell.x), roundf(row * cell.y))
-			var end := Vector2(roundf((index % columns + 1) * cell.x), roundf((row + 1) * cell.y))
-			var region := AtlasTexture.new()
-			region.atlas = sheet
-			region.region = Rect2(start, end - start)
-			region.filter_clip = true
-			sprite_frames.add_frame(clip, region)
+			sprite_frames.add_frame(clip, quadro(data, i, sheet))
 	frames_cache[actor] = sprite_frames
 	play("idle")
+
+## As definições de assets/animation/clips.json, lidas uma vez.
+static func manifesto() -> Dictionary:
+	if manifest_cache.is_empty():
+		manifest_cache = JSON.parse_string(FileAccess.get_file_as_string("res://assets/animation/clips.json"))
+	return manifest_cache
+
+## O quadro i de um clipe (uma definição de clips.json), recortado da folha.
+static func quadro(data: Dictionary, i: int, sheet: Texture2D = null) -> AtlasTexture:
+	if sheet == null: sheet = load("res://assets/animation/" + data["sheet"] + ".png")
+	# Aceita o formato legado grid e a quantidade de fileiras da v32.
+	var grid: Array = data.get("grid", [6, int(data.get("rows", 4))])
+	var columns := int(grid[0])
+	var cell := sheet.get_size() / Vector2(columns, int(grid[1]))
+	var indices: Array = data.get("frames", [])
+	var index := int(indices[i]) if not indices.is_empty() else int(data["start"]) + i
+	var row := floori(float(index) / columns)
+	var start := Vector2(roundf((index % columns) * cell.x), roundf(row * cell.y))
+	var end := Vector2(roundf((index % columns + 1) * cell.x), roundf((row + 1) * cell.y))
+	var region := AtlasTexture.new()
+	region.atlas = sheet
+	region.region = Rect2(start, end - start)
+	region.filter_clip = true
+	return region
+
+## Prévia no editor: o quadro escolhido com os pés na origem do nó pai, como select() o posiciona no jogo.
+## Só desenha enquanto o nó não tem quadros próprios, isto é, antes de configure().
+func _draw() -> void:
+	if previa_ator.is_empty() or sprite_frames != null: return
+	if not (Engine.is_editor_hint() or previa_fora_do_editor): return
+	var definicoes: Dictionary = manifesto().get(previa_ator, {})
+	if not definicoes.has(previa_animacao): return
+	var data: Dictionary = definicoes[previa_animacao]
+	var i := clampi(previa_quadro, 0, int(data["count"]) - 1)
+	var chave := "%s/%s/%d" % [previa_ator, previa_animacao, i]
+	if chave != _previa_chave:
+		_previa = quadro(data, i)
+		_previa_chave = chave
+	var imagem := _previa
+	var anchor: Array = data.get("anchor", [128, 250])
+	var deslocamentos: Array = data.get("deslocamentos", [])
+	var desvio := float(deslocamentos[i]) if i < deslocamentos.size() else 0.0
+	var canto := Vector2(desvio - float(anchor[0]), -float(anchor[1])) * previa_escala
+	draw_texture_rect(imagem, Rect2(canto, imagem.get_size() * previa_escala), false)
 
 func select(clip: String, direction: int, progress: float = -1.0) -> void:
 	if not definitions.has(clip):
