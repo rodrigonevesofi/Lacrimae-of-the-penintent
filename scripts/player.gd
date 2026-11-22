@@ -2,8 +2,8 @@ extends CharacterBody2D
 ## O Penitente das Lágrimas (jogador)
 
 const RastroGolpe = preload("res://scripts/rastro_golpe.gd")
-const LaminaSangue = preload("res://scripts/lamina_sangue.gd")
 const Gore = preload("res://scripts/gore.gd")
+const Efeitos = preload("res://scripts/efeitos.gd")
 
 signal died
 
@@ -1384,97 +1384,31 @@ func _blood_burst(at: Vector2, size: float, drops: int, direcao := Vector2.ZERO,
 	else:
 		# Jorro com direção (execuções): a mancha redonda fica pequena para a direção do sangue aparecer.
 		game.spawn_effect("blood", at, facing, size * 0.45)
-	var spray := CPUParticles2D.new()
-	spray.one_shot = true
-	spray.emitting = false
+	# Gotas arredondadas de sangue escuro (scenes/efeitos/sangue_jato.tscn); aqui só o que depende do golpe.
+	var spray: CPUParticles2D = Efeitos.SANGUE_JATO.instantiate()
 	spray.amount = maxi(drops, 1)
-	spray.lifetime = 1.4
-	spray.explosiveness = 0.95
 	spray.direction = Vector2(float(facing), -0.7) if direcao == Vector2.ZERO else direcao
 	spray.spread = abertura
-	spray.initial_velocity_min = 220.0
 	spray.initial_velocity_max = 640.0 * clampf(size, 0.6, 1.6)
-	spray.gravity = Vector2(0, 1500)
-	# Gotas arredondadas de 2–5 pixels, em vez de quadrados grandes.
-	var drop_gradient := Gradient.new()
-	drop_gradient.colors = PackedColorArray([Color.WHITE, Color(1, 1, 1, 0)])
-	var drop_texture := GradientTexture2D.new()
-	drop_texture.gradient = drop_gradient
-	drop_texture.width = 8
-	drop_texture.height = 8
-	drop_texture.fill = GradientTexture2D.FILL_RADIAL
-	drop_texture.fill_from = Vector2(0.5, 0.5)
-	drop_texture.fill_to = Vector2(1.0, 0.5)
-	spray.texture = drop_texture
-	spray.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	spray.scale_amount_min = 0.45
 	spray.scale_amount_max = 1.0 + 0.5 * clampf(size, 0.0, 1.6)
-	# Sangue escuro, com gotas um pouco mais vivas e outras quase pretas.
-	var shades := Gradient.new()
-	shades.colors = PackedColorArray([Color(0.62, 0.03, 0.05), Color(0.38, 0.0, 0.02)])
-	spray.color_initial_ramp = shades
-	spray.z_index = 7
 	spray.position = at
-	spray.add_to_group("blood_spray")
 	game.add_child(spray)
 	spray.emitting = true
 	get_tree().create_timer(2.0).timeout.connect(spray.queue_free)
 	if size >= 1.4:
 		# Golpe mortal: pedaços de carne arrancados, que giram no ar e caem pesados.
-		var chunks := CPUParticles2D.new()
-		chunks.one_shot = true
-		chunks.amount = 9
-		chunks.lifetime = 1.3
-		chunks.explosiveness = 1.0
+		var chunks: CPUParticles2D = Efeitos.SANGUE_PEDACOS.instantiate()
 		chunks.direction = Vector2(float(facing), -1.0)
-		chunks.spread = 50.0
-		chunks.initial_velocity_min = 260.0
-		chunks.initial_velocity_max = 520.0
-		chunks.gravity = Vector2(0, 1700)
-		chunks.angular_velocity_min = -540.0
-		chunks.angular_velocity_max = 540.0
-		var debris := AtlasTexture.new()
-		debris.atlas = load("res://assets/animation/pedacos.png")
-		debris.region = Rect2(0, 0, 384, 256)
-		chunks.texture = debris
-		var flipbook := CanvasItemMaterial.new()
-		flipbook.particles_animation = true
-		flipbook.particles_anim_h_frames = 3
-		flipbook.particles_anim_v_frames = 2
-		flipbook.particles_anim_loop = false
-		chunks.material = flipbook
-		chunks.anim_offset_min = 0.0
-		chunks.anim_offset_max = 0.999
-		chunks.scale_amount_min = 0.12
-		chunks.scale_amount_max = 0.24
-		chunks.color = Color.WHITE
-		chunks.z_index = 7
 		chunks.position = at
-		chunks.add_to_group("blood_spray")
 		game.add_child(chunks)
 		chunks.emitting = true
 		get_tree().create_timer(1.8).timeout.connect(chunks.queue_free)
 	if size >= 0.7:
 		# Névoa fina que fica no ar um instante depois de um corte profundo.
-		var mist := CPUParticles2D.new()
-		mist.one_shot = true
+		var mist: CPUParticles2D = Efeitos.SANGUE_NEVOA.instantiate()
 		mist.amount = int(drops * 0.8)
-		mist.lifetime = 0.7
-		mist.explosiveness = 1.0
 		mist.direction = Vector2(float(facing), -0.3)
-		mist.spread = 70.0
-		mist.initial_velocity_min = 60.0
-		mist.initial_velocity_max = 220.0
-		mist.gravity = Vector2(0, 160)
-		mist.damping_min = 120.0
-		mist.damping_max = 220.0
-		mist.texture = drop_texture
-		mist.scale_amount_min = 0.15
-		mist.scale_amount_max = 0.35
-		mist.color = Color(0.5, 0.02, 0.04, 0.55)
-		mist.z_index = 7
 		mist.position = at
-		mist.add_to_group("blood_spray")
 		game.add_child(mist)
 		mist.emitting = true
 		get_tree().create_timer(1.2).timeout.connect(mist.queue_free)
@@ -1483,22 +1417,8 @@ func _blood_burst(at: Vector2, size: float, drops: int, direcao := Vector2.ZERO,
 ## uma lágrima vermelha escorre da fenda do capacete. (No Vale se descobre de quem é a culpa.)
 func _blood_tear() -> void:
 	if character != "penitente": return
-	var tear := CPUParticles2D.new()
-	tear.one_shot = true
-	tear.amount = 3
-	tear.lifetime = 1.6
-	tear.explosiveness = 0.2
-	tear.direction = Vector2(0, 1)
-	tear.spread = 4.0
-	tear.initial_velocity_min = 8.0
-	tear.initial_velocity_max = 16.0
-	tear.gravity = Vector2(0, 46)
-	tear.scale_amount_min = 1.6
-	tear.scale_amount_max = 2.2
-	tear.color = Color(0.75, 0.03, 0.05)
-	tear.z_index = 2
+	var tear: CPUParticles2D = Efeitos.LAGRIMA_SANGUE.instantiate()
 	tear.position = Vector2(float(facing) * 7.0, -84.0)
-	tear.add_to_group("blood_tears")
 	add_child(tear)
 	tear.emitting = true
 	get_tree().create_timer(2.2).timeout.connect(tear.queue_free)
@@ -1867,7 +1787,7 @@ func _lancar_prece() -> void:
 	state = "prece"
 	state_t = 0.34
 	velocity.x = 0.0
-	var lamina = LaminaSangue.new()
+	var lamina = Efeitos.LAMINA_SANGUE.instantiate()
 	lamina.dono = self
 	lamina.lado = facing
 	lamina.dano = 34.0 * sword_multiplier()

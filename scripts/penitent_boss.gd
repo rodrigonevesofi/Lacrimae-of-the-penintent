@@ -216,31 +216,8 @@ func _break_armor(new_stage: int) -> void:
 func _shed_plates() -> void:
 	var game = _game()
 	if game == null: return
-	var plates := CPUParticles2D.new()
-	plates.one_shot = true
-	plates.amount = 7
-	plates.lifetime = 1.6
-	plates.explosiveness = 1.0
+	var plates: CPUParticles2D = preload("res://scripts/efeitos.gd").PLACAS_FLAGELADO.instantiate()
 	plates.direction = Vector2(-facing, -1.0)
-	plates.spread = 60.0
-	plates.initial_velocity_min = 180.0
-	plates.initial_velocity_max = 420.0
-	plates.gravity = Vector2(0, 1500)
-	plates.angular_velocity_min = -500.0
-	plates.angular_velocity_max = 500.0
-	plates.texture = load("res://assets/efeitos/placas_flagelado.png")
-	var pieces := CanvasItemMaterial.new()
-	pieces.particles_animation = true
-	pieces.particles_anim_h_frames = 4
-	pieces.particles_anim_v_frames = 1
-	pieces.particles_anim_loop = false
-	plates.material = pieces
-	plates.anim_offset_min = 0.0
-	plates.anim_offset_max = 0.999
-	plates.scale_amount_min = 0.25
-	plates.scale_amount_max = 0.45
-	plates.color = Color.WHITE
-	plates.z_index = 7
 	plates.position = global_position + Vector2(0, -60)
 	game.add_child(plates)
 	plates.emitting = true
