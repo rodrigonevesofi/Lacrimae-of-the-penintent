@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://materials/luz_radial.tres" id="1_textura"]
+[ext_resource type="Script" uid="uid://do2rbdwb2ky0s" path="res://scripts/salas/luz.gd" id="2_luz"]
+
+[node name="Luz" type="PointLight2D"]
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.6
+texture = ExtResource("1_textura")
+texture_scale = 2.0
+script = ExtResource("2_luz")

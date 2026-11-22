@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://scripts/salas/inscricao.gd" id="6_bd6si"]
 [ext_resource type="Script" path="res://scripts/salas/vela.gd" id="7_bjs07"]
 [ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="8_bd6si"]
-[ext_resource type="Script" path="res://scripts/salas/luz.gd" id="9_cy8ya"]
+[ext_resource type="PackedScene" path="res://scenes/salas/luz.tscn" id="9_luz"]
 [ext_resource type="Script" path="res://scripts/salas/abismo.gd" id="10_1foqq"]
 [ext_resource type="Script" path="res://scripts/salas/trecho.gd" id="11_ekw3g"]
 [ext_resource type="Script" path="res://scripts/salas/decoracao.gd" id="12_bmifk"]
@@ -150,15 +150,33 @@ position = Vector2(540, 900)
 script = ExtResource("5_wrclx")
 nome = "Altar das Primeiras Lágrimas"
 
+[node name="Luz" parent="Altares/Altar1" unique_id=1009990628 instance=ExtResource("9_luz")]
+position = Vector2(0, -60)
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.65
+texture_scale = 2.6
+
 [node name="Altar2" type="Node2D" parent="Altares" unique_id=1734907156]
 position = Vector2(1810, 900)
 script = ExtResource("5_wrclx")
 nome = "Altar do Limiar"
 
+[node name="Luz" parent="Altares/Altar2" unique_id=914293600 instance=ExtResource("9_luz")]
+position = Vector2(0, -60)
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.65
+texture_scale = 2.6
+
 [node name="Altar3" type="Node2D" parent="Altares" unique_id=458060727]
 position = Vector2(3620, 900)
 script = ExtResource("5_wrclx")
 nome = "Altar da Última Vela"
+
+[node name="Luz" parent="Altares/Altar3" unique_id=1238355335 instance=ExtResource("9_luz")]
+position = Vector2(0, -60)
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.65
+texture_scale = 2.6
 
 [node name="Vestigios" type="Node2D" parent="." unique_id=403510813]
 
@@ -210,6 +228,12 @@ A assinatura foi raspada. Sua mão treme ao tocar a pedra."
 position = Vector2(150, 900)
 script = ExtResource("7_bjs07")
 
+[node name="Luz" parent="Velas/Vela1" unique_id=1773711575 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
 [node name="Vela2" type="Node2D" parent="Velas" unique_id=150878544]
 position = Vector2(330, 900)
 script = ExtResource("7_bjs07")
@@ -221,6 +245,12 @@ script = ExtResource("7_bjs07")
 [node name="Vela4" type="Node2D" parent="Velas" unique_id=573033027]
 position = Vector2(700, 900)
 script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela4" unique_id=722591254 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
 
 [node name="Vela5" type="Node2D" parent="Velas" unique_id=1261903342]
 position = Vector2(960, 900)
@@ -234,6 +264,12 @@ script = ExtResource("7_bjs07")
 position = Vector2(1420, 900)
 script = ExtResource("7_bjs07")
 
+[node name="Luz" parent="Velas/Vela7" unique_id=1881644014 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
 [node name="Vela8" type="Node2D" parent="Velas" unique_id=1357985537]
 position = Vector2(1700, 900)
 script = ExtResource("7_bjs07")
@@ -245,6 +281,12 @@ script = ExtResource("7_bjs07")
 [node name="Vela10" type="Node2D" parent="Velas" unique_id=118835883]
 position = Vector2(2330, 900)
 script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela10" unique_id=279423724 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
 
 [node name="Vela11" type="Node2D" parent="Velas" unique_id=162098789]
 position = Vector2(2520, 900)
@@ -258,6 +300,12 @@ script = ExtResource("7_bjs07")
 position = Vector2(3050, 900)
 script = ExtResource("7_bjs07")
 
+[node name="Luz" parent="Velas/Vela13" unique_id=136671725 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
 [node name="Vela14" type="Node2D" parent="Velas" unique_id=1821970671]
 position = Vector2(3300, 900)
 script = ExtResource("7_bjs07")
@@ -270,6 +318,12 @@ script = ExtResource("7_bjs07")
 position = Vector2(3700, 900)
 script = ExtResource("7_bjs07")
 
+[node name="Luz" parent="Velas/Vela16" unique_id=1371368787 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
 [node name="Vela17" type="Node2D" parent="Velas" unique_id=1572225099]
 position = Vector2(3900, 900)
 script = ExtResource("7_bjs07")
@@ -281,6 +335,12 @@ script = ExtResource("7_bjs07")
 [node name="Vela19" type="Node2D" parent="Velas" unique_id=1184363805]
 position = Vector2(4450, 900)
 script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela19" unique_id=758727549 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
 
 [node name="Vela20" type="Node2D" parent="Velas" unique_id=243145341]
 position = Vector2(4700, 900)
@@ -319,18 +379,17 @@ ponto = "portao_do_vale"
 
 [node name="Luzes" type="Node2D" parent="." unique_id=595790626]
 
-[node name="LuzDoAbismo" type="Node2D" parent="Luzes" unique_id=1114029044]
+[node name="LuzDoAbismo" parent="Luzes" unique_id=1114029044 instance=ExtResource("9_luz")]
 position = Vector2(2135, 1080)
-script = ExtResource("9_cy8ya")
-cor = Color(0.75, 0.2, 0.2, 1)
-energia = 0.8
-alcance = 3.0
+color = Color(0.75, 0.2, 0.2, 1)
+energy = 0.8
+texture_scale = 3.0
 
-[node name="LuzDosPortoes" type="Node2D" parent="Luzes" unique_id=526376734]
+[node name="LuzDosPortoes" parent="Luzes" unique_id=526376734 instance=ExtResource("9_luz")]
 position = Vector2(4290, 680)
-script = ExtResource("9_cy8ya")
-cor = Color(0.9, 0.3, 0.25, 1)
-alcance = 5.0
+color = Color(0.9, 0.3, 0.25, 1)
+energy = 0.6
+texture_scale = 5.0
 
 [node name="Abismo" type="Node2D" parent="." unique_id=1450526971]
 position = Vector2(2000, 900)

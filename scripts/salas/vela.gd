@@ -1,7 +1,7 @@
 @tool
 extends Node2D
-## Vela no chão da Cidade. Vale a posição x: world_art.gd a desenha no chão e main.gd acende uma
-## luz tremulante a cada três velas.
+## Vela no chão da Cidade. Vale a posição x: world_art.gd a desenha no chão. Uma Luz filha
+## (scenes/salas/luz.tscn) é a chama que ilumina em volta; na Cidade, uma vela a cada três tem a sua.
 
 const Sala = preload("res://scripts/salas/sala.gd")
 

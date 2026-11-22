@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/salas/altar.gd" id="6_b7yqg"]
 [ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="7_iopiy"]
 [ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="8_iopiy"]
+[ext_resource type="PackedScene" path="res://scenes/salas/luz.tscn" id="9_luz"]
 
 [node name="Belfry" type="Node2D" unique_id=223313884]
 script = ExtResource("1_uggqh")
@@ -236,6 +237,12 @@ reliquia = true
 position = Vector2(380, 1750)
 script = ExtResource("8_iopiy")
 ponto = "reliquia"
+
+[node name="Luz" parent="Pontos/Reliquia" unique_id=868970614 instance=ExtResource("9_luz")]
+position = Vector2(0, -30)
+color = Color(1, 0.85, 0.5, 1)
+energy = 1.1
+texture_scale = 1.8
 
 [node name="CorrenteVigilia" type="Node2D" parent="Pontos" unique_id=1954731075]
 position = Vector2(920, 390)

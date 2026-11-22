@@ -59,7 +59,7 @@ static func _dados() -> Dictionary:
 			if v.reliquia: item["relic"] = true
 			d.pickups.append(item)
 		for luz in _filhos(sala, "Luzes"):
-			d.luzes.append({"room": id, "pos": _no_mundo(luz, sala), "color": luz.cor, "energy": luz.energia, "scale": luz.alcance})
+			d.luzes.append({"room": id, "pos": _no_mundo(luz, sala), "color": luz.color, "energy": luz.energy, "scale": luz.texture_scale})
 		for p in _filhos(sala, "Pontos"):
 			if d.pontos.has(p.ponto): push_error("Ponto %s repetido nas salas %s e %s." % [p.ponto, d.pontos[p.ponto].room, id])
 			d.pontos[p.ponto] = {"room": id, "pos": _no_mundo(p, sala)}

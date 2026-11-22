@@ -24,6 +24,8 @@
 [ext_resource type="Script" uid="uid://bonienhg2bs0a" path="res://scripts/primeiro_plano.gd" id="22_primeiro_plano"]
 [ext_resource type="Script" uid="uid://c6ivthntqtqeq" path="res://scripts/narrative.gd" id="23_narrative"]
 [ext_resource type="Script" uid="uid://ddu2q57rgm1n6" path="res://scripts/exploration.gd" id="24_exploration"]
+[ext_resource type="Texture2D" path="res://materials/luz_radial.tres" id="25_luz"]
+[ext_resource type="Script" uid="uid://cll0ytq64qybt" path="res://scripts/actor_animation.gd" id="26_animacao"]
 
 [node name="Main" type="Node2D" unique_id=2021083514]
 script = ExtResource("1_o5qli")
@@ -110,6 +112,20 @@ position = Vector2(150, 600)
 z_index = 10
 
 [node name="Interface" parent="." unique_id=1189709946 instance=ExtResource("14_interface")]
+
+[node name="LuzDaMancha" type="PointLight2D" parent="." unique_id=126367329]
+visible = false
+color = Color(0.6, 0.8, 1, 1)
+energy = 0.9
+texture = ExtResource("25_luz")
+texture_scale = 1.5
+
+[node name="Fragmento" type="Node2D" parent="." unique_id=1108411487]
+visible = false
+z_index = 5
+
+[node name="Animacao" type="AnimatedSprite2D" parent="Fragmento" unique_id=341374706]
+script = ExtResource("26_animacao")
 
 [node name="Narrativa" type="CanvasLayer" parent="." unique_id=1199315425]
 layer = 30

@@ -796,33 +796,24 @@ func _build_hud() -> void:
 	confession_panel.conectar(confessor)
 
 
-func _add_flicker_light(pos: Vector2, col: Color, energy: float, sc: float) -> PointLight2D:
-	var l := Util.make_light(col, energy, sc)
-	l.position = pos
-	add_child(l)
-	flicker.append([l, energy, randf_range(4.0, 9.0), randf_range(0.0, 6.0)])
-	return l
-
-
+## Luzes tremulantes das salas (scenes/salas/luz.tscn): as filhas das velas, dos altares e dos pontos (a da
+## relíquia) e as do grupo Luzes, nessa ordem e sala a sala. A energia de cada uma é a média do tremor;
+## a frequência e a fase são sorteadas aqui.
 func _build_lights() -> void:
-	for i in range(0, candle_xs.size(), 3):
-		_add_flicker_light(Vector2(candle_xs[i], GROUND_Y - 24.0), Color(1.0, 0.68, 0.38), 0.35, 1.7)
-	for a in altars:
-		_add_flicker_light(a + Vector2(0, -60), Color(1.0, 0.78, 0.5), 0.65, 2.6)
-	relic_light = _add_flicker_light(relic_pos + Vector2(0, -30), Color(1.0, 0.85, 0.5), 1.1, 1.8)
-	# Luzes de cenário postas nas salas (nós Luzes), como a do fundo do abismo e a dos portões.
-	for luz in Layout.luzes():
-		_add_flicker_light(luz.pos, luz.color, luz.energy, luz.scale)
-	stain_light = Util.make_light(Color(0.6, 0.8, 1.0), 0.9, 1.5)
-	stain_light.visible = false
-	add_child(stain_light)
-	stain_anchor = Node2D.new()
-	stain_anchor.visible = false
-	stain_anchor.z_index = 5
-	stain_animation = preload("res://scripts/actor_animation.gd").new()
+	for grupo in ["Velas", "Altares", "Pontos", "Luzes"]:
+		for sala in _salas():
+			if not sala.has_node(grupo): continue
+			for no in sala.get_node(grupo).get_children():
+				var luzes: Array = [no] if no is PointLight2D else no.get_children().filter(func(f): return f is PointLight2D)
+				for luz in luzes:
+					flicker.append([luz, luz.energy, randf_range(4.0, 9.0), randf_range(0.0, 6.0)])
+					if no.get("ponto") == "reliquia": relic_light = luz
+	if relic_light == null: push_error("A relíquia (ponto reliquia) não tem Luz filha na sala.")
+	# O fragmento de culpa deixado na morte e a sua luz ficam na main.tscn, ocultos até haver mancha.
+	stain_light = _camada("LuzDaMancha")
+	stain_anchor = _camada("Fragmento")
+	stain_animation = stain_anchor.get_node("Animacao")
 	stain_animation.configure("fragmento", 0.72)
-	stain_anchor.add_child(stain_animation)
-	add_child(stain_anchor)
 
 
 # ---------------------------------------------------------------- jogo
