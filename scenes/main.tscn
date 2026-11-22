@@ -14,6 +14,16 @@
 [ext_resource type="PackedScene" path="res://scenes/salas/vale.tscn" id="12_vale"]
 [ext_resource type="PackedScene" uid="uid://dirlgu4kpg3ya" path="res://scenes/player.tscn" id="13_player"]
 [ext_resource type="PackedScene" path="res://scenes/interface.tscn" id="14_interface"]
+[ext_resource type="Script" uid="uid://ft0xito4ktro" path="res://scripts/confessor.gd" id="15_confessor"]
+[ext_resource type="Script" uid="uid://v086kjegm2s4" path="res://scripts/soundscape.gd" id="16_soundscape"]
+[ext_resource type="Script" uid="uid://4astevch3fxa" path="res://scripts/pintura_viva.gd" id="17_pintura_viva"]
+[ext_resource type="Script" uid="uid://clo5i4i3drwmh" path="res://scripts/world_art.gd" id="18_world_art"]
+[ext_resource type="Script" uid="uid://d3hkjxbjjdv2s" path="res://scripts/vale_scene.gd" id="19_vale_scene"]
+[ext_resource type="Script" uid="uid://ks84i6dbstyx" path="res://scripts/ambient_life.gd" id="20_ambient_life"]
+[ext_resource type="Script" uid="uid://dbgx4d1ck4psn" path="res://scripts/bichos.gd" id="21_bichos"]
+[ext_resource type="Script" uid="uid://bonienhg2bs0a" path="res://scripts/primeiro_plano.gd" id="22_primeiro_plano"]
+[ext_resource type="Script" uid="uid://c6ivthntqtqeq" path="res://scripts/narrative.gd" id="23_narrative"]
+[ext_resource type="Script" uid="uid://ddu2q57rgm1n6" path="res://scripts/exploration.gd" id="24_exploration"]
 
 [node name="Main" type="Node2D" unique_id=2021083514]
 script = ExtResource("1_o5qli")
@@ -53,7 +63,57 @@ position = Vector2(27400, -350)
 [node name="Vale" parent="Salas" unique_id=1351527726 instance=ExtResource("12_vale")]
 position = Vector2(30200, -500)
 
+[node name="Confessor" type="Node" parent="." unique_id=1071477686]
+script = ExtResource("15_confessor")
+
+[node name="Som" type="Node" parent="." unique_id=1959167398]
+script = ExtResource("16_soundscape")
+
+[node name="Pintura" type="Node2D" parent="." unique_id=1302102035]
+script = ExtResource("17_pintura_viva")
+
+[node name="Arte" type="Node2D" parent="." unique_id=1940099285]
+script = ExtResource("18_world_art")
+
+[node name="ValeFundo" type="Node2D" parent="." unique_id=1777652994]
+script = ExtResource("19_vale_scene")
+
+[node name="ValeFrente" type="Node2D" parent="." unique_id=1099975904]
+z_index = 9
+script = ExtResource("19_vale_scene")
+front = true
+
+[node name="VidaFundo" type="Node2D" parent="." unique_id=1070302523]
+script = ExtResource("20_ambient_life")
+
+[node name="VidaFrente" type="Node2D" parent="." unique_id=1190580830]
+z_index = 9
+script = ExtResource("20_ambient_life")
+front = true
+
+[node name="Bichos" type="Node2D" parent="." unique_id=1936196520]
+script = ExtResource("21_bichos")
+
+[node name="PrimeiroPlano" type="Node2D" parent="." unique_id=1361399321]
+z_index = 11
+script = ExtResource("22_primeiro_plano")
+
+[node name="Tinta" type="CanvasModulate" parent="." unique_id=507811516]
+color = Color(0.76, 0.74, 0.8, 1)
+
+[node name="Dinamico" type="Node2D" parent="." unique_id=496555068]
+
 [node name="Player" parent="." unique_id=224551738 instance=ExtResource("13_player")]
 position = Vector2(150, 600)
 
+[node name="Efeitos" type="Node2D" parent="." unique_id=1826362772]
+z_index = 10
+
 [node name="Interface" parent="." unique_id=1189709946 instance=ExtResource("14_interface")]
+
+[node name="Narrativa" type="CanvasLayer" parent="." unique_id=1199315425]
+layer = 30
+script = ExtResource("23_narrative")
+
+[node name="Exploracao" type="Node" parent="." unique_id=1121693763]
+script = ExtResource("24_exploration")

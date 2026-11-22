@@ -30,7 +30,6 @@ var plano: Parallax2D
 var pecas: Array = []
 
 func _ready() -> void:
-	z_index = 11
 	plano = Parallax2D.new()
 	plano.scroll_scale = Vector2(VELOCIDADE, 0.0)
 	plano.repeat_size = Vector2.ZERO

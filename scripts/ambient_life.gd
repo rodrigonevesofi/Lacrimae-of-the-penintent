@@ -25,7 +25,8 @@ const ROOMS := {
 var paints := {}
 var lamps: Array = []
 var game
-var front := false
+## Camada da frente (z 9 na main.tscn).
+@export var front := false
 var t := 0.0
 var room := ""
 var hung: Array = []
@@ -38,7 +39,6 @@ func _ready() -> void:
 	paints["pendentes"]=load("res://assets/vida/pendentes.png")
 	for name in ["chama_vela","fumaca_incenso","corvo"]:paints[name]=load("res://assets/animation/"+name+".png")
 	for name in ["santo_base","santo_movimento","ossuario_base","ossuario_movimento","relicario_base","relicario_movimento"]:paints[name]=load("res://assets/vida/"+name+".png")
-	if front: z_index = 9
 	air = CPUParticles2D.new()
 	air.amount = 70 if not front else 24
 	air.lifetime = 8.0

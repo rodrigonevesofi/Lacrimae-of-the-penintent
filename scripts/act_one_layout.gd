@@ -223,7 +223,7 @@ static func city_decor(tipo: String) -> Array[Vector2]:
 		if deco.tipo == tipo: result.append(deco.pos)
 	return result
 
-## Plataformas da Cidade, construídas por main.gd (as das outras salas são de exploration.gd).
+## Plataformas da Cidade (os corpos de colisão são criados pela própria sala; ver sala.gd colisoes()).
 static func city_platforms() -> Array[Rect2]:
 	return _dados().city_platforms.duplicate()
 

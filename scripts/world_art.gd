@@ -40,6 +40,8 @@ const RECUO := Color(0.80, 0.77, 0.79)
 const GOLD := Color("a58a59")
 
 func _ready() -> void:
+	# Na main.tscn esta camada fica pronta antes da main; a posição de Iria vem dela.
+	if game == null: game = get_parent()
 	var surface := CanvasItemMaterial.new()
 	surface.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	material = surface

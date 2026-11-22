@@ -17,16 +17,8 @@ const ENEMY_SCENES := {
 	"boss": preload("res://scenes/inimigos/inimigo_chefe.tscn"),
 	"mirror": preload("res://scenes/inimigos/inimigo.tscn"),
 }
-const ValeScene = preload("res://scripts/vale_scene.gd")
-const AmbientLife = preload("res://scripts/ambient_life.gd")
 const ValeFinale = preload("res://scripts/vale_finale.gd")
-const InterfaceScene = preload("res://scenes/interface.tscn")
-const WorldArt = preload("res://scripts/world_art.gd")
-const PinturaViva = preload("res://scripts/pintura_viva.gd")
-const Bichos = preload("res://scripts/bichos.gd")
-const PrimeiroPlano = preload("res://scripts/primeiro_plano.gd")
 const Story = preload("res://scripts/story_text.gd")
-const ConfessorScript = preload("res://scripts/confessor.gd")
 const Telemetry = preload("res://scripts/telemetry.gd")
 
 const GROUND_Y := 600.0
@@ -139,6 +131,7 @@ var lore: Array = Layout.city_lore()
 
 
 func _ready() -> void:
+	if get_child_count() == 0: _adotar_cena()
 	add_to_group("game")
 	_crisp_fonts()
 	has_save = FileAccess.file_exists(SAVE_PATH)
@@ -147,23 +140,16 @@ func _ready() -> void:
 	telemetry = Telemetry.new()
 	telemetry.load_data()
 	telemetry.start_session()
-	confessor = ConfessorScript.new()
-	confessor.game = self
-	add_child(confessor)
-	soundscape = preload("res://scripts/soundscape.gd").new()
-	add_child(soundscape)
+	confessor = _camada("Confessor")
+	soundscape = _camada("Som")
 	_build_art()
 	_build_world()
 	_build_player()
 	_build_fx_layer()
 	_build_hud()
 	_build_lights()
-	narrative = preload("res://scripts/narrative.gd").new()
-	narrative.game = self
-	add_child(narrative)
-	exploration = preload("res://scripts/exploration.gd").new()
-	exploration.game = self
-	add_child(exploration)
+	narrative = _camada("Narrativa")
+	exploration = _camada("Exploracao")
 	exploration.build()
 	state = "title"
 	player.revive(TOMB_POS)
@@ -171,36 +157,36 @@ func _ready() -> void:
 	player.controllable = false
 
 
+## main.gd sem a cena (Fixture.new() nos testes): adota os nós da main.tscn, para que o jogo seja o mesmo.
+func _adotar_cena() -> void:
+	var cena: Node = load("res://scenes/main.tscn").instantiate()
+	for filho in cena.get_children():
+		cena.remove_child(filho)
+		add_child(filho)
+	cena.free()
+
+
+## Um nó da main.tscn, ligado à main e posto no fim da lista de filhos. As peças são chamadas na ordem
+## em que o jogo sempre as montou; como a ordem dos filhos é a de desenho, nada passa à frente de nada.
+func _camada(nome: String) -> Node:
+	var no := get_node(nome)
+	move_child(no, -1)
+	if "game" in no: no.game = self
+	return no
+
+
 func _build_art() -> void:
 	# A pintura de cada sala, animada por shader, fica atrás de tudo.
-	pintura = PinturaViva.new()
-	pintura.game = self
-	add_child(pintura)
-	art = WorldArt.new()
-	art.game = self
-	add_child(art)
-	vale_back = ValeScene.new()
-	vale_back.game = self
-	add_child(vale_back)
-	vale_front = ValeScene.new()
-	vale_front.game = self
-	vale_front.front = true
-	add_child(vale_front)
+	pintura = _camada("Pintura")
+	art = _camada("Arte")
+	vale_back = _camada("ValeFundo")
+	vale_front = _camada("ValeFrente")
 	# A camada viva das demais salas: o que balança, flutua, pinga e queima.
-	life_back = AmbientLife.new()
-	life_back.game = self
-	add_child(life_back)
-	life_front = AmbientLife.new()
-	life_front.game = self
-	life_front.front = true
-	add_child(life_front)
+	life_back = _camada("VidaFundo")
+	life_front = _camada("VidaFrente")
 	# Bichos que reagem ao Penitente e silhuetas de primeiro plano, mais rápidas que a câmera.
-	bichos = Bichos.new()
-	bichos.game = self
-	add_child(bichos)
-	primeiro_plano = PrimeiroPlano.new()
-	primeiro_plano.game = self
-	add_child(primeiro_plano)
+	bichos = _camada("Bichos")
+	primeiro_plano = _camada("PrimeiroPlano")
 
 
 ## Acessibilidade: remove clarões, oscilação de luz e tremor de câmera das cenas de culpa e do Guardião.
@@ -565,23 +551,16 @@ func _add_solid(r: Rect2, one_way: bool, onde: Node2D = self) -> StaticBody2D:
 	return b
 
 
-## As salas instanciadas na main.tscn (nó Salas), na ordem do mapa. Sem a cena (main.gd usado direto,
-## como em alguns testes), as salas são instanciadas aqui.
+## As salas instanciadas na main.tscn (nó Salas), na ordem do mapa.
 func _salas() -> Array[Node2D]:
-	var raiz: Node2D = get_node_or_null("Salas")
-	if raiz == null:
-		raiz = Node2D.new()
-		raiz.name = "Salas"
-		add_child(raiz)
-		move_child(raiz, 0)
 	var lista: Array[Node2D] = []
 	for id in Layout.SALAS:
 		var sala: Node2D = null
-		for filho in raiz.get_children():
+		for filho in get_node("Salas").get_children():
 			if filho.get("id") == id: sala = filho
 		if sala == null:
-			sala = load("res://scenes/salas/%s.tscn" % id).instantiate()
-			raiz.add_child(sala)
+			push_error("A sala %s não está no nó Salas da main.tscn." % id)
+			continue
 		if sala.position != sala.origem:
 			push_warning("Sala %s fora da origem na main.tscn; volta para %s." % [id, sala.origem])
 		sala.position = sala.origem
@@ -590,25 +569,18 @@ func _salas() -> Array[Node2D]:
 
 
 func _build_world() -> void:
-	var mod := CanvasModulate.new()
-	mod.color = Color(0.76, 0.74, 0.80)
-	add_child(mod)
+	# Tinta: o CanvasModulate que escurece o mundo inteiro (cor na main.tscn).
+	_camada("Tinta")
 	# Cada sala da cena cria o próprio chão, paredes, plataformas e alvenaria.
 	for sala in _salas():
 		for c in sala.colisoes(): _add_solid(c[0], c[1], sala)
-	dyn = Node2D.new()
+	dyn = _camada("Dinamico")
 	dyn.draw.connect(_draw_dynamic)
-	add_child(dyn)
 
 
 func _build_player() -> void:
-	# O Penitente está na main.tscn (nó Player); sem a cena, é instanciado aqui.
-	player = get_node_or_null("Player")
-	if player == null:
-		player = PlayerScene.instantiate()
-		add_child(player)
-	# Vai para depois do cenário e do chão, como antes: a pintura das salas não o cobre.
-	move_child(player, -1)
+	# O Penitente está na main.tscn (nó Player), depois do cenário: a pintura das salas não o cobre.
+	player = _camada("Player")
 	player.position = altars[0]
 	player.died.connect(_on_player_died)
 
@@ -809,19 +781,14 @@ func _update_duo(delta: float) -> void:
 			spawn_effect("dust", partner.global_position + Vector2(0.0, -30.0), 1, 0.7)
 
 func _build_fx_layer() -> void:
-	fxn = Node2D.new()
-	fxn.z_index = 10
+	# Efeitos desenhados por _draw_fx, à frente do mundo (z 10 na main.tscn).
+	fxn = _camada("Efeitos")
 	fxn.draw.connect(_draw_fx)
-	add_child(fxn)
 
 
 func _build_hud() -> void:
 	# HUD e Confessionário vêm de scenes/interface.tscn, instanciada na main.tscn (nó Interface).
-	var interface: CanvasLayer = get_node_or_null("Interface")
-	if interface == null:
-		interface = InterfaceScene.instantiate()
-		add_child(interface)
-	move_child(interface, -1)
+	var interface: CanvasLayer = _camada("Interface")
 	hud = interface.get_node("HUD")
 	hud.game = self
 	confession_panel = interface.get_node("ConfessionPanel")

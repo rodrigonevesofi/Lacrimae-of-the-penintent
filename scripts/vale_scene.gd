@@ -15,7 +15,8 @@ const CAM_Y := 380.0
 
 var paints := {}
 var game
-var front := false
+## Camada da frente (z 9 na main.tscn): partículas e silhuetas que passam à frente da cena.
+@export var front := false
 var t := 0.0
 ## 0 = crepúsculo calmo; 1 = o vale inteiro em sangue.
 var mood := 0.0
@@ -35,7 +36,6 @@ func _ready() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 1746
 	if front:
-		z_index = 9
 		_build_particles()
 		# Silhuetas de primeiro plano: postes e galhos que passam à frente da cena.
 		for i in range(4):
