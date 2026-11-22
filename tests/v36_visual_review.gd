@@ -76,7 +76,7 @@ func clear_foes() -> void:
 	for h in get_nodes_in_group("hazards"): h.queue_free()
 	await frames(2)
 func foe(kind: int, pos: Vector2):
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(kind)
 	e.setup(kind,pos,0,game.player)
 	game.add_child(e)
 	e.set_physics_process(false)

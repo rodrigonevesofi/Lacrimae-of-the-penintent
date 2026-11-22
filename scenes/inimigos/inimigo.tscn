@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://c07lg7lgjqhcc" path="res://scripts/enemy.gd" id="1_inimigo"]
+[ext_resource type="Script" uid="uid://dqsh61qcpdtom" path="res://scripts/combat_visuals.gd" id="2_visuais"]
+[ext_resource type="Script" uid="uid://cll0ytq64qybt" path="res://scripts/actor_animation.gd" id="3_animacao"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_corpo"]
+resource_local_to_scene = true
+size = Vector2(34, 56)
+
+[node name="Inimigo" type="CharacterBody2D" groups=["enemies"]]
+texture_filter = 4
+collision_layer = 4
+script = ExtResource("1_inimigo")
+
+[node name="CombatVisuals" type="Node2D" parent="."]
+script = ExtResource("2_visuais")
+
+[node name="Animator" type="AnimatedSprite2D" parent="."]
+script = ExtResource("3_animacao")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_corpo")

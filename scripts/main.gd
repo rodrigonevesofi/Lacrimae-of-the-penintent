@@ -7,6 +7,13 @@ const PlayerScene = preload("res://scenes/player.tscn")
 const EnemyScript = preload("res://scripts/enemy.gd")
 const CriaturaGoyaScript = preload("res://scripts/criatura_goya.gd")
 const FinalBossScript = preload("res://scripts/penitent_boss.gd")
+## Uma cena por família de inimigo (scenes/inimigos/); os dados de cada tipo ficam em EnemyScript.TYPES.
+const ENEMY_SCENES := {
+	"walker": preload("res://scenes/inimigos/inimigo_andante.tscn"),
+	"flyer": preload("res://scenes/inimigos/inimigo_voador.tscn"),
+	"boss": preload("res://scenes/inimigos/inimigo_chefe.tscn"),
+	"mirror": preload("res://scenes/inimigos/inimigo.tscn"),
+}
 const ValeScene = preload("res://scripts/vale_scene.gd")
 const AmbientLife = preload("res://scripts/ambient_life.gd")
 const ValeFinale = preload("res://scripts/vale_finale.gd")
@@ -597,6 +604,16 @@ func _build_player() -> void:
 	player.died.connect(_on_player_died)
 
 
+## Cria um inimigo do tipo `kind` a partir da cena da sua família, ainda fora da árvore.
+## Chame setup() com o mesmo tipo antes de add_child(). `script` troca enemy.gd por uma
+## subclasse (criatura_goya.gd, penitent_boss.gd) mantendo a estrutura da cena.
+func new_enemy(kind: int, script: Script = null) -> CharacterBody2D:
+	var e: CharacterBody2D = ENEMY_SCENES[EnemyScript.TYPES[kind].family].instantiate()
+	if script != null:
+		e.set_script(script)
+	return e
+
+
 # ------------------------------------------------------------------ O Vale dos Flagelados e o chefe final
 ## O Vale fica além dos portões: só se desce depois que o Guardião dos Sinos cai e a memória dos portões volta.
 ## Lá espera o Flagelado (scripts/penitent_boss.gd), que só a revelação mostra ser o próprio Penitente. Beatriz não entra com ele: o vale só deixa passar
@@ -903,14 +920,14 @@ func _spawn_enemies() -> void:
 	final_boss = null
 	for drop in get_tree().get_nodes_in_group("guilt_drops"): drop.queue_free()
 	for d in enemy_defs:
-		var e = EnemyScript.new()
+		var e = new_enemy(d[0])
 		e.setup(d[0], Vector2(d[1], d[2]), d[3], player)
 		e.killed.connect(_on_enemy_killed)
 		add_child(e)
 	exploration.spawn_enemies()
 	_criar_criaturas_aprovadas()
 	if not boss_defeated:
-		var b = EnemyScript.new()
+		var b = new_enemy(2)
 		b.setup(2, Vector2(4380.0, GROUND_Y), 0.0, player)
 		b.killed.connect(_on_enemy_killed)
 		add_child(b)
@@ -918,7 +935,7 @@ func _spawn_enemies() -> void:
 		boss = b
 	# O chefe final é criado por último: fica no Vale e só desperta lá.
 	if not final_defeated:
-		var fb = FinalBossScript.new()
+		var fb = new_enemy(9, FinalBossScript)
 		fb.setup(9, VALE_BOSS_POS, 0.0, player)
 		fb.room_id = "vale"
 		fb.killed.connect(_on_enemy_killed)
@@ -1820,7 +1837,7 @@ func knows_alba() -> bool:
 ## As criaturas aprovadas usam o mesmo ciclo de descanso e reaparecimento do restante do ato.
 func _criar_criaturas_aprovadas() -> void:
 	for dados in preload("res://scripts/act_one_layout.gd").criaturas_aprovadas():
-		var criatura=CriaturaGoyaScript.new()
+		var criatura=new_enemy(dados[1], CriaturaGoyaScript)
 		criatura.setup(dados[1],Vector2(dados[2],dados[3]),dados[4],player)
 		criatura.room_id=dados[0]
 		if dados.size()>5:criatura.group=int(dados[5])

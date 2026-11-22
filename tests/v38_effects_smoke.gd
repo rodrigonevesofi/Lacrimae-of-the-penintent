@@ -42,7 +42,7 @@ func run() -> void:
  p.impact_direction=Vector2.ZERO;p.take_hit(2,p.position.x-30,null,false)
  expect(p.impact_direction.x>0,"impacto vindo da esquerda define tremor para a direita")
  game.reduced_pulses=false
- var e=game.EnemyScript.new();e.setup(0,Vector2(1200,600),0,p);game.add_child(e)
+ var e=game.new_enemy(0);e.setup(0,Vector2(1200,600),0,p);game.add_child(e)
  e.set_physics_process(false);e.state="idle";e.velocity=Vector2.ZERO
  var ev=e.get_node("CombatVisuals")
  ev._process(0.01)

@@ -38,7 +38,7 @@ func run() -> void:
 	p.camera.position_smoothing_enabled = false
 	game.area_t = 0.0
 	game.toast_t = 0.0
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(3)
 	e.setup(3, Vector2(950, 600), 0, p)
 	game.add_child(e)
 	e.set_physics_process(false)

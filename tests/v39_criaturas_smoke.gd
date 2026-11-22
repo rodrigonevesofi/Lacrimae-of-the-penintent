@@ -14,7 +14,7 @@ func quadros(quantidade:int) -> void:
   await physics_frame
   await process_frame
 func criar(tipo:int,x:float=1400,y:float=600):
- var criatura=jogo.CriaturaGoyaScript.new()
+ var criatura=jogo.new_enemy(tipo, jogo.CriaturaGoyaScript)
  criatura.setup(tipo,Vector2(x,y),70,pessoa)
  criatura.room_id=jogo.exploration.room
  jogo.add_child(criatura)

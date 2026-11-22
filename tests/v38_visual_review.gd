@@ -100,12 +100,12 @@ func run() -> void:
  game.reduced_pulses=true;v._process(0.01)
  await capture("14-reduzir-pulsos","Reduzir pulsos · luz do aparo desativada")
  game.reduced_pulses=false;p.parry_hit=false;p.state="idle";p._update_animation()
- var foe=game.EnemyScript.new();foe.setup(0,Vector2(31730,600),0,p);game.add_child(foe);foe.room_id="vale";foe.set_physics_process(false);foe.spawn_opacity=1
+ var foe=game.new_enemy(0);foe.setup(0,Vector2(31730,600),0,p);game.add_child(foe);foe.room_id="vale";foe.set_physics_process(false);foe.spawn_opacity=1
  foe._die();foe.death_age=0.65;foe._process(0);foe.get_node("CombatVisuals").set_process(false);foe.get_node("CombatVisuals")._process(0.01)
  await dissolve_contact(foe)
  await capture("15-cinza-morte","Morte comum · cinzas de baixo para cima")
  foe.queue_free()
- var breathing_foe=game.EnemyScript.new();breathing_foe.setup(3,Vector2(31730,600),0,p);game.add_child(breathing_foe);breathing_foe.room_id="vale";breathing_foe.set_physics_process(false);breathing_foe.state="idle";breathing_foe.velocity=Vector2.ZERO;breathing_foe.spawn_opacity=1
+ var breathing_foe=game.new_enemy(3);breathing_foe.setup(3,Vector2(31730,600),0,p);game.add_child(breathing_foe);breathing_foe.room_id="vale";breathing_foe.set_physics_process(false);breathing_foe.state="idle";breathing_foe.velocity=Vector2.ZERO;breathing_foe.spawn_opacity=1
  await frames(90)
  await capture("19-respiracao","Criatura parada · Tween de respiração · escala vertical +1,2%")
  breathing_foe.queue_free()

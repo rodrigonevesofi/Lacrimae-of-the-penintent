@@ -79,13 +79,14 @@ var arena_right := 4780.0
 var rain_t := 0.0
 var phase := 1
 var last_attack := -1
-var ledge: RayCast2D
-var animator
+# Nós de scenes/inimigos/*.tscn. Ledge só existe nos andantes; Light, nos voadores e no chefe.
+@onready var ledge: RayCast2D = get_node_or_null("Ledge")
+@onready var animator = $Animator
 var spawn_opacity := 0.0
 var hit_pause := 0.0
 var cast_emitted := false
 var appearance: Texture2D
-var light: PointLight2D
+@onready var light: PointLight2D = get_node_or_null("Light")
 var group := -1
 var partner = null
 var duel_t := 0.0
@@ -124,6 +125,8 @@ var attack_parryable := false
 var attack_warning := ""
 var attack_target := Vector2.ZERO
 var secondary_velocity := Vector2.ZERO
+## Cor da luz dos voadores que fogem do azul padrão da cena inimigo_voador.tscn.
+const FLYER_GLOW := {5: Color(0.55, 0.9, 0.6), 6: Color(0.78, 0.65, 1.0)}
 const SECONDARY_WINDUPS := {0: 0.65, 1: 0.65, 3: 0.85, 4: 0.60, 5: 0.70, 6: 0.75, 7: 0.85, 8: 0.80}
 
 
@@ -151,12 +154,12 @@ func humanoid() -> bool:
 	return family == "walker"
 
 
+## A estrutura vem da cena da família (scenes/inimigos/): crie inimigos com game.new_enemy(kind),
+## que escolhe a cena certa, e chame setup() antes de add_child(). Os dados de cada tipo continuam em TYPES.
 func _ready() -> void:
-	var visuals = load("res://scripts/combat_visuals.gd").new()
-	visuals.name = "CombatVisuals"
-	add_child(visuals)
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var t: Dictionary = TYPES[kind]
+	if (ledge != null) != (family == "walker") or (light != null) != (family == "flyer" or kind == 2):
+		push_error("Inimigo %d (%s) criado com a cena errada: use game.new_enemy(kind)." % [kind, family])
 	if kind == 2:
 		var guardian := AtlasTexture.new()
 		guardian.atlas = load("res://assets/guardian.png")
@@ -168,34 +171,13 @@ func _ready() -> void:
 		atlas.region = Rect2((int(t.col) + 1) * 384, 0, 384, 1000)
 		atlas.filter_clip = true
 		appearance = atlas
-	animator = preload("res://scripts/actor_animation.gd").new()
 	animator.configure(t.actor, t.scale)
-	add_child(animator)
-	add_to_group("enemies")
-	collision_layer = 4
-	collision_mask = 1
-	var cs := CollisionShape2D.new()
-	var rs := RectangleShape2D.new()
-	rs.size = body_size
-	cs.shape = rs
+	# Cada tipo tem seu corpo; a forma é local a cada inimigo (resource_local_to_scene).
+	var cs: CollisionShape2D = $CollisionShape2D
+	cs.shape.size = body_size
 	cs.position = Vector2(0, -body_size.y / 2.0)
-	add_child(cs)
-	if family == "walker":
-		ledge = RayCast2D.new()
-		ledge.collision_mask = 1
-		ledge.enabled = true
-		add_child(ledge)
-	if family == "flyer":
-		var glow := Color(0.6, 0.78, 1.0)
-		if kind == 5: glow = Color(0.55, 0.9, 0.6)
-		if kind == 6: glow = Color(0.78, 0.65, 1.0)
-		light = Util.make_light(glow, 0.6, 1.4)
-		light.position = Vector2(0, -26)
-		add_child(light)
-	if kind == 2:
-		light = Util.make_light(Color(0.95, 0.35, 0.3), 0.55, 3.0)
-		light.position = Vector2(0, -100)
-		add_child(light)
+	if family == "flyer" and FLYER_GLOW.has(kind):
+		light.color = FLYER_GLOW[kind]
 
 
 func hurt_rect() -> Rect2:

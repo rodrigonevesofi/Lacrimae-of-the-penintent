@@ -29,7 +29,7 @@ func reset() -> void:
 	p.has_weapon = true
 	await frames(4)
 func enemy_at(pos: Vector2, kind: int = 0):
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(kind)
 	e.setup(kind, pos, 0, p)
 	e.room_id = "city"
 	game.add_child(e)

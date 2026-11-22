@@ -50,7 +50,7 @@ func run() -> void:
 	for kind in [0,1]:
 		var pos := Vector2(3070,600) if kind == 0 else Vector2(4030,515)
 		place(pos)
-		var victim = game.EnemyScript.new()
+		var victim = game.new_enemy(kind)
 		victim.setup(kind,pos + Vector2(55,0),0,game.player)
 		game.add_child(victim)
 		victim.set_physics_process(false)

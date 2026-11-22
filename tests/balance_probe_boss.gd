@@ -22,7 +22,7 @@ func trial(number: int):
 	p.hits={"1":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0},"2":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0},"3":{"slam":0,"wave":0,"rain":0,"spikes":0,"unknown":0}}
 	p.damage_by_phase={"1":0.0,"2":0.0,"3":0.0}
 	p.revive(Vector2(4050,600));p.has_weapon=true;p.hp=100;p.max_hp=100;p.flasks=3;p.penitence="none";p.culpa=0
-	boss=Actor.new();boss.setup(2,Vector2(4380,600),0,p);boss.announced=true
+	boss=game.new_enemy(2, Actor);boss.setup(2,Vector2(4380,600),0,p);boss.announced=true
 	boss.display_name="Guardião dos Sinos";game.add_child(boss);game.boss=boss;p.boss=boss
 	boss.awaken()
 	var elapsed=0.0;var next_attack=.3;var next_heal=0.0;var pending=-1.0

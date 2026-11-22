@@ -64,7 +64,7 @@ func run() -> void:
 	Input.action_press("jump")
 	await frames(10)
 	expect(not p.is_on_floor() and p.animator.animation=="air_drift","armed jump retains textured weapon in aerial drawings")
-	var victim=game.EnemyScript.new()
+	var victim=game.new_enemy(1)
 	victim.setup(1,p.position+Vector2(55,-55),0,p)
 	game.add_child(victim)
 	victim.set_physics_process(false)
@@ -88,7 +88,7 @@ func run() -> void:
 	expect(p.state=="idle" and p.is_on_floor() and not p.aerial_after_cut,"landing recovery returns to grounded control")
 	expect(p.sword.visible,"weapon returns to grip after aerial recovery")
 	# Espelha a área dedicada de golpe aéreo contra um alvo à esquerda.
-	var left_target=game.EnemyScript.new()
+	var left_target=game.new_enemy(1)
 	# Mantém o alvo abaixo da plataforma elevada, sem uma parede entre os dois.
 	left_target.setup(1,p.position+Vector2(-55,-20),0,p)
 	game.add_child(left_target)

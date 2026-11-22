@@ -20,7 +20,7 @@ func wait_state(e,s: String,limit: int) -> bool:
 		await frames(1)
 	return e.state == s
 func spawn(kind: int,pos: Vector2,rng: float,group: int = -1):
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(kind)
 	e.setup(kind,pos,rng,p)
 	e.group = group
 	game.add_child(e)
@@ -260,10 +260,10 @@ func run() -> void:
 	expect(p.begin_execution(flyer) and absf(flyer.position.y - 600.0) < 1.0,"a stunned flyer is brought down to ground level for its execution")
 	await frames(90)
 	await clear()
-	var walker = game.EnemyScript.new()
+	var walker = game.new_enemy(0)
 	expect(walker.humanoid(),"walkers use the humanoid execution clip")
 	walker.free()
-	var weeper = game.EnemyScript.new()
+	var weeper = game.new_enemy(6)
 	weeper.setup(6,Vector2.ZERO,0,p)
 	expect(not weeper.humanoid(),"flyers use the weeper execution clip")
 	weeper.free()

@@ -13,7 +13,7 @@ func frames(n: int) -> void:
 		await physics_frame
 		await process_frame
 func spawn(kind: int, x: float = 960.0):
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(kind)
 	e.setup(kind, Vector2(x, 600), 0, game.player)
 	e.room_id = "city"
 	game.add_child(e)

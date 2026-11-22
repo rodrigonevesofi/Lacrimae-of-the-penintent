@@ -23,7 +23,7 @@ func execute(kind: int) -> Dictionary:
 	p.revive(Vector2(900,600))
 	p.facing = 1
 	await frames(3)
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(kind)
 	e.setup(kind,Vector2(950,600),0,p)
 	e.room_id = "city"
 	game.add_child(e)

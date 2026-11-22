@@ -68,7 +68,7 @@ func run() -> void:
 		for child in node.get_children():
 			if child is Actor and child.actor == "jato_arterial": pulse = true
 	expect(pulse,"jato arterial desenha o atlas animado durante os pulsos")
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(0)
 	e.setup(0,Vector2(950,600),0,p)
 	game.add_child(e)
 	e.set_physics_process(false)

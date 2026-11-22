@@ -138,7 +138,7 @@ func update_gate() -> void:
 
 func spawn_enemies() -> void:
 	for d in Layout.enemies():
-		var e = game.EnemyScript.new()
+		var e = game.new_enemy(d[1])
 		e.setup(d[1],Vector2(d[2],d[3]),d[4],game.player)
 		e.room_id = d[0]
 		if d.size() > 5: e.group = int(d[5])
@@ -249,7 +249,7 @@ func _start_arena(a: Dictionary) -> void:
 func _spawn_wave(a: Dictionary) -> void:
 	arena_enemies.clear()
 	for d in a.waves[arena_wave]:
-		var e = game.EnemyScript.new()
+		var e = game.new_enemy(d[0])
 		e.setup(d[0],Vector2(d[1],d[2]),d[3],game.player)
 		e.room_id = a.room
 		e.killed.connect(game._on_enemy_killed)

@@ -29,7 +29,7 @@ func tap(a: String) -> void:
 	Input.action_release(a)
 
 func inimigo(kind: int, onde: Vector2):
-	var e = Inimigo.new()
+	var e = game.new_enemy(kind)
 	e.setup(kind, onde, 120.0, b)
 	e.room_id = game.exploration.room
 	game.add_child(e)

@@ -43,7 +43,7 @@ func run() -> void:
 	expect(absf(b.global_position.x - p.global_position.x) < 260.0,"she follows the Penitent (%.0f px apart)" % absf(b.global_position.x - p.global_position.x))
 	expect(absf(p.camera_focus_x) > 5.0, "a câmera mantém o enquadramento compartilhado entre quadros")
 	# Inimigos escolhem o penitente mais próximo
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(0)
 	e.setup(0,Vector2(b.global_position.x - 80.0,600),0,p)
 	e.room_id = "city"
 	game.add_child(e)

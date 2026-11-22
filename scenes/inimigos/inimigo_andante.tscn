@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/inimigos/inimigo.tscn" id="1_base"]
+
+[node name="InimigoAndante" instance=ExtResource("1_base")]
+
+[node name="Ledge" type="RayCast2D" parent="."]

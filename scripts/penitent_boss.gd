@@ -184,7 +184,7 @@ func _summon(count: int) -> void:
 		if minions.size() >= MINIONS_MAX: break
 		var side := -1.0 if i % 2 == 0 else 1.0
 		var x := clampf(global_position.x + side * (150.0 + 70.0 * i), arena_left + 60.0, arena_right - 60.0)
-		var m = game.CriaturaGoyaScript.new()
+		var m = game.new_enemy(11, game.CriaturaGoyaScript)
 		m.setup(11, Vector2(x, 600.0), 80.0, player)
 		m.room_id = "vale"
 		m.group = 800

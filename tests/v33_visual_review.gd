@@ -74,7 +74,7 @@ func run() -> void:
 	for kind in [3, 4, 5, 6, 7, 8]:
 		p.revive(Vector2(900, 600))
 		p.state = "idle"
-		var e = game.EnemyScript.new()
+		var e = game.new_enemy(kind)
 		e.setup(kind, Vector2(950, 600), 0, p)
 		e.room_id = "city"
 		game.add_child(e)

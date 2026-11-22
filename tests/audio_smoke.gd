@@ -67,7 +67,7 @@ func run() -> void:
 	game.player.has_weapon = true
 	for e in get_nodes_in_group("enemies"): e.queue_free()
 	await frames(2)
-	var devotee = game.EnemyScript.new()
+	var devotee = game.new_enemy(0)
 	devotee.setup(0,game.player.global_position + Vector2(80,0),0,game.player)
 	game.add_child(devotee)
 	devotee.set_physics_process(false)

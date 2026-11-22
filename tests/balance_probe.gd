@@ -54,7 +54,7 @@ func trial(spec: Dictionary, trial_seed: int):
 	p.roll_cd=0
 	p.culpa=0
 	p.lagrimas=0
-	var enemy=Enemy.new()
+	var enemy=game.new_enemy(spec.id)
 	enemy.setup(spec.id,Vector2(1480,600),150,p)
 	game.add_child(enemy)
 	p.set_physics_process(false)
