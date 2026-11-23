@@ -18,7 +18,7 @@ var knock_count := 0
 ## v43: medido numa luta de 14 s (tools/medir_mixagem.gd), os efeitos estavam em -8,4 LUFS e a música em -23,2:
 ## a trilha sumia. Agora a música sobe 8 dB, os efeitos descem 6 e o limitador não soma mais 3 dB a tudo.
 ## Alvo: música perto de -18 LUFS e efeitos de luta logo acima dela.
-const MIX_TRIM_DB := {"tracks": 9.0, "action": -10.0, "scene": -3.0, "creature": -8.0, "ambience": -1.0}
+const MIX_TRIM_DB := {"tracks": 11.0, "action": -18.0, "scene": -6.0, "creature": -15.0, "ambience": -3.0}
 ## Sons que se repetem muito numa luta (respingos, jatos) descem mais, para não virar uma parede de ruído.
 const TRIM_NOME := {"respingo_chao": -6.0, "sangue_jato": -3.0, "carne_rasga": -3.0, "step": -2.0, "osso_quebra": -2.0}
 

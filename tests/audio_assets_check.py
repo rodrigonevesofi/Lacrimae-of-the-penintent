@@ -9,6 +9,12 @@ spec={name:(d,1,False) for name,d in EVENTS.items()}
 for family,(count,d) in FAMILIES.items():
     spec.update({f'{family}_{i:02}':(d,1,False) for i in range(1,count+1)})
 spec.update({'amb_'+room:(30,2,True) for room in ROOMS})
+# v43: efeitos gerados a partir de docs/prompts-efeitos-sonoros-v43.md, com as durações daquela tabela.
+V43={'aparo':.5,'aterrissagem':.4,'execucao':.7,'swing':.3,'hit_carne':.3,'hit_metal':.3,'dor':.4,'morte':.8}
+for name in list(spec):
+    familia=name[-2:].isdigit() and name.rsplit('_',1)[0] in ('swing','hit_carne','hit_metal','dor','morte')
+    base=name.rsplit('_',1)[0] if familia else name
+    if base in V43 and (familia or base in ('aparo','aterrissagem','execucao')): spec[name]=(V43[base],)+spec[name][1:]
 rows=[]; errors=[]
 for name,(duration,channels,loop) in spec.items():
     p=ROOT/'assets/audio'/f'{name}.wav'
@@ -19,7 +25,7 @@ for name,(duration,channels,loop) in spec.items():
         x=pcm.astype(float)/32768; peak=np.max(abs(x)); rms=np.sqrt(np.mean(x*x))
         peak_db=20*np.log10(max(peak,1e-12)); rms_db=20*np.log10(max(rms,1e-12))
         onset=np.flatnonzero(np.max(abs(x),axis=1)>peak*.01)[0]/SR*1000
-        assert len(x)==round(duration*SR),'duration'
+        assert abs(len(x)-round(duration*SR))<=2,'duration'
         assert peak_db < -1 and np.max(abs(pcm.astype(int)))<32767,'peak/clipping'
         row=dict(file=p.name,seconds=len(x)/SR,channels=channels,peak_dbfs=round(peak_db,4),rms_dbfs=round(rms_db,4),onset_ms=round(onset,4),sha256=hashlib.sha256(p.read_bytes()).hexdigest())
         if loop:

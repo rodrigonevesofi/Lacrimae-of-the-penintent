@@ -11,7 +11,8 @@ func run() -> void:
 	var game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	var sound = game.soundscape
-	var durations := {"sangue_jato":0.4,"carne_rasga":0.35,"osso_quebra":0.3,"respingo_chao":0.2,"lamina_sai":0.4,"corpo_cai_carne":0.7,"corpo_cai_armadura":0.9,"esquiva_perfeita":0.5,"aviso_aparavel":0.25,"aviso_perigo":0.35,"execucao_impacto":0.9}
+	# v43: durações da tabela de docs/prompts-efeitos-sonoros-v43.md (efeitos gerados de novo).
+	var durations := {"sangue_jato":0.5,"carne_rasga":0.4,"osso_quebra":0.3,"respingo_chao":0.25,"lamina_sai":0.5,"corpo_cai_carne":0.6,"corpo_cai_armadura":0.6,"esquiva_perfeita":0.5,"aviso_aparavel":0.4,"aviso_perigo":0.5,"execucao_impacto":0.9}
 	for event in durations:
 		var names: Array = sound.FAMILIES[event] if sound.FAMILIES.has(event) else [event]
 		for name in names:
