@@ -30,7 +30,8 @@ func _initialize() -> void:
 				if code.contains(asset): users.append(f)
 	expect(users.is_empty(),"no other script shows the face %s" % str(users))
 	expect(ResourceLoader.exists("res://assets/close/close_01_mascarado.png"),"the masked close of the Penitent is ready for the story encounters")
-	var gates := FileAccess.get_file_as_string("res://scripts/exploration.gd")
+	# Desde a separação por salas, os textos de cada sala moram em scenes/salas/<sala>.tscn.
+	var gates := FileAccess.get_file_as_string("res://scripts/exploration.gd") + FileAccess.get_file_as_string("res://scenes/salas/court.tscn")
 	expect(gates.contains("selo raspado") and gates.contains("raspado a faca"),"the seals at the gates are scraped: who ordered it stays a question")
 	print("STORY_DECISIONS: %d checks, %d failures" % [checks,failures])
 	quit(0 if failures == 0 else 1)

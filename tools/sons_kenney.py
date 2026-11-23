@@ -56,6 +56,13 @@ som("oferenda", 1.2, [L(i("impactBell_heavy_001"), 0, 0, .6), L(r("handleCoins2"
 for k in range(4):
     som(f"step_pedra_{k+1:02}", .15, [L(i(f"footstep_concrete_00{k}"), 0, 0, .9), L(i(f"impactPlate_light_00{k}"), 0, -16, 1.0)], 6000, 60)
 som("aterrissagem", .4, [L(i("footstep_concrete_004"), 0, 0, .75), L(i("impactPlate_light_004"), 20, -8, .9), L(i("impactSoft_heavy_004"), 0, -6, .8)], 5000)
+# --- passos e pulo (v44): passos de madeira e de osso, e o pulo de armadura
+for k in range(3):
+    som(f"step_madeira_{k+1:02}", .15, [L(i(f"footstep_wood_00{k}"), 0, 0, .9), L(i(f"impactPlate_light_00{k}"), 0, -18, 1.0)], 6000, 60)
+    som(f"step_osso_{k+1:02}", .15, [L(i(f"footstep_concrete_00{k+1}"), 0, 0, .85), L(i(f"impactWood_light_00{k}"), 0, -9, 1.2), L(i(f"impactGlass_light_00{k}"), 10, -22, .7)], 7000, 60)
+    som(f"jump_{k+1:02}", .3, [L(i(f"footstep_concrete_00{k+2}"), 0, 0, .75), L(r(f"cloth{k+1}"), 20, -5, .9), L(i(f"impactPlate_light_00{k+1}"), 10, -14, .9)], 6500, 50)
+som("jump", .3, [L(i("footstep_concrete_001"), 0, 0, .75), L(r("cloth4"), 20, -5, .9), L(i("impactPlate_light_000"), 10, -14, .9)], 6500, 50)
+som("step", .15, [L(i("footstep_concrete_004"), 0, 0, .9), L(i("impactPlate_light_004"), 0, -16, 1.0)], 6000, 60)
 # dor e morte: a Kenney não tem vozes; ficam os sons anteriores, no tamanho da tabela.
 for k in range(3):
     som(f"dor_{k+1:02}", .4, [L(a(f"dor_{k+1:02}"))], 8000)

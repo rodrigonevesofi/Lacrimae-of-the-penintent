@@ -157,16 +157,10 @@ func _draw_play(vs: Vector2) -> void:
 		draw_polygon(PackedVector2Array([Vector2(0,vs.y-band),Vector2(vs.x,vs.y-band),Vector2(vs.x,vs.y),Vector2(0,vs.y)]),PackedColorArray([clear,clear,edge,edge]))
 		draw_polygon(PackedVector2Array([Vector2(0,0),Vector2(band,0),Vector2(band,vs.y),Vector2(0,vs.y)]),PackedColorArray([edge,clear,clear,edge]))
 		draw_polygon(PackedVector2Array([Vector2(vs.x-band,0),Vector2(vs.x,0),Vector2(vs.x,vs.y),Vector2(vs.x-band,vs.y)]),PackedColorArray([clear,edge,edge,clear]))
-	# Sangue na lente: gotas que espirraram na tela e escorrem.
+	# Sangue na lente: respingos irregulares com gotas soltas em volta e um filete que escorre.
+	# (Círculos lisos com brilho pareciam balões; o contorno agora é recortado e sem reflexo.)
 	for g in game.gotas_tela:
-		var k: float = g.t / g.vida
-		var a: float = (1.0 - smoothstep(0.55, 1.0, k)) * 0.85
-		var c: Vector2 = g.p + Vector2(0.0, g.escorre * g.t)
-		var r: float = g.r * (1.0 + 0.15 * minf(g.t * 6.0, 1.0))
-		draw_circle(c, r, Color(0.36, 0.0, 0.02, a * 0.9))
-		draw_circle(c + Vector2(-r * 0.25, -r * 0.2), r * 0.62, Color(0.55, 0.02, 0.05, a * 0.8))
-		draw_rect(Rect2(c.x - r * 0.18, c.y, r * 0.36, g.escorre * g.t * 1.6 + r * 0.6), Color(0.38, 0.0, 0.02, a * 0.75))
-		draw_circle(c + Vector2(-r * 0.35, -r * 0.4), r * 0.16, Color(0.95, 0.5, 0.5, a * 0.35))
+		_respingo_tela(g)
 	if game.clarao_t > 0.0:
 		var ca: Color = game.clarao_cor
 		ca.a *= game.clarao_t / game.clarao_dur
@@ -536,3 +530,36 @@ func _draw_penitences(vs: Vector2) -> void:
 		_text(Vector2(250, y + 34), row_title, 23, GOLD)
 		_text(Vector2(250, y + 68), rows[i][1], 18, Color("d7cbbd"))
 	_text(Vector2(0, 650), _k("V  ·  Fechar     ESC  ·  Pausar", "L3  ·  Fechar     START  ·  Pausar"), 18, Color("aea493"), HORIZONTAL_ALIGNMENT_CENTER, vs.x)
+
+func _respingo_tela(g: Dictionary) -> void:
+	var k: float = g.t / g.vida
+	var a: float = (1.0 - smoothstep(0.55, 1.0, k)) * 0.8
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(g.get("s", 1))
+	var r: float = g.r * (1.0 + 0.12 * minf(g.t * 6.0, 1.0))
+	var c: Vector2 = g.p
+	var escuro := Color(0.26, 0.0, 0.015, a)
+	var vivo := Color(0.46, 0.02, 0.04, a * 0.85)
+	# Contorno recortado: raio variável e algumas pontas, como sangue que bateu e se espalhou.
+	var pts := PackedVector2Array()
+	var lados := 18
+	for i in range(lados):
+		var ang := TAU * float(i) / float(lados)
+		var raio := r * rng.randf_range(0.62, 1.05)
+		if rng.randf() < 0.22: raio = r * rng.randf_range(1.25, 1.7)
+		pts.append(c + Vector2(cos(ang), sin(ang)) * raio)
+	draw_colored_polygon(pts, escuro)
+	var miolo := PackedVector2Array()
+	for p in pts: miolo.append(c + (p - c) * 0.55 + Vector2(-r * 0.08, -r * 0.08))
+	draw_colored_polygon(miolo, vivo)
+	# Gotas soltas em volta.
+	for i in range(rng.randi_range(3, 7)):
+		var ang := rng.randf() * TAU
+		var dist := r * rng.randf_range(1.3, 2.4)
+		draw_circle(c + Vector2(cos(ang), sin(ang)) * dist, r * rng.randf_range(0.07, 0.18), escuro)
+	# Filete que escorre, mais fino embaixo, com uma conta na ponta.
+	var desce: float = g.escorre * g.t * 1.6 + r * 0.5
+	var x0 := c.x + rng.randf_range(-r * 0.3, r * 0.3)
+	var filete := PackedVector2Array([Vector2(x0 - r * 0.16, c.y), Vector2(x0 + r * 0.16, c.y), Vector2(x0 + r * 0.06, c.y + desce), Vector2(x0 - r * 0.06, c.y + desce)])
+	draw_colored_polygon(filete, escuro)
+	draw_circle(Vector2(x0, c.y + desce), r * 0.12, escuro)

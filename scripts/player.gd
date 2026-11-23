@@ -34,8 +34,9 @@ const MAX_FALL := 950.0
 # Nós montados em scenes/player.tscn (edite-os pelo editor do Godot).
 @onready var animator = $Animator
 @onready var sword: Sprite2D = $Sword
-const SWORD_GRIP := Vector2(520, 360)
-const SWORD_SCALE := 0.035
+# Ponto do cabo (na textura) que fica dentro do punho fechado: logo atrás da guarda, que encosta no punho.
+const SWORD_GRIP := Vector2(545, 362)
+const SWORD_SCALE := 0.042
 ## Posição do punho em cada desenho de hero_motion.png (coordenadas da célula de 256 x 256), medida quadro a quadro.
 ## A empunhadura ocupa esse ponto para a mão fechar no cabo, em vez de ficar solta ao lado.
 const IDLE_GRIPS := [Vector2(177,159),Vector2(184,157),Vector2(183,154),Vector2(185,147),Vector2(180,156),Vector2(181,158)]
@@ -199,6 +200,7 @@ func _ready() -> void:
 	sword.offset = -SWORD_GRIP
 	# Acompanha o desenho assim que muda: o punho se desloca até 30 pixels entre quadros de corrida.
 	animator.frame_changed.connect(_update_sword)
+	animator.frame_changed.connect(_passo_no_quadro)
 	animator.animation_changed.connect(_update_sword)
 	# A câmera do Penitente enquadra o mundo; a câmera da parceira fica desligada.
 	if is_partner: camera.enabled = false
@@ -603,7 +605,9 @@ func _physics_process(delta: float) -> void:
 	prev_vy = velocity.y
 	move_and_slide()
 	footstep_t -= delta
-	if is_on_floor() and absf(velocity.x) > 40 and state == "idle" and footstep_t <= 0:
+	# Correndo, o passo toca no quadro em que o pé encosta no chão (_passo_no_quadro); o relógio fica para
+	# os outros casos, como andar empurrado ou animações sem quadros de corrida.
+	if is_on_floor() and absf(velocity.x) > 40 and state == "idle" and footstep_t <= 0 and animator.animation != "run":
 		get_tree().call_group("game", "play_sfx", "step")
 		footstep_t = 0.28
 
@@ -1534,6 +1538,15 @@ func can_drop() -> bool:
 	return false
 
 
+## Quadros da corrida em que um pé encosta no chão (um por pé, em ciclos de seis quadros).
+const PASSO_QUADROS := [1, 4]
+func _passo_no_quadro() -> void:
+	if animator.animation != "run" or not is_on_floor() or state != "idle" or absf(velocity.x) < 40.0: return
+	if not PASSO_QUADROS.has(animator.frame % 6): return
+	get_tree().call_group("game", "play_sfx", "step")
+	footstep_t = 0.28
+
+
 func _update_sword() -> void:
 	if sword == null: return
 	if lance != null: lance.visible = false
@@ -1548,7 +1561,9 @@ func _update_sword() -> void:
 	var wrist: Vector2 = grips[clampi(animator.frame, 0, grips.size() - 1)]
 	# Os desenhos já respiram e se movem; a espada acompanha o punho sem movimento adicional.
 	var hand := (wrist-Vector2(128,250))*0.44
-	var angle := 0.75
+	# A lâmina acompanha o braço: punho alto e à frente leva a ponta para a frente; punho baixo, para baixo.
+	var angle := 0.85
+	if animator.animation == "run": angle = clampf(0.75 + (wrist.y - 125.0) * 0.015, 0.3, 1.1)
 	# Mantém a ponta acima do piso de colisão durante o movimento baixo da espada na corrida.
 	var blade_length := (2050-SWORD_GRIP.x)*SWORD_SCALE
 	angle = minf(angle,asin(clampf((-3-hand.y)/blade_length,-1,1)))

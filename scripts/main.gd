@@ -1137,7 +1137,7 @@ func sangue_na_tela(quantas: int) -> void:
 		if gotas_tela.size() >= 40: gotas_tela.pop_front()
 		var borda := randf() < 0.7
 		var x := randf_range(0.0, vs.x) if not borda else (randf_range(0.0, vs.x * 0.22) if randf() < 0.5 else randf_range(vs.x * 0.78, vs.x))
-		gotas_tela.append({"p": Vector2(x, randf_range(vs.y * 0.05, vs.y * 0.75)), "r": randf_range(8.0, 30.0), "t": 0.0, "vida": randf_range(2.2, 3.6), "escorre": randf_range(10.0, 34.0)})
+		gotas_tela.append({"p": Vector2(x, randf_range(vs.y * 0.05, vs.y * 0.75)), "r": randf_range(8.0, 30.0), "t": 0.0, "vida": randf_range(2.2, 3.6), "escorre": randf_range(10.0, 34.0), "s": randi()})
 
 func spawn_fx(pos: Vector2, col: Color) -> void:
 	var effect_anchor := Node2D.new()

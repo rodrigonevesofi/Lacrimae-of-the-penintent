@@ -196,28 +196,28 @@
       "file": "step_madeira_01.wav",
       "seconds": 0.15,
       "channels": 1,
-      "peak_dbfs": -3.3964,
-      "rms_dbfs": -18.2092,
-      "onset_ms": 0.0227,
-      "sha256": "3ad5f33d156a1c2edd2c304ac2c5ee27d152d8a16c337d9ff53c4b3bd405114b"
+      "peak_dbfs": -3.0492,
+      "rms_dbfs": -20.0248,
+      "onset_ms": 0.2494,
+      "sha256": "dda639122efd006f08c6d2be9005c7b48cc618f433c301305e5dc00bf0f6cc8c"
     },
     {
       "file": "step_madeira_02.wav",
       "seconds": 0.15,
       "channels": 1,
-      "peak_dbfs": -2.113,
-      "rms_dbfs": -18.2081,
-      "onset_ms": 0.068,
-      "sha256": "8c9eebccfb524d7bbb882ed86491f971f4adba93a2d0b210a3ed2b30d539d317"
+      "peak_dbfs": -3.0,
+      "rms_dbfs": -19.2021,
+      "onset_ms": 0.1814,
+      "sha256": "412c5e944f4e10b3ce1e68c31739ad6cc748f12335d9ddb884ceee81096a7fb8"
     },
     {
       "file": "step_madeira_03.wav",
       "seconds": 0.15,
       "channels": 1,
-      "peak_dbfs": -4.1079,
-      "rms_dbfs": -18.9229,
-      "onset_ms": 0.0454,
-      "sha256": "04af7a479695d1c7769728e94db5908aa41a37bcf3a0ad92887ed506b71023b3"
+      "peak_dbfs": -3.0,
+      "rms_dbfs": -18.5459,
+      "onset_ms": 0.2041,
+      "sha256": "40b250606991464c8a520126cbeae26350ef5b0db5f3d6aa1ac351c2a8a4cf20"
     },
     {
       "file": "step_agua_01.wav",
@@ -250,28 +250,28 @@
       "file": "step_osso_01.wav",
       "seconds": 0.15,
       "channels": 1,
-      "peak_dbfs": -7.6051,
-      "rms_dbfs": -22.371,
-      "onset_ms": 0.0907,
-      "sha256": "e929b34440c01e043591f37115e00108705925fe0ae108346953431bfe2ce30f"
+      "peak_dbfs": -3.2445,
+      "rms_dbfs": -24.3633,
+      "onset_ms": 0.1361,
+      "sha256": "71afc7e3e70c21bb4064c331edc7ab28243d51e3136fa9eeaed915e1e2043dda"
     },
     {
       "file": "step_osso_02.wav",
       "seconds": 0.15,
       "channels": 1,
-      "peak_dbfs": -4.4232,
-      "rms_dbfs": -20.9007,
-      "onset_ms": 0.068,
-      "sha256": "df3e9ddbb28402e6b2122248b1c9abf076d3c31f04046bf0c2c6a7f6f498cae4"
+      "peak_dbfs": -4.8884,
+      "rms_dbfs": -24.1695,
+      "onset_ms": 0.1361,
+      "sha256": "39191d5ab4c2dbc8d2ca49d9316a71b9e90eb9716f76caea95a2209062b6b2a0"
     },
     {
       "file": "step_osso_03.wav",
       "seconds": 0.15,
       "channels": 1,
-      "peak_dbfs": -5.2529,
-      "rms_dbfs": -20.8428,
-      "onset_ms": 0.068,
-      "sha256": "0262770afaa848b48bef3c6967537773f9a5e80c8d995c742df6f37540ec2113"
+      "peak_dbfs": -3.0,
+      "rms_dbfs": -23.6819,
+      "onset_ms": 0.1361,
+      "sha256": "6326a38f39e1cf9cf9ba970e7fa8c4a2c7141ae6045d98fced9f46b8cf119d92"
     },
     {
       "file": "swing_01.wav",

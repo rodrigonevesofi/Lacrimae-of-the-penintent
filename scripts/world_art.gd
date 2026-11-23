@@ -16,6 +16,8 @@ var gate_memory: AtlasTexture
 const Layout = preload("res://scripts/act_one_layout.gd")
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
 var iria_animation
+## Espada fincada diante do túmulo: a mesma arte da espada na mão, reduzida uma vez com boa filtragem.
+var espada_fincada: ImageTexture
 ## A cor da pedra de cada sala, medida na própria pintura: [piso, parede].
 ## Galerias e alvenaria tomam a cor do piso; portas, altares e monumentos, a da parede.
 ## Antes tudo usava o mesmo cinza da cidade e parecia colado por cima da pintura.
@@ -181,15 +183,7 @@ func _draw() -> void:
 	for i in range(5):
 		draw_line(tumulo + Vector2(84 + i * 5, -10), tumulo + Vector2(82 + i * 5, -16), GOLD, 1)
 	if not game.player.has_weapon:
-		var x: float = game.SWORD_POS.x
-		var y: float = game.SWORD_POS.y
-		draw_line(Vector2(x, y - 3), Vector2(x, y - 73), Color("c1bfad"), 4)
-		draw_line(Vector2(x - 13, y - 57), Vector2(x + 13, y - 57), GOLD, 3)
-		draw_line(Vector2(x, y - 57), Vector2(x, y - 77), Color("5d342b"), 5)
-		draw_circle(Vector2(x, y - 79), 4, GOLD)
-		for i in range(5):
-			draw_line(Vector2(x, y - 47 + i * 7), Vector2(x + 5, y - 50 + i * 7), GOLD, 1)
-		draw_circle(Vector2(x, y - 47), 25 + sin(game.t * 2) * 3, Color(0.8, 0.63, 0.3, 0.04))
+		_desenhar_espada_fincada(game.SWORD_POS)
 	for altar in game.altars:
 		if altar.x < 4800: prop(0,altar,185)
 	for entry in game.lore: prop(2,Vector2(entry.x,600),120)
@@ -422,3 +416,37 @@ func draw_branch() -> void:
 	for i in range(22):
 		var pos := Vector2(b.position.x+fmod(i*131+game.t*3,b.size.x),floor_y-50-fmod(i*77,700))
 		draw_circle(pos,1,Color(0.8,0.72,0.57,0.16))
+
+## A espada do Penitente cravada no chão: lâmina enterrada, guarda e cabo à mostra, um monte de
+## terra rachada na base e uma luz fria que pulsa devagar, para o olhar achar a espada no escuro.
+func _desenhar_espada_fincada(pos: Vector2) -> void:
+	if espada_fincada == null:
+		var img: Image = load("res://assets/penitent_sword.png").get_image()
+		if img.is_compressed(): img.decompress()
+		img.resize(int(img.get_width() * 0.05), int(img.get_height() * 0.05), Image.INTERPOLATE_LANCZOS)
+		espada_fincada = ImageTexture.create_from_image(img)
+	var pulso := 0.5 + 0.5 * sin(game.t * 1.6)
+	var base := Vector2(pos.x, pos.y)
+	# Luz que desce sobre a espada e halo atrás do cabo.
+	var raio := PackedVector2Array([base + Vector2(-14, -150), base + Vector2(14, -150), base + Vector2(46, 0), base + Vector2(-46, 0)])
+	draw_colored_polygon(raio, Color(0.95, 0.85, 0.65, 0.05 + 0.03 * pulso))
+	for k in range(6):
+		draw_circle(base + Vector2(0, -72), 34.0 - k * 5.0, Color(1.0, 0.82, 0.55, (0.025 + 0.02 * pulso) * (k + 1) / 6.0))
+	# A ponta entra no chão e o monte de terra cobre a base, levemente inclinada.
+	var escala := 1.0
+	var ponta := Vector2(2050, 362) * 0.05
+	draw_set_transform(base + Vector2(3, 3), PI / 2.0 - 0.07, Vector2(escala, escala))
+	draw_texture(espada_fincada, -ponta)
+	draw_set_transform(Vector2.ZERO)
+	# Monte de terra, pedras soltas e rachaduras saindo da lâmina.
+	draw_colored_polygon(PackedVector2Array([base + Vector2(-34, 1), base + Vector2(-20, -6), base + Vector2(-6, -9), base + Vector2(8, -8), base + Vector2(22, -5), base + Vector2(36, 1)]), Color("2a2420"))
+	draw_colored_polygon(PackedVector2Array([base + Vector2(-16, 0), base + Vector2(-6, -7), base + Vector2(9, -6), base + Vector2(18, 0)]), Color("3a322b"))
+	for pedra in [Vector2(-28, -2), Vector2(-13, -8), Vector2(15, -7), Vector2(27, -3)]:
+		draw_circle(base + pedra, 2.6, Color("4b4640"))
+	for rachadura in [[Vector2(-4, 0), Vector2(-22, 3), Vector2(-40, 2)], [Vector2(5, 0), Vector2(19, 4), Vector2(33, 3)]]:
+		draw_polyline(PackedVector2Array([base + rachadura[0], base + rachadura[1], base + rachadura[2]]), Color(0.08, 0.06, 0.05, 0.8), 1.5)
+	# Brilho que corre pela lâmina de tempos em tempos.
+	var correr := fmod(game.t * 0.45, 1.0)
+	if correr < 0.35:
+		var y := lerpf(-90.0, -8.0, correr / 0.35)
+		draw_circle(base + Vector2(3 + y * -0.07, y), 2.2, Color(1, 0.95, 0.85, 0.55 * sin(correr / 0.35 * PI)))

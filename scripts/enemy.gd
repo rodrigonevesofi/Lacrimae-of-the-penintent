@@ -74,6 +74,9 @@ var bleed_t := 0.0
 var fade := 1.0
 var anim_t := 0.0
 var struck := false
+## v44: ritmo dos golpes das criaturas de corpo a corpo (ataques atrasados e golpes duplos).
+var ataques_feitos := 0
+var golpe_extra := false
 var awake := false
 var arena_left := 3800.0
 var arena_right := 4780.0
@@ -579,7 +582,11 @@ func _walker(delta: float) -> void:
 				velocity.x = 0.0
 			if dist < 72.0 and dy < 90.0 and cd <= 0.0 and alive and _melee_slot_available():
 				state = "windup"
-				state_t = 0.55
+				# v44: o ritmo varia. A cada três ataques, um vem atrasado (segura o golpe para enganar o aparo);
+				# a cada dois, o golpe é duplo (um segundo corte curto logo depois do primeiro).
+				ataques_feitos += 1
+				golpe_extra = ataques_feitos % 2 == 0
+				state_t = 0.55 * (1.45 if ataques_feitos % 3 == 0 else 1.0)
 				velocity.x = 0.0
 			elif not seen and dist > 460.0:
 				state = "patrol"
@@ -597,9 +604,16 @@ func _walker(delta: float) -> void:
 					player.take_hit(16.0, global_position.x, self, true)
 					struck = true
 			if state_t <= 0.0:
-				state = "recover"
-				state_t = 0.7
-				cd = 1.1
+				if golpe_extra and alive and dist < 95.0 and dy < 90.0:
+					# Segundo corte: preparação curta, também aparável e com o mesmo brilho.
+					golpe_extra = false
+					state = "windup"
+					state_t = 0.3
+				else:
+					golpe_extra = false
+					state = "recover"
+					state_t = 0.7
+					cd = 1.1
 		"recover":
 			velocity.x = 0.0
 			if state_t <= 0.0:
