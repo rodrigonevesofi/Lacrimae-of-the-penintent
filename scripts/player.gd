@@ -196,7 +196,8 @@ func _ready() -> void:
 	appearance.filter_clip = true
 	# Os quadros vêm de assets/animation/clips.json; por isso o animador é configurado aqui, não na cena.
 	animator.configure("hero", 0.44)
-	# SWORD_GRIP também mede a lâmina em _update_sword; o deslocamento sai dele para não divergir da cena.
+	animator.select("idle_desarmado", facing)
+	# SWORD_GRIP também é usado para posicionar a arma provisória.
 	sword.offset = -SWORD_GRIP
 	# Acompanha o desenho assim que muda: o punho se desloca até 30 pixels entre quadros de corrida.
 	animator.frame_changed.connect(_update_sword)
@@ -244,7 +245,7 @@ func _physics_process(delta: float) -> void:
 			_clear_combat_input()
 			input_release_gate = true
 			velocity = Vector2.ZERO
-			animator.select("idle", facing)
+			animator.select(_locomotion_clip(false), facing)
 			return
 	if ai:
 		_ai_think(delta)
@@ -607,7 +608,7 @@ func _physics_process(delta: float) -> void:
 	footstep_t -= delta
 	# Correndo, o passo toca no quadro em que o pé encosta no chão (_passo_no_quadro); o relógio fica para
 	# os outros casos, como andar empurrado ou animações sem quadros de corrida.
-	if is_on_floor() and absf(velocity.x) > 40 and state == "idle" and footstep_t <= 0 and animator.animation != "run":
+	if is_on_floor() and absf(velocity.x) > 40 and state == "idle" and footstep_t <= 0 and animator.animation not in ["run", "run_desarmado"]:
 		get_tree().call_group("game", "play_sfx", "step")
 		footstep_t = 0.28
 
@@ -688,7 +689,14 @@ func _update_animation() -> void:
 				var weight_pose := 0 if lance_weight < 34.0 else (1 if lance_weight < 67.0 else 2)
 				animator.pose("idle_weight", facing, weight_pose)
 			else:
-				animator.select("run" if absf(velocity.x) > 30 else "idle", facing)
+				animator.select(_locomotion_clip(absf(velocity.x) > 30), facing)
+
+
+func _locomotion_clip(running: bool) -> String:
+	var clip := "run" if running else "idle"
+	if animator.actor == "hero" and (not has_weapon or character != "penitente"):
+		return clip + "_desarmado"
+	return clip
 
 
 # ---------- ações ----------
@@ -1541,7 +1549,7 @@ func can_drop() -> bool:
 ## Quadros da corrida em que um pé encosta no chão (um por pé, em ciclos de seis quadros).
 const PASSO_QUADROS := [1, 4]
 func _passo_no_quadro() -> void:
-	if animator.animation != "run" or not is_on_floor() or state != "idle" or absf(velocity.x) < 40.0: return
+	if animator.animation not in ["run", "run_desarmado"] or not is_on_floor() or state != "idle" or absf(velocity.x) < 40.0: return
 	if not PASSO_QUADROS.has(animator.frame % 6): return
 	get_tree().call_group("game", "play_sfx", "step")
 	footstep_t = 0.28
@@ -1554,16 +1562,18 @@ func _update_sword() -> void:
 		# Os desenhos próprios já incluem a lança.
 		sword.visible = false
 		return
-	# Os desenhos de ataque e ritual já incluem a lâmina; nunca acrescenta uma segunda.
-	sword.visible = has_weapon and state == "idle" and not cinematic_focus and animator.animation in ["idle","run"]
+	var clip: Dictionary = animator.definitions.get(animator.animation, {})
+	sword.visible = has_weapon and state == "idle" and not cinematic_focus \
+		and not clip.get("espada_integrada", false) and animator.animation in ["idle", "run", "idle_desarmado", "run_desarmado"]
 	if not sword.visible: return
-	var grips: Array = RUN_GRIPS if animator.animation == "run" else IDLE_GRIPS
+	var running: bool = animator.animation in ["run", "run_desarmado"]
+	var grips: Array = RUN_GRIPS if running else IDLE_GRIPS
 	var wrist: Vector2 = grips[clampi(animator.frame, 0, grips.size() - 1)]
 	# Os desenhos já respiram e se movem; a espada acompanha o punho sem movimento adicional.
 	var hand := (wrist-Vector2(128,250))*0.44
 	# A lâmina acompanha o braço: punho alto e à frente leva a ponta para a frente; punho baixo, para baixo.
 	var angle := 0.85
-	if animator.animation == "run": angle = clampf(0.75 + (wrist.y - 125.0) * 0.015, 0.3, 1.1)
+	if running: angle = clampf(0.75 + (wrist.y - 125.0) * 0.015, 0.3, 1.1)
 	# Mantém a ponta acima do piso de colisão durante o movimento baixo da espada na corrida.
 	var blade_length := (2050-SWORD_GRIP.x)*SWORD_SCALE
 	angle = minf(angle,asin(clampf((-3-hand.y)/blade_length,-1,1)))

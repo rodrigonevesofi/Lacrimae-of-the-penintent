@@ -1,13 +1,31 @@
 {
   "hero": {
     "idle": {
+      "sheet": "hero_motion_espada",
+      "start": 0,
+      "count": 6,
+      "fps": 7,
+      "rows": 2,
+      "espada_integrada": true,
+      "loop": true
+    },
+    "run": {
+      "sheet": "hero_motion_espada",
+      "start": 6,
+      "count": 6,
+      "fps": 16,
+      "rows": 2,
+      "espada_integrada": true,
+      "loop": true
+    },
+    "idle_desarmado": {
       "sheet": "hero_motion",
       "start": 0,
       "count": 6,
       "fps": 7,
       "loop": true
     },
-    "run": {
+    "run_desarmado": {
       "sheet": "hero_motion",
       "start": 6,
       "count": 6,

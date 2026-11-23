@@ -34,16 +34,19 @@ func run() -> void:
 	await frames(3)
 	expect(game.get_node("Arte").espada_fincada != null and game.get_node("Arte").espada_fincada.get_width() > 80, "a arte da espada fincada foi preparada")
 
-	# ---- espada na mão: a guarda encosta no punho e a lâmina acompanha o braço na corrida
+	# ---- espada na mão: usa os seis desenhos armados da corrida sem sobrepor o sprite separado.
 	p.has_weapon = true
 	p.state = "idle"
-	expect(p.SWORD_GRIP.x > 500.0 and p.sword.offset == -p.SWORD_GRIP, "o cabo fica logo atrás da guarda, dentro do punho")
-	var angulos := {}
+	expect(p._locomotion_clip(true) == "run", "o Penitente armado seleciona a corrida com espada")
+	var quadros_armados := true
 	for i in range(6):
-		p.animator.select("run", 1, float(i) / 6.0 + 0.01)
+		p.animator.pose("run", 1, i)
 		p._update_sword()
-		angulos[snappedf(p.sword.rotation, 0.01)] = true
-	expect(angulos.size() >= 3, "na corrida a lâmina muda de ângulo com o braço")
+		var quadro: AtlasTexture = p.animator.sprite_frames.get_frame_texture("run", i)
+		quadros_armados = quadros_armados and not p.sword.visible \
+			and quadro.atlas.resource_path.ends_with("/hero_motion_espada.png") \
+			and quadro.region == Rect2(i * 256, 256, 256, 256)
+	expect(quadros_armados, "os seis quadros da corrida têm espada e não recebem uma segunda lâmina")
 
 	# ---- passo no quadro em que o pé encosta
 	expect(p.PASSO_QUADROS == [1, 4] and p.has_method("_passo_no_quadro"), "o passo toca nos quadros em que o pé toca o chão")

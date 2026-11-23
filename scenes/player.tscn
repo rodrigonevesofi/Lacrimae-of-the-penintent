@@ -42,7 +42,7 @@ offset = Vector2(-545, -362)
 position = Vector2(0, -53.68)
 scale = Vector2(0.44, 0.44)
 sprite_frames = ExtResource("8_quadros")
-animation = &"idle"
+animation = &"idle_desarmado"
 script = ExtResource("5_animacao")
 
 [node name="Lance" type="Node2D" parent="." unique_id=526463926]

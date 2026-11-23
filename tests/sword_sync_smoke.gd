@@ -1,58 +1,48 @@
 extends SceneTree
-## The sword stays in the fist of the drawing that is on screen, every displayed frame, standing and running.
-var game
+## Verifica os quadros com espada e as poses originais usadas antes da coleta.
+const ARMADO := "res://assets/animation/hero_motion_espada.png"
+const DESARMADO := "res://assets/animation/hero_motion.png"
 var checks := 0
 var failures := 0
-func _initialize() -> void: call_deferred("run")
-func expect(ok: bool,label: String) -> void:
+
+func _initialize() -> void:
+	call_deferred("run")
+
+func expect(ok: bool, label: String) -> void:
 	checks += 1
-	print("PASS: " if ok else "FAIL: ",label)
-	if not ok: failures += 1
-func frames(n: int) -> void:
-	for i in range(n):
-		await physics_frame
-		await process_frame
-func grip_error(p) -> float:
-	var grips: Array = p.RUN_GRIPS if p.animator.animation == "run" else p.IDLE_GRIPS
-	var wrist: Vector2 = grips[p.animator.frame]
-	var hand: Vector2 = (wrist - Vector2(128,250)) * 0.44
-	return p.sword.position.distance_to(Vector2(hand.x * p.facing, hand.y))
+	print("PASS: " if ok else "FAIL: ", label)
+	if not ok:
+		failures += 1
+
+func verificar_quadros(p, clipe: String, folha: String, linha: int) -> bool:
+	if p.animator.sprite_frames.get_frame_count(clipe) != 6:
+		return false
+	for i in range(6):
+		for direcao in [-1, 1]:
+			p.facing = direcao
+			p.animator.pose(clipe, direcao, i)
+			p._update_sword()
+			var quadro := p.animator.sprite_frames.get_frame_texture(clipe, i) as AtlasTexture
+			if p.sword.visible or quadro == null or quadro.atlas.resource_path != folha:
+				return false
+			if p.animator.flip_h != (direcao < 0) or quadro.region != Rect2(i * 256, linha * 256, 256, 256):
+				return false
+	return true
+
 func run() -> void:
-	game = load("res://scenes/main.tscn").instantiate()
-	root.add_child(game)
-	game._start_game(false,false)
-	for i in range(3):
-		game.message_t = 0
-		game.advance_message()
-	await frames(3)
-	var p = game.player
-	p.has_weapon = true
-	for e in get_nodes_in_group("enemies"): e.queue_free()
-	p.revive(Vector2(700,600))
-	await frames(5)
-	# v39: a espada passou para trás do corpo; o punho fecha por cima do cabo (antes ela cobria a mão).
-	expect(p.sword.z_index == p.animator.z_index and p.sword.get_index() < p.animator.get_index(),"the sword is drawn behind the body, so the fist closes over the grip")
-	var worst_idle := 0.0
-	var seen_idle := {}
-	for i in range(90):
-		await process_frame
-		if p.sword.visible and p.animator.animation == "idle":
-			worst_idle = maxf(worst_idle, grip_error(p))
-			seen_idle[p.animator.frame] = true
-	expect(seen_idle.size() >= 4 and worst_idle < 0.5,"standing, the grip is in the fist on every drawing (%d drawings, worst %.2f px)" % [seen_idle.size(), worst_idle])
-	Input.action_press("right")
-	var worst_run := 0.0
-	var seen_run := {}
-	for i in range(120):
-		await process_frame
-		if p.sword.visible and p.animator.animation == "run":
-			worst_run = maxf(worst_run, grip_error(p))
-			seen_run[p.animator.frame] = true
-	Input.action_release("right")
-	expect(seen_run.size() == 6 and worst_run < 0.5,"running, the grip is in the fist on every drawing (%d drawings, worst %.2f px)" % [seen_run.size(), worst_run])
-	game._delete_save()
-	game.queue_free()
-	game = null
-	await frames(5)
-	print("SWORD_SYNC: %d checks, %d failures" % [checks,failures])
+	var p = load("res://scenes/player.tscn").instantiate()
+	root.add_child(p)
+	p.set_physics_process(false)
+	p.set_process(false)
+	p.state = "idle"
+	expect(p.animator.animation == "idle_desarmado", "o Penitente começa com as mãos vazias")
+	for running in [false, true]:
+		var linha := 1 if running else 0
+		var nome := "corrida" if running else "parado"
+		p.has_weapon = false
+		expect(verificar_quadros(p, p._locomotion_clip(running), DESARMADO, linha), "%s sem arma: seis quadros originais" % nome)
+		p.has_weapon = true
+		expect(verificar_quadros(p, p._locomotion_clip(running), ARMADO, linha), "%s com arma: seis quadros com espada e sem sobreposição" % nome)
+	p.free()
+	print("SWORD_SYNC: %d checks, %d failures" % [checks, failures])
 	quit(0 if failures == 0 else 1)
