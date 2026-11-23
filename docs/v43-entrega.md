@@ -20,13 +20,14 @@ As fotos das seis execuções, do clarão do golpe, do aviso no altar, das ofere
 - A trilha estava cerca de 15 LU abaixo dos efeitos. A mixagem foi medida em LUFS (EBU R128) numa luta de teste de 14 segundos no claustro (`tools/medir_mixagem.gd`), separando trilha e efeitos.
 - Depois do ajuste, a trilha sobe 9 dB e os golpes descem 10 dB. Os sons mais pesados (respingos, jatos, carne, osso e passos) também têm cortes próprios.
 
-| Medição (luta de teste) | Antes | Depois |
-|---|---|---|
-| Só trilha | −23,2 LUFS | −18,1 LUFS |
-| Só efeitos | −8,4 LUFS | −15,7 LUFS |
-| Diferença | efeitos 14,8 LU acima | efeitos 2,4 LU acima |
+| Medição (luta de teste) | v42 | v43 (entrega) | v43 final, trilha à frente e sons Kenney |
+|---|---|---|---|
+| Só trilha | −23,2 LUFS | −18,1 LUFS | −16,1 LUFS |
+| Só efeitos | −8,4 LUFS | −15,7 LUFS | −22,5 LUFS |
+| Diferença | efeitos 14,8 LU acima | efeitos 2,4 LU acima | efeitos 6,4 LU **abaixo** |
 
-- **Efeitos novos:** o Flow Music faz música, não efeitos curtos. Os prompts para gerar efeitos no ElevenLabs ou no Argon estão em [prompts-efeitos-sonoros-v43.md](prompts-efeitos-sonoros-v43.md), com o nome de arquivo de cada som. Enquanto um som novo não existir, o jogo toca o mais parecido que já tem (`SUBSTITUTOS` em `soundscape.gd`).
+- **Trilha à frente:** depois de ouvir, a prioridade foi invertida: a música sobe 2 dB e golpes, criaturas, cenas e ambiência descem (`MIX_TRIM_DB` em `soundscape.gd`).
+- **Efeitos da Kenney:** os 52 efeitos da tabela de [prompts-efeitos-sonoros-v43.md](prompts-efeitos-sonoros-v43.md) foram refeitos a partir dos pacotes "Impact Sounds" e "RPG Audio" da Kenney (gravações reais, licença CC0, em `assets/audio/licencas/`). Cada som combina de duas a cinco camadas, com tom mais grave e escuro, a duração da tabela e o pico em −3 dBFS (`tools/sons_kenney.py`). Dor, morte, jato de sangue e respingo no chão foram gerados no ElevenLabs e cortados no tamanho do jogo (`tools/sons_elevenlabs.py`). Com eles, os efeitos ficam 7,7 LU abaixo da trilha na luta de teste.
 
 ## 3. Combate
 
