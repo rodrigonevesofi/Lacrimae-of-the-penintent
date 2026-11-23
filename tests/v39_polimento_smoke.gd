@@ -74,7 +74,8 @@ func run() -> void:
 	p.state = "idle"
 	p._update_animation()
 	p._update_sword()
-	check(p.sword.visible, "espada visível parado")
+	# v44: parado, a espada vem desenhada no próprio quadro (espada_integrada); a solta fica escondida.
+	check(p.sword.visible or p.animator.definitions.get(p.animator.animation, {}).get("espada_integrada", false), "espada visível parado")
 	check(p.sword.get_index() < p.animator.get_index() and p.sword.z_index == 0, "a espada é desenhada atrás do corpo: o punho fica por cima do cabo")
 	check(p.SWORD_GRIP.x > 480.0 and p.SWORD_GRIP.x < 600.0, "a mão segura o cabo junto à guarda")
 	var guarda: Vector2 = p.sword.transform * (Vector2(640, 360) - p.SWORD_GRIP)

@@ -36,7 +36,9 @@ func run() -> void:
 		var right:Vector2=p.sword.position
 		var angle:float=p.sword.rotation
 		var tip:Vector2=p.sword.transform*(Vector2(2050,360)-p.SWORD_GRIP)
-		expect(p.sword.visible and tip.y<=-2.8,"run weapon tip stays above ground frame %d"%frame_index)
+		# v44: os quadros de corrida já trazem a espada desenhada; a espada solta só aparece sem eles.
+		var integrada:bool=p.animator.definitions.get(p.animator.animation,{}).get("espada_integrada",false)
+		expect((integrada and not p.sword.visible) or (p.sword.visible and tip.y<=-2.8),"run weapon tip stays above ground frame %d"%frame_index)
 		p.facing=-1
 		p.animator.pose("run",-1,frame_index)
 		p._update_sword()
@@ -86,7 +88,7 @@ func run() -> void:
 	expect(p.state_t==remaining,"aerial move cannot restart repeatedly in the same jump")
 	await frames(55)
 	expect(p.state=="idle" and p.is_on_floor() and not p.aerial_after_cut,"landing recovery returns to grounded control")
-	expect(p.sword.visible,"weapon returns to grip after aerial recovery")
+	expect(p.sword.visible or p.animator.definitions.get(p.animator.animation,{}).get("espada_integrada",false),"weapon returns to grip after aerial recovery")
 	# Espelha a área dedicada de golpe aéreo contra um alvo à esquerda.
 	var left_target=game.new_enemy(1)
 	# Mantém o alvo abaixo da plataforma elevada, sem uma parede entre os dois.
