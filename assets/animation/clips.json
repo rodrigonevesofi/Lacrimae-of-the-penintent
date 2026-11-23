@@ -33,6 +33,15 @@
       "loop": true
     },
     "roll": {
+      "sheet": "hero_acoes_espada",
+      "start": 0,
+      "count": 6,
+      "fps": 12,
+      "rows": 3,
+      "espada_integrada": true,
+      "loop": false
+    },
+    "roll_desarmado": {
       "sheet": "hero_motion",
       "start": 12,
       "count": 6,
@@ -40,6 +49,15 @@
       "loop": false
     },
     "jump": {
+      "sheet": "hero_acoes_espada",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "rows": 3,
+      "espada_integrada": true,
+      "loop": false
+    },
+    "jump_desarmado": {
       "sheet": "hero_reactions",
       "start": 0,
       "count": 6,
@@ -47,6 +65,15 @@
       "loop": false
     },
     "hurt": {
+      "sheet": "hero_acoes_espada",
+      "start": 12,
+      "count": 6,
+      "fps": 12,
+      "rows": 3,
+      "espada_integrada": true,
+      "loop": false
+    },
+    "hurt_desarmado": {
       "sheet": "hero_reactions",
       "start": 6,
       "count": 6,
@@ -66,6 +93,97 @@
       "count": 6,
       "fps": 12,
       "loop": false
+    },
+    "golpe_contracorte": {
+      "sheet": "hero_golpes_novos",
+      "start": 0,
+      "count": 6,
+      "fps": 12,
+      "rows": 7,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "espada_integrada": true
+    },
+    "golpe_estocada": {
+      "sheet": "hero_golpes_novos",
+      "start": 6,
+      "count": 6,
+      "fps": 12,
+      "rows": 7,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "espada_integrada": true
+    },
+    "golpe_descendente": {
+      "sheet": "hero_golpes_novos",
+      "start": 12,
+      "count": 7,
+      "fps": 12,
+      "rows": 7,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "espada_integrada": true
+    },
+    "golpe_ascendente": {
+      "sheet": "hero_golpes_novos",
+      "start": 19,
+      "count": 6,
+      "fps": 12,
+      "rows": 7,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "espada_integrada": true
+    },
+    "golpe_investida": {
+      "sheet": "hero_golpes_novos",
+      "start": 25,
+      "count": 6,
+      "fps": 12,
+      "rows": 7,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "espada_integrada": true
+    },
+    "golpe_aereo2": {
+      "sheet": "hero_golpes_novos",
+      "start": 31,
+      "count": 5,
+      "fps": 12,
+      "rows": 7,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "espada_integrada": true
+    },
+    "golpe_prece": {
+      "sheet": "hero_golpes_novos",
+      "start": 36,
+      "count": 6,
+      "fps": 12,
+      "rows": 7,
+      "loop": false,
+      "anchor": [
+        128,
+        250
+      ],
+      "espada_integrada": true
     },
     "attack_a": {
       "sheet": "hero_combat",
@@ -173,10 +291,12 @@
       ]
     },
     "air_land": {
-      "sheet": "hero_aerial",
-      "start": 12,
+      "sheet": "hero_acoes_espada",
+      "start": 6,
       "count": 6,
       "fps": 12,
+      "rows": 3,
+      "espada_integrada": true,
       "loop": false,
       "anchor": [
         128,
@@ -184,10 +304,12 @@
       ]
     },
     "air_drift": {
-      "sheet": "hero_aerial",
-      "start": 18,
+      "sheet": "hero_acoes_espada",
+      "start": 6,
       "count": 6,
       "fps": 12,
+      "rows": 3,
+      "espada_integrada": true,
       "loop": false,
       "anchor": [
         128,

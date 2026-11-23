@@ -670,9 +670,9 @@ func _update_animation() -> void:
 		"charge": animator.select("charged_heavy", facing, minf(heavy_t / HEAVY_FULL, 1.0) * 3.99 / 6.0)
 		"heavy": animator.select("charged_heavy", facing, (4.0 + clampf(1.0 - state_t / heavy_len, 0.0, 1.0) * 1.99) / 6.0)
 		"plunge": animator.select("air_attack", facing, 0.55)
-		"roll": animator.select("roll", facing, 1 - state_t / ROLL_TIME)
+		"roll": animator.select(_clipe_arma("roll"), facing, 1 - state_t / ROLL_TIME)
 		"parry": animator.select("parry_recoil" if parry_hit else "parry", facing, clampf(1.0 - state_t / (0.3 if parry_hit else PARRY_TIME), 0.0, 0.999))
-		"hurt": animator.select("hurt", facing, 1 - state_t / 0.25)
+		"hurt": animator.select(_clipe_arma("hurt"), facing, 1 - state_t / 0.25)
 		"dead": animator.select("death", facing, 1 - state_t / 0.70)
 		"heal": animator.select("heal", facing, 1 - state_t / 0.55)
 		"pray": animator.select("pray", facing, 1 - state_t / pray_duration)
@@ -681,9 +681,9 @@ func _update_animation() -> void:
 				animator.select("air_drift",facing)
 			elif not is_on_floor():
 				var index := (0 if jump_elapsed < 0.06 else 1) if velocity.y < -120 else (2 if velocity.y < 80 else 3)
-				animator.pose("air_drift" if has_weapon else "jump", facing, index)
+				animator.pose("air_drift" if has_weapon else _clipe_arma("jump"), facing, index)
 			elif landing_t > 0:
-				animator.pose("air_land" if has_weapon else "jump", facing, 4 if landing_t > 0.05 else 5)
+				animator.pose("air_land" if has_weapon else _clipe_arma("jump"), facing, 4 if landing_t > 0.05 else 5)
 			elif animator.actor == "beatriz" and absf(velocity.x) <= 30.0:
 				# Três faixas de peso: 0–33, 34–66 e 67–100.
 				var weight_pose := 0 if lance_weight < 34.0 else (1 if lance_weight < 67.0 else 2)
@@ -693,7 +693,10 @@ func _update_animation() -> void:
 
 
 func _locomotion_clip(running: bool) -> String:
-	var clip := "run" if running else "idle"
+	return _clipe_arma("run" if running else "idle")
+
+
+func _clipe_arma(clip: String) -> String:
 	if animator.actor == "hero" and (not has_weapon or character != "penitente"):
 		return clip + "_desarmado"
 	return clip
