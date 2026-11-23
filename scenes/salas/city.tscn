@@ -1,0 +1,503 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_cwcgp"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_054h8"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_w5plu"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_wrclx"]
+[ext_resource type="Script" path="res://scripts/salas/altar.gd" id="5_wrclx"]
+[ext_resource type="Script" path="res://scripts/salas/inscricao.gd" id="6_bd6si"]
+[ext_resource type="Script" path="res://scripts/salas/vela.gd" id="7_bjs07"]
+[ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="8_bd6si"]
+[ext_resource type="PackedScene" path="res://scenes/salas/luz.tscn" id="9_luz"]
+[ext_resource type="Script" path="res://scripts/salas/abismo.gd" id="10_1foqq"]
+[ext_resource type="Script" path="res://scripts/salas/trecho.gd" id="11_ekw3g"]
+[ext_resource type="Script" path="res://scripts/salas/decoracao.gd" id="12_bmifk"]
+[ext_resource type="Script" path="res://scripts/salas/zona.gd" id="13_zona"]
+
+[node name="City" type="Node2D" unique_id=504323771]
+script = ExtResource("1_cwcgp")
+id = "city"
+nome = "CIDADE DA PENITÊNCIA"
+origem = Vector2(0, -300)
+tamanho = Vector2(4800, 1250)
+piso = 900.0
+arte = "vespera_panorama"
+posicao_no_mapa = Vector2(450, 330)
+espessura_piso = 400.0
+espessura_parede = 60.0
+parede_acima = 300.0
+parede_abaixo = 450.0
+reverberacao = 0.1
+ambiente = "amb_city"
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=1294751039]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=1706862920]
+position = Vector2(380, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(140, 22)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1317531726]
+position = Vector2(1350, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(120, 22)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=504675364]
+position = Vector2(1500, 740)
+script = ExtResource("2_054h8")
+tamanho = Vector2(120, 22)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=439105840]
+position = Vector2(1650, 660)
+script = ExtResource("2_054h8")
+tamanho = Vector2(220, 22)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=2025269825]
+position = Vector2(2700, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(160, 22)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=834328545]
+position = Vector2(2950, 740)
+script = ExtResource("2_054h8")
+tamanho = Vector2(160, 22)
+
+[node name="Plataforma7" type="Node2D" parent="Plataformas" unique_id=297516583]
+position = Vector2(3200, 820)
+script = ExtResource("2_054h8")
+tamanho = Vector2(140, 22)
+
+[node name="Plataforma8" type="Node2D" parent="Plataformas" unique_id=903473451]
+position = Vector2(4000, 815)
+script = ExtResource("2_054h8")
+tamanho = Vector2(150, 22)
+
+[node name="Plataforma9" type="Node2D" parent="Plataformas" unique_id=382444860]
+position = Vector2(4500, 815)
+script = ExtResource("2_054h8")
+tamanho = Vector2(150, 22)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=389083304]
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1524586229]
+
+[node name="Devotee1" type="Node2D" parent="Inimigos" unique_id=442124716]
+position = Vector2(800, 900)
+script = ExtResource("3_w5plu")
+alcance = 140.0
+
+[node name="Devotee2" type="Node2D" parent="Inimigos" unique_id=1291789059]
+position = Vector2(1250, 900)
+script = ExtResource("3_w5plu")
+alcance = 160.0
+
+[node name="Mourner3" type="Node2D" parent="Inimigos" unique_id=1393806665]
+position = Vector2(1750, 780)
+script = ExtResource("3_w5plu")
+tipo = 1
+alcance = 110.0
+
+[node name="Devotee4" type="Node2D" parent="Inimigos" unique_id=675224370]
+position = Vector2(2600, 900)
+script = ExtResource("3_w5plu")
+alcance = 150.0
+
+[node name="Devotee5" type="Node2D" parent="Inimigos" unique_id=1885613071]
+position = Vector2(2950, 900)
+script = ExtResource("3_w5plu")
+alcance = 160.0
+
+[node name="Mourner6" type="Node2D" parent="Inimigos" unique_id=851534567]
+position = Vector2(3100, 770)
+script = ExtResource("3_w5plu")
+tipo = 1
+alcance = 130.0
+
+[node name="Devotee7" type="Node2D" parent="Inimigos" unique_id=72231618]
+position = Vector2(3350, 900)
+script = ExtResource("3_w5plu")
+alcance = 110.0
+
+[node name="Arenas" type="Node2D" parent="." unique_id=1735123512]
+
+[node name="Portas" type="Node2D" parent="." unique_id=142854958]
+
+[node name="Burial_A" type="Node2D" parent="Portas" unique_id=429356488]
+position = Vector2(1160, 900)
+script = ExtResource("4_wrclx")
+ligacao = "burial"
+rotulo = "Ossuário dos Sem Nome"
+
+[node name="WaterReturn_B" type="Node2D" parent="Portas" unique_id=919080653]
+position = Vector2(2400, 900)
+script = ExtResource("4_wrclx")
+ligacao = "water_return"
+lado = "b"
+
+[node name="Vows_A" type="Node2D" parent="Portas" unique_id=1330868875]
+position = Vector2(3080, 900)
+script = ExtResource("4_wrclx")
+ligacao = "vows"
+rotulo = "Claustro dos Votos"
+
+[node name="TowerReturn_B" type="Node2D" parent="Portas" unique_id=1016751222]
+position = Vector2(3380, 900)
+script = ExtResource("4_wrclx")
+ligacao = "tower_return"
+lado = "b"
+
+[node name="Altares" type="Node2D" parent="." unique_id=1408502656]
+
+[node name="Altar1" type="Node2D" parent="Altares" unique_id=1159249757]
+position = Vector2(540, 900)
+script = ExtResource("5_wrclx")
+nome = "Altar das Primeiras Lágrimas"
+
+[node name="Luz" parent="Altares/Altar1" unique_id=1009990628 instance=ExtResource("9_luz")]
+position = Vector2(0, -60)
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.65
+texture_scale = 2.6
+
+[node name="Altar2" type="Node2D" parent="Altares" unique_id=1734907156]
+position = Vector2(1810, 900)
+script = ExtResource("5_wrclx")
+nome = "Altar do Limiar"
+
+[node name="Luz" parent="Altares/Altar2" unique_id=914293600 instance=ExtResource("9_luz")]
+position = Vector2(0, -60)
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.65
+texture_scale = 2.6
+
+[node name="Altar3" type="Node2D" parent="Altares" unique_id=458060727]
+position = Vector2(3620, 900)
+script = ExtResource("5_wrclx")
+nome = "Altar da Última Vela"
+
+[node name="Luz" parent="Altares/Altar3" unique_id=1238355335 instance=ExtResource("9_luz")]
+position = Vector2(0, -60)
+color = Color(1, 0.78, 0.5, 1)
+energy = 0.65
+texture_scale = 2.6
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=403510813]
+
+[node name="Inscricoes" type="Node2D" parent="." unique_id=1018347344]
+
+[node name="Inscricao1" type="Node2D" parent="Inscricoes" unique_id=2105036492]
+position = Vector2(730, 900)
+script = ExtResource("6_bd6si")
+titulo = "A Primeira Mártir"
+texto = "Diante de um antigo altar, ela chorou sangue.
+Os registros dizem que centenas receberam absolvição.
+
+Desde então, Vespera passou a medir a culpa em lágrimas."
+
+[node name="Inscricao2" type="Node2D" parent="Inscricoes" unique_id=133164793]
+position = Vector2(1390, 900)
+script = ExtResource("6_bd6si")
+titulo = "A Regra do Confessor"
+texto = "Bem-aventurados os que choram.
+
+Um decreto sem nome: quem não chora deverá aprender a dor.
+Uma segunda mão riscou: misericórdia quero, não sacrifício.
+
+À margem: procure no campanário aquilo que ainda o ergue."
+
+[node name="Inscricao3" type="Node2D" parent="Inscricoes" unique_id=2044609946]
+position = Vector2(2630, 900)
+script = ExtResource("6_bd6si")
+titulo = "A Pedra e a Sentença"
+texto = "Quem está sem pecado, atire a primeira pedra.
+
+A Ordem raspou a primeira linha. Conservou as pedras.
+As lágrimas levaram o remorso. Os atos permaneceram."
+
+[node name="Inscricao4" type="Node2D" parent="Inscricoes" unique_id=1713095345]
+position = Vector2(3860, 900)
+script = ExtResource("6_bd6si")
+titulo = "Os Portões Fechados"
+texto = "Foi a justiça que ergueu estes portões.
+
+A sentença foi gravada acima da tranca.
+Embaixo, alguém riscou: aqui também esperavam crianças.
+
+A assinatura foi raspada. Sua mão treme ao tocar a pedra."
+
+[node name="Velas" type="Node2D" parent="." unique_id=1161115896]
+
+[node name="Vela1" type="Node2D" parent="Velas" unique_id=1717580747]
+position = Vector2(150, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela1" unique_id=1773711575 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
+[node name="Vela2" type="Node2D" parent="Velas" unique_id=150878544]
+position = Vector2(330, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela3" type="Node2D" parent="Velas" unique_id=33237315]
+position = Vector2(540, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela4" type="Node2D" parent="Velas" unique_id=573033027]
+position = Vector2(700, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela4" unique_id=722591254 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
+[node name="Vela5" type="Node2D" parent="Velas" unique_id=1261903342]
+position = Vector2(960, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela6" type="Node2D" parent="Velas" unique_id=828031511]
+position = Vector2(1180, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela7" type="Node2D" parent="Velas" unique_id=1444574293]
+position = Vector2(1420, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela7" unique_id=1881644014 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
+[node name="Vela8" type="Node2D" parent="Velas" unique_id=1357985537]
+position = Vector2(1700, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela9" type="Node2D" parent="Velas" unique_id=1833547619]
+position = Vector2(1860, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela10" type="Node2D" parent="Velas" unique_id=118835883]
+position = Vector2(2330, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela10" unique_id=279423724 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
+[node name="Vela11" type="Node2D" parent="Velas" unique_id=162098789]
+position = Vector2(2520, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela12" type="Node2D" parent="Velas" unique_id=1308959433]
+position = Vector2(2800, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela13" type="Node2D" parent="Velas" unique_id=1842475016]
+position = Vector2(3050, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela13" unique_id=136671725 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
+[node name="Vela14" type="Node2D" parent="Velas" unique_id=1821970671]
+position = Vector2(3300, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela15" type="Node2D" parent="Velas" unique_id=164391455]
+position = Vector2(3560, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela16" type="Node2D" parent="Velas" unique_id=2035616313]
+position = Vector2(3700, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela16" unique_id=1371368787 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
+[node name="Vela17" type="Node2D" parent="Velas" unique_id=1572225099]
+position = Vector2(3900, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela18" type="Node2D" parent="Velas" unique_id=343319110]
+position = Vector2(4150, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Vela19" type="Node2D" parent="Velas" unique_id=1184363805]
+position = Vector2(4450, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Luz" parent="Velas/Vela19" unique_id=758727549 instance=ExtResource("9_luz")]
+position = Vector2(0, -24)
+color = Color(1, 0.68, 0.38, 1)
+energy = 0.35
+texture_scale = 1.7
+
+[node name="Vela20" type="Node2D" parent="Velas" unique_id=243145341]
+position = Vector2(4700, 900)
+script = ExtResource("7_bjs07")
+
+[node name="Pontos" type="Node2D" parent="." unique_id=1560290924]
+
+[node name="Tumulo" type="Node2D" parent="Pontos" unique_id=1507415646]
+position = Vector2(150, 900)
+script = ExtResource("8_bd6si")
+
+[node name="Espada" type="Node2D" parent="Pontos" unique_id=265299034]
+position = Vector2(340, 900)
+script = ExtResource("8_bd6si")
+ponto = "espada"
+
+[node name="Iria" type="Node2D" parent="Pontos" unique_id=1659734299]
+position = Vector2(990, 900)
+script = ExtResource("8_bd6si")
+ponto = "iria"
+
+[node name="Memorial" type="Node2D" parent="Pontos" unique_id=2126058535]
+position = Vector2(2800, 900)
+script = ExtResource("8_bd6si")
+ponto = "memorial"
+
+[node name="ChefeGuardiao" type="Node2D" parent="Pontos" unique_id=1949644681]
+position = Vector2(4380, 900)
+script = ExtResource("8_bd6si")
+ponto = "chefe_guardiao"
+
+[node name="PortaoDoVale" type="Node2D" parent="Pontos" unique_id=680677643]
+position = Vector2(4700, 900)
+script = ExtResource("8_bd6si")
+ponto = "portao_do_vale"
+
+[node name="GatilhoChefe" type="Node2D" parent="Pontos" unique_id=918235696]
+position = Vector2(3900, 900)
+script = ExtResource("8_bd6si")
+ponto = "gatilho_chefe"
+
+[node name="AtalhoDevPortao" type="Node2D" parent="Pontos" unique_id=813447292]
+position = Vector2(3700, 900)
+script = ExtResource("8_bd6si")
+ponto = "atalho_dev_portao"
+
+[node name="Luzes" type="Node2D" parent="." unique_id=595790626]
+
+[node name="LuzDoAbismo" parent="Luzes" unique_id=1114029044 instance=ExtResource("9_luz")]
+position = Vector2(2135, 1080)
+color = Color(0.75, 0.2, 0.2, 1)
+energy = 0.8
+texture_scale = 3.0
+
+[node name="LuzDosPortoes" parent="Luzes" unique_id=526376734 instance=ExtResource("9_luz")]
+position = Vector2(4290, 680)
+color = Color(0.9, 0.3, 0.25, 1)
+energy = 0.6
+texture_scale = 5.0
+
+[node name="Abismo" type="Node2D" parent="." unique_id=1450526971]
+position = Vector2(2000, 900)
+script = ExtResource("10_1foqq")
+
+[node name="Trechos" type="Node2D" parent="." unique_id=1763183181]
+
+[node name="Trecho1" type="Node2D" parent="Trechos" unique_id=863085873]
+position = Vector2(0, 900)
+script = ExtResource("11_ekw3g")
+nome = "CRIPTA DO DESPERTAR"
+
+[node name="Trecho2" type="Node2D" parent="Trechos" unique_id=1417505081]
+position = Vector2(1250, 900)
+script = ExtResource("11_ekw3g")
+nome = "PÁTIO DOS NOMES RISCADOS"
+
+[node name="Trecho3" type="Node2D" parent="Trechos" unique_id=861878140]
+position = Vector2(2270, 900)
+script = ExtResource("11_ekw3g")
+nome = "GALERIA DAS CONFISSÕES"
+
+[node name="Trecho4" type="Node2D" parent="Trechos" unique_id=1951041664]
+position = Vector2(3300, 900)
+script = ExtResource("11_ekw3g")
+nome = "PORTÕES DO SILÊNCIO"
+
+[node name="Decoracoes" type="Node2D" parent="." unique_id=1781190618]
+
+[node name="Gaiola1" type="Node2D" parent="Decoracoes" unique_id=506246973]
+position = Vector2(1430, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola2" type="Node2D" parent="Decoracoes" unique_id=1315697553]
+position = Vector2(1790, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola3" type="Node2D" parent="Decoracoes" unique_id=917789551]
+position = Vector2(2150, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola4" type="Node2D" parent="Decoracoes" unique_id=74673596]
+position = Vector2(2510, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Gaiola5" type="Node2D" parent="Decoracoes" unique_id=421832665]
+position = Vector2(2870, 490)
+script = ExtResource("12_bmifk")
+
+[node name="Pano1" type="Node2D" parent="Decoracoes" unique_id=814084743]
+position = Vector2(1160, 470)
+script = ExtResource("12_bmifk")
+tipo = "pano"
+
+[node name="Pano2" type="Node2D" parent="Decoracoes" unique_id=407371915]
+position = Vector2(2550, 410)
+script = ExtResource("12_bmifk")
+tipo = "pano"
+
+[node name="Pano3" type="Node2D" parent="Decoracoes" unique_id=685125646]
+position = Vector2(3380, 480)
+script = ExtResource("12_bmifk")
+tipo = "pano"
+
+[node name="Corrente1" type="Node2D" parent="Decoracoes" unique_id=1249300874]
+position = Vector2(3781, 230)
+script = ExtResource("12_bmifk")
+tipo = "corrente"
+
+[node name="Corrente2" type="Node2D" parent="Decoracoes" unique_id=1640926088]
+position = Vector2(3794, 230)
+script = ExtResource("12_bmifk")
+tipo = "corrente"
+
+[node name="Zonas" type="Node2D" parent="." unique_id=595465664]
+
+[node name="PortaoDosSinos" type="Node2D" parent="Zonas" unique_id=456561138]
+position = Vector2(3780, 100)
+script = ExtResource("13_zona")
+tamanho = Vector2(28, 800)
+
+[node name="AvisoDasCorrentes" type="Node2D" parent="Zonas" unique_id=928133548]
+position = Vector2(3640, 100)
+script = ExtResource("13_zona")
+zona = "aviso_das_correntes"
+tamanho = Vector2(150, 800)
+
+[node name="ParedeDoChefe" type="Node2D" parent="Zonas" unique_id=1341114595]
+position = Vector2(3790, -300)
+script = ExtResource("13_zona")
+zona = "parede_do_chefe"
+tamanho = Vector2(40, 1200)
+
+[node name="MusicaDoTemplo" type="Node2D" parent="Zonas" unique_id=1425301226]
+position = Vector2(0, 100)
+script = ExtResource("13_zona")
+zona = "musica_do_templo"
+tamanho = Vector2(1250, 800)

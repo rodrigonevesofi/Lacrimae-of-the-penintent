@@ -33,7 +33,7 @@ func run() -> void:
 	game.area_t = 0
 	game.toast_t = 0
 	await frames(30)
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(3)
 	e.setup(3, Vector2(1530, 600), 0, p)
 	e.room_id = "city"
 	game.add_child(e)

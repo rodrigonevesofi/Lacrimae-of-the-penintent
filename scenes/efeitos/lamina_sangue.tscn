@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/lamina_sangue.gd" id="1_lamina"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cru"]
+light_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_tons"]
+colors = PackedColorArray(0.75, 0.04, 0.06, 1, 0.35, 0, 0.02, 0)
+
+[node name="LaminaSangue" type="Node2D"]
+z_index = 8
+material = SubResource("CanvasItemMaterial_cru")
+script = ExtResource("1_lamina")
+
+[node name="Gotas" type="CPUParticles2D" parent="."]
+amount = 40
+lifetime = 0.6
+direction = Vector2(-1, 0.3)
+spread = 30.0
+gravity = Vector2(0, 900)
+initial_velocity_min = 40.0
+initial_velocity_max = 160.0
+scale_amount_min = 1.5
+scale_amount_max = 3.2
+color_ramp = SubResource("Gradient_tons")

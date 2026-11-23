@@ -2,8 +2,9 @@ extends CharacterBody2D
 ## Inimigos: 0 = Devoto Corrompido, 1 = Chorão (voador), 2 = A Mãe das Lágrimas (chefe)
 
 const Util = preload("res://scripts/util.gd")
-const Tear = preload("res://scripts/tear.gd")
-const Spike = preload("res://scripts/spike.gd")
+## Projéteis (scenes/projeteis/): instancie a cena e ajuste antes de adicionar à árvore.
+const TearScene = preload("res://scenes/projeteis/lagrima.tscn")
+const SpikeScene = preload("res://scenes/projeteis/espinho.tscn")
 
 signal killed(enemy)
 
@@ -79,13 +80,14 @@ var arena_right := 4780.0
 var rain_t := 0.0
 var phase := 1
 var last_attack := -1
-var ledge: RayCast2D
-var animator
+# Nós de scenes/inimigos/*.tscn. Ledge só existe nos andantes; Light, nos voadores e no chefe.
+@onready var ledge: RayCast2D = get_node_or_null("Ledge")
+@onready var animator = $Animator
 var spawn_opacity := 0.0
 var hit_pause := 0.0
 var cast_emitted := false
 var appearance: Texture2D
-var light: PointLight2D
+@onready var light: PointLight2D = get_node_or_null("Light")
 var group := -1
 var partner = null
 var duel_t := 0.0
@@ -124,6 +126,8 @@ var attack_parryable := false
 var attack_warning := ""
 var attack_target := Vector2.ZERO
 var secondary_velocity := Vector2.ZERO
+## Cor da luz dos voadores que fogem do azul padrão da cena inimigo_voador.tscn.
+const FLYER_GLOW := {5: Color(0.55, 0.9, 0.6), 6: Color(0.78, 0.65, 1.0)}
 const SECONDARY_WINDUPS := {0: 0.65, 1: 0.65, 3: 0.85, 4: 0.60, 5: 0.70, 6: 0.75, 7: 0.85, 8: 0.80}
 
 
@@ -151,12 +155,12 @@ func humanoid() -> bool:
 	return family == "walker"
 
 
+## A estrutura vem da cena da família (scenes/inimigos/): crie inimigos com game.new_enemy(kind),
+## que escolhe a cena certa, e chame setup() antes de add_child(). Os dados de cada tipo continuam em TYPES.
 func _ready() -> void:
-	var visuals = load("res://scripts/combat_visuals.gd").new()
-	visuals.name = "CombatVisuals"
-	add_child(visuals)
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var t: Dictionary = TYPES[kind]
+	if (ledge != null) != (family == "walker") or (light != null) != (family == "flyer" or kind == 2):
+		push_error("Inimigo %d (%s) criado com a cena errada: use game.new_enemy(kind)." % [kind, family])
 	if kind == 2:
 		var guardian := AtlasTexture.new()
 		guardian.atlas = load("res://assets/guardian.png")
@@ -168,34 +172,13 @@ func _ready() -> void:
 		atlas.region = Rect2((int(t.col) + 1) * 384, 0, 384, 1000)
 		atlas.filter_clip = true
 		appearance = atlas
-	animator = preload("res://scripts/actor_animation.gd").new()
 	animator.configure(t.actor, t.scale)
-	add_child(animator)
-	add_to_group("enemies")
-	collision_layer = 4
-	collision_mask = 1
-	var cs := CollisionShape2D.new()
-	var rs := RectangleShape2D.new()
-	rs.size = body_size
-	cs.shape = rs
+	# Cada tipo tem seu corpo; a forma é local a cada inimigo (resource_local_to_scene).
+	var cs: CollisionShape2D = $CollisionShape2D
+	cs.shape.size = body_size
 	cs.position = Vector2(0, -body_size.y / 2.0)
-	add_child(cs)
-	if family == "walker":
-		ledge = RayCast2D.new()
-		ledge.collision_mask = 1
-		ledge.enabled = true
-		add_child(ledge)
-	if family == "flyer":
-		var glow := Color(0.6, 0.78, 1.0)
-		if kind == 5: glow = Color(0.55, 0.9, 0.6)
-		if kind == 6: glow = Color(0.78, 0.65, 1.0)
-		light = Util.make_light(glow, 0.6, 1.4)
-		light.position = Vector2(0, -26)
-		add_child(light)
-	if kind == 2:
-		light = Util.make_light(Color(0.95, 0.35, 0.3), 0.55, 3.0)
-		light.position = Vector2(0, -100)
-		add_child(light)
+	if family == "flyer" and FLYER_GLOW.has(kind):
+		light.color = FLYER_GLOW[kind]
 
 
 func hurt_rect() -> Rect2:
@@ -525,7 +508,7 @@ func _secondary_update(delta: float) -> void:
 				secondary_velocity = (attack_target - global_position).normalized() * 360.0
 				if kind in [1, 5]:
 					for angle in ([-0.22, 0.0, 0.22] if kind == 1 else [0.0]):
-						var tear = Tear.new()
+						var tear = TearScene.instantiate()
 						tear.player = player
 						tear.source = self
 						tear.parryable = true
@@ -535,7 +518,7 @@ func _secondary_update(delta: float) -> void:
 				elif kind in [3, 8]:
 					get_tree().call_group("game", "spawn_effect", "poeira", global_position, facing, 0.7, "onda_golpe")
 					for direction in [-1.0, 1.0]:
-						var wave = Tear.new()
+						var wave = TearScene.instantiate()
 						wave.player = player
 						wave.source = self
 						wave.wave = true
@@ -762,11 +745,8 @@ func _break_coffin() -> void:
 		director.shake_cam(5.0)
 		# A pedra quebrada permanece onde caiu.
 		if ResourceLoader.exists("res://assets/detritos_caixao.png"):
-			var rubble := Sprite2D.new()
-			rubble.texture = load("res://assets/detritos_caixao.png")
-			rubble.scale = Vector2(0.5, 0.5)
+			var rubble: Sprite2D = load(preload("res://scripts/efeitos.gd").DETRITOS_CAIXAO).instantiate()
 			rubble.flip_h = facing < 0
-			rubble.z_index = 4
 			rubble.position = global_position + Vector2(float(facing) * 34.0, -30.0)
 			director.add_child(rubble)
 
@@ -987,7 +967,7 @@ func _drop_line() -> void:
 	var floor_y := 598.0
 	if game != null and game.exploration != null: floor_y = float(game.exploration.rooms[room_id].floor) + 24.0
 	for offset in [-120.0, 0.0, 120.0]:
-		var t = Tear.new()
+		var t = TearScene.instantiate()
 		t.player = player
 		t.vel = Vector2(0.0, 70.0)
 		t.grav = 760.0
@@ -1041,7 +1021,7 @@ func _flyer(delta: float) -> void:
 
 func _shoot_fan(d: Vector2) -> void:
 	for spread in [-0.32, 0.0, 0.32]:
-		var t = Tear.new()
+		var t = TearScene.instantiate()
 		t.player = player
 		t.vel = d.rotated(spread) * 240.0
 		t.dmg = 7.0
@@ -1051,7 +1031,7 @@ func _shoot_fan(d: Vector2) -> void:
 
 
 func _shoot(d: Vector2) -> void:
-	var t = Tear.new()
+	var t = TearScene.instantiate()
 	t.player = player
 	t.vel = d * 260.0
 	t.dmg = 14.0
@@ -1224,12 +1204,8 @@ func _crack_floor() -> void:
 	var director = get_tree().get_first_node_in_group("game")
 	if director == null or not ResourceLoader.exists("res://assets/rachadura_chao.png"):
 		return
-	var crack := Sprite2D.new()
-	crack.texture = load("res://assets/rachadura_chao.png")
-	crack.scale = Vector2(0.7, 0.7)
-	crack.z_index = 4
+	var crack: Sprite2D = load(preload("res://scripts/efeitos.gd").RACHADURA_CHAO).instantiate()
 	crack.position = Vector2(global_position.x, global_position.y - 30.0)
-	crack.add_to_group("boss_cracks")
 	director.add_child(crack)
 	var fade := crack.create_tween()
 	fade.tween_interval(6.0)
@@ -1248,7 +1224,7 @@ func _scream() -> void:
 		director.spawn_effect("ring_weak", mouth, facing, 2.4, "onda", Color(1.0, 0.55, 0.5, 0.8))
 	var aim: Vector2 = (player.global_position + Vector2(0.0, -40.0) - (global_position + Vector2(0.0, -260.0))).normalized()
 	for k in range(5):
-		var t = Tear.new()
+		var t = TearScene.instantiate()
 		t.player = player
 		t.vel = aim.rotated(deg_to_rad(-24.0 + k * 12.0)) * 270.0
 		t.dmg = 9.0
@@ -1263,7 +1239,7 @@ func _slam() -> void:
 	if absf(player.global_position.x - global_position.x) < 170.0 and absf(player.global_position.y - global_position.y) < 70.0:
 		player.take_hit(26.0, global_position.x, self, false)
 	for s in [-1.0, 1.0]:
-		var t = Tear.new()
+		var t = TearScene.instantiate()
 		t.player = player
 		t.vel = Vector2(s * (240.0 if phase == 1 else 320.0), 0.0)
 		t.dmg = 16.0
@@ -1279,7 +1255,7 @@ func _rain_drop() -> void:
 	if randf() < 0.5:
 		x = player.global_position.x + randf_range(-150.0, 150.0)
 	x = clampf(x, arena_left + 30.0, arena_right - 30.0)
-	var t = Tear.new()
+	var t = TearScene.instantiate()
 	t.player = player
 	t.vel = Vector2(0.0, 120.0)
 	t.grav = 700.0
@@ -1295,7 +1271,7 @@ func _spikes() -> void:
 	for i in range(n):
 		var x: float = player.global_position.x + (float(i) - float(n - 1) / 2.0) * 110.0
 		x = clampf(x, arena_left + 30.0, arena_right - 30.0)
-		var s = Spike.new()
+		var s = SpikeScene.instantiate()
 		s.player = player
 		s.delay = 0.9 if phase == 1 else 0.7
 		get_parent().add_child(s)

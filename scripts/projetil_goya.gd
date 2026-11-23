@@ -9,14 +9,12 @@ var dano:=12.0
 var restante:=4.0
 var poca:=false
 var contatos:={}
-var desenho:Sprite2D
+## Criado a partir de scenes/projeteis/projetil_goya.tscn; "quadro" (colher, tigela, ave) é definido antes
+## de entrar na árvore e escolhe o recorte do atlas, que é próprio de cada projétil.
+@onready var desenho:Sprite2D=$Desenho
 func _ready() -> void:
- add_to_group("hazards")
- desenho=Sprite2D.new()
- var recorte:=AtlasTexture.new();recorte.atlas=load("res://assets/animation/goya_projeteis.png");recorte.region=Rect2(quadro*128,0,128,128)
- desenho.texture=recorte;desenho.scale=Vector2.ONE*(0.25 if quadro<2 else 0.35)
- add_child(desenho)
- z_index=4
+ desenho.texture.region=Rect2(quadro*128,0,128,128)
+ desenho.scale=Vector2.ONE*(0.25 if quadro<2 else 0.35)
 func _physics_process(delta:float) -> void:
  var jogo=get_tree().get_first_node_in_group("game")
  if jogo==null:return

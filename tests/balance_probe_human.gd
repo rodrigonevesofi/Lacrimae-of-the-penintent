@@ -45,7 +45,7 @@ func trial(scenario: Dictionary,number: int):
 	for key in p.hits:p.hits[key]=0
 	var enemies=[]
 	for d in definitions:
-		var e=game.EnemyScript.new()
+		var e=game.new_enemy(d[1])
 		e.setup(d[1],Vector2(d[2],d[3]),d[4],p)
 		e.room_id=d[0]
 		e.group=d[5] if d.size()>5 else -1
@@ -134,7 +134,8 @@ func run():
 	game.soundscape.ambience.stop();game.soundscape.incoming.stop();game.soundscape.guilt_layer.stop()
 	for voice in game.soundscape.effects.values():voice.stop()
 	var old=game.player
-	p=ProbePlayer.new();game.add_child(p);game.player=p;old.queue_free()
+	# A sonda usa a cena do jogador (filhos, colisão, câmera) com o script observador no lugar de player.gd.
+	p=game.PlayerScene.instantiate();p.set_script(ProbePlayer);game.add_child(p);game.player=p;old.queue_free()
 	await frames(3)
 	var only="devorador" if "--only-devorador" in OS.get_cmdline_user_args() else ("asmodeia_controle" if "--only-asmodeia" in OS.get_cmdline_user_args() else "")
 	if only!="":

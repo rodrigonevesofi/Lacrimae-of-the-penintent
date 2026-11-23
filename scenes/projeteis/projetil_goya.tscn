@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" uid="uid://crc3531k3cof8" path="res://scripts/projetil_goya.gd" id="1_projetil"]
+[ext_resource type="Texture2D" uid="uid://c4080c51h6sfp" path="res://assets/animation/goya_projeteis.png" id="2_atlas"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_quadro"]
+resource_local_to_scene = true
+atlas = ExtResource("2_atlas")
+region = Rect2(0, 0, 128, 128)
+
+[node name="ProjetilGoya" type="Node2D" groups=["hazards"]]
+z_index = 4
+script = ExtResource("1_projetil")
+
+[node name="Desenho" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = SubResource("AtlasTexture_quadro")

@@ -1,0 +1,207 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_ln2so"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_jmui2"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_l2qvo"]
+[ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_uplk0"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_y7bv2"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_jmui2"]
+[ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="7_l2qvo"]
+
+[node name="Cistern" type="Node2D" unique_id=1383495263]
+script = ExtResource("1_ln2so")
+id = "cistern"
+nome = "CISTERNA DOS NOMES"
+origem = Vector2(8200, -350)
+tamanho = Vector2(2400, 1300)
+arte = "cistern"
+linha_do_chao = 0.845
+posicao_no_mapa = Vector2(450, 540)
+passos = "step_agua"
+reverberacao = 0.36
+ambiente = "amb_cistern"
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=1355199334]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=1522223051]
+position = Vector2(360, 870)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=351251459]
+position = Vector2(500, 790)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=800185033]
+position = Vector2(640, 710)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=732069475]
+position = Vector2(780, 630)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=1686844325]
+position = Vector2(920, 550)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=1266699103]
+position = Vector2(1060, 470)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma7" type="Node2D" parent="Plataformas" unique_id=1600940997]
+position = Vector2(1200, 390)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma8" type="Node2D" parent="Plataformas" unique_id=1288899177]
+position = Vector2(1200, 390)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(500, 28)
+
+[node name="Plataforma9" type="Node2D" parent="Plataformas" unique_id=277735938]
+position = Vector2(1640, 470)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(150, 24)
+
+[node name="Plataforma10" type="Node2D" parent="Plataformas" unique_id=1592218423]
+position = Vector2(1770, 550)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(150, 24)
+
+[node name="Plataforma11" type="Node2D" parent="Plataformas" unique_id=1757472751]
+position = Vector2(1900, 630)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(150, 24)
+
+[node name="Plataforma12" type="Node2D" parent="Plataformas" unique_id=317291836]
+position = Vector2(2030, 710)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(150, 24)
+
+[node name="Plataforma13" type="Node2D" parent="Plataformas" unique_id=799328445]
+position = Vector2(2160, 790)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(150, 24)
+
+[node name="Plataforma14" type="Node2D" parent="Plataformas" unique_id=507132483]
+position = Vector2(495, 710)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(145, 24)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=403265771]
+
+[node name="Bloco1" type="Node2D" parent="Alvenaria" unique_id=457551322]
+position = Vector2(800, 900)
+script = ExtResource("2_jmui2")
+tamanho = Vector2(240, 50)
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1453215586]
+
+[node name="Devotee1" type="Node2D" parent="Inimigos" unique_id=255243210]
+position = Vector2(480, 950)
+script = ExtResource("3_l2qvo")
+alcance = 140.0
+
+[node name="Asmodeia2" type="Node2D" parent="Inimigos" unique_id=1347679546]
+position = Vector2(900, 830)
+script = ExtResource("3_l2qvo")
+tipo = 6
+alcance = 130.0
+
+[node name="Devotee3" type="Node2D" parent="Inimigos" unique_id=1569010356]
+position = Vector2(1480, 390)
+script = ExtResource("3_l2qvo")
+alcance = 130.0
+
+[node name="Devotee4" type="Node2D" parent="Inimigos" unique_id=266770747]
+position = Vector2(1900, 950)
+script = ExtResource("3_l2qvo")
+alcance = 150.0
+
+[node name="MeioEnterrado5" type="Node2D" parent="Inimigos" unique_id=514612048]
+position = Vector2(670, 950)
+script = ExtResource("3_l2qvo")
+tipo = 12
+alcance = 0.0
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=230422934]
+
+[node name="ArenaCistern" type="Node2D" parent="Arenas" unique_id=1736278465]
+position = Vector2(1120, 950)
+script = ExtResource("4_uplk0")
+id = "cistern"
+largura = 870.0
+
+[node name="Leva1" type="Node2D" parent="Arenas/ArenaCistern" unique_id=150940262]
+
+[node name="Devotee1" type="Node2D" parent="Arenas/ArenaCistern/Leva1" unique_id=2066474829]
+position = Vector2(160, 0)
+script = ExtResource("3_l2qvo")
+alcance = 60.0
+
+[node name="Flagelante2" type="Node2D" parent="Arenas/ArenaCistern/Leva1" unique_id=1032911202]
+position = Vector2(740, 0)
+script = ExtResource("3_l2qvo")
+tipo = 4
+alcance = 60.0
+
+[node name="Leva2" type="Node2D" parent="Arenas/ArenaCistern" unique_id=2142808223]
+
+[node name="Asmodeia1" type="Node2D" parent="Arenas/ArenaCistern/Leva2" unique_id=158282856]
+position = Vector2(480, -120)
+script = ExtResource("3_l2qvo")
+tipo = 6
+
+[node name="Devotee2" type="Node2D" parent="Arenas/ArenaCistern/Leva2" unique_id=702785216]
+position = Vector2(100, 0)
+script = ExtResource("3_l2qvo")
+alcance = 60.0
+
+[node name="Portas" type="Node2D" parent="." unique_id=230594690]
+
+[node name="Drain_B" type="Node2D" parent="Portas" unique_id=896175346]
+position = Vector2(170, 950)
+script = ExtResource("5_y7bv2")
+ligacao = "drain"
+lado = "b"
+
+[node name="WaterReturn_A" type="Node2D" parent="Portas" unique_id=1974884254]
+position = Vector2(2200, 950)
+script = ExtResource("5_y7bv2")
+ligacao = "water_return"
+rotulo = "Grade do pátio"
+trinco = true
+
+[node name="RefugeReturn_B" type="Node2D" parent="Portas" unique_id=520387959]
+position = Vector2(640, 710)
+script = ExtResource("5_y7bv2")
+ligacao = "refuge_return"
+lado = "b"
+
+[node name="Altares" type="Node2D" parent="." unique_id=647568683]
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=1667460719]
+
+[node name="Calice1" type="Node2D" parent="Vestigios" unique_id=1773851899]
+position = Vector2(1750, 950)
+script = ExtResource("6_jmui2")
+id_vestigio = "calice_1"
+nome = "Cálice de Sangue"
+texto = "Um cálice de bronze, ainda morno, cheio até a borda.
+O sangue de quem foi absolvido não coagula.
+
+Vida máxima +12."
+reliquia = true
+
+[node name="Pontos" type="Node2D" parent="." unique_id=364947999]
+
+[node name="CorrenteAgua" type="Node2D" parent="Pontos" unique_id=1186852444]
+position = Vector2(1450, 390)
+script = ExtResource("7_l2qvo")
+ponto = "corrente_agua"

@@ -1,5 +1,6 @@
 extends Node2D
 ## Espinhos que brotam do chão (ataque do chefe) - tem telegrafia antes do dano
+## Criado a partir de scenes/projeteis/espinho.tscn (que o põe no grupo "hazards").
 
 var player = null
 var delay := 0.9
@@ -13,9 +14,6 @@ func imminent_hit(who, window: float) -> bool:
 	if player != who or hit or delay - t < 0.0 or delay - t > window: return false
 	return Rect2(global_position + Vector2(-width/2,-90),Vector2(width,90)).intersects(who.body_rect())
 
-
-func _ready() -> void:
-	add_to_group("hazards")
 
 func _process(delta: float) -> void:
 	var game = get_tree().get_first_node_in_group("game")

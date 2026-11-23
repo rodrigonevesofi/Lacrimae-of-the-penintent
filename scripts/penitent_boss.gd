@@ -184,7 +184,7 @@ func _summon(count: int) -> void:
 		if minions.size() >= MINIONS_MAX: break
 		var side := -1.0 if i % 2 == 0 else 1.0
 		var x := clampf(global_position.x + side * (150.0 + 70.0 * i), arena_left + 60.0, arena_right - 60.0)
-		var m = game.CriaturaGoyaScript.new()
+		var m = game.new_enemy(11, game.CriaturaGoyaScript)
 		m.setup(11, Vector2(x, 600.0), 80.0, player)
 		m.room_id = "vale"
 		m.group = 800
@@ -216,44 +216,16 @@ func _break_armor(new_stage: int) -> void:
 func _shed_plates() -> void:
 	var game = _game()
 	if game == null: return
-	var plates := CPUParticles2D.new()
-	plates.one_shot = true
-	plates.amount = 7
-	plates.lifetime = 1.6
-	plates.explosiveness = 1.0
+	var plates: CPUParticles2D = preload("res://scripts/efeitos.gd").PLACAS_FLAGELADO.instantiate()
 	plates.direction = Vector2(-facing, -1.0)
-	plates.spread = 60.0
-	plates.initial_velocity_min = 180.0
-	plates.initial_velocity_max = 420.0
-	plates.gravity = Vector2(0, 1500)
-	plates.angular_velocity_min = -500.0
-	plates.angular_velocity_max = 500.0
-	plates.texture = load("res://assets/efeitos/placas_flagelado.png")
-	var pieces := CanvasItemMaterial.new()
-	pieces.particles_animation = true
-	pieces.particles_anim_h_frames = 4
-	pieces.particles_anim_v_frames = 1
-	pieces.particles_anim_loop = false
-	plates.material = pieces
-	plates.anim_offset_min = 0.0
-	plates.anim_offset_max = 0.999
-	plates.scale_amount_min = 0.25
-	plates.scale_amount_max = 0.45
-	plates.color = Color.WHITE
-	plates.z_index = 7
 	plates.position = global_position + Vector2(0, -60)
 	game.add_child(plates)
 	plates.emitting = true
 	get_tree().create_timer(2.2).timeout.connect(plates.queue_free)
 	# Uma peça de cada queda permanece no chão, marcando a armadura já abandonada.
-	var fallen_plate:=Sprite2D.new()
-	var tile:=AtlasTexture.new()
-	tile.atlas=plates.texture
-	tile.region=Rect2(clampi(stage-1,0,3)*128,0,128,128)
-	fallen_plate.texture=tile
-	fallen_plate.scale=Vector2.ONE*0.4
+	var fallen_plate:Sprite2D=preload("res://scripts/efeitos.gd").PLACA_CAIDA.instantiate()
+	fallen_plate.texture.region=Rect2(clampi(stage-1,0,3)*128,0,128,128)
 	fallen_plate.position=global_position+Vector2(0,-65)
-	fallen_plate.z_index=-1
 	game.add_child(fallen_plate)
 	var landing:=Vector2(clampf(global_position.x-facing*randf_range(45,100),arena_left,arena_right),592)
 	var fall:=fallen_plate.create_tween()

@@ -1,0 +1,171 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_c7ird"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_4t7ec"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_c2x5k"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_w1108"]
+[ext_resource type="Script" path="res://scripts/salas/altar.gd" id="5_c2x5k"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_w1108"]
+
+[node name="Nave" type="Node2D" unique_id=1863889185]
+script = ExtResource("1_c7ird")
+id = "nave"
+nome = "NAVE DO SILÊNCIO"
+origem = Vector2(21400, -450)
+tamanho = Vector2(2600, 1400)
+piso = 1050.0
+arte = "nave_silencio"
+linha_do_chao = 0.848
+altura_arte = 880.0
+posicao_no_mapa = Vector2(20, 230)
+reverberacao = 0.4
+musica = "nave"
+ambiente = "amb_nave"
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=2032120668]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=1200670242]
+position = Vector2(550, 970)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(150, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=782091415]
+position = Vector2(710, 890)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(150, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=1719368641]
+position = Vector2(870, 810)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(420, 26)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=1175534079]
+position = Vector2(1400, 970)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=1846183132]
+position = Vector2(1540, 890)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=120672649]
+position = Vector2(1680, 810)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma7" type="Node2D" parent="Plataformas" unique_id=134847461]
+position = Vector2(1820, 730)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma8" type="Node2D" parent="Plataformas" unique_id=815475379]
+position = Vector2(1820, 650)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(680, 28)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=1163875]
+
+[node name="Bloco1" type="Node2D" parent="Alvenaria" unique_id=180064246]
+position = Vector2(600, 1005)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(180, 45)
+
+[node name="Bloco2" type="Node2D" parent="Alvenaria" unique_id=135849023]
+position = Vector2(1950, 1000)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(260, 50)
+
+[node name="Bloco3" type="Node2D" parent="Alvenaria" unique_id=30860383]
+position = Vector2(2010, 950)
+script = ExtResource("2_4t7ec")
+tamanho = Vector2(140, 100)
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1439426415]
+
+[node name="Devotee1" type="Node2D" parent="Inimigos" unique_id=1793868629]
+position = Vector2(1050, 1050)
+script = ExtResource("3_c2x5k")
+alcance = 120.0
+
+[node name="Asmodeia2" type="Node2D" parent="Inimigos" unique_id=1690557449]
+position = Vector2(1200, 930)
+script = ExtResource("3_c2x5k")
+tipo = 6
+alcance = 150.0
+
+[node name="Mourner3" type="Node2D" parent="Inimigos" unique_id=1290804223]
+position = Vector2(2200, 540)
+script = ExtResource("3_c2x5k")
+tipo = 1
+
+[node name="Devorador4" type="Node2D" parent="Inimigos" unique_id=244774461]
+position = Vector2(1800, 1050)
+script = ExtResource("3_c2x5k")
+tipo = 3
+alcance = 70.0
+
+[node name="Carregador5" type="Node2D" parent="Inimigos" unique_id=814743506]
+position = Vector2(1400, 1050)
+script = ExtResource("3_c2x5k")
+tipo = 8
+alcance = 120.0
+
+[node name="Parcas6" type="Node2D" parent="Inimigos" unique_id=941725483]
+position = Vector2(2300, 1000)
+script = ExtResource("3_c2x5k")
+tipo = 13
+alcance = 90.0
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=704649642]
+
+[node name="Portas" type="Node2D" parent="." unique_id=1144462079]
+
+[node name="NaveIn_B" type="Node2D" parent="Portas" unique_id=651044652]
+position = Vector2(160, 1050)
+script = ExtResource("4_w1108")
+ligacao = "nave_in"
+lado = "b"
+
+[node name="NaveOut_A" type="Node2D" parent="Portas" unique_id=1378885133]
+position = Vector2(2450, 1050)
+script = ExtResource("4_w1108")
+ligacao = "nave_out"
+rotulo = "Passagem do coro"
+
+[node name="Altares" type="Node2D" parent="." unique_id=240083512]
+
+[node name="Altar1" type="Node2D" parent="Altares" unique_id=1054054182]
+position = Vector2(400, 1050)
+script = ExtResource("5_c2x5k")
+nome = "Altar da Santa Calada"
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=835092322]
+
+[node name="Pews" type="Node2D" parent="Vestigios" unique_id=20071118]
+position = Vector2(1080, 810)
+script = ExtResource("6_w1108")
+id_vestigio = "pews"
+nome = "Bancos voltados para a parede"
+texto = "Todos os bancos da nave foram virados para a pedra nua.
+
+\"Porque os seus ouvidos se fecharam, e eles não ouviram.\"
+
+Há lágrimas secas nas fendas da madeira.
+
++120 lágrimas."
+recompensa = 120
+
+[node name="Silence" type="Node2D" parent="Vestigios" unique_id=1574186088]
+position = Vector2(2200, 650)
+script = ExtResource("6_w1108")
+id_vestigio = "silence"
+nome = "Terço de contas apagadas"
+texto = "Cada conta foi lixada até perder o nome que levava.
+Restou o fio, e o fio ainda está quente.
+
+Uma mão devota esteve aqui antes de você.
+
++250 lágrimas."
+recompensa = 250

@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="Gradient" id="Gradient_tons"]
+offsets = PackedFloat32Array(0, 0, 1)
+colors = PackedColorArray(0.62, 0.05, 0.07, 1, 0.55, 0.22, 0.22, 1, 0.3, 0, 0.02, 1)
+
+[node name="GoreMassa" type="CPUParticles2D"]
+z_index = 7
+emitting = false
+amount = 70
+lifetime = 1.2
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 1500)
+initial_velocity_min = 120.0
+initial_velocity_max = 520.0
+scale_amount_min = 2.0
+scale_amount_max = 5.5
+color_initial_ramp = SubResource("Gradient_tons")

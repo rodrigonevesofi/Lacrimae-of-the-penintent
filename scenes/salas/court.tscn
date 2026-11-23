@@ -1,0 +1,127 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_r6s0l"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_lbk35"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_me5ei"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="4_7tj13"]
+[ext_resource type="Script" path="res://scripts/salas/altar.gd" id="5_me5ei"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_7tj13"]
+
+[node name="Court" type="Node2D" unique_id=1362481682]
+script = ExtResource("1_r6s0l")
+id = "court"
+nome = "PÁTIO DOS PORTÕES SELADOS"
+origem = Vector2(27400, -350)
+arte = "patio_portoes"
+linha_do_chao = 0.852
+altura_arte = 800.0
+posicao_no_mapa = Vector2(1000, 560)
+reverberacao = 0.14
+musica = "patio"
+ambiente = "amb_court"
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=2106304600]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=121313676]
+position = Vector2(700, 870)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(200, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1981576417]
+position = Vector2(900, 790)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(200, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=1506517810]
+position = Vector2(1100, 710)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(440, 26)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=727547871]
+
+[node name="Bloco1" type="Node2D" parent="Alvenaria" unique_id=2144760419]
+position = Vector2(800, 900)
+script = ExtResource("2_lbk35")
+tamanho = Vector2(200, 50)
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=1831288897]
+
+[node name="Devorador1" type="Node2D" parent="Inimigos" unique_id=27836190]
+position = Vector2(1250, 950)
+script = ExtResource("3_me5ei")
+tipo = 3
+
+[node name="Mourner2" type="Node2D" parent="Inimigos" unique_id=1300520720]
+position = Vector2(900, 600)
+script = ExtResource("3_me5ei")
+tipo = 1
+alcance = 120.0
+
+[node name="Devotee3" type="Node2D" parent="Inimigos" unique_id=838926351]
+position = Vector2(1650, 950)
+script = ExtResource("3_me5ei")
+alcance = 80.0
+
+[node name="Romaria4" type="Node2D" parent="Inimigos" unique_id=850571664]
+position = Vector2(670, 950)
+script = ExtResource("3_me5ei")
+tipo = 15
+alcance = 45.0
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=1926270233]
+
+[node name="Portas" type="Node2D" parent="." unique_id=298430692]
+
+[node name="SealRoad_B" type="Node2D" parent="Portas" unique_id=1790252203]
+position = Vector2(160, 950)
+script = ExtResource("4_7tj13")
+ligacao = "seal_road"
+lado = "b"
+
+[node name="Altares" type="Node2D" parent="." unique_id=927318561]
+
+[node name="Altar1" type="Node2D" parent="Altares" unique_id=454741742]
+position = Vector2(550, 950)
+script = ExtResource("5_me5ei")
+nome = "Altar dos Portões Selados"
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=1506459019]
+
+[node name="Seal" type="Node2D" parent="Vestigios" unique_id=594899292]
+position = Vector2(1400, 950)
+script = ExtResource("6_7tj13")
+id_vestigio = "seal"
+nome = "Os Portões Selados"
+texto = "Os portões estão fechados por fora, com correntes que ninguém forjou aqui.
+Gravado na madeira, sob um selo raspado: \"POR ORDEM DO SELO: NINGUÉM SAIRÁ, NINGUÉM ENTRARÁ.\"
+
+Abaixo, riscado por unhas: \"Pai, abra. Estamos aqui.\"
+
+Este caminho ainda não se abre.
+Algo que você carrega ainda é a chave."
+recompensa = 0
+
+[node name="Decree" type="Node2D" parent="Vestigios" unique_id=376080865]
+position = Vector2(1300, 710)
+script = ExtResource("6_7tj13")
+id_vestigio = "decree"
+nome = "Decreto selado em cera"
+texto = "\"Quem lamentar será tratado como cúmplice da praga.
+Quem chorar será contado entre os culpados.\"
+
+O nome no selo foi raspado a faca. O pulso que assinou tremia.
+Pela primeira vez, você duvida de quem ordenou.
+
++200 lágrimas."
+recompensa = 200
+
+[node name="Espinho2" type="Node2D" parent="Vestigios" unique_id=2075242779]
+position = Vector2(900, 900)
+script = ExtResource("6_7tj13")
+id_vestigio = "espinho_2"
+nome = "Espinho da Ira"
+texto = "Preso na madeira dos portões, ao lado das marcas de unhas.
+
+Dano +8%."
+reliquia = true

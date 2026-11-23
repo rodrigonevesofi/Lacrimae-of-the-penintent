@@ -137,7 +137,7 @@ func run() -> void:
 		game.lagrimas_ar.clear()
 		p.apply_penitence("none")
 		await frames(4)
-		e = game.EnemyScript.new()
+		e = game.new_enemy(kind)
 		e.setup(kind, Vector2(700,600), 0, p)
 		game.add_child(e)
 		e.set_physics_process(false)
@@ -176,7 +176,7 @@ func run() -> void:
 	game.boss.state = "stagger"
 	game.boss.position = Vector2(700,600)
 	expect(not p.begin_execution(game.boss), "boss cannot bypass fight through common execution")
-	var victim = game.EnemyScript.new()
+	var victim = game.new_enemy(0)
 	victim.setup(0, Vector2(700,600), 0, p)
 	game.add_child(victim)
 	victim.spawn_opacity = 1
@@ -194,7 +194,7 @@ func run() -> void:
 	# Exercita os modificadores pelos caminhos reais de dano, não apenas pelos metadados.
 	victim.queue_free()
 	await frames(2)
-	var sword_target = game.EnemyScript.new()
+	var sword_target = game.new_enemy(0)
 	sword_target.setup(0, Vector2(700,600), 0, p)
 	game.add_child(sword_target)
 	sword_target.set_physics_process(false)

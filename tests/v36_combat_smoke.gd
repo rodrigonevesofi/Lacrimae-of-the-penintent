@@ -14,7 +14,7 @@ func frames(n: int) -> void:
 		await physics_frame
 		await process_frame
 func foe(kind: int, pos: Vector2):
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(kind)
 	e.setup(kind, pos, 0, p)
 	game.add_child(e)
 	e.set_physics_process(false)
@@ -158,7 +158,7 @@ func run() -> void:
 	p._start_roll()
 	expect(p.perfect_dodge_used, "pancada iminente do Guardião também permite esquiva perfeita")
 	await reset()
-	var spike = game.EnemyScript.Spike.new()
+	var spike = game.EnemyScript.SpikeScene.instantiate()
 	spike.player = p
 	spike.t = 0.76
 	game.add_child(spike)
@@ -166,7 +166,7 @@ func run() -> void:
 	p._start_roll()
 	expect(p.perfect_dodge_used, "espinho prestes a brotar entra na previsão da esquiva")
 	await reset()
-	var incoming = game.EnemyScript.Tear.new()
+	var incoming = game.EnemyScript.TearScene.instantiate()
 	incoming.player = p
 	incoming.vel = Vector2(-600,0)
 	game.add_child(incoming)
@@ -241,7 +241,7 @@ func run() -> void:
 	p._start_parry()
 	p.state_t = p.PARRY_TIME
 	p.invuln = 0
-	var tear = game.EnemyScript.Tear.new()
+	var tear = game.EnemyScript.TearScene.instantiate()
 	tear.player = p
 	tear.parryable = true
 	game.add_child(tear)
@@ -252,7 +252,7 @@ func run() -> void:
 	p._start_parry()
 	p.state_t = p.PARRY_TIME
 	p.invuln = 0
-	tear = game.EnemyScript.Tear.new()
+	tear = game.EnemyScript.TearScene.instantiate()
 	tear.player = p
 	game.add_child(tear)
 	tear.position = p.position - Vector2(0,30)

@@ -72,7 +72,6 @@ var opening := [
 ]
 
 func _ready() -> void:
-	layer = 30
 	opening_art = load("res://assets/opening.png")
 	font = ThemeDB.fallback_font
 	var ramp := Gradient.new()

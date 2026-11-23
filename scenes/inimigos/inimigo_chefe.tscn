@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/inimigos/inimigo.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://materials/luz_radial.tres" id="2_luz"]
+
+[node name="InimigoChefe" instance=ExtResource("1_base")]
+
+[node name="Light" type="PointLight2D" parent="."]
+position = Vector2(0, -100)
+color = Color(0.95, 0.35, 0.3, 1)
+energy = 0.55
+texture = ExtResource("2_luz")
+texture_scale = 3.0

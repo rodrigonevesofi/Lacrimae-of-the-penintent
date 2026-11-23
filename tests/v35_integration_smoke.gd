@@ -60,7 +60,7 @@ func run() -> void:
 	expect(get_nodes_in_group("blood_splats").size() == 90, "limite de 90 respingos vale mesmo no mesmo quadro")
 	await frames(3)
 	expect(get_nodes_in_group("blood_splats").size() == 90, "respingos permanecem depois do golpe")
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(7)
 	e.setup(7, Vector2(1000, 600), 0, p)
 	game.add_child(e)
 	e._die()

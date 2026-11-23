@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_al3mw"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="2_spmnc"]
+[ext_resource type="Script" path="res://scripts/salas/ponto.gd" id="3_spmnc"]
+
+[node name="Vale" type="Node2D" unique_id=1874735420]
+script = ExtResource("1_al3mw")
+id = "vale"
+nome = "VALE DOS FLAGELADOS"
+origem = Vector2(30200, -500)
+tamanho = Vector2(3400, 1400)
+piso = 1100.0
+arte = "gates"
+linha_do_chao = 0.8
+altura_arte = 1250.0
+ao_ar_livre = true
+procedural = true
+posicao_no_mapa = Vector2(1180, 560)
+reverberacao = 0.2
+ambiente = "amb_vale"
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=190778392]
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=2082342367]
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=779291200]
+
+[node name="Disciplinantes1" type="Node2D" parent="Inimigos" unique_id=2065784274]
+position = Vector2(1140, 1100)
+script = ExtResource("2_spmnc")
+tipo = 11
+alcance = 80.0
+grupo = 700
+criatura = true
+
+[node name="Disciplinantes2" type="Node2D" parent="Inimigos" unique_id=2019390607]
+position = Vector2(1220, 1100)
+script = ExtResource("2_spmnc")
+tipo = 11
+alcance = 80.0
+grupo = 700
+criatura = true
+
+[node name="Disciplinantes3" type="Node2D" parent="Inimigos" unique_id=917007197]
+position = Vector2(1300, 1100)
+script = ExtResource("2_spmnc")
+tipo = 11
+alcance = 80.0
+grupo = 700
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=566349504]
+
+[node name="Portas" type="Node2D" parent="." unique_id=35289926]
+
+[node name="Altares" type="Node2D" parent="." unique_id=1361405317]
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=1489426778]
+
+[node name="Pontos" type="Node2D" parent="." unique_id=1398761657]
+
+[node name="EntradaVale" type="Node2D" parent="Pontos" unique_id=206619607]
+position = Vector2(280, 1100)
+script = ExtResource("3_spmnc")
+ponto = "entrada_vale"
+
+[node name="ChefeVale" type="Node2D" parent="Pontos" unique_id=270806441]
+position = Vector2(2100, 1100)
+script = ExtResource("3_spmnc")
+ponto = "chefe_vale"

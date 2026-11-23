@@ -11,6 +11,8 @@ var ui_regions: Dictionary = {}
 const GOLD := Color(0.86, 0.7, 0.38)
 
 
+## Fica em scenes/interface.tscn (camada 10, processa mesmo em pausa, ignora o mouse, 1280 x 720).
+## O desenho continua em _draw: barras, molduras, mapa e telas são compostos por código.
 func _ready() -> void:
 	ui_art = load("res://assets/reliquary_ui.png")
 	for path in ["res://assets/ending/ato1_portoes_v2.png", "res://assets/ending/ato1_portoes.png"]:
@@ -25,9 +27,6 @@ func _ready() -> void:
 	font = ThemeDB.fallback_font
 	title_font = load("res://assets/title_font.ttf")
 	title_art = load("res://assets/monastery.png")
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	size = Vector2(1280, 720)
 
 
 var pause_notice := ""
@@ -505,7 +504,7 @@ func _draw_aviso_mundo(vs: Vector2) -> void:
 ## Iria não é inimiga: um losango dourado e o nome dela aparecem quando o Penitente se aproxima.
 func _draw_npc(vs: Vector2) -> void:
 	if game.state != "play" or game.exploration.room != "city" or game.message_text != "": return
-	var iria := Vector2(990, 600)
+	var iria: Vector2 = game.IRIA_POS
 	var dist: float = game.player.global_position.distance_to(iria)
 	if dist > 640.0: return
 	var a: float = clampf((640.0 - dist) / 260.0, 0.0, 1.0)

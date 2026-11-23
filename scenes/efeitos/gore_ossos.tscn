@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Material" path="res://materials/flipbook_pedacos.tres" id="1_flipbook"]
+[ext_resource type="Texture2D" path="res://materials/pedacos_sangue.tres" id="2_pedacos"]
+
+[node name="GoreOssos" type="CPUParticles2D"]
+z_index = 7
+material = ExtResource("1_flipbook")
+emitting = false
+amount = 14
+lifetime = 1.4
+one_shot = true
+explosiveness = 1.0
+texture = ExtResource("2_pedacos")
+direction = Vector2(1, -1)
+spread = 80.0
+gravity = Vector2(0, 1700)
+initial_velocity_min = 200.0
+initial_velocity_max = 560.0
+angular_velocity_min = -720.0
+angular_velocity_max = 720.0
+scale_amount_min = 0.1
+scale_amount_max = 0.2
+anim_offset_max = 0.999

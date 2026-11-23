@@ -13,6 +13,7 @@ var doorway_art: Texture2D
 var memorial_base: Sprite2D
 var memorial_doll: Sprite2D
 var gate_memory: AtlasTexture
+const Layout = preload("res://scripts/act_one_layout.gd")
 const PANORAMA_RECT := Rect2(0, -770, 4800, 1600)
 var iria_animation
 ## A cor da pedra de cada sala, medida na própria pintura: [piso, parede].
@@ -39,13 +40,15 @@ const RECUO := Color(0.80, 0.77, 0.79)
 const GOLD := Color("a58a59")
 
 func _ready() -> void:
+	# Na main.tscn esta camada fica pronta antes da main; a posição de Iria vem dela.
+	if game == null: game = get_parent()
 	var surface := CanvasItemMaterial.new()
 	surface.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	material = surface
 	iria_animation = preload("res://scripts/actor_animation.gd").new()
 	iria_animation.configure("iria", 0.38)
 	var iria_anchor := Node2D.new()
-	iria_anchor.position = Vector2(990, 600)
+	iria_anchor.position = game.IRIA_POS
 	add_child(iria_anchor)
 	iria_anchor.add_child(iria_animation)
 	sacred_props = load("res://assets/sacred_props.png")
@@ -137,18 +140,20 @@ func _draw() -> void:
 	if not _pintura_viva("city"): draw_texture_rect(panorama, PANORAMA_RECT, false, RECUO)
 	if game.exploration != null: draw_passages("city")
 	# A ponte quebrada é um buraco real no plano de caminhada em primeiro plano.
+	var abismo: Vector2 = game.abyss_span
+	var vao := abismo.y - abismo.x
 	if abyss_art != null:
 		# Abismo pintado: pedra quebrada nas duas bordas, névoa subindo e luz tênue ao fundo.
-		draw_rect(Rect2(2000, 600, 270, 330), Color("0b0e12"))
-		draw_texture_rect(abyss_art, Rect2(2000, 596, 270, 400), false)
+		draw_rect(Rect2(abismo.x, 600, vao, 330), Color("0b0e12"))
+		draw_texture_rect(abyss_art, Rect2(abismo.x, 596, vao, 400), false)
 	else:
-		draw_rect(Rect2(2000, 600, 270, 310), Color("12171d"))
-		for edge in [2000, 2270]:
-			var side := -1 if edge == 2000 else 1
+		draw_rect(Rect2(abismo.x, 600, vao, 310), Color("12171d"))
+		for edge in [abismo.x, abismo.y]:
+			var side := -1 if edge == abismo.x else 1
 			polygon([Vector2(edge, 600), Vector2(edge + side * 35, 600), Vector2(edge + side * 22, 666), Vector2(edge + side * 12, 631)], Color("595149"))
 	# O primeiro plano deve corresponder exatamente às plataformas de colisão.
-	_draw_ground(0, 2000)
-	_draw_ground(2270, 4800)
+	_draw_ground(0, abismo.x)
+	_draw_ground(abismo.y, PANORAMA_RECT.end.x)
 	for p in game.platforms:
 		# Suportes esculpidos conectam fisicamente as saliências ao edifício atrás.
 		for end_x in [p.position.x + 12, p.end.x - 12]:
@@ -157,31 +162,34 @@ func _draw() -> void:
 		draw_line(p.position, Vector2(p.end.x, p.position.y), Color("b5a084"), 2)
 	# Iria permanece separada dos combatentes; a bengala identifica sua silhueta.
 	# Gaiolas vazias suspensas: silhuetas de fundo, nunca colisões ocultas.
-	for x in range(1430, 3200, 360):
+	for gaiola in Layout.city_decor("gaiola"):
+		var x: float = gaiola.x
 		var sway := sin(game.t * 0.65 + x) * 5
-		var pos := Vector2(x + sway, 190)
+		var pos := Vector2(x + sway, gaiola.y)
 		draw_line(Vector2(x, -100), pos, Color("252228"), 2)
 		draw_arc(pos + Vector2(0, 22), 22, PI, TAU, 16, Color("6d5a43"), 2)
 		draw_rect(Rect2(pos.x - 22, pos.y + 22, 44, 60), Color("3a3433"), false, 2)
 		for dx in [-14, -5, 5, 14]:
 			draw_line(pos + Vector2(dx, 22), pos + Vector2(dx, 82), Color("6d5a43"), 2)
-	draw_set_transform(Vector2(2800,599),0,Vector2(1,0.13))
+	draw_set_transform(game.MEMORIAL_POS + Vector2(0, -1),0,Vector2(1,0.13))
 	draw_circle(Vector2.ZERO,95,Color(0,0,0,0.25))
 	draw_set_transform(Vector2.ZERO)
-	prop(1,Vector2(150,600),260)
+	var tumulo: Vector2 = game.TOMB_POS
+	prop(1,tumulo,260)
 	# Coroa deixada ao lado do túmulo.
-	draw_arc(Vector2(245, 593), 12, PI, TAU, 10, GOLD, 2)
+	draw_arc(tumulo + Vector2(95, -7), 12, PI, TAU, 10, GOLD, 2)
 	for i in range(5):
-		draw_line(Vector2(234 + i * 5, 590), Vector2(232 + i * 5, 584), GOLD, 1)
+		draw_line(tumulo + Vector2(84 + i * 5, -10), tumulo + Vector2(82 + i * 5, -16), GOLD, 1)
 	if not game.player.has_weapon:
 		var x: float = game.SWORD_POS.x
-		draw_line(Vector2(x, 597), Vector2(x, 527), Color("c1bfad"), 4)
-		draw_line(Vector2(x - 13, 543), Vector2(x + 13, 543), GOLD, 3)
-		draw_line(Vector2(x, 543), Vector2(x, 523), Color("5d342b"), 5)
-		draw_circle(Vector2(x, 521), 4, GOLD)
+		var y: float = game.SWORD_POS.y
+		draw_line(Vector2(x, y - 3), Vector2(x, y - 73), Color("c1bfad"), 4)
+		draw_line(Vector2(x - 13, y - 57), Vector2(x + 13, y - 57), GOLD, 3)
+		draw_line(Vector2(x, y - 57), Vector2(x, y - 77), Color("5d342b"), 5)
+		draw_circle(Vector2(x, y - 79), 4, GOLD)
 		for i in range(5):
-			draw_line(Vector2(x, 553 + i * 7), Vector2(x + 5, 550 + i * 7), GOLD, 1)
-		draw_circle(Vector2(x, 553), 25 + sin(game.t * 2) * 3, Color(0.8, 0.63, 0.3, 0.04))
+			draw_line(Vector2(x, y - 47 + i * 7), Vector2(x + 5, y - 50 + i * 7), GOLD, 1)
+		draw_circle(Vector2(x, y - 47), 25 + sin(game.t * 2) * 3, Color(0.8, 0.63, 0.3, 0.04))
 	for altar in game.altars:
 		if altar.x < 4800: prop(0,altar,185)
 	for entry in game.lore: prop(2,Vector2(entry.x,600),120)
@@ -190,15 +198,15 @@ func _draw() -> void:
 	for cx in game.candle_xs:
 		for i in range(3): candle(Vector2(cx + rng.randf_range(-18,18),599),rng.randf_range(9,22),float(i))
 	if game.exploration != null and game.exploration.bells.size() < 2:
-		for x in [3781,3794]:
-			for y in range(-70,600,18): draw_arc(Vector2(x,y),7,0,TAU,12,Color("967853"),3)
+		for corrente in Layout.city_decor("corrente"):
+			for y in range(int(corrente.y),600,18): draw_arc(Vector2(corrente.x,y),7,0,TAU,12,Color("967853"),3)
 	# Entulho, ossos pequenos e raízes no chão. Determinísticos entre quadros.
 	for i in range(120):
 		var x := rng.randf_range(10, 4790)
-		if x > 2000 and x < 2270:
+		if x > abismo.x and x < abismo.y:
 			continue
 		polygon([Vector2(x - 4, 600), Vector2(x - 2, 594), Vector2(x + 5, 596), Vector2(x + 7, 600)], Color("4b4945"))
-	for anchor in [Vector2(1160, 170), Vector2(2550, 110), Vector2(3380, 180)]:
+	for anchor in Layout.city_decor("pano"):
 		for i in range(8):
 			var yy: float = anchor.y + i * 17
 			var sway := sin(game.t * 1.2 + i * 0.4) * i * 0.75
@@ -266,7 +274,7 @@ func build_memorial() -> void:
 	var size := memorial_base.texture.get_size()
 	var unit := 220.0/size.x
 	memorial_base.scale = Vector2.ONE*unit
-	memorial_base.position = Vector2(2800,600+(size.y/2-1008)*unit)
+	memorial_base.position = game.MEMORIAL_POS + Vector2(0,(size.y/2-1008)*unit)
 	# A imagem de origem tem brilho translúcido suave em torno da silhueta. Este material de recorte
 	# remove o halo durante a renderização e preserva a suavização das bordas da pedra.
 	var shader := Shader.new()
@@ -278,7 +286,7 @@ func build_memorial() -> void:
 	memorial_doll = Sprite2D.new()
 	memorial_doll.texture = load("res://assets/cloth_doll.png")
 	memorial_doll.scale = Vector2.ONE*0.037
-	memorial_doll.position = Vector2(2800,543+(627-1136)*0.037)
+	memorial_doll.position = game.MEMORIAL_POS + Vector2(0,-57+(627-1136)*0.037)
 	memorial_doll.visible = false
 	add_child(memorial_doll)
 
@@ -398,7 +406,7 @@ func draw_branch() -> void:
 		prop(2,item.pos,100)
 		var glow: Vector2 = item.pos+Vector2(0,-52)
 		draw_circle(glow,7+sin(game.t*3)*2,Color(0.85,0.75,0.5,0.25))
-	for entry in [{"id":"water","room":"cistern","pos":Vector2(9650,40)}, {"id":"vigil","room":"belfry","pos":Vector2(15120,-260)}]:
+	for entry in ex.bell_chains():
 		if entry.room == ex.room:
 			prop(4,entry.pos,150,Color(0.65,0.65,0.62) if ex.bells.has(entry.id) else Color.WHITE)
 	if not game.relic_taken and ex.room == "belfry":

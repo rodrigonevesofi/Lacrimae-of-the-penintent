@@ -25,9 +25,9 @@ def risk(m):
     return 'Sem alerta pelo critério'
 
 def inventory():
-    # Lê as declarações reais das salas, em vez de deduzir a partir de cada PNG da raiz.
-    layout = (ROOT/'scripts/act_one_layout.gd').read_text()
-    room_art = sorted(set(re.findall(r'"art"\s*:\s*"([^"]+)"', layout)))
+    # Lê as declarações reais das salas (scenes/salas/*.tscn), em vez de deduzir a partir de cada PNG da raiz.
+    room_art = sorted({m for cena in (ROOT/'scenes/salas').glob('*.tscn')
+                       for m in re.findall(r'^arte = "([^"]+)"', cena.read_text(encoding='utf-8'), re.M)})
     if not room_art:
         raise ValueError('No room backgrounds discovered; check the layout parser')
     paths = {p: 'cena / '+folder for folder in ['memory', 'boss', 'ending']

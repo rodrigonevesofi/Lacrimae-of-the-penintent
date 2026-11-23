@@ -50,7 +50,8 @@ func run() -> void:
 	var p = game.player
 	p.revive(Vector2(900,600))
 	game._place_splat(Vector2(900,600),10)
-	var stain = get_nodes_in_group("blood_splats")[0].get_child(0)
+	# A mancha é o próprio sprite (scenes/efeitos/mancha_chao.tscn), não mais um nó com o sprite dentro.
+	var stain = get_nodes_in_group("blood_splats")[0]
 	expect(stain is Sprite2D and stain.texture.atlas.resource_path.ends_with("sangue_chao.png"), "manchas no piso usam a pintura, não polígonos")
 	game.wall_splat(Vector2(900,560))
 	expect(get_nodes_in_group("blood_walls").is_empty(), "sem parede perto não cria sangue suspenso")
@@ -68,7 +69,7 @@ func run() -> void:
 		for child in node.get_children():
 			if child is Actor and child.actor == "jato_arterial": pulse = true
 	expect(pulse,"jato arterial desenha o atlas animado durante os pulsos")
-	var e = game.EnemyScript.new()
+	var e = game.new_enemy(0)
 	e.setup(0,Vector2(950,600),0,p)
 	game.add_child(e)
 	e.set_physics_process(false)

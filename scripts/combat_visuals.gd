@@ -1,8 +1,9 @@
 extends Node2D
 ## Efeitos visuais locais; não alteram dano nem janelas de controle.
 var subject
-var trail: Line2D
-var glint: PointLight2D
+## Rastro da arma e brilho do golpe, montados em scenes/efeitos/combat_visuals.tscn.
+@onready var trail: Line2D = $Trail
+@onready var glint: PointLight2D = $Glint
 var breathing: Tween
 var was_idle := false
 var age := 0.0
@@ -18,24 +19,8 @@ static var coverage_cache:Dictionary={}
 func _ready() -> void:
  subject=get_parent()
  player_actor=subject.has_method("_start_attack")
- trail=Line2D.new()
- trail.top_level=true
+ # O rastro do jogador é mais largo que o dos inimigos.
  trail.width=7.0 if player_actor else 5.0
- trail.z_index=8
- var taper:=Curve.new()
- taper.add_point(Vector2(0,0));taper.add_point(Vector2(0.65,0.8));taper.add_point(Vector2(1,1))
- trail.width_curve=taper
- trail.joint_mode=Line2D.LINE_JOINT_ROUND
- add_child(trail)
- glint=PointLight2D.new()
- var gradient:=Gradient.new()
- gradient.colors=PackedColorArray([Color.WHITE,Color(1,1,1,0)])
- var radial:=GradientTexture2D.new()
- radial.gradient=gradient;radial.width=128;radial.height=128
- radial.fill=GradientTexture2D.FILL_RADIAL;radial.fill_from=Vector2(0.5,0.5);radial.fill_to=Vector2(1,0.5)
- glint.texture=radial;glint.texture_scale=1.6;glint.color=Color(1,0.80,0.38);glint.energy=0.0
- glint.position=Vector2(0,-50)
- add_child(glint)
 
 func material_for() -> ShaderMaterial:
  var m:=ShaderMaterial.new()

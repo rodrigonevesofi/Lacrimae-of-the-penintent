@@ -14,7 +14,7 @@ func quadros(quantidade:int) -> void:
   await physics_frame
   await process_frame
 func criar(tipo:int,x:float=1400,y:float=600):
- var criatura=jogo.CriaturaGoyaScript.new()
+ var criatura=jogo.new_enemy(tipo, jogo.CriaturaGoyaScript)
  criatura.setup(tipo,Vector2(x,y),70,pessoa)
  criatura.room_id=jogo.exploration.room
  jogo.add_child(criatura)
@@ -135,7 +135,7 @@ func executar() -> void:
  colisao.shape=forma;parede.add_child(colisao);parede.position=Vector2(1460,530);jogo.add_child(parede)
  await quadros(2);viuva._revelar_pela_lanterna()
  conferir(float(pessoa.get_meta("lanterna_ate",0.0))==0,"parede bloqueia o facho")
- var projetil=jogo.CriaturaGoyaScript.ProjetilGoya.new()
+ var projetil=jogo.CriaturaGoyaScript.ProjetilScene.instantiate()
  projetil.sala="city";projetil.position=Vector2(1425,545);projetil.velocidade=Vector2(410,0);jogo.add_child(projetil)
  pessoa.invuln=0;pessoa.hp=pessoa.max_hp
  await quadros(20)

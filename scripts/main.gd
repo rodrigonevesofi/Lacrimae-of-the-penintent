@@ -2,22 +2,23 @@ extends Node2D
 ## Cena principal: monta a fase, luzes, jogador, HUD, salvamento e narrativa.
 
 const Util = preload("res://scripts/util.gd")
+## O mapa: salas em scenes/salas/ (plataformas, inimigos, altares, pontos especiais...).
+const Layout = preload("res://scripts/act_one_layout.gd")
 const GuiltText = preload("res://scripts/guilt_text.gd")
-const PlayerScript = preload("res://scripts/player.gd")
+const PlayerScene = preload("res://scenes/player.tscn")
 const EnemyScript = preload("res://scripts/enemy.gd")
 const CriaturaGoyaScript = preload("res://scripts/criatura_goya.gd")
 const FinalBossScript = preload("res://scripts/penitent_boss.gd")
-const ValeScene = preload("res://scripts/vale_scene.gd")
-const AmbientLife = preload("res://scripts/ambient_life.gd")
+const Efeitos = preload("res://scripts/efeitos.gd")
+## Uma cena por família de inimigo (scenes/inimigos/); os dados de cada tipo ficam em EnemyScript.TYPES.
+const ENEMY_SCENES := {
+	"walker": preload("res://scenes/inimigos/inimigo_andante.tscn"),
+	"flyer": preload("res://scenes/inimigos/inimigo_voador.tscn"),
+	"boss": preload("res://scenes/inimigos/inimigo_chefe.tscn"),
+	"mirror": preload("res://scenes/inimigos/inimigo.tscn"),
+}
 const ValeFinale = preload("res://scripts/vale_finale.gd")
-const HudScript = preload("res://scripts/hud.gd")
-const WorldArt = preload("res://scripts/world_art.gd")
-const PinturaViva = preload("res://scripts/pintura_viva.gd")
-const Bichos = preload("res://scripts/bichos.gd")
-const PrimeiroPlano = preload("res://scripts/primeiro_plano.gd")
 const Story = preload("res://scripts/story_text.gd")
-const ConfessorScript = preload("res://scripts/confessor.gd")
-const ConfessionPanel = preload("res://scripts/confession_panel.gd")
 const Telemetry = preload("res://scripts/telemetry.gd")
 
 const GROUND_Y := 600.0
@@ -58,8 +59,16 @@ var area_name := ""
 var area_t := 0.0
 var art: Node2D
 var soundscape: Node
-const TOMB_POS := Vector2(150, 600)
-const SWORD_POS := Vector2(340, 600)
+## Pontos especiais (nós Pontos em scenes/salas/): editados no editor, lidos ao iniciar.
+var TOMB_POS: Vector2 = Layout.ponto("tumulo")
+var SWORD_POS: Vector2 = Layout.ponto("espada")
+var IRIA_POS: Vector2 = Layout.ponto("iria")
+var MEMORIAL_POS: Vector2 = Layout.ponto("memorial")
+## Diante dos portões: descida ao Vale depois do Guardião (ou o encerramento, se o Vale já foi vencido).
+var VALE_GATE_POS: Vector2 = Layout.ponto("portao_do_vale")
+var GUARDIAN_POS: Vector2 = Layout.ponto("chefe_guardiao")
+## O Guardião acorda quando o Penitente passa deste x (com os dois sinos tocados).
+var GUARDIAN_TRIGGER_X: float = Layout.ponto("gatilho_chefe").x
 const PROLOGUE: Array[Dictionary] = [
 	{"title": "O TÚMULO SEM NOME", "text": "Você desperta em um túmulo de pedra, nas profundezas\nde uma catedral abandonada. Não se lembra do seu nome.\n\nMarcas de antigos rituais cobrem seu corpo. Ao seu lado,\numa coroa enferrujada repousa entre espinhos."},
 	{"title": "A INSCRIÇÃO", "text": "Aquele que condenou milhares deverá carregar\no peso de cada lágrima.\n\nQue sua morte seja negada até que sua culpa\nencontre repouso."},
@@ -103,53 +112,28 @@ var toast_t := 0.0
 var fx_list: Array = []
 var flicker: Array = []
 
-var relic_pos := Vector2(14580, 1100)
+var relic_pos: Vector2 = Layout.ponto("reliquia")
 
-var altars: Array[Vector2] = [Vector2(540, 600), Vector2(1810, 600), Vector2(3620, 600)]
+## Altares, plataformas, inimigos, velas e inscrições da Cidade: editados em scenes/salas/city.tscn.
+## exploration.gd acrescenta os altares das outras salas a altars e altar_names.
+var altars: Array[Vector2] = Layout.city_altars()
+var altar_names: Array[String] = Layout.city_altar_names()
 
-var platforms: Array[Rect2] = [
-	Rect2(380, 520, 140, 22),
-	Rect2(1350, 520, 120, 22),
-	Rect2(1500, 440, 120, 22),
-	Rect2(1650, 360, 220, 22),
-	Rect2(2700, 520, 160, 22),
-	Rect2(2950, 440, 160, 22),
-	Rect2(3200, 520, 140, 22),
-	Rect2(4000, 515, 150, 22),
-	Rect2(4500, 515, 150, 22),
-]
+var platforms: Array[Rect2] = Layout.city_platforms()
+## O vão da ponte quebrada (nó Abismo da Cidade): sem chão de x até y.
+var abyss_span: Vector2 = Layout.city_abyss()
 
 # [tipo, x, y, alcance]  (0 = devoto, 1 = chorão)
-var enemy_defs: Array = [
-	[0, 800.0, 600.0, 140.0],
-	[0, 1250.0, 600.0, 160.0],
-	[1, 1750.0, 480.0, 110.0],
-	[0, 2600.0, 600.0, 150.0],
-	[0, 2950.0, 600.0, 160.0],
-	[1, 3100.0, 470.0, 130.0],
-	[0, 3350.0, 600.0, 110.0],
-]
+var enemy_defs: Array = Layout.city_enemies()
 
-var candle_xs: Array[float] = [
-	150.0, 330.0, 540.0, 700.0, 960.0, 1180.0, 1420.0, 1700.0, 1860.0,
-	2330.0, 2520.0, 2800.0, 3050.0, 3300.0, 3560.0, 3700.0, 3900.0, 4150.0, 4450.0, 4700.0,
-]
+var candle_xs: Array[float] = Layout.city_candles()
 
-var lore: Array = [
-	{"x": 730.0, "title": "A Primeira Mártir",
-	"text": "Diante de um antigo altar, ela chorou sangue.\nOs registros dizem que centenas receberam absolvição.\n\nDesde então, Vespera passou a medir a culpa em lágrimas."},
-	{"x": 1390.0, "title": "A Regra do Confessor",
-	"text": "Bem-aventurados os que choram.\n\nUm decreto sem nome: quem não chora deverá aprender a dor.\nUma segunda mão riscou: misericórdia quero, não sacrifício.\n\nÀ margem: procure no campanário aquilo que ainda o ergue."},
-	{"x": 2630.0, "title": "A Pedra e a Sentença",
-	"text": "Quem está sem pecado, atire a primeira pedra.\n\nA Ordem raspou a primeira linha. Conservou as pedras.\nAs lágrimas levaram o remorso. Os atos permaneceram."},
-	{"x": 3860.0, "title": "Os Portões Fechados",
-	"text": "Foi a justiça que ergueu estes portões.\n\nA sentença foi gravada acima da tranca.\nEmbaixo, alguém riscou: aqui também esperavam crianças.\n\nA assinatura foi raspada. Sua mão treme ao tocar a pedra."},
-]
-
-var altar_names: Array[String] = ["Altar das Primeiras Lágrimas", "Altar do Limiar", "Altar da Última Vela"]
+## Inscrições: {"x", "title", "text"}.
+var lore: Array = Layout.city_lore()
 
 
 func _ready() -> void:
+	if get_child_count() == 0: _adotar_cena()
 	add_to_group("game")
 	_crisp_fonts()
 	has_save = FileAccess.file_exists(SAVE_PATH)
@@ -158,23 +142,16 @@ func _ready() -> void:
 	telemetry = Telemetry.new()
 	telemetry.load_data()
 	telemetry.start_session()
-	confessor = ConfessorScript.new()
-	confessor.game = self
-	add_child(confessor)
-	soundscape = preload("res://scripts/soundscape.gd").new()
-	add_child(soundscape)
+	confessor = _camada("Confessor")
+	soundscape = _camada("Som")
 	_build_art()
 	_build_world()
 	_build_player()
 	_build_fx_layer()
 	_build_hud()
 	_build_lights()
-	narrative = preload("res://scripts/narrative.gd").new()
-	narrative.game = self
-	add_child(narrative)
-	exploration = preload("res://scripts/exploration.gd").new()
-	exploration.game = self
-	add_child(exploration)
+	narrative = _camada("Narrativa")
+	exploration = _camada("Exploracao")
 	exploration.build()
 	state = "title"
 	player.revive(TOMB_POS)
@@ -182,36 +159,36 @@ func _ready() -> void:
 	player.controllable = false
 
 
+## main.gd sem a cena (Fixture.new() nos testes): adota os nós da main.tscn, para que o jogo seja o mesmo.
+func _adotar_cena() -> void:
+	var cena: Node = load("res://scenes/main.tscn").instantiate()
+	for filho in cena.get_children():
+		cena.remove_child(filho)
+		add_child(filho)
+	cena.free()
+
+
+## Um nó da main.tscn, ligado à main e posto no fim da lista de filhos. As peças são chamadas na ordem
+## em que o jogo sempre as montou; como a ordem dos filhos é a de desenho, nada passa à frente de nada.
+func _camada(nome: String) -> Node:
+	var no := get_node(nome)
+	move_child(no, -1)
+	if "game" in no: no.game = self
+	return no
+
+
 func _build_art() -> void:
 	# A pintura de cada sala, animada por shader, fica atrás de tudo.
-	pintura = PinturaViva.new()
-	pintura.game = self
-	add_child(pintura)
-	art = WorldArt.new()
-	art.game = self
-	add_child(art)
-	vale_back = ValeScene.new()
-	vale_back.game = self
-	add_child(vale_back)
-	vale_front = ValeScene.new()
-	vale_front.game = self
-	vale_front.front = true
-	add_child(vale_front)
+	pintura = _camada("Pintura")
+	art = _camada("Arte")
+	vale_back = _camada("ValeFundo")
+	vale_front = _camada("ValeFrente")
 	# A camada viva das demais salas: o que balança, flutua, pinga e queima.
-	life_back = AmbientLife.new()
-	life_back.game = self
-	add_child(life_back)
-	life_front = AmbientLife.new()
-	life_front.game = self
-	life_front.front = true
-	add_child(life_front)
+	life_back = _camada("VidaFundo")
+	life_front = _camada("VidaFrente")
 	# Bichos que reagem ao Penitente e silhuetas de primeiro plano, mais rápidas que a câmera.
-	bichos = Bichos.new()
-	bichos.game = self
-	add_child(bichos)
-	primeiro_plano = PrimeiroPlano.new()
-	primeiro_plano.game = self
-	add_child(primeiro_plano)
+	bichos = _camada("Bichos")
+	primeiro_plano = _camada("PrimeiroPlano")
 
 
 ## Acessibilidade: remove clarões, oscilação de luz e tremor de câmera das cenas de culpa e do Guardião.
@@ -372,7 +349,7 @@ func dev_input(event: InputEvent) -> bool:
 			if player.dev_fly: _leave_dev_fly()
 			else: player.dev_fly = true
 		KEY_B:
-			exploration.travel("city", Vector2(3700, 600))
+			exploration.travel("city", Layout.ponto("atalho_dev_portao"))
 		_: return false
 	return true
 
@@ -559,7 +536,8 @@ func _setup_gamepads() -> void:
 
 
 # ---------------------------------------------------------------- construção
-func _add_solid(r: Rect2, one_way: bool) -> StaticBody2D:
+## Corpo de colisão retangular em coordenadas do mundo, filho de `onde` (a main ou uma sala).
+func _add_solid(r: Rect2, one_way: bool, onde: Node2D = self) -> StaticBody2D:
 	var b := StaticBody2D.new()
 	b.set_meta("one_way",one_way)
 	b.collision_layer = 1
@@ -568,41 +546,63 @@ func _add_solid(r: Rect2, one_way: bool) -> StaticBody2D:
 	var rs := RectangleShape2D.new()
 	rs.size = r.size
 	cs.shape = rs
-	cs.position = r.position + r.size / 2.0
+	cs.position = r.position + r.size / 2.0 - onde.position
 	cs.one_way_collision = one_way
 	b.add_child(cs)
-	add_child(b)
+	onde.add_child(b)
 	return b
 
 
+## As salas instanciadas na main.tscn (nó Salas), na ordem do mapa.
+func _salas() -> Array[Node2D]:
+	var lista: Array[Node2D] = []
+	for id in Layout.SALAS:
+		var sala: Node2D = null
+		for filho in get_node("Salas").get_children():
+			if filho.get("id") == id: sala = filho
+		if sala == null:
+			push_error("A sala %s não está no nó Salas da main.tscn." % id)
+			continue
+		if sala.position != sala.origem:
+			push_warning("Sala %s fora da origem na main.tscn; volta para %s." % [id, sala.origem])
+		sala.position = sala.origem
+		lista.append(sala)
+	return lista
+
+
 func _build_world() -> void:
-	var mod := CanvasModulate.new()
-	mod.color = Color(0.76, 0.74, 0.80)
-	add_child(mod)
-	_add_solid(Rect2(0, GROUND_Y, 2000, 400), false)
-	_add_solid(Rect2(2270, GROUND_Y, 2530, 400), false)
-	_add_solid(Rect2(-60, -600, 60, 2000), false)
-	_add_solid(Rect2(4800, -600, 60, 2000), false)
-	for p in platforms:
-		_add_solid(p, true)
-	dyn = Node2D.new()
+	# Tinta: o CanvasModulate que escurece o mundo inteiro (cor na main.tscn).
+	_camada("Tinta")
+	# Cada sala da cena cria o próprio chão, paredes, plataformas e alvenaria.
+	for sala in _salas():
+		for c in sala.colisoes(): _add_solid(c[0], c[1], sala)
+	dyn = _camada("Dinamico")
 	dyn.draw.connect(_draw_dynamic)
-	add_child(dyn)
 
 
 func _build_player() -> void:
-	player = PlayerScript.new()
+	# O Penitente está na main.tscn (nó Player), depois do cenário: a pintura das salas não o cobre.
+	player = _camada("Player")
 	player.position = altars[0]
-	add_child(player)
 	player.died.connect(_on_player_died)
+
+
+## Cria um inimigo do tipo `kind` a partir da cena da sua família, ainda fora da árvore.
+## Chame setup() com o mesmo tipo antes de add_child(). `script` troca enemy.gd por uma
+## subclasse (criatura_goya.gd, penitent_boss.gd) mantendo a estrutura da cena.
+func new_enemy(kind: int, script: Script = null) -> CharacterBody2D:
+	var e: CharacterBody2D = ENEMY_SCENES[EnemyScript.TYPES[kind].family].instantiate()
+	if script != null:
+		e.set_script(script)
+	return e
 
 
 # ------------------------------------------------------------------ O Vale dos Flagelados e o chefe final
 ## O Vale fica além dos portões: só se desce depois que o Guardião dos Sinos cai e a memória dos portões volta.
 ## Lá espera o Flagelado (scripts/penitent_boss.gd), que só a revelação mostra ser o próprio Penitente. Beatriz não entra com ele: o vale só deixa passar
 ## quem carrega aquela culpa. Ela só atravessa quando a segunda parte da armadura cai.
-const VALE_ENTRANCE := Vector2(30480, 600)
-const VALE_BOSS_POS := Vector2(32300, 600)
+var VALE_ENTRANCE: Vector2 = Layout.ponto("entrada_vale")
+var VALE_BOSS_POS: Vector2 = Layout.ponto("chefe_vale")
 const VALE_LINES := {
 	"enter": "VALE DOS FLAGELADOS\nOnde a culpa permanece.",
 	"held": "Beatriz para à beira do vale. A névoa não a deixa passar:\n\"Ninguém atravessa a culpa de outro.\"",
@@ -735,7 +735,7 @@ func enable_duo(on: bool) -> void:
 	if on and (partner == null or not is_instance_valid(partner)):
 		player.character = "penitente"
 		player.apply_character()
-		partner = PlayerScript.new()
+		partner = PlayerScene.instantiate()
 		partner.is_partner = true
 		partner.prefix = "p2_"
 		partner.ai = true
@@ -783,51 +783,39 @@ func _update_duo(delta: float) -> void:
 			spawn_effect("dust", partner.global_position + Vector2(0.0, -30.0), 1, 0.7)
 
 func _build_fx_layer() -> void:
-	fxn = Node2D.new()
-	fxn.z_index = 10
+	# Efeitos desenhados por _draw_fx, à frente do mundo (z 10 na main.tscn).
+	fxn = _camada("Efeitos")
 	fxn.draw.connect(_draw_fx)
-	add_child(fxn)
 
 
 func _build_hud() -> void:
-	var cl := CanvasLayer.new()
-	cl.layer = 10
-	add_child(cl)
-	hud = HudScript.new()
+	# HUD e Confessionário vêm de scenes/interface.tscn, instanciada na main.tscn (nó Interface).
+	var interface: CanvasLayer = _camada("Interface")
+	hud = interface.get_node("HUD")
 	hud.game = self
-	cl.add_child(hud)
-	confession_panel = ConfessionPanel.new()
+	confession_panel = interface.get_node("ConfessionPanel")
 	confession_panel.game = self
-	confession_panel.confessor = confessor
-	cl.add_child(confession_panel)
+	confession_panel.conectar(confessor)
 
 
-func _add_flicker_light(pos: Vector2, col: Color, energy: float, sc: float) -> PointLight2D:
-	var l := Util.make_light(col, energy, sc)
-	l.position = pos
-	add_child(l)
-	flicker.append([l, energy, randf_range(4.0, 9.0), randf_range(0.0, 6.0)])
-	return l
-
-
+## Luzes tremulantes das salas (scenes/salas/luz.tscn): as filhas das velas, dos altares e dos pontos (a da
+## relíquia) e as do grupo Luzes, nessa ordem e sala a sala. A energia de cada uma é a média do tremor;
+## a frequência e a fase são sorteadas aqui.
 func _build_lights() -> void:
-	for i in range(0, candle_xs.size(), 3):
-		_add_flicker_light(Vector2(candle_xs[i], GROUND_Y - 24.0), Color(1.0, 0.68, 0.38), 0.35, 1.7)
-	for a in altars:
-		_add_flicker_light(a + Vector2(0, -60), Color(1.0, 0.78, 0.5), 0.65, 2.6)
-	relic_light = _add_flicker_light(relic_pos + Vector2(0, -30), Color(1.0, 0.85, 0.5), 1.1, 1.8)
-	_add_flicker_light(Vector2(2135, 780), Color(0.75, 0.2, 0.2), 0.8, 3.0)
-	_add_flicker_light(Vector2(4290, 380), Color(0.9, 0.3, 0.25), 0.6, 5.0)
-	stain_light = Util.make_light(Color(0.6, 0.8, 1.0), 0.9, 1.5)
-	stain_light.visible = false
-	add_child(stain_light)
-	stain_anchor = Node2D.new()
-	stain_anchor.visible = false
-	stain_anchor.z_index = 5
-	stain_animation = preload("res://scripts/actor_animation.gd").new()
+	for grupo in ["Velas", "Altares", "Pontos", "Luzes"]:
+		for sala in _salas():
+			if not sala.has_node(grupo): continue
+			for no in sala.get_node(grupo).get_children():
+				var luzes: Array = [no] if no is PointLight2D else no.get_children().filter(func(f): return f is PointLight2D)
+				for luz in luzes:
+					flicker.append([luz, luz.energy, randf_range(4.0, 9.0), randf_range(0.0, 6.0)])
+					if no.get("ponto") == "reliquia": relic_light = luz
+	if relic_light == null: push_error("A relíquia (ponto reliquia) não tem Luz filha na sala.")
+	# O fragmento de culpa deixado na morte e a sua luz ficam na main.tscn, ocultos até haver mancha.
+	stain_light = _camada("LuzDaMancha")
+	stain_anchor = _camada("Fragmento")
+	stain_animation = stain_anchor.get_node("Animacao")
 	stain_animation.configure("fragmento", 0.72)
-	stain_anchor.add_child(stain_animation)
-	add_child(stain_anchor)
 
 
 # ---------------------------------------------------------------- jogo
@@ -903,22 +891,22 @@ func _spawn_enemies() -> void:
 	final_boss = null
 	for drop in get_tree().get_nodes_in_group("guilt_drops"): drop.queue_free()
 	for d in enemy_defs:
-		var e = EnemyScript.new()
+		var e = new_enemy(d[0])
 		e.setup(d[0], Vector2(d[1], d[2]), d[3], player)
 		e.killed.connect(_on_enemy_killed)
 		add_child(e)
 	exploration.spawn_enemies()
 	_criar_criaturas_aprovadas()
 	if not boss_defeated:
-		var b = EnemyScript.new()
-		b.setup(2, Vector2(4380.0, GROUND_Y), 0.0, player)
+		var b = new_enemy(2)
+		b.setup(2, GUARDIAN_POS, 0.0, player)
 		b.killed.connect(_on_enemy_killed)
 		add_child(b)
 		b.display_name = "Guardião dos Sinos"
 		boss = b
 	# O chefe final é criado por último: fica no Vale e só desperta lá.
 	if not final_defeated:
-		var fb = FinalBossScript.new()
+		var fb = new_enemy(9, FinalBossScript)
 		fb.setup(9, VALE_BOSS_POS, 0.0, player)
 		fb.room_id = "vale"
 		fb.killed.connect(_on_enemy_killed)
@@ -999,12 +987,11 @@ func toast(s: String) -> void:
 
 ## O fragmento recuperado se desfaz em luz no local onde estava.
 func _dissolve_fragment(pos: Vector2) -> void:
-	var anchor := Node2D.new()
+	var anchor: Node2D = Efeitos.EFEITO_ANIMADO.instantiate()
 	anchor.position = pos + FRAGMENT_LIFT
 	anchor.z_index = 5
-	var animation = preload("res://scripts/actor_animation.gd").new()
+	var animation = anchor.get_node("Animacao")
 	animation.configure("fragmento", 0.72)
-	anchor.add_child(animation)
 	add_child(anchor)
 	animation.select("dissolve", 1)
 	animation.animation_finished.connect(anchor.queue_free)
@@ -1036,18 +1023,12 @@ func _place_splat(at: Vector2, size: float) -> void:
 		var oldest = old.pop_front()
 		oldest.remove_from_group("blood_splats")
 		oldest.queue_free()
-	var splat := Node2D.new()
+	var splat: Sprite2D = Efeitos.MANCHA_CHAO.instantiate()
 	splat.position = at + Vector2(0.0, -1.0)
-	splat.z_index = 5
 	splat.add_to_group("blood_splats")
-	var stain := Sprite2D.new()
-	var paint := AtlasTexture.new()
-	paint.atlas = load("res://assets/efeitos/sangue_chao.png")
-	paint.region = Rect2(randi_range(0, 7) * 128, 0, 128, 64)
-	stain.texture = paint
-	stain.scale = Vector2(size * 3.2 / 128.0, size * 0.8 / 64.0)
-	stain.flip_h = randf() < 0.5
-	splat.add_child(stain)
+	splat.texture.region = Rect2(randi_range(0, 7) * 128, 0, 128, 64)
+	splat.scale = Vector2(size * 3.2 / 128.0, size * 0.8 / 64.0)
+	splat.flip_h = randf() < 0.5
 	add_child(splat)
 	soundscape.play_sfx_at("respingo_chao", at)
 	var fade := splat.create_tween()
@@ -1070,16 +1051,10 @@ func wall_splat(at: Vector2) -> void:
 		var first = old.pop_front()
 		first.remove_from_group("blood_walls")
 		first.queue_free()
-	var stain := Sprite2D.new()
-	var paint := AtlasTexture.new()
-	paint.atlas = load("res://assets/efeitos/sangue_parede.png")
-	paint.region = Rect2(randi_range(0, 3) * 256, 0, 256, 256)
-	stain.texture = paint
+	var stain: Sprite2D = Efeitos.MANCHA_PAREDE.instantiate()
+	stain.texture.region = Rect2(randi_range(0, 3) * 256, 0, 256, 256)
 	stain.position = wall.position
-	stain.scale = Vector2(0.30, 0.55)
 	stain.flip_h = wall.normal.x < 0
-	stain.z_index = 4
-	stain.add_to_group("blood_walls")
 	add_child(stain)
 	var fade := stain.create_tween()
 	fade.tween_interval(40.0)
@@ -1087,13 +1062,11 @@ func wall_splat(at: Vector2) -> void:
 	fade.tween_callback(stain.queue_free)
 
 func spawn_effect(kind: String, pos: Vector2, flip: int = 1, size: float = 0.55, actor: String = "efeitos", tint: Color = Color.WHITE) -> void:
-	var anchor := Node2D.new()
+	var anchor: Node2D = Efeitos.EFEITO_ANIMADO.instantiate()
 	anchor.position = pos
-	anchor.z_index = 6
 	anchor.modulate = tint
-	var animation = preload("res://scripts/actor_animation.gd").new()
+	var animation = anchor.get_node("Animacao")
 	animation.configure(actor, size)
-	anchor.add_child(animation)
 	add_child(anchor)
 	animation.select(kind, flip)
 	animation.animation_finished.connect(anchor.queue_free)
@@ -1455,23 +1428,23 @@ func _play_update(delta: float) -> void:
 			prompt_at = target.global_position + Vector2(0, -target.body_size.y - 30.0)
 			if Input.is_action_just_pressed("interact"): player.begin_execution(target)
 			return
-	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(Vector2(4700,600)) < 65:
+	if exploration.room == "city" and boss_defeated and memory_seen and pp.distance_to(VALE_GATE_POS) < 65:
 		if not final_defeated:
 			# Além dos portões fica o Vale, e nele a última luta.
 			prompt = "[E] Descer ao Vale dos Flagelados"
-			prompt_at = Vector2(4700, 470)
+			prompt_at = VALE_GATE_POS + Vector2(0, -130)
 			if Input.is_action_just_pressed("interact"):
 				enter_vale()
 			return
 		prompt = "[E] Contemplar a primeira Lágrima · encerrar a vigília"
-		prompt_at = Vector2(4700, 470)
+		prompt_at = VALE_GATE_POS + Vector2(0, -130)
 		if Input.is_action_just_pressed("interact"):
 			state = "ending"
 			ending_t = 0
 			player.controllable = false
 		return
 	if exploration.update(delta): return
-	var new_area := "CRIPTA DO DESPERTAR" if pp.x < 1250.0 else (("PÁTIO DOS NOMES RISCADOS" if pp.x < 2270 else "GALERIA DAS CONFISSÕES") if pp.x < 3300.0 else "PORTÕES DO SILÊNCIO")
+	var new_area := Layout.city_area_at(pp.x)
 	if area_name != new_area:
 		area_name = new_area
 		area_t = 4.5
@@ -1487,21 +1460,21 @@ func _play_update(delta: float) -> void:
 		return
 
 
-	if pp.distance_to(Vector2(990, 600)) < 65:
+	if pp.distance_to(IRIA_POS) < 65:
 		prompt = "[E] Falar com Iria" if not iria_met else "[E] Ouvir Iria"
-		prompt_at = Vector2(990, 470)
+		prompt_at = IRIA_POS + Vector2(0, -130)
 		if Input.is_action_just_pressed("interact"):
 			iria_met = true
 			var has_register: bool = exploration.collected.has("register")
 			show_dialogue(Story.iria_pages(has_register, story_flags.has("names_read"), memorial_honored, story_flags.has("memorial_named"), memory_seen), "names_read" if has_register and not story_flags.has("names_read") else "")
 			_save()
 		return
-	if doll_found and pp.distance_to(Vector2(2800, 600)) < 60:
+	if doll_found and pp.distance_to(MEMORIAL_POS) < 60:
 		var known_name: bool = exploration.collected.has("register")
 		var can_name: bool = known_name and not story_flags.has("memorial_named")
 		if not memorial_honored or can_name:
 			prompt = "[E] Gravar o nome de Alba no memorial" if memorial_honored else "[E] Deixar a boneca no memorial"
-			prompt_at = Vector2(2800, 480)
+			prompt_at = MEMORIAL_POS + Vector2(0, -120)
 			if Input.is_action_just_pressed("interact"):
 				memorial_honored = true
 				if known_name and not story_flags.has("memorial_named"): story_flags.append("memorial_named")
@@ -1542,9 +1515,9 @@ func _play_update(delta: float) -> void:
 			show_message(lore[near_lore]["title"], lore[near_lore]["text"])
 
 	# gatilho do chefe
-	if boss != null and is_instance_valid(boss) and not boss.awake and not boss.dead and pp.x > 3900.0 and exploration.bells.size() == 2:
+	if boss != null and is_instance_valid(boss) and not boss.awake and not boss.dead and pp.x > GUARDIAN_TRIGGER_X and exploration.bells.size() == 2:
 		boss.awaken()
-		boss_wall = _add_solid(Rect2(3790, -600, 40, 1200), false)
+		boss_wall = _add_solid(Layout.zona("parede_do_chefe"), false)
 		if narrative.mode == "": narrative.begin("boss_intro")
 		toast("Os sinos tocam. O Guardião reconhece sua presença.")
 
@@ -1820,7 +1793,7 @@ func knows_alba() -> bool:
 ## As criaturas aprovadas usam o mesmo ciclo de descanso e reaparecimento do restante do ato.
 func _criar_criaturas_aprovadas() -> void:
 	for dados in preload("res://scripts/act_one_layout.gd").criaturas_aprovadas():
-		var criatura=CriaturaGoyaScript.new()
+		var criatura=new_enemy(dados[1], CriaturaGoyaScript)
 		criatura.setup(dados[1],Vector2(dados[2],dados[3]),dados[4],player)
 		criatura.room_id=dados[0]
 		if dados.size()>5:criatura.group=int(dados[5])

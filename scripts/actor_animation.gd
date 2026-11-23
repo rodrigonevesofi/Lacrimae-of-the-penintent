@@ -1,12 +1,20 @@
 extends AnimatedSprite2D
 ## Os quadros de animação são desenhos distintos recortados de uma grade regular de origem.
 ## A jogabilidade e o contato visual compartilham a linha do tempo normalizada de cada ação.
+##
+## Os quadros de cada personagem ficam num SpriteFrames em assets/animation/quadros/<ator>.tres (abra no painel
+## SpriteFrames do editor para ver attack_a, hurt, parry...). Esses arquivos são gerados a partir de
+## assets/animation/clips.json por tools/gerar_quadros.gd: para mudar recortes, fps ou laços, edite clips.json e
+## rode o gerador (tests/quadros_smoke.gd acusa quando os dois divergem). clips.json também guarda o que o
+## SpriteFrames não tem: a âncora dos pés e os deslocamentos usados em select().
+const PASTA_QUADROS := "res://assets/animation/quadros/"
 static var manifest_cache: Dictionary = {}
 static var frames_cache: Dictionary = {}
 var definitions: Dictionary = {}
 var actor := ""
 var unit_scale := 0.44
 var manual := false
+
 const SHADER_ATOR := preload("res://shaders/ator_legivel.gdshader")
 
 ## Como cada personagem se destaca. O Penitente tem borda dourada; Beatriz, prateada; os inimigos,
@@ -50,38 +58,55 @@ func configure(actor_name: String, scale_factor: float) -> void:
 		animation_changed.connect(_atualizar_limites)
 	scale = Vector2.ONE * unit_scale
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	if manifest_cache.is_empty():
-		manifest_cache = JSON.parse_string(FileAccess.get_file_as_string("res://assets/animation/clips.json"))
-	definitions = manifest_cache[actor]
+	definitions = manifesto()[actor]
 	if frames_cache.has(actor):
 		sprite_frames = frames_cache[actor]
 		play("idle")
 		return
-	sprite_frames = SpriteFrames.new()
-	sprite_frames.remove_animation("default")
-	for clip in definitions:
-		var data: Dictionary = definitions[clip]
-		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
-		# Aceita o formato legado grid e a quantidade de fileiras da v32.
-		var grid: Array = data.get("grid", [6, int(data.get("rows", 4))])
-		var columns := int(grid[0])
-		var cell := sheet.get_size() / Vector2(columns, int(grid[1]))
-		sprite_frames.add_animation(clip)
-		sprite_frames.set_animation_loop(clip, data.get("loop", true))
-		sprite_frames.set_animation_speed(clip, float(data.get("fps", 12)))
-		for i in range(int(data["count"])):
-			var indices: Array = data.get("frames", [])
-			var index := int(indices[i]) if not indices.is_empty() else int(data["start"]) + i
-			var row := floori(float(index) / columns)
-			var start := Vector2(roundf((index % columns) * cell.x), roundf(row * cell.y))
-			var end := Vector2(roundf((index % columns + 1) * cell.x), roundf((row + 1) * cell.y))
-			var region := AtlasTexture.new()
-			region.atlas = sheet
-			region.region = Rect2(start, end - start)
-			region.filter_clip = true
-			sprite_frames.add_frame(clip, region)
+	var arquivo := PASTA_QUADROS + actor + ".tres"
+	sprite_frames = load(arquivo) if ResourceLoader.exists(arquivo) else montar_quadros(actor)
 	frames_cache[actor] = sprite_frames
 	play("idle")
+
+## Os quadros de um personagem montados direto de clips.json (o gerador grava isto em quadros/<ator>.tres).
+static func montar_quadros(ator: String) -> SpriteFrames:
+	var quadros := SpriteFrames.new()
+	quadros.remove_animation("default")
+	var definicoes: Dictionary = manifesto()[ator]
+	for clip in definicoes:
+		var data: Dictionary = definicoes[clip]
+		var sheet: Texture2D = load("res://assets/animation/" + data["sheet"] + ".png")
+		quadros.add_animation(clip)
+		quadros.set_animation_loop(clip, data.get("loop", true))
+		quadros.set_animation_speed(clip, float(data.get("fps", 12)))
+		for i in range(int(data["count"])):
+			quadros.add_frame(clip, quadro(data, i, sheet))
+	return quadros
+
+## As definições de assets/animation/clips.json, lidas uma vez.
+static func manifesto() -> Dictionary:
+	if manifest_cache.is_empty():
+		manifest_cache = JSON.parse_string(FileAccess.get_file_as_string("res://assets/animation/clips.json"))
+	return manifest_cache
+
+## O quadro i de um clipe (uma definição de clips.json), recortado da folha.
+static func quadro(data: Dictionary, i: int, sheet: Texture2D = null) -> AtlasTexture:
+	if sheet == null: sheet = load("res://assets/animation/" + data["sheet"] + ".png")
+	# Aceita o formato legado grid e a quantidade de fileiras da v32.
+	var grid: Array = data.get("grid", [6, int(data.get("rows", 4))])
+	var columns := int(grid[0])
+	var cell := sheet.get_size() / Vector2(columns, int(grid[1]))
+	var indices: Array = data.get("frames", [])
+	var index := int(indices[i]) if not indices.is_empty() else int(data["start"]) + i
+	var row := floori(float(index) / columns)
+	var start := Vector2(roundf((index % columns) * cell.x), roundf(row * cell.y))
+	var end := Vector2(roundf((index % columns + 1) * cell.x), roundf((row + 1) * cell.y))
+	var region := AtlasTexture.new()
+	region.atlas = sheet
+	region.region = Rect2(start, end - start)
+	region.filter_clip = true
+	return region
+
 
 func select(clip: String, direction: int, progress: float = -1.0) -> void:
 	if not definitions.has(clip):

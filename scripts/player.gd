@@ -1,10 +1,9 @@
 extends CharacterBody2D
 ## O Penitente das Lágrimas (jogador)
 
-const Util = preload("res://scripts/util.gd")
 const RastroGolpe = preload("res://scripts/rastro_golpe.gd")
-const LaminaSangue = preload("res://scripts/lamina_sangue.gd")
 const Gore = preload("res://scripts/gore.gd")
+const Efeitos = preload("res://scripts/efeitos.gd")
 
 signal died
 
@@ -32,8 +31,9 @@ const AIR_ATTACK_TIME := 0.48
 const AIR_RECOVERY_TIME := 0.16
 const MAX_FALL := 950.0
 
-var animator
-var sword: Sprite2D
+# Nós montados em scenes/player.tscn (edite-os pelo editor do Godot).
+@onready var animator = $Animator
+@onready var sword: Sprite2D = $Sword
 const SWORD_GRIP := Vector2(520, 360)
 const SWORD_SCALE := 0.035
 ## Posição do punho em cada desenho de hero_motion.png (coordenadas da célula de 256 x 256), medida quadro a quadro.
@@ -112,7 +112,7 @@ var lance_weight := 0.0
 var swap_cd := 0.0
 var share_cd := 0.0
 var attack_len := ATTACK_TIME
-var lance: Node2D
+@onready var lance: Node2D = $Lance
 ## Os dois penitentes caminham juntos. O jogo controla Beatriz até o segundo jogador usar um
 ## dos comandos dela (prefixo "p2_"). Quem cai ainda pode receber sangue do parceiro para se levantar.
 var is_partner := false
@@ -180,77 +180,28 @@ var safe_pos := Vector2.ZERO
 var shake := 0.0
 var impact_direction := Vector2.ZERO
 var roll_cd := 0.0
-var camera: Camera2D
-var light: PointLight2D
+@onready var camera: Camera2D = $Camera2D
+@onready var light: PointLight2D = $Light
 
 
+## A estrutura do jogador (espada, lança provisória de Beatriz, colisão, luz, câmera, grupos e camadas
+## de colisão) fica em scenes/player.tscn. A ordem dos filhos importa: a espada vem antes do Animator,
+## atrás do corpo, para o punho fechado ficar por cima do cabo. Crie o jogador com
+## preload("res://scenes/player.tscn").instantiate(), nunca com player.gd.new().
 func _ready() -> void:
-	var visuals = load("res://scripts/combat_visuals.gd").new()
-	visuals.name = "CombatVisuals"
-	add_child(visuals)
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	appearance = AtlasTexture.new()
 	appearance.atlas = load("res://assets/characters.png")
 	appearance.region = Rect2(0, 0, 384, 1000)
 	appearance.filter_clip = true
-	animator = preload("res://scripts/actor_animation.gd").new()
+	# Os quadros vêm de assets/animation/clips.json; por isso o animador é configurado aqui, não na cena.
 	animator.configure("hero", 0.44)
-	add_child(animator)
-	sword = Sprite2D.new()
-	sword.texture = load("res://assets/penitent_sword.png")
-	sword.centered = false
+	# SWORD_GRIP também mede a lâmina em _update_sword; o deslocamento sai dele para não divergir da cena.
 	sword.offset = -SWORD_GRIP
-	sword.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	var sword_surface := ShaderMaterial.new()
-	sword_surface.shader = load("res://shaders/penitent_readability.gdshader")
-	sword_surface.set_shader_parameter("midtone_gain",1.12)
-	sword_surface.set_shader_parameter("edge_strength",0.16)
-	sword.material = sword_surface
-	add_child(sword)
-	# Lança provisória de Beatriz quando a arte própria está ausente: haste de ferro batido e ponta cinzenta.
-	lance = Node2D.new()
-	lance.z_index = 1
-	var shaft := Polygon2D.new()
-	shaft.polygon = PackedVector2Array([Vector2(-30, -2), Vector2(70, -2), Vector2(70, 2), Vector2(-30, 2)])
-	shaft.color = Color(0.22, 0.18, 0.16)
-	lance.add_child(shaft)
-	var point := Polygon2D.new()
-	point.polygon = PackedVector2Array([Vector2(70, -5), Vector2(92, 0), Vector2(70, 5)])
-	point.color = Color(0.62, 0.62, 0.64)
-	lance.add_child(point)
-	lance.visible = false
-	add_child(lance)
-	# Atrás do corpo: o punho fechado fica por cima do cabo, a lâmina sai de um lado da mão e o pomo
-	# do outro. Antes a espada ficava na frente e cobria a mão inteira, parecendo colada no braço.
-	move_child(sword, animator.get_index())
 	# Acompanha o desenho assim que muda: o punho se desloca até 30 pixels entre quadros de corrida.
 	animator.frame_changed.connect(_update_sword)
 	animator.animation_changed.connect(_update_sword)
-	add_to_group("player")
-	collision_layer = 2
-	collision_mask = 1
-	floor_snap_length = 10.0
-	var cs := CollisionShape2D.new()
-	var rs := RectangleShape2D.new()
-	rs.size = Vector2(22, 56)
-	cs.shape = rs
-	cs.position = Vector2(0, -28)
-	add_child(cs)
-	light = Util.make_light(Color(1.0, 0.82, 0.6), 0.32, 2.6)
-	light.position = Vector2(0, -40)
-	add_child(light)
-	camera = Camera2D.new()
-	camera.offset = Vector2(0, -110)
-	camera.position_smoothing_enabled = true
-	camera.position_smoothing_speed = 7.0
-	camera.limit_left = 0
-	camera.limit_right = 4800
-	camera.limit_bottom = 800
-	camera.limit_top = -300
-	add_child(camera)
 	# A câmera do Penitente enquadra o mundo; a câmera da parceira fica desligada.
 	if is_partner: camera.enabled = false
-	add_to_group("players")
 	safe_pos = global_position
 
 
@@ -1433,97 +1384,31 @@ func _blood_burst(at: Vector2, size: float, drops: int, direcao := Vector2.ZERO,
 	else:
 		# Jorro com direção (execuções): a mancha redonda fica pequena para a direção do sangue aparecer.
 		game.spawn_effect("blood", at, facing, size * 0.45)
-	var spray := CPUParticles2D.new()
-	spray.one_shot = true
-	spray.emitting = false
+	# Gotas arredondadas de sangue escuro (scenes/efeitos/sangue_jato.tscn); aqui só o que depende do golpe.
+	var spray: CPUParticles2D = Efeitos.SANGUE_JATO.instantiate()
 	spray.amount = maxi(drops, 1)
-	spray.lifetime = 1.4
-	spray.explosiveness = 0.95
 	spray.direction = Vector2(float(facing), -0.7) if direcao == Vector2.ZERO else direcao
 	spray.spread = abertura
-	spray.initial_velocity_min = 220.0
 	spray.initial_velocity_max = 640.0 * clampf(size, 0.6, 1.6)
-	spray.gravity = Vector2(0, 1500)
-	# Gotas arredondadas de 2–5 pixels, em vez de quadrados grandes.
-	var drop_gradient := Gradient.new()
-	drop_gradient.colors = PackedColorArray([Color.WHITE, Color(1, 1, 1, 0)])
-	var drop_texture := GradientTexture2D.new()
-	drop_texture.gradient = drop_gradient
-	drop_texture.width = 8
-	drop_texture.height = 8
-	drop_texture.fill = GradientTexture2D.FILL_RADIAL
-	drop_texture.fill_from = Vector2(0.5, 0.5)
-	drop_texture.fill_to = Vector2(1.0, 0.5)
-	spray.texture = drop_texture
-	spray.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	spray.scale_amount_min = 0.45
 	spray.scale_amount_max = 1.0 + 0.5 * clampf(size, 0.0, 1.6)
-	# Sangue escuro, com gotas um pouco mais vivas e outras quase pretas.
-	var shades := Gradient.new()
-	shades.colors = PackedColorArray([Color(0.62, 0.03, 0.05), Color(0.38, 0.0, 0.02)])
-	spray.color_initial_ramp = shades
-	spray.z_index = 7
 	spray.position = at
-	spray.add_to_group("blood_spray")
 	game.add_child(spray)
 	spray.emitting = true
 	get_tree().create_timer(2.0).timeout.connect(spray.queue_free)
 	if size >= 1.4:
 		# Golpe mortal: pedaços de carne arrancados, que giram no ar e caem pesados.
-		var chunks := CPUParticles2D.new()
-		chunks.one_shot = true
-		chunks.amount = 9
-		chunks.lifetime = 1.3
-		chunks.explosiveness = 1.0
+		var chunks: CPUParticles2D = Efeitos.SANGUE_PEDACOS.instantiate()
 		chunks.direction = Vector2(float(facing), -1.0)
-		chunks.spread = 50.0
-		chunks.initial_velocity_min = 260.0
-		chunks.initial_velocity_max = 520.0
-		chunks.gravity = Vector2(0, 1700)
-		chunks.angular_velocity_min = -540.0
-		chunks.angular_velocity_max = 540.0
-		var debris := AtlasTexture.new()
-		debris.atlas = load("res://assets/animation/pedacos.png")
-		debris.region = Rect2(0, 0, 384, 256)
-		chunks.texture = debris
-		var flipbook := CanvasItemMaterial.new()
-		flipbook.particles_animation = true
-		flipbook.particles_anim_h_frames = 3
-		flipbook.particles_anim_v_frames = 2
-		flipbook.particles_anim_loop = false
-		chunks.material = flipbook
-		chunks.anim_offset_min = 0.0
-		chunks.anim_offset_max = 0.999
-		chunks.scale_amount_min = 0.12
-		chunks.scale_amount_max = 0.24
-		chunks.color = Color.WHITE
-		chunks.z_index = 7
 		chunks.position = at
-		chunks.add_to_group("blood_spray")
 		game.add_child(chunks)
 		chunks.emitting = true
 		get_tree().create_timer(1.8).timeout.connect(chunks.queue_free)
 	if size >= 0.7:
 		# Névoa fina que fica no ar um instante depois de um corte profundo.
-		var mist := CPUParticles2D.new()
-		mist.one_shot = true
+		var mist: CPUParticles2D = Efeitos.SANGUE_NEVOA.instantiate()
 		mist.amount = int(drops * 0.8)
-		mist.lifetime = 0.7
-		mist.explosiveness = 1.0
 		mist.direction = Vector2(float(facing), -0.3)
-		mist.spread = 70.0
-		mist.initial_velocity_min = 60.0
-		mist.initial_velocity_max = 220.0
-		mist.gravity = Vector2(0, 160)
-		mist.damping_min = 120.0
-		mist.damping_max = 220.0
-		mist.texture = drop_texture
-		mist.scale_amount_min = 0.15
-		mist.scale_amount_max = 0.35
-		mist.color = Color(0.5, 0.02, 0.04, 0.55)
-		mist.z_index = 7
 		mist.position = at
-		mist.add_to_group("blood_spray")
 		game.add_child(mist)
 		mist.emitting = true
 		get_tree().create_timer(1.2).timeout.connect(mist.queue_free)
@@ -1532,22 +1417,8 @@ func _blood_burst(at: Vector2, size: float, drops: int, direcao := Vector2.ZERO,
 ## uma lágrima vermelha escorre da fenda do capacete. (No Vale se descobre de quem é a culpa.)
 func _blood_tear() -> void:
 	if character != "penitente": return
-	var tear := CPUParticles2D.new()
-	tear.one_shot = true
-	tear.amount = 3
-	tear.lifetime = 1.6
-	tear.explosiveness = 0.2
-	tear.direction = Vector2(0, 1)
-	tear.spread = 4.0
-	tear.initial_velocity_min = 8.0
-	tear.initial_velocity_max = 16.0
-	tear.gravity = Vector2(0, 46)
-	tear.scale_amount_min = 1.6
-	tear.scale_amount_max = 2.2
-	tear.color = Color(0.75, 0.03, 0.05)
-	tear.z_index = 2
+	var tear: CPUParticles2D = Efeitos.LAGRIMA_SANGUE.instantiate()
 	tear.position = Vector2(float(facing) * 7.0, -84.0)
-	tear.add_to_group("blood_tears")
 	add_child(tear)
 	tear.emitting = true
 	get_tree().create_timer(2.2).timeout.connect(tear.queue_free)
@@ -1641,14 +1512,10 @@ func _blood_decal(ground: Vector2) -> void:
 		var oldest = old.pop_front()
 		oldest.remove_from_group("blood_decals")
 		oldest.queue_free()
-	var pool := Sprite2D.new()
-	var art := AtlasTexture.new()
-	art.atlas = load("res://assets/efeitos/sangue_chao.png")
-	art.region = Rect2(randi_range(4, 7) * 128, 0, 128, 64)
-	pool.texture = art
+	var pool: Sprite2D = Efeitos.MANCHA_CHAO.instantiate()
+	pool.texture.region = Rect2(randi_range(4, 7) * 128, 0, 128, 64)
 	pool.scale = Vector2(2.1, 0.75)
 	pool.flip_h = facing < 0
-	pool.z_index = 5
 	var query := PhysicsRayQueryParameters2D.create(ground - Vector2(0, 4), ground + Vector2(0, 1200), 1)
 	var floor_hit := get_world_2d().direct_space_state.intersect_ray(query)
 	if not floor_hit.is_empty(): ground = floor_hit.position
@@ -1916,7 +1783,7 @@ func _lancar_prece() -> void:
 	state = "prece"
 	state_t = 0.34
 	velocity.x = 0.0
-	var lamina = LaminaSangue.new()
+	var lamina = Efeitos.LAMINA_SANGUE.instantiate()
 	lamina.dono = self
 	lamina.lado = facing
 	lamina.dano = 34.0 * sword_multiplier()

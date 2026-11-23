@@ -1,0 +1,93 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/animation/gota_culpa.png" id="1_cbylm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h6w5y"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(384, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fydd7"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(512, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nesfv"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(640, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ya6rk"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(0, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l1o3o"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(128, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q0mv4"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(256, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxa10"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(256, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ya7wi"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(384, 0, 128, 128)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m3x4g"]
+atlas = ExtResource("1_cbylm")
+region = Rect2(512, 0, 128, 128)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h6w5y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fydd7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nesfv")
+}],
+"loop": 0,
+"name": &"collect",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ya6rk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l1o3o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q0mv4")
+}],
+"loop": 0,
+"name": &"fall",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yxa10")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ya7wi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m3x4g")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 8.0
+}]

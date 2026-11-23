@@ -8,28 +8,13 @@ var dano := 34.0
 var vida := 0.85
 var t := 0.0
 var atingidos: Array = []
-var gotas: CPUParticles2D
+## Gotas que a lâmina deixa para trás (cena scenes/efeitos/lamina_sangue.tscn).
+@onready var gotas: CPUParticles2D = $Gotas
 const VELOCIDADE := 820.0
 
+## Criada por scripts/efeitos.gd LAMINA_SANGUE.instantiate(); "lado" é definido antes de entrar na árvore.
 func _ready() -> void:
-	z_index = 8
-	var cru := CanvasItemMaterial.new()
-	cru.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
-	material = cru
-	gotas = CPUParticles2D.new()
-	gotas.amount = 40
-	gotas.lifetime = 0.6
 	gotas.direction = Vector2(-lado, 0.3)
-	gotas.spread = 30.0
-	gotas.initial_velocity_min = 40.0
-	gotas.initial_velocity_max = 160.0
-	gotas.gravity = Vector2(0, 900)
-	gotas.scale_amount_min = 1.5
-	gotas.scale_amount_max = 3.2
-	var tons := Gradient.new()
-	tons.colors = PackedColorArray([Color(0.75, 0.04, 0.06), Color(0.35, 0.0, 0.02, 0.0)])
-	gotas.color_ramp = tons
-	add_child(gotas)
 
 func _physics_process(delta: float) -> void:
 	t += delta

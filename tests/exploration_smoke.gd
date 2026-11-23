@@ -99,7 +99,23 @@ func ledge_index(x: float,y: float) -> int:
 		var r: Rect2 = game.exploration.ledges[i]
 		if is_equal_approx(r.position.x,x) and is_equal_approx(r.position.y,y): return i
 	return -1
+## Índices das saliências pelos retângulos (posição e tamanho): a ordem de Layout.platforms() segue a ordem
+## dos nós em scenes/salas/, então o teste não pode depender de posições fixas na lista.
+func ledges_at(rects: Array) -> Array:
+	var indices: Array = []
+	for r in rects:
+		var found := -1
+		for i in range(game.exploration.ledges.size()):
+			if game.exploration.ledges[i].is_equal_approx(r): found = i; break
+		indices.append(found)
+	return indices
+## Escada de n degraus a partir de (x, y): cada um sobe dy e anda dx.
+func stairs(x: float, y: float, dx: float, dy: float, n: int, size: Vector2) -> Array:
+	var rects: Array = []
+	for i in range(n): rects.append(Rect2(x+i*dx, y-i*dy, size.x, size.y))
+	return rects
 func climb(indices: Array) -> bool:
+	if indices.has(-1): return false
 	for index in indices:
 		var rect: Rect2 = game.exploration.ledges[index]
 		if not await go(rect.position.x+minf(60,rect.size.x/2),rect.position.y): return false
@@ -122,7 +138,7 @@ func run() -> void:
 	expect(await go(1160,600),"walk from tomb to burial passage")
 	await interact()
 	expect(game.exploration.room=="ossuary","enter ossuary through door")
-	expect(await climb([0,1,2,3,4,5]),"climb the ossuary gallery without double jump")
+	expect(await climb(ledges_at(stairs(5480,520,140,80,5,Vector2(140,24))+[Rect2(6100,200,680,28)])),"climb the ossuary gallery without double jump")
 	expect(await go(6450,200),"reach optional upper passage")
 	await interact()
 	expect(game.exploration.room=="refuge","upper branch leads to refuge")
@@ -144,7 +160,7 @@ func run() -> void:
 	await interact()
 	expect(game.exploration.room=="cistern","refuge rejoins cistern through alternate entrance")
 	# A cisterna começa após dez saliências do ossuário, seguidas por sete saliências ascendentes.
-	expect(await climb([12,13,14,15,16,17]),"climb cistern mechanism with normal jumps")
+	expect(await climb(ledges_at(stairs(8840,360,140,80,5,Vector2(145,24))+[Rect2(9400,40,500,28)])),"climb cistern mechanism with normal jumps")
 	expect(await go(9650,40),"reach upper water-chain mechanism")
 	await interact()
 	expect(game.exploration.bells.has("water"),"release first chain through physical branch traversal")
@@ -155,7 +171,7 @@ func run() -> void:
 	await interact()
 	expect(game.exploration.room=="cloister","enter cloister branch")
 	# Ossuário10 + cisterna13 =23; subida do claustro23..29 e galeria30.
-	expect(await climb([23,24,25,26,27,28,29,30]),"climb cloister upper route")
+	expect(await climb(ledges_at(stairs(11320,520,140,80,7,Vector2(145,24))+[Rect2(12160,40,1000,28)])),"climb cloister upper route")
 	expect(await go(12800,40),"reach hidden archive entrance")
 	await interact()
 	expect(game.exploration.room=="archive","upper cloister branches to archive")
@@ -174,11 +190,11 @@ func run() -> void:
 	expect(await go(14580,1100),"descend tower to the relic alcove")
 	expect(game.player.has_double_jump and game.relic_taken,"relic acquired in tower through exploration")
 	if game.message_text!="": await close_message()
-	# Claustro termina35; torre: lance inferior36..42, patamar43, superior44..50, alto51, salto duplo52.
-	expect(await climb([36,37,38,39,40,41,42,43]),"ascend lower tower switchback")
-	expect(await climb([44,45,46,47,48,49,50,51]),"ascend upper tower switchback")
+	# Torre: lance inferior de sete degraus e patamar; lance superior de sete degraus e o alto; depois o salto duplo.
+	expect(await climb(ledges_at(stairs(14500,1020,140,80,7,Vector2(145,24))+[Rect2(15340,540,500,28)])),"ascend lower tower switchback")
+	expect(await climb(ledges_at(stairs(15340,460,-140,80,7,Vector2(145,24))+[Rect2(14350,-100,400,28)])),"ascend upper tower switchback")
 	expect(await go(14730,-100),"approach final elevated gap")
-	expect(await climb([52]),"double jump reaches upper bell gallery")
+	expect(await climb(ledges_at([Rect2(14900,-260,450,28)])),"double jump reaches upper bell gallery")
 	expect(await go(15120,-260),"reach second bell mechanism")
 	await interact()
 	expect(game.exploration.bells.size()==2 and game.exploration.gate==null,"both explored mechanisms open boss access")

@@ -1,0 +1,151 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/salas/sala.gd" id="1_f0127"]
+[ext_resource type="Script" path="res://scripts/salas/retangulo.gd" id="2_fnek0"]
+[ext_resource type="Script" path="res://scripts/salas/marcador_inimigo.gd" id="3_1uuqp"]
+[ext_resource type="Script" path="res://scripts/salas/arena.gd" id="4_m17hd"]
+[ext_resource type="Script" path="res://scripts/salas/porta.gd" id="5_tsthx"]
+[ext_resource type="Script" path="res://scripts/salas/vestigio.gd" id="6_fnek0"]
+
+[node name="Archive" type="Node2D" unique_id=1611202148]
+script = ExtResource("1_f0127")
+id = "archive"
+nome = "ARQUIVO DAS CONFISSÕES"
+origem = Vector2(16600, -350)
+arte = "gallery"
+linha_do_chao = 0.735
+altura_arte = 1250.0
+posicao_no_mapa = Vector2(700, 110)
+passos = "step_madeira"
+reverberacao = 0.22
+ambiente = "amb_archive"
+
+[node name="Plataformas" type="Node2D" parent="." unique_id=83474145]
+
+[node name="Plataforma1" type="Node2D" parent="Plataformas" unique_id=907472895]
+position = Vector2(280, 870)
+script = ExtResource("2_fnek0")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma2" type="Node2D" parent="Plataformas" unique_id=1954914511]
+position = Vector2(420, 790)
+script = ExtResource("2_fnek0")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma3" type="Node2D" parent="Plataformas" unique_id=1973182569]
+position = Vector2(560, 710)
+script = ExtResource("2_fnek0")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma4" type="Node2D" parent="Plataformas" unique_id=1797995575]
+position = Vector2(700, 630)
+script = ExtResource("2_fnek0")
+tamanho = Vector2(145, 24)
+
+[node name="Plataforma5" type="Node2D" parent="Plataformas" unique_id=1546243861]
+position = Vector2(700, 630)
+script = ExtResource("2_fnek0")
+tamanho = Vector2(600, 26)
+
+[node name="Plataforma6" type="Node2D" parent="Plataformas" unique_id=514957288]
+position = Vector2(646, 630)
+script = ExtResource("2_fnek0")
+tamanho = Vector2(54, 26)
+
+[node name="Alvenaria" type="Node2D" parent="." unique_id=700790957]
+
+[node name="Bloco1" type="Node2D" parent="Alvenaria" unique_id=347110442]
+position = Vector2(360, 900)
+script = ExtResource("2_fnek0")
+tamanho = Vector2(200, 50)
+
+[node name="Inimigos" type="Node2D" parent="." unique_id=905776481]
+
+[node name="Devotee1" type="Node2D" parent="Inimigos" unique_id=1327705169]
+position = Vector2(780, 950)
+script = ExtResource("3_1uuqp")
+alcance = 170.0
+
+[node name="Bruxa2" type="Node2D" parent="Inimigos" unique_id=1363486315]
+position = Vector2(850, 875)
+script = ExtResource("3_1uuqp")
+tipo = 5
+alcance = 60.0
+grupo = 1
+
+[node name="Bruxa3" type="Node2D" parent="Inimigos" unique_id=1161150336]
+position = Vector2(1100, 860)
+script = ExtResource("3_1uuqp")
+tipo = 5
+alcance = 60.0
+grupo = 1
+
+[node name="Bruxa4" type="Node2D" parent="Inimigos" unique_id=2657863]
+position = Vector2(1350, 875)
+script = ExtResource("3_1uuqp")
+tipo = 5
+alcance = 60.0
+grupo = 1
+
+[node name="Sono5" type="Node2D" parent="Inimigos" unique_id=962830016]
+position = Vector2(430, 900)
+script = ExtResource("3_1uuqp")
+tipo = 14
+alcance = 0.0
+criatura = true
+
+[node name="Arenas" type="Node2D" parent="." unique_id=1207939529]
+
+[node name="ArenaArchive" type="Node2D" parent="Arenas" unique_id=1610192982]
+position = Vector2(640, 950)
+script = ExtResource("4_m17hd")
+id = "archive"
+largura = 980.0
+
+[node name="Leva1" type="Node2D" parent="Arenas/ArenaArchive" unique_id=2005811363]
+
+[node name="Devotee1" type="Node2D" parent="Arenas/ArenaArchive/Leva1" unique_id=318099873]
+position = Vector2(660, 0)
+script = ExtResource("3_1uuqp")
+alcance = 60.0
+
+[node name="Devotee2" type="Node2D" parent="Arenas/ArenaArchive/Leva1" unique_id=1340528418]
+position = Vector2(910, 0)
+script = ExtResource("3_1uuqp")
+alcance = 60.0
+
+[node name="Portas" type="Node2D" parent="." unique_id=1190937947]
+
+[node name="Records_B" type="Node2D" parent="Portas" unique_id=2065561379]
+position = Vector2(160, 950)
+script = ExtResource("5_tsthx")
+ligacao = "records"
+lado = "b"
+
+[node name="ArchiveReturn_A" type="Node2D" parent="Portas" unique_id=1210120604]
+position = Vector2(1830, 950)
+script = ExtResource("5_tsthx")
+ligacao = "archive_return"
+rotulo = "Passadiço dos copistas"
+trinco = true
+
+[node name="NaveIn_A" type="Node2D" parent="Portas" unique_id=1435499923]
+position = Vector2(800, 630)
+script = ExtResource("5_tsthx")
+ligacao = "nave_in"
+rotulo = "Nave do Silêncio"
+
+[node name="Altares" type="Node2D" parent="." unique_id=1071100489]
+
+[node name="Vestigios" type="Node2D" parent="." unique_id=882404549]
+
+[node name="Register" type="Node2D" parent="Vestigios" unique_id=224125381]
+position = Vector2(1200, 630)
+script = ExtResource("6_fnek0")
+id_vestigio = "register"
+nome = "Registro dos que esperaram"
+texto = "Uma lista de famílias, sem sentença ou confissão.
+Ao lado de cada nome, a mesma palavra: aguardando.
+
+A Ordem chamou o silêncio de consentimento.
+Você pode levar estes nomes até Iria."

@@ -20,7 +20,7 @@ func run() -> void:
 			Input.action_press("left"); await frames(150); Input.action_release("left")
 	elif mode=="fight":
 		for kind in [0,0,4]:
-			var e=game.EnemyScript.new(); e.setup(kind,Vector2(1150+randi()%200,600),60,p); e.room_id="city"; e.killed.connect(game._on_enemy_killed); game.add_child(e)
+			var e=game.new_enemy(kind); e.setup(kind,Vector2(1150+randi()%200,600),60,p); e.room_id="city"; e.killed.connect(game._on_enemy_killed); game.add_child(e)
 		for f in range(560):
 			var nearest=null
 			for e in get_nodes_in_group("enemies"):

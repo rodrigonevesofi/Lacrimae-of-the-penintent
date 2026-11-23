@@ -1,6 +1,6 @@
 extends "res://scripts/enemy.gd"
 ## Nove criaturas das fichas aprovadas pelo autor. Os contratos de combate herdados são mantidos.
-const ProjetilGoya = preload("res://scripts/projetil_goya.gd")
+const ProjetilScene = preload("res://scenes/projeteis/projetil_goya.tscn")
 const NOMES := ["glutao","disciplinantes","meio_enterrado","parcas","sono","romaria","espantalho","dois_velhos","viuva"]
 var tempo_local := 0.0
 var duracao_aviso := 0.8
@@ -156,7 +156,7 @@ func _soltar_ataque() -> void:
    pessoa.take_hit(18 if kind in [15,16] else 13,global_position.x,self,attack_parryable)
 
 func _disparar(quadro:int,velocidade:Vector2,gravidade:float,dano:float) -> void:
- var projetil=ProjetilGoya.new()
+ var projetil=ProjetilScene.instantiate()
  projetil.origem=self;projetil.sala=room_id;projetil.quadro=quadro
  projetil.velocidade=velocidade;projetil.gravidade=gravidade;projetil.dano=dano
  projetil.global_position=global_position+Vector2(facing*20,-55)

@@ -51,8 +51,6 @@ const SUBSTITUTOS := {"investida": "esquiva_perfeita", "corte_ascendente": "swin
 const HOOK_NAMES := ["morte", "morte_grande", "chefe_morte", "chefe_pancada", "dor", "aterrissagem", "coleta", "porta", "projetil", "projetil_impacto", "espinho", "aparo", "execucao", "portao_fecha", "portao_abre", "ui_mover", "ui_confirmar"]
 ## Os sons narrativos são sempre reproduzidos da mesma forma; os demais variam um pouco em altura e volume.
 const FIXED_SFX := ["altar", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo"]
-## Reverberação de cada lugar (quanto da cauda acústica da sala os efeitos carregam).
-const SPACE := {"vale": 0.20, "city": 0.10, "ossuary": 0.28, "cistern": 0.36, "cloister": 0.30, "belfry": 0.32, "archive": 0.22, "refuge": 0.18, "nave": 0.40, "terrace": 0.16, "court": 0.14}
 ## Famílias de variações: uma solicitação por nome escolhe aleatoriamente uma de suas gravações.
 const FAMILIES := {
 	"jump": ["jump_01", "jump_02", "jump_03"],
@@ -71,8 +69,18 @@ const FAMILIES := {
 	"step_agua": ["step_agua_01", "step_agua_02", "step_agua_03"],
 	"step_osso": ["step_osso_01", "step_osso_02", "step_osso_03"],
 }
-## Superfície em que o penitente caminha em cada lugar.
-const SURFACE := {"vale": "step_pedra", "city": "step_pedra", "ossuary": "step_osso", "cistern": "step_agua", "cloister": "step_pedra", "belfry": "step_madeira", "archive": "step_madeira", "refuge": "step_pedra", "nave": "step_pedra", "terrace": "step_pedra", "court": "step_pedra"}
+## O som de cada sala vem da cena dela (scenes/salas/<id>.tscn, grupo Som do Inspetor), lido em _ler_salas():
+## reverberação (quanto da cauda acústica da sala os efeitos carregam), superfície dos passos, música fora de
+## combate e laço de ambiente.
+const Layout = preload("res://scripts/act_one_layout.gd")
+## Músicas de sala com faixa própria: valem mesmo no começo da Cidade, antes do canto do templo.
+const TRILHAS_PROPRIAS := ["nave", "terraco", "patio"]
+var room_space := {}
+var room_surface := {}
+var room_music := {}
+var room_ambience := {}
+## Até onde (x do mundo) toca o canto do templo: a borda direita da zona musica_do_templo da Cidade.
+var temple_until := 0.0
 var beds: Array = []
 var bed_streams := {}
 var bed_room := "-"
@@ -110,7 +118,18 @@ func _build_buses() -> void:
 
 const EFFECT_NAMES := ["step", "swing", "hit", "hurt", "roll", "jump", "heal", "altar", "death", "bell", "breath", "knock", "murmurio_01", "murmurio_02", "murmurio_03", "corrente_cede", "sino_surdo", "devorador_rugido", "devorador_bote", "flagelante_chicote", "flagelante_investida", "bruxa_sussurro", "bruxa_leque", "asmodeia_aviso", "asmodeia_estilhaco", "duelista_cacete"]
 
+func _ler_salas() -> void:
+	var salas := Layout.rooms()
+	for id in salas:
+		var som: Dictionary = salas[id].sound
+		room_space[id] = som.reverb
+		room_surface[id] = som.steps
+		room_music[id] = som.music
+		if not str(som.ambience).is_empty(): room_ambience[id] = som.ambience
+	temple_until = Layout.zona("musica_do_templo").end.x
+
 func _ready() -> void:
+	_ler_salas()
 	_build_buses()
 	ambience = AudioStreamPlayer.new()
 	ambience.bus = "Music"
@@ -144,8 +163,8 @@ func _ready() -> void:
 	add_child(guilt_layer)
 	guilt_layer.play()
 	# A textura sonora de cada lugar, um ciclo longo sob a música.
-	for room in SURFACE.keys():
-		var path := "res://assets/audio/amb_%s.wav" % room
+	for room in room_ambience:
+		var path := "res://assets/audio/%s.wav" % room_ambience[room]
 		if ResourceLoader.exists(path):
 			var bed: AudioStreamWAV = load(path)
 			bed.loop_mode = AudioStreamWAV.LOOP_FORWARD
@@ -178,7 +197,7 @@ func _ready() -> void:
 func resolve(name: String) -> String:
 	var family := name
 	var game = get_parent()
-	if name == "step" and game != null and game.exploration != null: family = SURFACE.get(game.exploration.room, "step")
+	if name == "step" and game != null and game.exploration != null: family = room_surface.get(game.exploration.room, "step")
 	if FAMILIES.has(family):
 		var options: Array = []
 		for variant in FAMILIES[family]:
@@ -300,10 +319,9 @@ func desired_context() -> String:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		if not enemy.dead and (game.exploration == null or enemy.room_id == game.exploration.room) and enemy.global_position.distance_to(game.player.global_position) < 230 and enemy.state in ["chase", "windup", "strike", "cast"]:
 			return "combat"
-	if game.exploration != null:
-		var scores := {"nave": "nave", "terrace": "terraco", "court": "patio"}
-		if scores.has(game.exploration.room): return scores[game.exploration.room]
-	return "temple" if game.player.position.x < 1250 or game.exploration.room in ["ossuary","refuge"] else "exploration"
+	var musica: String = room_music.get(game.exploration.room, "exploration") if game.exploration != null else "exploration"
+	if musica in TRILHAS_PROPRIAS: return musica
+	return "temple" if game.player.position.x < temple_until or musica == "temple" else "exploration"
 
 func change_context(context: String) -> void:
 	if context == music_context or switching or not music_streams.has(context): return
@@ -323,7 +341,7 @@ func _process(delta: float) -> void:
 	if game.player == null:
 		return
 	if reverb != null and game.exploration != null:
-		reverb.set("wet", move_toward(float(reverb.get("wet")), float(SPACE.get(game.exploration.room, 0.12)), delta * 0.3))
+		reverb.set("wet", move_toward(float(reverb.get("wet")), float(room_space.get(game.exploration.room, 0.12)), delta * 0.3))
 	_update_beds(game, delta)
 	context_timer -= delta
 	if context_timer <= 0 and not switching:

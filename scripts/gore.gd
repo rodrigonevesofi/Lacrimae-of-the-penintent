@@ -6,6 +6,7 @@ extends RefCounted
 ## com o coração arrancado ou com o crânio esmagado.
 
 const SHADER := preload("res://shaders/corte_gore.gdshader")
+const Efeitos = preload("res://scripts/efeitos.gd")
 const VIDA_NO_CHAO := 30.0
 const MAX_PEDACOS := 26
 
@@ -188,21 +189,11 @@ static func _limitar(game) -> void:
 
 ## Jato de sangue contínuo, preso a um pedaço (gira junto quando ele tomba).
 static func jato(pai: Node2D, local: Vector2, direcao: Vector2, duracao: float, forca: float, game = null) -> void:
-	var j := CPUParticles2D.new()
-	j.amount = 90
-	j.lifetime = 1.0
+	var j: CPUParticles2D = Efeitos.GORE_JATO.instantiate()
 	j.direction = direcao.normalized()
-	j.spread = 9.0
 	j.initial_velocity_min = 240.0 * forca
 	j.initial_velocity_max = 620.0 * forca
-	j.gravity = Vector2(0, 1500)
-	j.scale_amount_min = 1.6
-	j.scale_amount_max = 4.2
-	var tons := Gradient.new()
-	tons.colors = PackedColorArray([Color(0.7, 0.02, 0.05), Color(0.34, 0.0, 0.02)])
-	j.color_initial_ramp = tons
 	j.position = local
-	j.z_index = 7
 	pai.add_child(j)
 	j.emitting = true
 	# Os temporizadores ficam dentro do próprio jato: se o pedaço sumir antes, eles somem junto.
@@ -238,22 +229,8 @@ static func jato(pai: Node2D, local: Vector2, direcao: Vector2, duracao: float, 
 
 ## Cortina de sangue entre as duas metades.
 static func _cortina(game, onde: Vector2, altura: float) -> void:
-	var c := CPUParticles2D.new()
-	c.one_shot = true
-	c.amount = 120
-	c.lifetime = 1.1
-	c.explosiveness = 0.85
-	c.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	var c: CPUParticles2D = Efeitos.GORE_CORTINA.instantiate()
 	c.emission_rect_extents = Vector2(4, altura * 0.45)
-	c.direction = Vector2(0, -1)
-	c.spread = 80.0
-	c.initial_velocity_min = 80.0
-	c.initial_velocity_max = 380.0
-	c.gravity = Vector2(0, 1400)
-	c.scale_amount_min = 1.5
-	c.scale_amount_max = 3.8
-	c.color = Color(0.55, 0.01, 0.04)
-	c.z_index = 7
 	game.add_child(c)
 	c.global_position = onde
 	c.emitting = true
@@ -261,51 +238,12 @@ static func _cortina(game, onde: Vector2, altura: float) -> void:
 
 ## Crânio esmagado: estilhaços de osso, massa escura e uma névoa vermelha.
 static func _estilhacos(game, onde: Vector2, lado: int) -> void:
-	var ossos := CPUParticles2D.new()
-	ossos.one_shot = true
-	ossos.amount = 14
-	ossos.lifetime = 1.4
-	ossos.explosiveness = 1.0
+	var ossos: CPUParticles2D = Efeitos.GORE_OSSOS.instantiate()
 	ossos.direction = Vector2(lado, -1)
-	ossos.spread = 80.0
-	ossos.initial_velocity_min = 200.0
-	ossos.initial_velocity_max = 560.0
-	ossos.gravity = Vector2(0, 1700)
-	ossos.angular_velocity_min = -720.0
-	ossos.angular_velocity_max = 720.0
-	var debris := AtlasTexture.new()
-	debris.atlas = load("res://assets/animation/pedacos.png")
-	debris.region = Rect2(0, 0, 384, 256)
-	ossos.texture = debris
-	var flip := CanvasItemMaterial.new()
-	flip.particles_animation = true
-	flip.particles_anim_h_frames = 3
-	flip.particles_anim_v_frames = 2
-	flip.particles_anim_loop = false
-	ossos.material = flip
-	ossos.anim_offset_max = 0.999
-	ossos.scale_amount_min = 0.1
-	ossos.scale_amount_max = 0.2
-	ossos.z_index = 7
 	game.add_child(ossos)
 	ossos.global_position = onde
 	ossos.emitting = true
-	var massa := CPUParticles2D.new()
-	massa.one_shot = true
-	massa.amount = 70
-	massa.lifetime = 1.2
-	massa.explosiveness = 1.0
-	massa.direction = Vector2(0, -1)
-	massa.spread = 180.0
-	massa.initial_velocity_min = 120.0
-	massa.initial_velocity_max = 520.0
-	massa.gravity = Vector2(0, 1500)
-	massa.scale_amount_min = 2.0
-	massa.scale_amount_max = 5.5
-	var tons := Gradient.new()
-	tons.colors = PackedColorArray([Color(0.62, 0.05, 0.07), Color(0.3, 0.0, 0.02), Color(0.55, 0.22, 0.22)])
-	massa.color_initial_ramp = tons
-	massa.z_index = 7
+	var massa: CPUParticles2D = Efeitos.GORE_MASSA.instantiate()
 	game.add_child(massa)
 	massa.global_position = onde
 	massa.emitting = true

@@ -16,7 +16,8 @@ const TEXT_SIZE := 18
 
 var game = null
 var confessor = null
-var input: LineEdit
+## Campo de pergunta, montado e estilizado em scenes/interface.tscn.
+@onready var input: LineEdit = $Input
 var font: Font
 var title_font: Font
 var panel_art: AtlasTexture
@@ -28,36 +29,25 @@ var selected := 0
 var _stick_dir := 0
 
 
+## Fica em scenes/interface.tscn (processa mesmo em pausa, ignora o mouse, começa oculto).
+## game e confessor precisam ser atribuídos antes de a cena entrar na árvore.
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	size = Vector2(1280, 720)
-	visible = false
 	font = ThemeDB.fallback_font
 	title_font = load("res://assets/title_font.ttf")
 	panel_art = AtlasTexture.new()
 	panel_art.atlas = load("res://assets/reliquary_ui.png")
 	panel_art.region = Rect2(535, 580, 540, 345)
 	panel_art.filter_clip = true
-	input = LineEdit.new()
-	input.position = Vector2(PANEL.position.x + 50, 562)
-	input.size = Vector2(PANEL.size.x - 100, 40)
-	input.max_length = confessor.MAX_QUESTION if confessor != null else 240
-	input.placeholder_text = "Escreva sua dúvida, ou escolha uma pergunta acima…"
-	input.add_theme_font_size_override("font_size", 18)
-	input.add_theme_color_override("font_color", Color("eadcc4"))
-	input.add_theme_color_override("font_placeholder_color", Color(0.75, 0.68, 0.58, 0.55))
-	input.add_theme_color_override("caret_color", GOLD)
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color(0.03, 0.02, 0.03, 0.92)
-	box.border_color = Color(GOLD, 0.6)
-	box.set_border_width_all(1)
-	box.set_content_margin_all(8)
-	input.add_theme_stylebox_override("normal", box)
-	input.add_theme_stylebox_override("focus", box)
-	add_child(input)
 	input.text_submitted.connect(_on_submitted)
-	if confessor != null: confessor.answered.connect(_on_answered)
+
+
+## Liga o painel ao confessor. A main chama depois que a interface já está na árvore.
+func conectar(c) -> void:
+	if confessor != null and confessor.answered.is_connected(_on_answered): confessor.answered.disconnect(_on_answered)
+	confessor = c
+	if confessor == null: return
+	input.max_length = confessor.MAX_QUESTION
+	confessor.answered.connect(_on_answered)
 
 
 func open(where: String) -> void:
